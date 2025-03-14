@@ -12,7 +12,9 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        //
+        return view('clientes.index',[
+            'clientes'=> Cliente::orderBy('nome')->paginate('20')
+        ]);
     }
 
     /**
@@ -28,7 +30,21 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $cliente = new Cliente();
+        $cliente->user_id        = $request->user_id;
+        $cliente->nome        = $request->nome;
+        $cliente->email        = $request->email;
+        $cliente->telefone        = $request->telefone;
+        $cliente->telefonecom        = $request->telefonecom;
+        $cliente->endereco        = $request->endereco;
+        $cliente->bairro        = $request->bairro;
+        $cliente->cidade        = $request->cidade;
+        $cliente->uf        = $request->uf;
+        $cliente->sexo        = $request->sexo;
+
+        $cliente->save();
+        return redirect()->route(route:'cliente.create')->with('msg','Cliente cadastrado com sucesso!');
+
     }
 
     /**

@@ -15,28 +15,27 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
                     <x-nav-link :href="route('veiculos.novos.index')" :active="request()->routeIs('novos.index')">
                         {{ __('Veículos Novos') }}
                     </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
                     <x-nav-link :href="route('veiculos.usados.index')" :active="request()->routeIs('usados.index')">
                         {{ __('Veículos Usados') }}
                     </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
                     <x-nav-link :href="route('propostas.index')" :active="request()->routeIs('propostas')">
                         {{ __('Propostas') }}
                     </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
                     <x-nav-link :href="route('financeiro.index')" :active="request()->routeIs('financeiro')">
                         {{ __('Financeiro') }}
                     </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
+                    <x-nav-link :href="route('cliente.create')" :active="request()->routeIs('clientes.create')">
+                        {{ __('Clientes') }}
+                    </x-nav-link>
+
                     <x-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios')">
                         {{ __('Relatórios') }}
                     </x-nav-link>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
