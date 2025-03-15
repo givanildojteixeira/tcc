@@ -12,29 +12,34 @@
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
                         Cadastro de Clientes
                     </h2>
-                   {{-- Botao para listar clientes --}}
-                   <p class="mb-4 p-6">
-                        <a href="{{route('cliente.index')}}" class="bg-blue-500 text-white rounded p-2">Lista de Clientes</a>
-                   </p>
+
+                    {{-- Botao para listar clientes - somente para quem tem acesso --}}
+                    @can('level')
+                        <p class="mb-4 p-6">
+                            <a href="{{ route('cliente.index') }}" class="bg-blue-500 text-white rounded p-2">Lista de
+                                Clientes</a>
+                        </p>
+                    @endcan
 
                     {{-- Mensagem de confirmação --}}
-                    @if(session('msg'))
-                    <p class="bg-blue-500 p-2 rounded text-center text-white mb-4">{{session('msg')}}</p>
+                    @if (session('msg'))
+                        <p class="bg-blue-500 p-2 rounded text-center text-white mb-4">{{ session('msg') }}</p>
                     @endif
 
                     {{-- formulario --}}
-                    <form action="{{route('cliente.store')}}" method="post">
+                    <form action="{{ route('cliente.store') }}" method="post">
                         @csrf
 
                         <fieldset class="border-2 rouded p-6">
                             <legend> Preencha todos os campos</legend>
 
                             {{-- relacionamento --}}
-                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" >
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
 
                             <div class="bg-gray-100 p-4 rounded overflow-hidden mb-4">
                                 <label for="nome">Nome</label>
-                                <input type="text" name="nome" id="nome" class="w-full rounded" required autofocus>
+                                <input type="text" name="nome" id="nome" class="w-full rounded" required
+                                    autofocus>
                             </div>
                             <div class="bg-gray-100 p-4 rounded overflow-hidden mb-4">
                                 <label for="email">E-mail</label>
@@ -46,7 +51,8 @@
                             </div>
                             <div class="bg-gray-100 p-4 rounded overflow-hidden mb-4">
                                 <label for="telefonecom">Telefone Comercial</label>
-                                <input type="tel" name="telefonecom" id="telefonecom" class="w-full rounded" required>
+                                <input type="tel" name="telefonecom" id="telefonecom" class="w-full rounded"
+                                    required>
                             </div>
                             <div class="bg-gray-100 p-4 rounded overflow-hidden mb-4">
                                 <label for="endereco">Endereço</label>

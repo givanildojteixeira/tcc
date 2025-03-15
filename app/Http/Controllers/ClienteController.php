@@ -7,13 +7,20 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
+
+    // Criando restrição para quem pode acessar o metodo index
+    public function __construct()
+    {
+        $this->middleware(middleware: 'can:level')->only(methods: 'index');
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('clientes.index',[
-            'clientes'=> Cliente::orderBy('nome')->paginate('20')
+        return view('clientes.index', [
+            'clientes' => Cliente::orderBy('nome')->paginate('1')
         ]);
     }
 
@@ -31,20 +38,19 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         $cliente = new Cliente();
-        $cliente->user_id        = $request->user_id;
-        $cliente->nome        = $request->nome;
+        $cliente->user_id      = $request->user_id;
+        $cliente->nome         = $request->nome;
         $cliente->email        = $request->email;
-        $cliente->telefone        = $request->telefone;
-        $cliente->telefonecom        = $request->telefonecom;
-        $cliente->endereco        = $request->endereco;
-        $cliente->bairro        = $request->bairro;
-        $cliente->cidade        = $request->cidade;
-        $cliente->uf        = $request->uf;
-        $cliente->sexo        = $request->sexo;
+        $cliente->telefone     = $request->telefone;
+        $cliente->telefonecom  = $request->telefonecom;
+        $cliente->endereco     = $request->endereco;
+        $cliente->bairro       = $request->bairro;
+        $cliente->cidade       = $request->cidade;
+        $cliente->uf           = $request->uf;
+        $cliente->sexo         = $request->sexo;
 
         $cliente->save();
-        return redirect()->route(route:'cliente.create')->with('msg','Cliente cadastrado com sucesso!');
-
+        return redirect()->route(route: 'cliente.create')->with('msg', 'Cliente cadastrado com sucesso!');
     }
 
     /**
