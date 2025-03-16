@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\Authenticate;
 use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+// use App\Http\Controllers\Auth;
+
 
 class ClienteController extends Controller
 {
@@ -14,13 +20,25 @@ class ClienteController extends Controller
         $this->middleware(middleware: 'can:level')->only(methods: 'index');
     }
 
+    public function clientes_to_user(User $id)
+    {
+        $user = User::where('id', $id->id)->first();
+        $clientes = $user->customers()->get();
+
+        return view('clientes.clientes_to_user', [
+            'clientes' => $clientes
+        ]);
+    }
+
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         return view('clientes.index', [
-            'clientes' => Cliente::orderBy('nome')->paginate('1')
+            'clientes' => Cliente::orderBy('nome')->paginate('5')
         ]);
     }
 
@@ -58,7 +76,7 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        //
+        return view('clientes.show', ['cliente' => $cliente]);
     }
 
     /**
@@ -66,7 +84,7 @@ class ClienteController extends Controller
      */
     public function edit(Cliente $cliente)
     {
-        //
+        return view('clientes.edit', ['cliente' => $cliente]);
     }
 
     /**
@@ -74,7 +92,8 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        //
+        Cliente::findOrFail($cliente->id)->update($request->all());
+        return redirect()->route('cliente.show', $cliente->id);
     }
 
     /**
@@ -82,6 +101,12 @@ class ClienteController extends Controller
      */
     public function destroy(Cliente $cliente)
     {
-        //
+        Cliente::findOrFail($cliente->id)->delete();
+        return redirect()->route('meus-clientes', Auth::user()->id);
+    }
+
+    public function confirma_delete(Cliente $id)
+    {
+        return view('clientes.confirma_delete',['id' => $id]);
     }
 }

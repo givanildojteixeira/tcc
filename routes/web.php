@@ -8,7 +8,10 @@ use App\Http\Controllers\NovosController;
 use App\Http\Controllers\PropostasController;
 use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\UsadosController;
+use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +29,10 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard',[
+        'clientes' => Cliente::all(),
+        'users' => User::all()
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -43,6 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::resources([
         'cliente'=>ClienteController::class
     ]);
+
+    //Clientes to user
+    Route::get('/meus-clientes/{id}', [ClienteController::class, 'clientes_to_user'])->name('meus-clientes');
+    route::get('/confirma-delete/{id}',[ClienteController::class, 'confirma_delete'])->name('confirma_delete');
 
     //Veiculos novos
     Route::get('/novos.index',[NovosController::class,'index'])->name('veiculos.novos.index');

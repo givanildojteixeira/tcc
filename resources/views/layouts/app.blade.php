@@ -9,7 +9,7 @@
 
         {{-- fontawesome --}}
         <script src="https://kit.fontawesome.com/5c48256430.js" crossorigin="anonymous"></script>
-
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
