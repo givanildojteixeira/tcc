@@ -29,9 +29,10 @@
   
   php artisan make:model Cliente -mcr
 
-  =>serão criados os arquivos:    INFO  Model [C:\Users\Givanildo\laravel\clientes\app\Models\Cliente.php] created successfully.
-                                INFO  Migration [C:\Users\Givanildo\laravel\clientes\database\migrations/2025_03_13_113030_create_clientes_table.php] created successfully.  
-                                INFO  Controller [C:\Users\Givanildo\laravel\clientes\app\Http\Controllers\ClienteController.php] created successfully.  
+ =>serão criados os arquivos:     
+ * \app\Http\Controllers\ClienteController.php
+ * \app\Models\Cliente.php
+ * \database\migrations/2025_03_13_113030_create_clientes_table.php
 
   => altere as tabelas e faça o relacionamento
 
