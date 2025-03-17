@@ -83,3 +83,53 @@ git commit -m "first commit"
                                 INFO  Controller [C:\Users\Givanildo\laravel\clientes\app\Http\Controllers\ClienteController.php] created successfully.  
   => altere as tabelas e faça o relacionamento
   php artisan migrate
+
+
+
+ ## Roteiro para manter código atualizado entre dois ambientes (casa e trabalho)
+1. Configuração inicial (apenas uma vez)
+No PC de casa e no PC do trabalho:
+Clone o repositório remoto no seu computador (caso ainda não tenha feito isso):
+git clone https://github.com/seu-usuario/seu-repositorio.git
+
+Entre no diretório do repositório:
+cd seu-repositorio
+
+Confirme que o repositório remoto está configurado corretamente:
+git remote -v
+Se necessário, adicione o repositório remoto:
+git remote add origin https://github.com/seu-usuario/seu-repositorio.git
+
+2. Fluxo diário de trabalho
+▶️ Programando em casa
+Puxe as atualizações do repositório remoto antes de começar a programar:
+git pull origin main
+Isso garante que você esteja trabalhando com a versão mais recente do código.
+
+Faça suas alterações no código 🎯
+
+Adicione os arquivos modificados ao Git:
+git add .
+Isso adiciona todas as alterações ao controle de versão.
+
+Faça um commit com uma mensagem descritiva:
+git commit -m "Implementação da funcionalidade X"
+
+Envie as mudanças para o repositório remoto:
+git push origin main
+
+
+## Dicas Extras
+Se estiver trabalhando em uma nova funcionalidade, crie uma branch específica:
+git checkout -b nova-feature
+
+Depois, ao finalizar, mescle com a branch principal:
+git checkout main
+git merge nova-feature
+git push origin main
+
+Caso haja conflitos no git pull, resolva manualmente e continue o fluxo.
+
+Use git status frequentemente para verificar o estado do repositório:
+git status
+
