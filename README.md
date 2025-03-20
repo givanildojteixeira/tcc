@@ -1,4 +1,4 @@
-
+  
 <h1 align="center"> Projeto Atendimento Vendas de Veículos </h1>
 
 <p align="center">
@@ -7,26 +7,26 @@
 
 
 
-## Instalação  🎯 
+## Instalação  📝  🚀 🔥✨
 
 
-# CONSOLE  🎯 
+# CONSOLE  📝 
 ## Comandos para colocar no console para facilitar o uso
  
 Ativa o browser para acessar o sistema em http://localhost:8000
 
 ```markdown
-[php artisan serve]
+php artisan serve1
 ```
 
 Faz a alteração automaticamente a cada salvamento
 
 ```markdown
-[npm run dev]
+npm run dev
 ```
 
 
-# CRUD  🎯 
+# CRUD  📝 
 
 **Criar Arquivos** =>  *php artisan make:model Cliente -mcr*
 
@@ -41,12 +41,11 @@ Faz a alteração automaticamente a cada salvamento
 
 **Popular as tabelas:**  => *php artisan migrate:refresh --seed*
 
-```markdown
-[usar em ambiente de desenvolvimento]
-```
+usar em ambiente de desenvolvimento
 
 
-# GIT  🎯 
+
+# GIT  📝 
 
 ## Roteiro para manter código atualizado entre dois ambientes (casa e trabalho)
 

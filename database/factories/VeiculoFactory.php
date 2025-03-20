@@ -17,18 +17,33 @@ class VeiculoFactory extends Factory
      */
     public function definition(): array
     {
+        // Define se o veículo é novo ou usado
+        $novo_usado = $this->faker->randomElement(['Novo', 'Usado']);
+
+        // Define a marca com base no tipo de veículo
+        $marca = $novo_usado === 'Novo'
+            ? 'GM'
+            : $this->faker->randomElement(['GM', 'FORD', 'VW', 'FIAT', 'RENAULT', 'CITROEN']);
+
+        // Define o ano de fabricação
+        $ano_fab = $this->faker->numberBetween(2000, date('Y'));
+
+        // Define o ano do modelo como o mesmo ano de fabricação ou o próximo ano
+        $ano_modelo = $this->faker->randomElement([$ano_fab, $ano_fab + 1]);
+
+        // Insere os dados
         return [
             'chassi'        => $this->faker->unique()->regexify('[A-HJ-NPR-Z0-9]{17}'),
-            'novo_usado'    => $this->faker->randomElement(['Novo', 'Usado']),
-            'marca'         => $this->faker->randomElement(['GM']),
+            'novo_usado'    => $novo_usado,
+            'marca'         => $marca,
             'familia'       => $this->faker->word(),
             'desc_veiculo'  => $this->faker->sentence(6),
             'modelo_fab'    => $this->faker->word(),
             'cor'           => $this->faker->safeColorName(),
             'cod_opcional'  => $this->faker->randomNumber(6, true),
-            'combustivel'   => $this->faker->randomElement(['Gasolina', 'Álcool', 'Diesel', 'Elétrico', 'Híbrido']),
-            'ano_fab'       => $this->faker->year(),
-            'ano_modelo'    => $this->faker->year(),
+            'combustivel'   => $this->faker->randomElement(['Gasolina', 'Álcool', 'Flex', 'Diesel', 'Elétrico', 'Híbrido']),
+            'ano_fab'       => $ano_fab,
+            'ano_modelo'    => $ano_modelo,
             'motor'         => $this->faker->randomElement(['1.0', '1.4', '1.6', '2.0', '3.0', 'Elétrico']),
             'portas'        => $this->faker->randomElement([2, 4, 5]),
             'vlr_tabela'    => $this->faker->randomFloat(2, 30000, 200000),
