@@ -1,8 +1,10 @@
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <h2 class="text-center text-2xl font-bold text-white-500 mb-4">Acesso ao sistema.</h2>
+    <div class="flex justify-center items-center">
+        <x-application-logo />
+    </div>
+    <!-- <h2 class="text-center text-2xl font-bold text-white-500 mb-4">Acesso ao sistema.</h2> -->
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
@@ -35,9 +37,9 @@
         <!-- Actions -->
         <div class="flex items-center justify-between mt-4 ">
             @if (Route::has('register'))
-                <a class="text-sm text-black-700 " href="{{ route('register') }}">
-                    {{ __('Cadastre-se') }}
-                </a>
+            <a class="text-sm text-black-700 " href="{{ route('register') }}">
+                {{ __('Cadastre-se') }}
+            </a>
             @endif
 
             <x-primary-button>
