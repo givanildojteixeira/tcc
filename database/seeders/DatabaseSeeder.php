@@ -12,9 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::factory(20)->create();
+        \App\Models\User::factory(10)->create();
 
-        \App\Models\User::factory()->create(['name' => 'Givanildo Teixeira','email' => 'givanildo@guarachevrolet.com.br','password' => 'teste123','level' => 'admin',]);
+        \App\Models\User::factory()->create(['name' => 'Givanildo Teixeira',
+        'email' => 'givanildo@guarachevrolet.com.br',
+        'password' => '$2y$10$qYVsI51VL9Wg3qHqOExGe.WyOnPAywrCUh/UL0qiPAKGfHYOM48hK',  // => 'teste123'
+        'level' => 'admin',]);
 
         // Cria 50 clientes fictícios
         \App\Models\Cliente::factory(50)->create();

@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Opcionais extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'modelo_fab',
+        'cod_opcional',
+        'descricao',
+];
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\UsadosController;
 use App\Models\Cliente;
 use App\Models\User;
+use App\Models\Veiculo;
 use Illuminate\Support\Facades\Route;
 
 
@@ -31,7 +32,10 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard',[
         'clientes' => Cliente::all(),
-        'users' => User::all()
+        'users' => User::all(),
+        'veiculos' => Veiculo::all(),
+        'veiculosnovos' => Veiculo::where('novo_usado', 'Novo')->count(),
+        'veiculosusados' => Veiculo::where('novo_usado', 'Usado')->count(),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 

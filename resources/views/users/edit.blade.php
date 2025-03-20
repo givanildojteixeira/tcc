@@ -20,8 +20,11 @@
                         <label for="level">Selecione o nível</label><br>
                         <select name="level" required class="py-1 px-8 rouded">
                             <option value="" selected disabled>Selecione uma opção</option>
-                            <option value="user">Usuario Comum</option>
-                            <option value="admin">Administrador</option>
+                            <option value="Vendedor">Vendedor</option>
+                            <option value="Assistente">Assistente</option>
+                            <option value="Gerente">Gerente</option>
+                            <option value="Diretor">Diretor</option>
+                            <option value="Admin">Administrador</option>
                         </select>
                         <button type="submit" class="bg-blue-500 text-white rouded py-2 px-4">
                             <i class="fa-regular fa-floppy-disk mr-2"></i>Salvar alterações

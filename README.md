@@ -16,7 +16,7 @@
 Ativa o browser para acessar o sistema em http://localhost:8000
 
 ```markdown
-php artisan serve1
+php artisan serve
 ```
 
 Faz a alteração automaticamente a cada salvamento

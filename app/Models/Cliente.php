@@ -10,14 +10,21 @@ class Cliente extends Model
     use HasFactory;
     protected $fillable = [
             'nome',
+            'tipo_Pessoa',
+            'cpf_cnpj',
             'email',
+            'celular',
             'telefone',
             'telefonecom',
+            'cep',
             'endereco',
             'bairro',
             'cidade',
             'uf',
-            'sexo'
+            'sexo',
+            'estado_Civil',
+            'data_fundacao',
+            'data_Nascimento',
     ];
 
     //relacionamento das tabelas
