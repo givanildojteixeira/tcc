@@ -13,9 +13,17 @@
 # CONSOLE  🎯 
 ## Comandos para colocar no console para facilitar o uso
  
-  *php artisan serve*  [ ativa o browser para acessar o sistema em http://localhost:8000]
+Ativa o browser para acessar o sistema em http://localhost:8000
 
-  *npm run dev* [faz a alteração automaticamente a cada salvamento]
+```markdown
+[php artisan serve]
+```
+
+Faz a alteração automaticamente a cada salvamento
+
+```markdown
+[npm run dev]
+```
 
 
 # CRUD  🎯 
