@@ -7,27 +7,18 @@
 
 
 
+## Instalação  🎯 
 
 
-
-## Instalação
-
-
-
-
-
-
-
-
+# CONSOLE  🎯 
 ## Comandos para colocar no console para facilitar o uso
  
-  php artisan serve  [ ativa o browser para acessar o sistema em http://localhost:8000]
+  *php artisan serve*  [ ativa o browser para acessar o sistema em http://localhost:8000]
 
-  npm run dev [faz a alteração automaticamente a cada salvamento]
+  *npm run dev* [faz a alteração automaticamente a cada salvamento]
 
 
-
-## Comandos e procedimentos para criar novas tabelas CRUD
+# CRUD  🎯 
 
 **Criar Arquivos** =>  *php artisan make:model Cliente -mcr*
 
@@ -38,21 +29,14 @@
  * \app\Models\Cliente.php
  * \database\migrations/2025_03_13_113030_create_clientes_table.php
 
-  => altere as tabelas e faça o relacionamento
+  ▶️ altere as tabelas e faça o relacionamento
 
-<<<<<<< HEAD
-=======
-**Criar Factory**<p>
-*php artisan make:factory OpcionalFactory --model=Opcional*
-
->>>>>>> 32419739275e97359fa6028e155f2cf782986d25
 **Popular as tabelas:** - usar em ambiente de desenvolvimento
 
 *php artisan migrate:refresh --seed*
 
 
-
-🎯 # GIT 
+# GIT  🎯 
 
 ## Roteiro para manter código atualizado entre dois ambientes (casa e trabalho)
 
