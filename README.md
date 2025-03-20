@@ -31,9 +31,11 @@
 
   ▶️ altere as tabelas e faça o relacionamento
 
-**Popular as tabelas:** - usar em ambiente de desenvolvimento
+**Popular as tabelas:**  => *php artisan migrate:refresh --seed*
 
-*php artisan migrate:refresh --seed*
+```markdown
+[usar em ambiente de desenvolvimento]
+```
 
 
 # GIT  🎯 
