@@ -36,7 +36,7 @@
 
   => altere as tabelas e faça o relacionamento
 
-**Criar Factory**
+**Criar Factory**<p>
 *php artisan make:factory OpcionalFactory --model=Opcional*
 
 **Popular as tabelas:** - usar em ambiente de desenvolvimento
