@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('opcionais', function (Blueprint $table) {
             $table->id();
-            //relacionamento com a tabela de veiculos
+
             $table->string('modelo_fab');
             $table->string('cod_opcional');
-
-            //outros dados
             $table->string('descricao');
 
             //criação dos dados de dadas de criação e update

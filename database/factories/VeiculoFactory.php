@@ -20,7 +20,7 @@ class VeiculoFactory extends Factory
         return [
             'chassi'        => $this->faker->unique()->regexify('[A-HJ-NPR-Z0-9]{17}'),
             'novo_usado'    => $this->faker->randomElement(['Novo', 'Usado']),
-            'marca'         => $this->faker->company(),
+            'marca'         => $this->faker->randomElement(['GM']),
             'familia'       => $this->faker->word(),
             'desc_veiculo'  => $this->faker->sentence(6),
             'modelo_fab'    => $this->faker->word(),

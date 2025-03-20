@@ -25,10 +25,10 @@
 
   npm run dev [faz a alteração automaticamente a cada salvamento]
 
-## Comandos para criar novas tabelas CRUD
+## Comandos e procedimentos para criar novas tabelas CRUD
   
-  php artisan make:model Cliente -mcr
-
+  *php artisan make:model Cliente -mcr*
+  
  =>serão criados os arquivos:     
  * \app\Http\Controllers\ClienteController.php
  * \app\Models\Cliente.php
@@ -36,7 +36,11 @@
 
   => altere as tabelas e faça o relacionamento
 
-  php artisan migrate
+**Criar Factory**
+*php artisan make:factory OpcionalFactory --model=Opcional*
+
+**Popular as tabelas:** - usar em ambiente de desenvolvimento
+*php artisan migrate:refresh --seed*
 
 
 
