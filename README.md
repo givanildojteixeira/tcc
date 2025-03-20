@@ -40,6 +40,12 @@
 
   => altere as tabelas e faça o relacionamento
 
+<<<<<<< HEAD
+=======
+**Criar Factory**<p>
+*php artisan make:factory OpcionalFactory --model=Opcional*
+
+>>>>>>> 32419739275e97359fa6028e155f2cf782986d25
 **Popular as tabelas:** - usar em ambiente de desenvolvimento
 
 *php artisan migrate:refresh --seed*
