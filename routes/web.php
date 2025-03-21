@@ -53,8 +53,6 @@ Route::middleware('auth')->group(function () {
     Route::resources([
         'cliente'=>ClienteController::class
     ]);
-
-    //Clientes to user
     Route::get('/meus-clientes/{id}', [ClienteController::class, 'clientes_to_user'])->name('meus-clientes');
     route::get('/confirma-delete/{id}',[ClienteController::class, 'confirma_delete'])->name('confirma_delete');
 

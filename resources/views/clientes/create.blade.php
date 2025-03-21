@@ -17,7 +17,7 @@
                     <div class="flex gap-4 mb-4 p-6">
                         @can('level')
                             <a href="{{ route('cliente.index') }}" class="bg-blue-500 text-white rounded p-2">
-                                Lista de Clientes
+                                Lista de Clientes- index
                             </a>
                         @endcan
 
