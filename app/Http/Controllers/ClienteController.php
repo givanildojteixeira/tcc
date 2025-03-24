@@ -38,7 +38,7 @@ class ClienteController extends Controller
     public function index()
     {
         return view('clientes.index', [
-            'clientes' => Cliente::orderBy('nome')->paginate('5')
+            'clientes' => Cliente::orderBy('nome')->paginate('20')
         ]);
     }
 

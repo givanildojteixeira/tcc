@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Cliente::factory(50)->create();
 
         // Cria 150 veiculos fictícios
-        \App\Models\Veiculo::factory(100)->create();
+        // \App\Models\Veiculo::factory(100)->create();
+
     }
 }

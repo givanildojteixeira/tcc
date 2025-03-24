@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
 
     //Veiculos novos
     Route::get('/novos.index',[NovosController::class,'index'])->name('veiculos.novos.index');
+    Route::get('/novos/index/{familia}', [NovosController::class, 'filtrarPorFamilia'])->name('veiculos.novos.filtro');
 
     //Veiculos usados
     Route::get('/usados.index',[UsadosController::class,'index'])->name('veiculos.usados.index');

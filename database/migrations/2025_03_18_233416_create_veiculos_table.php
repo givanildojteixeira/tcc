@@ -23,13 +23,14 @@ return new class extends Migration
             $table->string('cor');
             $table->string('cod_opcional');
             $table->string('combustivel');
-            $table->string('ano_fab');
-            $table->string('ano_modelo');
+            $table->string('Ano_Mod');
             $table->string('motor');
             $table->string('portas');
             $table->decimal('vlr_tabela', 10, 2);
             $table->decimal('vlr_bonus', 10, 2);
             $table->decimal('vlr_nota', 10, 2);
+            $table->string('local');
+            $table->date('dta_faturamento');
             $table->string('user_reserva');
             $table->string('desc_nota');
 
