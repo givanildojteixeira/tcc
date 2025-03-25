@@ -9,9 +9,7 @@ use App\Models\Veiculo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-
-// use App\Http\Controllers\Auth;
-
+use Illuminate\Support\Facades\DB;
 
 class NovosController extends Controller
 {
@@ -29,6 +27,13 @@ class NovosController extends Controller
      */
     public function index()
     {
+        // Recupera os valores únicos da coluna 'desc_veiculo' da tabela 'veiculos'
+        $veiculosUnicos = Veiculo::select('desc_veiculo')
+            ->distinct()  // Garante que não haja repetições
+            ->where('marca', 'GM')  // Filtro pela marca 'GM' principal da View
+            ->where('novo_usado', 'Novo')
+            ->get();
+
         // Busca todos os arquivos na pasta public/images/familia/
         $imagens = File::allFiles(public_path('images/familia'));
 
@@ -37,21 +42,59 @@ class NovosController extends Controller
                 ->orderBy('desc_veiculo')
                 ->paginate(50),
             'imagens' => $imagens, // Passa as imagens para a view
+            'veiculosUnicos' => $veiculosUnicos, // Passa os veículos únicos para a view
         ]);
+    }
+
+    //   FILTROS   **************************************
+
+    // Método privado que carrega os dados compartilhados
+    private function carregarDadosVeiculos()
+    {
+        // Carrega os veículos únicos
+        $veiculosUnicos = Veiculo::select('desc_veiculo')
+            ->distinct()  // Garante que não haja repetições
+            ->where('marca', 'GM')  // Filtro pela marca 'GM'
+            ->where('novo_usado', 'Novo')  // Filtro de "Novo"
+            ->get();
+
+            // Carrega as imagens das famílias
+        $imagens = File::allFiles(public_path('images/familia'));
+
+
+        return compact('veiculosUnicos', 'imagens');
     }
 
     public function filtrarPorFamilia($familia)
     {
-        // Buscar veículos pela família
+        // Carrega os dados compartilhados
+        $dados = $this->carregarDadosVeiculos();
+
+        // Filtro
         $veiculos = Veiculo::where('desc_veiculo', 'LIKE', "%$familia%")
             ->where('marca', 'GM')
+            ->where('novo_usado', 'Novo')
             ->orderBy('desc_veiculo')
             ->paginate(50);
 
-        // Buscar todas as imagens para manter o carrossel
-        $imagens = File::allFiles(public_path('images/familia'));
+        // Retorna a view
+        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
+    }
 
-        return view('veiculos.novos.index', compact('veiculos', 'imagens'));
+    public function filtrarPorVeiculo($veiculo)
+    {
+        // Carrega os dados compartilhados
+        $dados = $this->carregarDadosVeiculos();
+
+        // Filtra
+        $veiculos = Veiculo::where('desc_veiculo', '=', $veiculo)
+            ->where('marca', 'GM')
+            ->where('novo_usado', 'Novo')
+            ->orderBy('desc_veiculo')
+            ->paginate(5);
+
+        // Retorna a view
+        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
     }
 
     /**

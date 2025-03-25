@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* aplicado para quando o usuario clicar no cabeçalho de uma tabela */
+.sortable {
+    cursor: pointer;
+}
+
+/* Cor de fundo para indicar que a coluna foi ordenada */
+.sorted {
+    background-color: #e0e0e0;
+}
