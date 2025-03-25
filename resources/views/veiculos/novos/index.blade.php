@@ -1,23 +1,23 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex gap-4 max-w-7xl mx-auto">
+        <div class="flex mb-1 gap-4 max-w-7xl mx-auto">
             <!-- Carrossel de Veículos -->
             <div class="swiper mySwiper bg-white shadow-lg rounded-lg overflow-hidden w-1/2"
                 title="Clique sobre o veiculo para filtrar todos os modelos de sua Família.">
                 <div class="swiper-wrapper">
                     @foreach ($imagens as $imagem)
-                        @php
-                            $familia = ucfirst(pathinfo(basename($imagem), PATHINFO_FILENAME));
-                        @endphp
-                        <div>
-                            <div class="swiper-slide text-center">
-                                <a href="{{ route('veiculos.novos.filtro', ['familia' => $familia]) }}">
-                                    <img src="{{ asset('images/familia/' . basename($imagem)) }}" alt="Imagem do Veículo"
-                                        class="rounded-lg w-full object-cover">
-                                    <div class="text-sm font-semibold mt-2 text-center">{{ $familia }}</div>
-                                </a>
-                            </div>
+                    @php
+                    $familia = ucfirst(pathinfo(basename($imagem), PATHINFO_FILENAME));
+                    @endphp
+                    <div>
+                        <div class="swiper-slide text-center">
+                            <a href="{{ route('veiculos.novos.filtro', ['familia' => $familia]) }}">
+                                <img src="{{ asset('images/familia/' . basename($imagem)) }}" alt="Imagem do Veículo"
+                                    class="rounded-lg w-full object-cover">
+                                <div class="text-sm font-semibold mt-2 text-center">{{ $familia }}</div>
+                            </a>
                         </div>
+                    </div>
                     @endforeach
                 </div>
                 <!-- Botões de navegação -->
@@ -28,124 +28,132 @@
             <!-- ComboBox (Desc Veículo  = Modelo) -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col w-1/6">
                 <div class="flex flex-col gap-2">
-                    <span class="text-xl font-semibold text-center">Modelo</span>
+                    <span class="mt-1 font-semibold text-center">Modelo</span>
                     <select id="modeloVeiculo"
-                        class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class=" mx-2  p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="" disabled selected>Selecione</option>
                         @foreach ($veiculosUnicos as $veiculo)
-                            <option value="{{ $veiculo->desc_veiculo }}">{{ $veiculo->desc_veiculo }}</option>
+                        <option value="{{ $veiculo->desc_veiculo }}">{{ $veiculo->desc_veiculo }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
             <!-- Card da Pesquisa -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col w-1/2">
-                <!-- Título do ComboBox (Combustivel) -->
-                <div class="flex items-center gap-4">
-                    <span class="text-xl font-semibold">Combustível</span>
-                    <select name="ano_modelo"
-                        class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="Gasolina">Gasolina</option>
-                        <option value="Alcool">Alcool</option>
-                        <option value="Flex">Flex</option>
-                        <option value="Diesel">Diesel</option>
-                        <option value="Eletrico">Eletrico</option>
-                    </select>
-                </div>
 
-                <!-- Título do ComboBox (Ano/Modelo) -->
-                <div class="flex items-center gap-4">
-                    <span class="text-xl font-semibold">Ano/Modelo</span>
-                    <select name="ano_modelo"
-                        class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="2024/2024">2024/2024</option>
-                        <option value="2024/2025">2024/2025</option>
-                        <option value="2025/2025">2025/2025</option>
-                        <option value="2025/2026">2025/2026</option>
-                    </select>
-                </div>
-            </div>
+<div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/2">
+    <div class="grid grid-cols-2 gap-2">
+        <!-- Combustível -->
+        <div class="flex items-center gap-1">
+            <span class="text-xs font-semibold text-gray-600">Combustível:</span>
+            <select name="combustivel" class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                <option value="Gasolina">Gasolina</option>
+                <option value="Alcool">Alcool</option>
+                <option value="Flex">Flex</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Eletrico">Elétrico</option>
+            </select>
+        </div>
+
+        <!-- Ano/Modelo -->
+        <div class="flex items-center gap-1">
+            <span class="text-xs font-semibold text-gray-600">Ano/Modelo:</span>
+            <select name="ano_modelo" class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                <option value="2024/2024">2024/2024</option>
+                <option value="2024/2025">2024/2025</option>
+                <option value="2025/2025">2025/2025</option>
+                <option value="2025/2026">2025/2026</option>
+            </select>
+        </div>
+
+        <!-- Transmissão -->
+        <div class="flex items-center gap-1">
+            <span class="text-xs font-semibold text-gray-600">Transmissão:</span>
+            <select name="transmissao" class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                <option value="Manual">Manual</option>
+                <option value="Automático">Automático</option>
+                <option value="CVT">CVT</option>
+            </select>
+        </div>
+
+        <!-- Categoria -->
+        <div class="flex items-center gap-1">
+            <span class="text-xs font-semibold text-gray-600">Categoria:</span>
+            <select name="categoria" class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                <option value="Hatch">Hatch</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Picape">Picape</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+
+
         </div>
     </x-slot>
 
-    <div> <!-- class="py-1"> -->
+    <div> <!-- Container flexível -->
         <div class="w-full max-w-full">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
-                    <div class="p-6 text-gray-900">
-                        <div style="max-height: 400px; overflow-y: auto;"> <!-- Container para rolagem -->
-                            <table class="table-auto w-full">
-                                <thead class="bg-gray-100 text-left sticky top-0 z-10">
-                                    <tr>
-                                        <th class="sortable p-2" data-column="veiculo">Veículo <i
-                                                class="fas fa-sort"></i></th>
-                                        <th class="sortable p-2" data-column="modelo">Modelo <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th class="sortable p-2" data-column="combustivel">Comb <i
-                                                class="fas fa-sort"></i></th>
-                                        <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i
-                                                class="fas fa-sort"></i></th>
-                                        <th class="sortable p-2" data-column="chassi">Chassi <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th class="sortable p-2" data-column="cor">Cor <i class="fas fa-sort"></i></th>
-                                        <th class="sortable p-2" data-column="pts">Pts <i class="fas fa-sort"></i></th>
-                                        <th class="sortable p-2" data-column="opcional">Opc. <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th class="sortable p-2" data-column="tabela">Tabela <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th class="sortable p-2" data-column="bonus">Bonus <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th class="sortable p-2" data-column="custo">Custo <i class="fas fa-sort"></i>
-                                        </th>
-                                        <th class="sortable p-2" data-column="faturado">Faturado <i
-                                                class="fas fa-sort"></i></th>
-                                        <th class="hidden">Local</th> <!-- Coluna oculta -->
-                                    </tr>
-                                </thead>
-                                <tbody class="text-sm">
-                                    @foreach ($veiculos as $veiculo)
-                                        {{-- Coloca a cor na linha com base na coluna local --}}
-                                        @php
-                                            // Define a cor da linha com base no valor da coluna 'local'
-                                            $rowColor = '';
-                                            if ($veiculo->local == 'Matriz') {
-                                                $rowColor = 'text-black'; // Matriz mantém a cor preta
-                                            } elseif ($veiculo->local == 'Filial') {
-                                                $rowColor = 'text-yellow-500'; // Filial em amarelo
-                                            } elseif ($veiculo->local == 'Transito') {
-                                                $rowColor = 'text-green-500'; // Trânsito em verde
-                                            }
-                                        @endphp
-                                        <tr class="hover:bg-gray-100 {{ $rowColor }}">
-                                            <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
-                                            <td class="p-2">{{ $veiculo->modelo_fab }}</td>
-                                            <td class="p-2">{{ $veiculo->combustivel }}</td>
-                                            <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
-                                            <td class="p-2">{{ $veiculo->chassi }}</td>
-                                            <td class="p-2">{{ $veiculo->cor }}</td>
-                                            <td class="p-2">{{ $veiculo->portas }}</td>
-                                            <td class="p-2">{{ $veiculo->cod_opcional }}</td>
-                                            <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
-                                            </td>
-                                            <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
-                                            </td>
-                                            <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
-                                            </td>
-                                            <td class="p-2">
-                                                {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                                dias
-                                            </td>
-                                            <td class="hidden">{{ $veiculo->local }}</td> <!-- Coluna oculta -->
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="text-gray-900" id="tabela-wrapper">
+                        <table class="table-auto w-full">
+                            <thead class="bg-gray-100 text-left sticky top-0 z-10">
+                                <tr>
+                                    <th class="sortable p-2" data-column="veiculo">Veículo <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="modelo">Modelo <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="combustivel">Comb <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="chassi">Chassi <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="cor">Cor <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="pts">Pts <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="opcional">Opc. <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="tabela">Tabela <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="bonus">Bonus <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="custo">Custo <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="faturado">Faturado <i class="fas fa-sort"></i></th>
+                                    <th class="hidden">Local</th> <!-- Coluna oculta -->
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                @foreach ($veiculos as $veiculo)
+                                @php
+                                $rowColor = '';
+                                if ($veiculo->local == 'Matriz') {
+                                $rowColor = 'text-black';
+                                } elseif ($veiculo->local == 'Filial') {
+                                $rowColor = 'text-yellow-500';
+                                } elseif ($veiculo->local == 'Transito') {
+                                $rowColor = 'text-green-500';
+                                }
+                                @endphp
+                                <tr class="hover:bg-gray-100 {{ $rowColor }}">
+                                    <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
+                                    <td class="p-2">{{ $veiculo->modelo_fab }}</td>
+                                    <td class="p-2">{{ $veiculo->combustivel }}</td>
+                                    <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
+                                    <td class="p-2">{{ $veiculo->chassi }}</td>
+                                    <td class="p-2">{{ $veiculo->cor }}</td>
+                                    <td class="p-2">{{ $veiculo->portas }}</td>
+                                    <td class="p-2">{{ $veiculo->cod_opcional }}</td>
+                                    <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
+                                    <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}</td>
+                                    <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
+                                    <td class="p-2">
+                                        {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }} dias
+                                    </td>
+                                    <td class="hidden">{{ $veiculo->local }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
 
     <!-- Barra fixa abaixo da tabela -->
