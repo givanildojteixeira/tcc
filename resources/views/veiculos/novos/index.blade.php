@@ -99,6 +99,7 @@
                                         </th>
                                         <th class="sortable p-2" data-column="faturado">Faturado <i
                                                 class="fas fa-sort"></i></th>
+                                        <th class="hidden">Local</th> <!-- Coluna oculta -->
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
@@ -134,7 +135,7 @@
                                                 {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
                                                 dias
                                             </td>
-                                            {{-- <td class="p-2">{{ $veiculo->local }}</td> --}}
+                                            <td class="hidden">{{ $veiculo->local }}</td> <!-- Coluna oculta -->
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -157,9 +158,12 @@
             </div>
             <!-- Legenda de cores -->
             <div class="text-sm"> Legenda Alocação =>
-                <span class="text-black font-semibold">Matriz</span> |
-                <span class="text-yellow-500 font-semibold">Filial</span> |
-                <span class="text-green-500 font-semibold">Trânsito</span>
+                <span class="filter text-black font-semibold" data-filter="Matriz"
+                    style="cursor: pointer;">Matriz</span> |
+                <span class="filter text-yellow-500 font-semibold" data-filter="Filial"
+                    style="cursor: pointer;">Filial</span> |
+                <span class="filter text-green-500 font-semibold" data-filter="Transito"
+                    style="cursor: pointer;">Trânsito</span>
             </div>
         </div>
     </div>
@@ -232,7 +236,7 @@
             function sortTable(column, direction) {
                 const rows = Array.from(document.querySelectorAll('tbody tr'));
                 const index = Array.from(headers).findIndex(header => header.getAttribute('data-column') ===
-                column);
+                    column);
                 const isNumeric = column === 'pts' || column === 'tabela' || column === 'bonus' || column ===
                     'custo' || column === 'faturado'; // Defina quais colunas são numéricas
 
@@ -256,6 +260,56 @@
                 const tbody = document.querySelector('tbody');
                 rows.forEach(row => tbody.appendChild(row));
             }
+
+            // Variável para filtro da legenda (Local)
+            let activeFilter = null;
+
+            // Função para aplicar o filtro e atualizar o contador
+            function applyFilter() {
+                const rows = Array.from(document.querySelectorAll('tbody tr'));
+                let visibleCount = 0; // Contador de veículos visíveis
+
+                // Se nenhum filtro estiver ativo, exiba todas as linhas
+                if (!activeFilter) {
+                    rows.forEach(row => {
+                        row.style.display = '';
+                    });
+                    visibleCount = rows.length;
+                } else {
+                    // Exiba apenas as linhas que correspondem ao filtro ativo
+                    rows.forEach(row => {
+                        const local = row.querySelector('td:nth-child(13)').textContent.trim();
+                        if (local === activeFilter) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Atualizar o contador na interface
+                const contador = document.getElementById('selectedVehiclesCount');
+                contador.textContent = activeFilter ?
+                    `Filtro Aplicado [${activeFilter}] - Veículos listados: ${visibleCount}` :
+                    `Veículos Listados: ${visibleCount}`;
+            }
+
+            // Evento de clique nas legendas
+            document.querySelectorAll('.filter').forEach(filter => {
+                filter.addEventListener('click', function() {
+                    const filterValue = this.getAttribute('data-filter');
+
+                    // Se já estiver ativo, desativa o filtro
+                    activeFilter = (activeFilter === filterValue) ? null : filterValue;
+
+                    // Aplica o filtro e atualiza o contador
+                    applyFilter();
+                });
+            });
+
+
+
         });
     </script>
 </x-app-layout>
