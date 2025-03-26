@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\Authenticate;
 use App\Models\Cliente;
-use App\Models\User;
 use App\Models\Veiculo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\DB;
 
-use function Laravel\Prompts\alert;
 
 class NovosController extends Controller
 {
@@ -22,38 +17,11 @@ class NovosController extends Controller
         $this->middleware(middleware: 'can:level')->only(methods: 'index');
     }
 
-
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    //paginador
+    public function pg()
     {
-        // Recupera os valores únicos da coluna 'desc_veiculo' da tabela 'veiculos'
-        $veiculosUnicos = Veiculo::select('desc_veiculo')
-            ->distinct()  // Garante que não haja repetições
-            ->where('marca', 'GM')  // Filtro pela marca 'GM' principal da View
-            ->where('novo_usado', 'Novo')
-            ->get();
-
-        // Busca todos os arquivos na pasta public/images/familia/
-        $imagens = File::allFiles(public_path('images/familia'));
-
-        //limpa filtros da sessão
-        session()->forget('modelo_selecionado');
-        session()->forget('ano_modelo_selecionado');
-        session()->forget('combustivel_selecionado');
-
-        return view('veiculos.novos.index', [
-            'veiculos' => Veiculo::where('marca', 'GM')
-                ->orderBy('desc_veiculo')
-                ->paginate(50),
-            'imagens' => $imagens, // Passa as imagens para a view
-            'veiculosUnicos' => $veiculosUnicos, // Passa os veículos únicos para a view
-        ]);
+        return 50;
     }
-
-    //   FILTROS   **************************************
 
     // Método privado que carrega os dados compartilhados
     private function carregarDadosVeiculos()
@@ -65,10 +33,45 @@ class NovosController extends Controller
             ->where('novo_usado', 'Novo')  // Filtro de "Novo"
             ->get();
 
+        // Carrega as cores dos veiculos
+        $cores = Veiculo::select('cor')
+            ->distinct()  // Garante que não haja repetições
+            ->where('marca', 'GM')  // Filtro pela marca 'GM'
+            ->where('novo_usado', 'Novo')  // Filtro de "Novo"
+            ->get();
+
         // Carrega as imagens das famílias
         $imagens = File::allFiles(public_path('images/familia'));
-        return compact('veiculosUnicos', 'imagens');
+
+        return compact('veiculosUnicos', 'cores', 'imagens');
     }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        // Carrega os dados compartilhados
+        $dados = $this->carregarDadosVeiculos();
+
+        //limpa filtros da sessão
+        session()->forget('modelo_selecionado');
+        session()->forget('ano_modelo_selecionado');
+        session()->forget('combustivel_selecionado');
+        session()->forget('transmissao_selecionada');
+        session()->forget('corVeiculos_selecionada');
+
+        // Filtra
+        $veiculos = Veiculo::where('marca', 'GM')
+            ->where('novo_usado', 'Novo')
+            ->orderBy('desc_veiculo')
+            ->paginate($this->pg());
+
+        // Retorna a view
+        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
+    }
+
+    //   FILTROS   **************************************
 
     public function filtrarPorFamilia($familia)
     {
@@ -80,7 +83,7 @@ class NovosController extends Controller
             ->where('marca', 'GM')
             ->where('novo_usado', 'Novo')
             ->orderBy('desc_veiculo')
-            ->paginate(50);
+            ->paginate($this->pg());
 
         // Retorna a view
         return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
@@ -99,7 +102,7 @@ class NovosController extends Controller
             ->where('marca', 'GM')
             ->where('novo_usado', 'Novo')
             ->orderBy('desc_veiculo')
-            ->paginate(5);
+            ->paginate($this->pg());
 
         // Retorna a view com os dados, incluindo o modelo selecionado na sessão
         return view('veiculos.novos.index', array_merge($dados, [
@@ -119,7 +122,7 @@ class NovosController extends Controller
             ->where('marca', 'GM')
             ->where('novo_usado', 'Novo')
             ->orderBy('desc_veiculo')
-            ->paginate(5);
+            ->paginate($this->pg());
 
         // var_dump($veiculos); // Verifica se a consulta retorna resultados
         // Retorna a view
@@ -139,7 +142,7 @@ class NovosController extends Controller
             ->where('marca', 'GM')
             ->where('novo_usado', 'Novo')
             ->orderBy('desc_veiculo')
-            ->paginate(5);
+            ->paginate($this->pg());
 
         // Retorna a view com os dados filtrados
         return view('veiculos.novos.index', array_merge($dados, [
@@ -164,7 +167,7 @@ class NovosController extends Controller
             ->where('marca', 'GM')
             ->where('novo_usado', 'Novo')
             ->orderBy('desc_veiculo')
-            ->paginate(50);
+            ->paginate($this->pg());
 
         // Retorna a view com os dados filtrados
         return view('veiculos.novos.index', array_merge($dados, [
@@ -173,6 +176,48 @@ class NovosController extends Controller
         ]));
     }
 
+    public function filtrarPorTransmissao($transmissao)
+    {
+        // Salva o valor da transmissão na sessão
+        session(['transmissao_selecionada' => $transmissao]);
+
+        // Carrega os dados compartilhados
+        $dados = $this->carregarDadosVeiculos();
+
+
+        // Pegando os 3 primeiros caracteres da transmissão e convertendo para maiúsculo
+        $transmissaoAbreviada = strtoupper(substr($transmissao, 0, 3));
+
+        // Filtra veículos com base nos últimos 3 caracteres da coluna 'combustivel'
+        $veiculos = Veiculo::whereRaw('UPPER(SUBSTRING(combustivel, -3)) = ?', [$transmissaoAbreviada])
+            ->where('marca', 'GM')
+            ->where('novo_usado', 'Novo')
+            ->orderBy('desc_veiculo')
+            ->paginate($this->pg()); // Paginação com 5 itens por página
+
+        // Retorna a view com os dados filtrados
+        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
+    }
+
+
+    public function filtrarPorCor($cor)
+    {
+        // Salva o valor da cor na sessão para persistir a seleção
+        session(['corVeiculos_selecionada' => $cor]);
+
+        // Carrega os dados compartilhados
+        $dados = $this->carregarDadosVeiculos();
+
+        // Realiza a consulta com o filtro de cor
+        $veiculos = Veiculo::where('cor', $cor)  // Filtra pelos veículos que possuem a cor selecionada
+            ->where('marca', 'GM')  // Filtro pela marca 'GM'
+            ->where('novo_usado', 'Novo')  // Filtro de "Novo"
+            ->orderBy('desc_veiculo')  // Ordenação por nome
+            ->paginate(10);  // Paginação de 10 resultados por página
+
+        // Retorna a view com os dados filtrados
+        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
+    }
 
 
 

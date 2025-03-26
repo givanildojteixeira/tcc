@@ -108,31 +108,42 @@
                     <div class="flex items-center gap-1">
                         <span class="text-xs font-semibold text-gray-600">Transmissão:</span>
                         <select name="transmissao"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="window.location.href=this.value;">
                             <option value="" disabled selected>Selecione</option>
-                            <option value="Mecânica">Manual</option>
-                            <option value="Automático">Automático</option>
-                            <option value="CVT">CVT</option>
+                            <option
+                                value="{{ route('veiculos.novos.filtroTransmissao', ['transmissao' => 'Mecânica']) }}"
+                                {{ session('transmissao_selecionada') == 'Mecânica' ? 'selected' : '' }}>Mecânica
+                            </option>
+                            <option
+                                value="{{ route('veiculos.novos.filtroTransmissao', ['transmissao' => 'Automático']) }}"
+                                {{ session('transmissao_selecionada') == 'Automático' ? 'selected' : '' }}>Automático
+                            </option>
+                            <option value="{{ route('veiculos.novos.filtroTransmissao', ['transmissao' => 'CVT']) }}"
+                                {{ session('transmissao_selecionada') == 'CVT' ? 'selected' : '' }}>CVT</option>
                         </select>
                     </div>
 
-                    <!-- Categoria -->
+                    <!-- Cores Veículos -->
                     <div class="flex items-center gap-1">
                         <span class="text-xs font-semibold text-gray-600">Cor:</span>
-                        <select name="categoria"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                        <select name="corVeiculos"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="window.location.href=this.value;">
                             <option value="" disabled selected>Selecione</option>
-                            <option value="Hatch">Hatch</option>
-                            <option value="Sedan">Sedan</option>
-                            <option value="SUV">SUV</option>
-                            <option value="Picape">Picape</option>
+
+                            <!-- Iterando sobre a coleção $cores -->
+                            @foreach ($cores as $cor)
+                                <option value="{{ route('veiculos.novos.filtroCor', ['cor' => $cor->cor]) }}"
+                                    {{ session('corVeiculos_selecionada') == $cor->cor ? 'selected' : '' }}>
+                                    {{ $cor->cor }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
+
                 </div>
             </div>
-
-
-
         </div>
     </x-slot>
 
@@ -218,10 +229,10 @@
             <div class="text-lg font-semibold" id="selectedVehiclesCount">
                 Veículos Listados: {{ count($veiculos) }}
             </div>
-                <!-- Exibir os links de navegação da página -->
-    <div class="pagination">
-        {{ $veiculos->links() }}
-    </div>
+            <!-- Exibir os links de navegação da página -->
+            <div class="pagination">
+                {{ $veiculos->links() }}
+            </div>
             <!-- Legenda de cores -->
             <div class="text-sm"> Legenda Alocação =>
                 <span class="filter text-black font-semibold" data-filter="Matriz"
