@@ -5,9 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Veiculo;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Veiculo>
- */
 class VeiculoFactory extends Factory
 {
     /**
@@ -17,35 +14,134 @@ class VeiculoFactory extends Factory
      */
     public function definition(): array
     {
-        // Define se o veículo é novo ou usado
-        $novo_usado = $this->faker->randomElement(['Novo', 'Usado']);
+        $marca = $this->faker->randomElement([
+            'Chevrolet',
+            'Ford',
+            'Volkswagen',
+            'Fiat',
+            'Honda',
+            'Toyota',
+            'Nissan',
+            'Hyundai',
+            'Renault',
+            'Peugeot',
+            'Citroën',
+            'Jeep',
+            'Mitsubishi',
+            'BMW',
+            'Mercedes-Benz',
+            'Audi',
+            'Kia',
+            'Suzuki',
+            'Chery',
+            'Volvo'
+        ]);
 
-        // Define a marca com base no tipo de veículo
-        $marca = $novo_usado === 'Novo'
-            ? 'GM'
-            : $this->faker->randomElement(['GM', 'FORD', 'VW', 'FIAT', 'RENAULT', 'CITROEN']);
+        $modelo = $this->faker->randomElement([
+            'Onix',
+            'Prisma',
+            'Civic',
+            'Corolla',
+            'Gol',
+            'Polo',
+            'HB20',
+            'Argo',
+            'Fiesta',
+            'Ka',
+            'Cruze',
+            'Fusion',
+            'Ranger',
+            'Toro',
+            'Compass',
+            'HR-V',
+            'EcoSport',
+            'SW4',
+            'X1',
+            'A3',
+            'S10',
+            'Duster',
+            'Kicks',
+            'Versa',
+            'March',
+            'Sentra',
+            'Strada',
+            'Hilux',
+            'Yaris',
+            'T-Cross',
+            'Spin',
+            'Renegade',
+            'Mobi',
+            'Cronos',
+            'Saveiro',
+            'Jetta',
+            'Tiguan',
+            'Amarok',
+            'Doblo',
+            'Celta',
+            'Bravo',
+            'C4 Cactus',
+            '208',
+            'Sandero',
+            'Logan',
+            'Captur',
+            'Outlander',
+            'ASX',
+            'Lancer',
+            'Golf'
+        ]);
 
-        // Insere os dados
+        $cores = $this->faker->randomElement([
+            'Azul',
+            'Vermelho',
+            'Preto',
+            'Branco',
+            'Cinza',
+            'Prata',
+            'Dourado',
+            'Verde',
+            'Amarelo',
+            'Laranja',
+            'Roxo',
+            'Azul Claro',
+            'Bege',
+            'Marrom',
+            'Rosa',
+            'Verde Claro',
+            'Azul Escuro',
+            'Lilas',
+            'Turquesa',
+            'Pêssego'
+        ]);
+
+        // Gera os anos no formato "2000/2001"
+        $anosModelo = [];
+        for ($ano = 2000; $ano <= 2022; $ano++) {
+            $anosModelo[] = "$ano/$ano";
+            if ($ano < 2022) {
+                $anosModelo[] = "$ano/" . ($ano + 1);
+            }
+        }
+
         return [
-            'chassi'          => $this->faker->unique()->regexify('[A-HJ-NPR-Z0-9]{17}'),
-            'novo_usado'      => $novo_usado,
+            'chassi'          => $this->faker->regexify('[A-HJ-NPR-Z0-9]{11}') . $this->faker->randomNumber(6, true),
+            'novo_usado'      => 'Usado',
             'marca'           => $marca,
-            'familia'         => $this->faker->word(),
-            'desc_veiculo'    => $this->faker->sentence(6),
-            'modelo_fab'      => $this->faker->word(),
-            'cor'             => $this->faker->safeColorName(),
-            'cod_opcional'    => $this->faker->randomNumber(6, true),
+            'familia'         => $marca, // Família agora igual à marca
+            'desc_veiculo'    => $modelo,
+            'modelo_fab'      => $modelo, // Ajustado para evitar null
+            'cor'             => $cores,
+            'cod_opcional'    => $this->faker->regexify('[A-Z]{3}'),
             'combustivel'     => $this->faker->randomElement(['Gasolina', 'Álcool', 'Flex', 'Diesel', 'Elétrico', 'Híbrido']),
-            'Ano_Mod'         => $this->faker->numberBetween(2000, date('Y')),
+            'Ano_Mod'         => $this->faker->randomElement($anosModelo), // Agora retorna apenas um valor
             'motor'           => $this->faker->randomElement(['1.0', '1.4', '1.6', '2.0', '3.0', 'Elétrico']),
             'portas'          => $this->faker->randomElement([2, 4, 5]),
             'vlr_tabela'      => $this->faker->randomFloat(2, 30000, 200000),
             'vlr_bonus'       => $this->faker->randomFloat(2, 500, 5000),
             'vlr_nota'        => $this->faker->randomFloat(2, 25000, 180000),
-            'local'           => $this->faker->randomElement(['Transito', 'Matriz', 'Filial']),
-            'dta_faturamento' => $this->faker->sentence('01/01/2025'),
-            'user_reserva'    => $this->faker->name(),
-            'desc_nota'       => $this->faker->sentence(10),
+            'local'           => $this->faker->randomElement(['Consignado', 'Matriz', 'Filial']),
+            'dta_faturamento' => $this->faker->dateTimeBetween('2024-09-01', 'now')->format('Y-m-d'), // Ajustado para formato padrão de banco de dados
+            'user_reserva'    => '22',
+            'desc_nota'       => "Veículo usado modelo: " . $modelo, // Incluindo o modelo no texto
         ];
     }
 }

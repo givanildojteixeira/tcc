@@ -40,6 +40,7 @@ npm run dev
   ▶️ altere as tabelas e faça o relacionamento
 
 **Popular as tabelas:**  => *php artisan migrate:refresh --seed*
+Factory: => php artisan db:seed  
 
 usar em ambiente de desenvolvimento
 
