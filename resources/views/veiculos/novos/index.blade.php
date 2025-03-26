@@ -1,92 +1,113 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex mb-1 gap-4 max-w-7xl mx-auto">
+        <div class="flex gap-1">
             <!-- Carrossel de Veículos -->
-            <div class="swiper mySwiper bg-white shadow-lg rounded-lg overflow-hidden w-1/2"
+            <div class="swiper mySwiper bg-white shadow-lg rounded-lg overflow-hidden w-2/3"
                 title="Clique sobre o veiculo para filtrar todos os modelos de sua Família.">
                 <div class="swiper-wrapper">
                     @foreach ($imagens as $imagem)
-                    @php
-                    $familia = ucfirst(pathinfo(basename($imagem), PATHINFO_FILENAME));
-                    @endphp
-                    <div>
-                        <div class="swiper-slide text-center">
-                            <a href="{{ route('veiculos.novos.filtro', ['familia' => $familia]) }}">
-                                <img src="{{ asset('images/familia/' . basename($imagem)) }}" alt="Imagem do Veículo"
-                                    class="rounded-lg w-full object-cover">
-                                <div class="text-sm font-semibold mt-2 text-center">{{ $familia }}</div>
-                            </a>
+                        @php
+                            $familia = ucfirst(pathinfo(basename($imagem), PATHINFO_FILENAME));
+                        @endphp
+                        <div>
+                            <div class="swiper-slide text-center">
+                                <a href="{{ route('veiculos.novos.filtro', ['familia' => $familia]) }}">
+                                    <img src="{{ asset('images/familia/' . basename($imagem)) }}" alt="Imagem do Veículo"
+                                        class="rounded-lg w-full object-cover">
+                                    <div class="text-sm font-semibold mt-2 text-center">{{ $familia }}</div>
+                                </a>
+                            </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
                 <!-- Botões de navegação -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
+                {{-- <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div> --}}
             </div>
 
-            <!-- ComboBox (Desc Veículo  = Modelo) -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col w-1/6">
-                <div class="flex flex-col gap-2">
-                    <span class="mt-1 font-semibold text-center">Modelo</span>
-                    <select id="modeloVeiculo"
-                        class=" mx-2  p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="" disabled selected>Selecione</option>
-                        @foreach ($veiculosUnicos as $veiculo)
-                        <option value="{{ $veiculo->desc_veiculo }}">{{ $veiculo->desc_veiculo }}</option>
-                        @endforeach
-                    </select>
+            <!-- Card de Filtros -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/3">
+                <div class="grid grid-cols-1 gap-2">
+                    <!-- ComboBox Modelo -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-gray-600">Modelo:</span>
+                        <select id="modeloVeiculo"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                            <option value="" disabled selected>Selecione</option>
+                            @foreach ($veiculosUnicos as $veiculo)
+                                <option value="{{ $veiculo->desc_veiculo }}">{{ $veiculo->desc_veiculo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Campo de Pesquisa Chassi com Botão -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-gray-600">Chassi:</span>
+                        <input type="text" id="chassiPesquisa"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            placeholder="Digite o chassi">
+                        <button id="buscarChassi" class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
+                            🔍
+                        </button>
+                    </div>
                 </div>
             </div>
+
+
+
+
             <!-- Card da Pesquisa -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/2">
+                <div class="grid grid-cols-2 gap-2">
+                    <!-- Combustível -->
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs font-semibold text-gray-600">Combustível:</span>
+                        <select name="combustivel"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                            <option value="Gasolina">Gasolina</option>
+                            <option value="Alcool">Alcool</option>
+                            <option value="Flex">Flex</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Eletrico">Elétrico</option>
+                        </select>
+                    </div>
 
-<div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/2">
-    <div class="grid grid-cols-2 gap-2">
-        <!-- Combustível -->
-        <div class="flex items-center gap-1">
-            <span class="text-xs font-semibold text-gray-600">Combustível:</span>
-            <select name="combustivel" class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                <option value="Gasolina">Gasolina</option>
-                <option value="Alcool">Alcool</option>
-                <option value="Flex">Flex</option>
-                <option value="Diesel">Diesel</option>
-                <option value="Eletrico">Elétrico</option>
-            </select>
-        </div>
+                    <!-- Ano/Modelo -->
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs font-semibold text-gray-600">Ano/Modelo:</span>
+                        <select name="ano_modelo"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                            <option value="2024/2024">2024/2024</option>
+                            <option value="2024/2025">2024/2025</option>
+                            <option value="2025/2025">2025/2025</option>
+                            <option value="2025/2026">2025/2026</option>
+                        </select>
+                    </div>
 
-        <!-- Ano/Modelo -->
-        <div class="flex items-center gap-1">
-            <span class="text-xs font-semibold text-gray-600">Ano/Modelo:</span>
-            <select name="ano_modelo" class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                <option value="2024/2024">2024/2024</option>
-                <option value="2024/2025">2024/2025</option>
-                <option value="2025/2025">2025/2025</option>
-                <option value="2025/2026">2025/2026</option>
-            </select>
-        </div>
+                    <!-- Transmissão -->
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs font-semibold text-gray-600">Transmissão:</span>
+                        <select name="transmissao"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                            <option value="Manual">Manual</option>
+                            <option value="Automático">Automático</option>
+                            <option value="CVT">CVT</option>
+                        </select>
+                    </div>
 
-        <!-- Transmissão -->
-        <div class="flex items-center gap-1">
-            <span class="text-xs font-semibold text-gray-600">Transmissão:</span>
-            <select name="transmissao" class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                <option value="Manual">Manual</option>
-                <option value="Automático">Automático</option>
-                <option value="CVT">CVT</option>
-            </select>
-        </div>
-
-        <!-- Categoria -->
-        <div class="flex items-center gap-1">
-            <span class="text-xs font-semibold text-gray-600">Categoria:</span>
-            <select name="categoria" class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                <option value="Hatch">Hatch</option>
-                <option value="Sedan">Sedan</option>
-                <option value="SUV">SUV</option>
-                <option value="Picape">Picape</option>
-            </select>
-        </div>
-    </div>
-</div>
+                    <!-- Categoria -->
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs font-semibold text-gray-600">Categoria:</span>
+                        <select name="categoria"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                            <option value="Hatch">Hatch</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Picape">Picape</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -101,50 +122,61 @@
                         <table class="table-auto w-full">
                             <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                 <tr>
-                                    <th class="sortable p-2" data-column="veiculo">Veículo <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="modelo">Modelo <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="combustivel">Comb <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="chassi">Chassi <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="veiculo">Veículo <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable p-2" data-column="modelo">Modelo <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable p-2" data-column="combustivel">Comb <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable p-2" data-column="chassi">Chassi <i class="fas fa-sort"></i>
+                                    </th>
                                     <th class="sortable p-2" data-column="cor">Cor <i class="fas fa-sort"></i></th>
                                     <th class="sortable p-2" data-column="pts">Pts <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="opcional">Opc. <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="tabela">Tabela <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="opcional">Opc. <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable p-2" data-column="tabela">Tabela <i class="fas fa-sort"></i>
+                                    </th>
                                     <th class="sortable p-2" data-column="bonus">Bonus <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="custo">Custo <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="faturado">Faturado <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="custo">Custo <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable p-2" data-column="faturado">Faturado <i
+                                            class="fas fa-sort"></i>
+                                    </th>
                                     <th class="hidden">Local</th> <!-- Coluna oculta -->
                                 </tr>
                             </thead>
                             <tbody class="text-sm">
                                 @foreach ($veiculos as $veiculo)
-                                @php
-                                $rowColor = '';
-                                if ($veiculo->local == 'Matriz') {
-                                $rowColor = 'text-black';
-                                } elseif ($veiculo->local == 'Filial') {
-                                $rowColor = 'text-yellow-500';
-                                } elseif ($veiculo->local == 'Transito') {
-                                $rowColor = 'text-green-500';
-                                }
-                                @endphp
-                                <tr class="hover:bg-gray-100 {{ $rowColor }}">
-                                    <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
-                                    <td class="p-2">{{ $veiculo->modelo_fab }}</td>
-                                    <td class="p-2">{{ $veiculo->combustivel }}</td>
-                                    <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
-                                    <td class="p-2">{{ $veiculo->chassi }}</td>
-                                    <td class="p-2">{{ $veiculo->cor }}</td>
-                                    <td class="p-2">{{ $veiculo->portas }}</td>
-                                    <td class="p-2">{{ $veiculo->cod_opcional }}</td>
-                                    <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
-                                    <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}</td>
-                                    <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
-                                    <td class="p-2">
-                                        {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }} dias
-                                    </td>
-                                    <td class="hidden">{{ $veiculo->local }}</td>
-                                </tr>
+                                    @php
+                                        $rowColor = '';
+                                        if ($veiculo->local == 'Matriz') {
+                                            $rowColor = 'text-black';
+                                        } elseif ($veiculo->local == 'Filial') {
+                                            $rowColor = 'text-yellow-500';
+                                        } elseif ($veiculo->local == 'Transito') {
+                                            $rowColor = 'text-green-500';
+                                        }
+                                    @endphp
+                                    <tr class="hover:bg-gray-100 {{ $rowColor }}">
+                                        <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
+                                        <td class="p-2">{{ $veiculo->modelo_fab }}</td>
+                                        <td class="p-2">{{ $veiculo->combustivel }}</td>
+                                        <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
+                                        <td class="p-2">{{ $veiculo->chassi }}</td>
+                                        <td class="p-2">{{ $veiculo->cor }}</td>
+                                        <td class="p-2">{{ $veiculo->portas }}</td>
+                                        <td class="p-2">{{ $veiculo->cod_opcional }}</td>
+                                        <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
+                                        <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}</td>
+                                        <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
+                                        <td class="p-2">
+                                            {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
+                                            dias
+                                        </td>
+                                        <td class="hidden">{{ $veiculo->local }}</td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -157,7 +189,6 @@
 
 
     <!-- Barra fixa abaixo da tabela -->
-    <!-- Barra fixa abaixo da tabela com linha de divisão acima -->
     <div class="fixed bottom-0 left-0 w-full bg-white shadow-lg p-2 border-t border-gray-300">
         <div class="flex justify-between items-center">
             <!-- Número de veículos selecionados -->
@@ -195,6 +226,22 @@
                 var veiculoSelecionado = this.value;
                 if (veiculoSelecionado) {
                     window.location.href = "{{ url('/novos/index') }}/" + veiculoSelecionado;
+                }
+            });
+
+            // Função para buscar por chassi
+            document.getElementById('buscarChassi').addEventListener('click', function() {
+                // Obtém o valor da caixa de texto
+                var chassi = document.getElementById('chassiPesquisa').value.trim();
+
+                // Verifica se o campo de texto não está vazio
+                if (chassi !== '') {
+                    // Se não estiver vazio, redireciona para a rota
+                    // window.location.href = '/novos/index/' + chassi;
+                    window.location.href = "{{ route('veiculos.novos.filtroC', ['chassi' => ':chassi']) }}".replace(':chassi', chassi);
+                } else {
+                    // Caso o campo esteja vazio, não faz nada ou pode exibir uma mensagem
+                    alert('Por favor, digite um chassi.');
                 }
             });
 

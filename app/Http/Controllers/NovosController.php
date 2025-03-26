@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 
+use function Laravel\Prompts\alert;
+
 class NovosController extends Controller
 {
 
@@ -58,10 +60,8 @@ class NovosController extends Controller
             ->where('novo_usado', 'Novo')  // Filtro de "Novo"
             ->get();
 
-            // Carrega as imagens das famílias
+        // Carrega as imagens das famílias
         $imagens = File::allFiles(public_path('images/familia'));
-
-
         return compact('veiculosUnicos', 'imagens');
     }
 
@@ -77,7 +77,9 @@ class NovosController extends Controller
             ->orderBy('desc_veiculo')
             ->paginate(50);
 
-        // Retorna a view
+            var_dump("Filtra por ");
+
+         // Retorna a view
         return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
     }
 
@@ -93,10 +95,28 @@ class NovosController extends Controller
             ->orderBy('desc_veiculo')
             ->paginate(5);
 
+            var_dump("Filtra por veiculo");
         // Retorna a view
         return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
     }
 
+    public function filtrarPorChassi($chassi)
+    {
+        // Carrega os dados compartilhados
+        $dados = $this->carregarDadosVeiculos();
+
+        // Filtra
+        $veiculos = Veiculo::where('chassi',$chassi)
+            ->where('marca', 'GM')
+            ->where('novo_usado', 'Novo')
+            ->orderBy('desc_veiculo')
+            ->paginate(5);
+
+            var_dump("Filtra por chassi");
+            // var_dump($veiculos); // Verifica se a consulta retorna resultados
+        // Retorna a view
+        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
+    }
     /**
      * Show the form for creating a new resource.
      */

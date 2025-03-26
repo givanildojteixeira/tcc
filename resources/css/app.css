@@ -52,4 +52,9 @@ html, body {
 }
 
 
-
+/* fundo azul no cabeçalho */
+.div-navegador {
+    background-color: #fdfdff;
+    color: white;
+    text-align: center;
+}

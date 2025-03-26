@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="div-navegador  mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
@@ -40,14 +40,14 @@
             </div>
 
 
-            <!-- Settings Dropdown Cadastros-->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <!-- Agrupa os Dropdowns de Cadastros e Usuário -->
+            <div class="hidden sm:flex sm:items-center space-x-4">
+                <!-- Dropdown Cadastros -->
                 <x-dropdown align="left" width="48">
                     <x-slot name="trigger">
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <div>Cadastros</div>
-
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20">
@@ -64,29 +64,23 @@
                             <i class="fa-solid fa-people-group"></i>
                             <span class="ms-3">{{ __('Clientes') }}</span>
                         </x-dropdown-link>
-
-                        <x-dropdown-link :href="route('user.index')" :active="request()->routeIs('user.index')" class="items-center">
+                        <x-dropdown-link :href="route('user.index')" class="items-center">
                             <i class="fa-solid fa-car"></i>
-                            <span class="ms-3">{{ __('Veiculos') }}</span>
+                            <span class="ms-3">{{ __('Veículos') }}</span>
                         </x-dropdown-link>
-
-                        <x-dropdown-link :href="route('user.index')" :active="request()->routeIs('user.index')" class="items-center">
+                        <x-dropdown-link :href="route('user.index')" class="items-center">
                             <i class="fa-solid fa-cart-shopping"></i>
                             <span class="ms-3">{{ __('Opcionais') }}</span>
                         </x-dropdown-link>
-
                     </x-slot>
                 </x-dropdown>
-            </div>
 
-            <!-- Settings Dropdown Usuario-->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <!-- Dropdown Usuário -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
-
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20">
@@ -103,23 +97,18 @@
                             <i class="fa-solid fa-user-tie"></i>
                             <span class="ms-3">{{ __('Meus Dados') }}</span>
                         </x-dropdown-link>
-
-                        <x-dropdown-link :href="route('user.index')" :active="request()->routeIs('user.index')" class="items-center">
+                        <x-dropdown-link :href="route('user.index')" class="items-center">
                             <i class="fa-solid fa-users"></i>
-                            <span class="ms-3">{{ __('Lista de Usuarios') }}</span>
+                            <span class="ms-3">{{ __('Lista de Usuários') }}</span>
                         </x-dropdown-link>
 
-                        <!-- Linha de separação -->
                         <hr class="border-gray-200 dark:border-gray-600 my-2">
 
-                        <!-- Authentication -->
+                        <!-- Logout -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();"
-                                class="items-center">
+                                onclick="event.preventDefault(); this.closest('form').submit();" class="items-center">
                                 <i class="fa-solid fa-person-walking-arrow-right"></i>
                                 <span class="ms-3">{{ __('Sair') }}</span>
                             </x-dropdown-link>
@@ -127,6 +116,7 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
