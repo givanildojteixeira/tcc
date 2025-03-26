@@ -95,3 +95,6 @@ Use git status frequentemente para verificar o estado do repositório:
 
 ** git status
 
+Se quer apagar todas as alterações e voltar ao estado exato do repositório:
+
+** git reset --hard origin/main
