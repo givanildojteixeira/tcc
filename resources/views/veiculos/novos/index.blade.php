@@ -11,7 +11,7 @@
                         @endphp
                         <div>
                             <div class="swiper-slide text-center">
-                                <a href="{{ route('veiculos.novos.filtro', ['familia' => $familia]) }}">
+                                <a href="{{ route('veiculos.novos.filtroF', ['familia' => $familia]) }}">
                                     <img src="{{ asset('images/familia/' . basename($imagem)) }}" alt="Imagem do Veículo"
                                         class="rounded-lg w-full object-cover">
                                     <div class="text-sm font-semibold mt-2 text-center">{{ $familia }}</div>
@@ -33,9 +33,13 @@
                         <span class="text-xs font-semibold text-gray-600">Modelo:</span>
                         <select id="modeloVeiculo"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                            <option value="" disabled selected>Selecione</option>
+                            <option value="" disabled
+                                {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                                <option value="{{ $veiculo->desc_veiculo }}">{{ $veiculo->desc_veiculo }}</option>
+                                <option value="{{ $veiculo->desc_veiculo }}"
+                                    {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
+                                    {{ $veiculo->desc_veiculo }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -53,34 +57,50 @@
                 </div>
             </div>
 
-
-
-
-            <!-- Card da Pesquisa -->
+            <!-- Card para Pesquisas Combinadas -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/2">
                 <div class="grid grid-cols-2 gap-2">
                     <!-- Combustível -->
                     <div class="flex items-center gap-1">
                         <span class="text-xs font-semibold text-gray-600">Combustível:</span>
-                        <select name="combustivel"
+                        <select id="combustivel"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                            <option value="Gasolina">Gasolina</option>
-                            <option value="Alcool">Alcool</option>
-                            <option value="Flex">Flex</option>
-                            <option value="Diesel">Diesel</option>
-                            <option value="Eletrico">Elétrico</option>
+                            <option value="" disabled
+                                {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            <option value="Gasolina"
+                                {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : '' }}>Gasolina
+                            </option>
+                            <option value="Alcool"
+                                {{ session('combustivel_selecionado') == 'Alcool' ? 'selected' : '' }}>Álcool</option>
+                            <option value="Flex"
+                                {{ session('combustivel_selecionado') == 'Flex' ? 'selected' : '' }}>Flex</option>
+                            <option value="Diesel"
+                                {{ session('combustivel_selecionado') == 'Diesel' ? 'selected' : '' }}>Diesel</option>
+                            <option value="Eletrico"
+                                {{ session('combustivel_selecionado') == 'Eletrico' ? 'selected' : '' }}>Elétrico
+                            </option>
                         </select>
                     </div>
 
                     <!-- Ano/Modelo -->
                     <div class="flex items-center gap-1">
                         <span class="text-xs font-semibold text-gray-600">Ano/Modelo:</span>
-                        <select name="ano_modelo"
+                        <select id="anoModelo"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                            <option value="2024/2024">2024/2024</option>
-                            <option value="2024/2025">2024/2025</option>
-                            <option value="2025/2025">2025/2025</option>
-                            <option value="2025/2026">2025/2026</option>
+                            <option value="" disabled
+                                {{ empty(session('ano_modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            <option value="2024/2024"
+                                {{ session('ano_modelo_selecionado') == '2024/2024' ? 'selected' : '' }}>2024/2024
+                            </option>
+                            <option value="2024/2025"
+                                {{ session('ano_modelo_selecionado') == '2024/2025' ? 'selected' : '' }}>2024/2025
+                            </option>
+                            <option value="2025/2025"
+                                {{ session('ano_modelo_selecionado') == '2025/2025' ? 'selected' : '' }}>2025/2025
+                            </option>
+                            <option value="2025/2026"
+                                {{ session('ano_modelo_selecionado') == '2025/2026' ? 'selected' : '' }}>2025/2026
+                            </option>
                         </select>
                     </div>
 
@@ -89,7 +109,8 @@
                         <span class="text-xs font-semibold text-gray-600">Transmissão:</span>
                         <select name="transmissao"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                            <option value="Manual">Manual</option>
+                            <option value="" disabled selected>Selecione</option>
+                            <option value="Mecânica">Manual</option>
                             <option value="Automático">Automático</option>
                             <option value="CVT">CVT</option>
                         </select>
@@ -97,9 +118,10 @@
 
                     <!-- Categoria -->
                     <div class="flex items-center gap-1">
-                        <span class="text-xs font-semibold text-gray-600">Categoria:</span>
+                        <span class="text-xs font-semibold text-gray-600">Cor:</span>
                         <select name="categoria"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                            <option value="" disabled selected>Selecione</option>
                             <option value="Hatch">Hatch</option>
                             <option value="Sedan">Sedan</option>
                             <option value="SUV">SUV</option>
@@ -138,7 +160,8 @@
                                     </th>
                                     <th class="sortable p-2" data-column="tabela">Tabela <i class="fas fa-sort"></i>
                                     </th>
-                                    <th class="sortable p-2" data-column="bonus">Bonus <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="bonus">Bonus <i class="fas fa-sort"></i>
+                                    </th>
                                     <th class="sortable p-2" data-column="custo">Custo <i class="fas fa-sort"></i>
                                     </th>
                                     <th class="sortable p-2" data-column="faturado">Faturado <i
@@ -195,6 +218,10 @@
             <div class="text-lg font-semibold" id="selectedVehiclesCount">
                 Veículos Listados: {{ count($veiculos) }}
             </div>
+                <!-- Exibir os links de navegação da página -->
+    <div class="pagination">
+        {{ $veiculos->links() }}
+    </div>
             <!-- Legenda de cores -->
             <div class="text-sm"> Legenda Alocação =>
                 <span class="filter text-black font-semibold" data-filter="Matriz"
@@ -225,7 +252,7 @@
             document.getElementById('modeloVeiculo').addEventListener('change', function() {
                 var veiculoSelecionado = this.value;
                 if (veiculoSelecionado) {
-                    window.location.href = "{{ url('/novos/index') }}/" + veiculoSelecionado;
+                    window.location.href = "{{ url('/novos/modelo') }}/" + veiculoSelecionado;
                 }
             });
 
@@ -237,13 +264,42 @@
                 // Verifica se o campo de texto não está vazio
                 if (chassi !== '') {
                     // Se não estiver vazio, redireciona para a rota
-                    // window.location.href = '/novos/index/' + chassi;
-                    window.location.href = "{{ route('veiculos.novos.filtroC', ['chassi' => ':chassi']) }}".replace(':chassi', chassi);
+                    window.location.href = "{{ route('veiculos.novos.filtroC', ['chassi' => ':chassi']) }}"
+                        .replace(':chassi', chassi);
                 } else {
                     // Caso o campo esteja vazio, não faz nada ou pode exibir uma mensagem
                     alert('Por favor, digite um chassi.');
                 }
             });
+
+            // Função para buscar por Ano Modelo
+            document.getElementById('anoModelo').addEventListener('change', function() {
+                var anoModeloSelecionado = this.value;
+                if (anoModeloSelecionado) {
+                    window.location.href = "{{ url('/novos/ano-modelo') }}/" + encodeURIComponent(
+                        anoModeloSelecionado);
+                }
+            });
+
+            document.getElementById('combustivel').addEventListener('change', function() {
+                var combustivelSelecionado = this.value;
+                if (combustivelSelecionado) {
+                    var rota =
+                        "{{ route('veiculos.novos.filtroCombustivel', ['combustivel' => '__VALOR__']) }}";
+                    window.location.href = rota.replace('__VALOR__', encodeURIComponent(
+                        combustivelSelecionado));
+                }
+            });
+
+            // Função que executa o botao ao entrar na pesquisa por texto e pressionar Enter
+            document.getElementById('chassiPesquisa').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event
+                        .preventDefault(); // Impede o comportamento padrão de envio de formulário (se estiver em um formulário)
+                    document.getElementById('buscarChassi').click(); // Aciona o clique do botão
+                }
+            });
+
 
             // Ordenação da tabela ao clicar no cabeçalho
             const headers = document.querySelectorAll('.sortable');

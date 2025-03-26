@@ -57,10 +57,16 @@ Route::middleware('auth')->group(function () {
     route::get('/confirma-delete/{id}',[ClienteController::class, 'confirma_delete'])->name('confirma_delete');
 
     //Veiculos novos
-    Route::get('/novos.index',[NovosController::class,'index'])->name('veiculos.novos.index');
-    Route::get('/novos/index/{familia}', [NovosController::class, 'filtrarPorFamilia'])->name('veiculos.novos.filtro');
-    Route::get('/novos/index/{veiculo}', [NovosController::class, 'filtrarPorVeiculo'])->name('veiculos.novos.filtroV');
-    Route::get('/novos/index/{chassi}', [NovosController::class, 'filtrarPorChassi'])->name('veiculos.novos.filtroC');
+    Route::get('/novos',[NovosController::class,'index'])->name('veiculos.novos.index');
+    Route::get('/novos/chassi/{chassi}', [NovosController::class, 'filtrarPorChassi'])->name('veiculos.novos.filtroC');
+    Route::get('/novos/familia/{familia}', [NovosController::class, 'filtrarPorFamilia'])->name('veiculos.novos.filtroF');
+    Route::get('/novos/modelo/{veiculo}', [NovosController::class, 'filtrarPorVeiculo'])->name('veiculos.novos.filtroV');
+    Route::get('/novos/combustivel/{combustivel}', [NovosController::class, 'filtrarPorCombustivel'])->name('veiculos.novos.filtroCombustivel');
+    Route::get('/novos/ano-modelo/{ano_modelo}', [NovosController::class, 'filtrarPorAnoModelo'])
+    ->where('ano_modelo', '.*') // Permite qualquer caractere, incluindo "/"
+    ->name('veiculos.novos.filtroAnoModelo');
+
+
 
     //Veiculos usados
     Route::get('/usados.index',[UsadosController::class,'index'])->name('veiculos.usados.index');

@@ -39,6 +39,11 @@ class NovosController extends Controller
         // Busca todos os arquivos na pasta public/images/familia/
         $imagens = File::allFiles(public_path('images/familia'));
 
+        //limpa filtros da sessão
+        session()->forget('modelo_selecionado');
+        session()->forget('ano_modelo_selecionado');
+        session()->forget('combustivel_selecionado');
+
         return view('veiculos.novos.index', [
             'veiculos' => Veiculo::where('marca', 'GM')
                 ->orderBy('desc_veiculo')
@@ -77,28 +82,32 @@ class NovosController extends Controller
             ->orderBy('desc_veiculo')
             ->paginate(50);
 
-            var_dump("Filtra por ");
-
-         // Retorna a view
+        // Retorna a view
         return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
     }
 
     public function filtrarPorVeiculo($veiculo)
     {
+        // Armazena o modelo na sessão
+        session(['modelo_selecionado' => $veiculo]);
+
         // Carrega os dados compartilhados
         $dados = $this->carregarDadosVeiculos();
 
-        // Filtra
+        // Filtra os veículos
         $veiculos = Veiculo::where('desc_veiculo', '=', $veiculo)
             ->where('marca', 'GM')
             ->where('novo_usado', 'Novo')
             ->orderBy('desc_veiculo')
             ->paginate(5);
 
-            var_dump("Filtra por veiculo");
-        // Retorna a view
-        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
+        // Retorna a view com os dados, incluindo o modelo selecionado na sessão
+        return view('veiculos.novos.index', array_merge($dados, [
+            'veiculos' => $veiculos,
+            'modelo' => $veiculo, // Passa o modelo selecionado para a view
+        ]));
     }
+
 
     public function filtrarPorChassi($chassi)
     {
@@ -106,17 +115,67 @@ class NovosController extends Controller
         $dados = $this->carregarDadosVeiculos();
 
         // Filtra
-        $veiculos = Veiculo::where('chassi',$chassi)
+        $veiculos = Veiculo::where('chassi', 'LIKE', "%$chassi")
             ->where('marca', 'GM')
             ->where('novo_usado', 'Novo')
             ->orderBy('desc_veiculo')
             ->paginate(5);
 
-            var_dump("Filtra por chassi");
-            // var_dump($veiculos); // Verifica se a consulta retorna resultados
+        // var_dump($veiculos); // Verifica se a consulta retorna resultados
         // Retorna a view
         return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
     }
+
+    public function filtrarPorAnoModelo($ano_modelo)
+    {
+        // Salvar o valor selecionado na sessão para manter a seleção no combo
+        session(['ano_modelo_selecionado' => $ano_modelo]);
+
+        // Carregar dados compartilhados (caso tenha outros filtros)
+        $dados = $this->carregarDadosVeiculos();
+
+        // Filtrar os veículos com base no Ano/Modelo selecionado
+        $veiculos = Veiculo::where('Ano_Mod', '=', $ano_modelo)
+            ->where('marca', 'GM')
+            ->where('novo_usado', 'Novo')
+            ->orderBy('desc_veiculo')
+            ->paginate(5);
+
+        // Retorna a view com os dados filtrados
+        return view('veiculos.novos.index', array_merge($dados, [
+            'veiculos' => $veiculos,
+            'ano_modelo_selecionado' => $ano_modelo
+        ]));
+    }
+
+    public function filtrarPorCombustivel($combustivel)
+    {
+        // Salva o combustível selecionado na sessão
+        session(['combustivel_selecionado' => $combustivel]);
+
+        // Convertendo a primeira letra para maiúscula e pegando os 3 primeiros caracteres
+        $combustivelAbreviado = strtoupper(substr($combustivel, 0, 3));
+
+        // Carregar dados compartilhados (se houver outros filtros)
+        $dados = $this->carregarDadosVeiculos();
+
+        // Filtrando os veículos com base no combustível
+        $veiculos = Veiculo::whereRaw('UPPER(SUBSTRING(combustivel, 1, 3)) = ?', [$combustivelAbreviado])
+            ->where('marca', 'GM')
+            ->where('novo_usado', 'Novo')
+            ->orderBy('desc_veiculo')
+            ->paginate(50);
+
+        // Retorna a view com os dados filtrados
+        return view('veiculos.novos.index', array_merge($dados, [
+            'veiculos' => $veiculos,
+            'combustivel_selecionado' => $combustivel
+        ]));
+    }
+
+
+
+
     /**
      * Show the form for creating a new resource.
      */
