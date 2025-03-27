@@ -2,16 +2,35 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex gap-1">
-            <!-- Card de Filtros -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/3">
-                <div class="grid grid-cols-1 gap-2">
+            <!-- Card para Pesquisas Combinadas -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-4/6">
+                <div class="grid grid-cols-3 gap-2">
+
+                    <!-- ComboBox Marca -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-gray-600">Marca:</span>
+                        <select id="marcaVeiculo"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="atualizarFiltro('marca', this.value)">
+                            <option value="" {{ empty(session('marca_selecionado')) ? 'selected' : '' }}>Todos
+                            </option>
+                            @foreach ($marcas as $marca)
+                                <option value="{{ $marca->marca }}"
+                                    {{ session('marca_selecionado') == $marca->marca ? 'selected' : '' }}>
+                                    {{ $marca->marca }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <!-- ComboBox Modelo -->
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-semibold text-gray-600">Modelo:</span>
                         <select id="modeloVeiculo"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                            <option value="" disabled
-                                {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="atualizarFiltro('modelo', this.value)">
+                            <option value="" {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>
+                                Todos</option>
                             @foreach ($veiculosUnicos as $veiculo)
                                 <option value="{{ $veiculo->desc_veiculo }}"
                                     {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
@@ -21,29 +40,14 @@
                         </select>
                     </div>
 
-                    <!-- Campo de Pesquisa Chassi com Botão -->
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-semibold text-gray-600">Chassi:</span>
-                        <input type="text" id="chassiPesquisa"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            placeholder="Digite o chassi">
-                        <button id="buscarChassi" class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
-                            🔍
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card para Pesquisas Combinadas -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/2">
-                <div class="grid grid-cols-2 gap-2">
                     <!-- Combustível -->
                     <div class="flex items-center gap-1">
                         <span class="text-xs font-semibold text-gray-600">Combustível:</span>
                         <select id="combustivel"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                            <option value="" disabled
-                                {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="atualizarFiltro('combustivel', this.value)">
+                            <option value="" {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>
+                                Todos</option>
                             <option value="Gasolina"
                                 {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : '' }}>Gasolina
                             </option>
@@ -59,66 +63,100 @@
                         </select>
                     </div>
 
-                    <!-- Ano/Modelo -->
-                    <div class="flex items-center gap-1">
-                        <span class="text-xs font-semibold text-gray-600">Ano/Modelo:</span>
-                        <select id="anoModelo"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                            <option value="" disabled
-                                {{ empty(session('ano_modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
-                            <option value="2024/2024"
-                                {{ session('ano_modelo_selecionado') == '2024/2024' ? 'selected' : '' }}>2024/2024
-                            </option>
-                            <option value="2024/2025"
-                                {{ session('ano_modelo_selecionado') == '2024/2025' ? 'selected' : '' }}>2024/2025
-                            </option>
-                            <option value="2025/2025"
-                                {{ session('ano_modelo_selecionado') == '2025/2025' ? 'selected' : '' }}>2025/2025
-                            </option>
-                            <option value="2025/2026"
-                                {{ session('ano_modelo_selecionado') == '2025/2026' ? 'selected' : '' }}>2025/2026
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Transmissão -->
-                    <div class="flex items-center gap-1">
-                        <span class="text-xs font-semibold text-gray-600">Transmissão:</span>
-                        <select name="transmissao"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            onchange="window.location.href=this.value;">
-                            <option value="" disabled selected>Selecione</option>
-                            <option
-                                value="{{ route('veiculos.novos.filtroTransmissao', ['transmissao' => 'Mecânica']) }}"
-                                {{ session('transmissao_selecionada') == 'Mecânica' ? 'selected' : '' }}>Mecânica
-                            </option>
-                            <option
-                                value="{{ route('veiculos.novos.filtroTransmissao', ['transmissao' => 'Automático']) }}"
-                                {{ session('transmissao_selecionada') == 'Automático' ? 'selected' : '' }}>Automático
-                            </option>
-                            <option value="{{ route('veiculos.novos.filtroTransmissao', ['transmissao' => 'CVT']) }}"
-                                {{ session('transmissao_selecionada') == 'CVT' ? 'selected' : '' }}>CVT</option>
-                        </select>
-                    </div>
-
                     <!-- Cores Veículos -->
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center gap-2">
                         <span class="text-xs font-semibold text-gray-600">Cor:</span>
-                        <select name="corVeiculos"
+                        <select id="corVeiculo"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            onchange="window.location.href=this.value;">
-                            <option value="" disabled selected>Selecione</option>
-
-                            <!-- Iterando sobre a coleção $cores -->
+                            onchange="atualizarFiltro('cor', this.value)">
+                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>
+                                Todos</option>
                             @foreach ($cores as $cor)
-                                <option value="{{ route('veiculos.novos.filtroCor', ['cor' => $cor->cor]) }}"
-                                    {{ session('corVeiculos_selecionada') == $cor->cor ? 'selected' : '' }}>
+                                <option value="{{ $cor->cor }}"
+                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
                                     {{ $cor->cor }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
 
+
+                    <!-- Ano_Mod Veículos -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-gray-600">Ano/Modelo:</span>
+                        <select id="anoVeiculo"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="atualizarFiltro('ano', this.value)">
+                            <option value="" {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
+                                Todos</option>
+                            @foreach ($anos as $ano)
+                                <option value="{{ $ano['Ano_Mod'] }}"
+                                    {{ session('ano_selecionado') == $ano['Ano_Mod'] ? 'selected' : '' }}>
+                                    {{ $ano['Ano_Mod'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+
+                    <!-- Portas -->
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs font-semibold text-gray-600">Portas:</span>
+                        <select id="portas"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="atualizarFiltro('portas', this.value)">
+                            <option value="" {{ empty(session('portas_selecionado')) ? 'selected' : '' }}>Todos
+                            </option>
+                            <option value="2" {{ session('portas_selecionado') == '2' ? 'selected' : '' }}>2
+                            </option>
+                            <option value="4" {{ session('portas_selecionado') == '4' ? 'selected' : '' }}>4
+                            </option>
+                            <option value="5" {{ session('portas_selecionado') == '5' ? 'selected' : '' }}>5
+                            </option>
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Bloco de pesquisa especifica --}}
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-full w-2/6">
+                <div class="flex flex-col w-full">
+                    <!-- Campo de Pesquisa Chassi com Botão -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-gray-600">Chassi:</span>
+                        <input type="text" id="chassiPesquisa"
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            placeholder="Digite o chassi">
+                        <button id="buscarChassi" class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
+                            🔍
+                        </button>
+                    </div>
+
+                    <!-- Filtro de Preço -->
+                    <span class="text-xs font-semibold text-gray-600 border-t border-gray-500">
+                        Faixa de Preço:
+                        <span id="minValorLabel"> Min R$
+                            {{ number_format(session('valor_min', 30000), 2, ',', '.') }}</span>
+                        &nbsp;⇄&nbsp;
+                        <span id="maxValorLabel">Max R$
+                            {{ number_format(session('valor_max', 200000), 2, ',', '.') }}</span>
+                    </span>
+
+                    <!-- Sliders ocupando toda a largura -->
+                    <div class="flex items-center gap-2 w-full">
+                        <input type="range" id="minValor" name="valor_min" min="30000" max="200000"
+                            step="1000" value="{{ session('valor_min', 30000) }}" oninput="atualizarValores()"
+                            class="w-full">
+
+                        <input type="range" id="maxValor" name="valor_max" min="30000" max="200000"
+                            step="1000" value="{{ session('valor_max', 200000) }}" oninput="atualizarValores()"
+                            class="w-full">
+                        <button onclick="aplicarFiltroPreco()"
+                            class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
+                            🔍
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,27 +170,24 @@
                         <table class="table-auto w-full">
                             <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                 <tr>
-                                    <th class="sortable p-2" data-column="veiculo">Veículo <i class="fas fa-sort"></i>
+                                    <th class="sortable p-2" data-column="marca">Marca <i class="fas fa-sort"></i></th>
+                                    <th class="sortable p-2" data-column="veiculo">Modelo<i class="fas fa-sort"></i>
                                     </th>
-                                    <th class="sortable p-2" data-column="marca">Marca <i class="fas fa-sort"></i>
+                                    <th class="sortable p-2" data-column="combustivel">Comb <i
+                                            class="fas fa-sort"></i>
                                     </th>
-                                    <th class="sortable p-2" data-column="combustivel">Comb <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="ano/mod">Ano_Mod <i class="fas fa-sort"></i>
+                                    <th class="sortable p-2" data-column="ano/mod">Ano_Mod <i
+                                            class="fas fa-sort"></i>
                                     </th>
                                     <th class="sortable p-2" data-column="chassi">Chassi <i class="fas fa-sort"></i>
                                     </th>
                                     <th class="sortable p-2" data-column="cor">Cor <i class="fas fa-sort"></i></th>
                                     <th class="sortable p-2" data-column="pts">Pts <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="opcional">Opc. <i class="fas fa-sort"></i>
+                                    <th class="sortable p-2" data-column="custo">Custo <i class="fas fa-sort"></i>
                                     </th>
                                     <th class="sortable p-2" data-column="tabela">Tabela <i class="fas fa-sort"></i>
                                     </th>
-                                    <th class="sortable p-2" data-column="bonus">Bonus <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="custo">Custo <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="faturado">Faturado <i
+                                    <th class="sortable p-2" data-column="faturado">Estoque<i
                                             class="fas fa-sort"></i>
                                     </th>
                                     <th class="hidden">Local</th> <!-- Coluna oculta -->
@@ -166,21 +201,19 @@
                                             $rowColor = 'text-black';
                                         } elseif ($veiculo->local == 'Filial') {
                                             $rowColor = 'text-yellow-500';
-                                        } elseif ($veiculo->local == 'Transito') {
+                                        } elseif ($veiculo->local == 'Consignado') {
                                             $rowColor = 'text-green-500';
                                         }
                                     @endphp
                                     <tr class="hover:bg-gray-100 {{ $rowColor }}">
-                                        <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
                                         <td class="p-2">{{ $veiculo->marca }}</td>
+                                        <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
                                         <td class="p-2">{{ $veiculo->combustivel }}</td>
                                         <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
                                         <td class="p-2">{{ $veiculo->chassi }}</td>
                                         <td class="p-2">{{ $veiculo->cor }}</td>
                                         <td class="p-2">{{ $veiculo->portas }}</td>
-                                        <td class="p-2">{{ $veiculo->cod_opcional }}</td>
                                         <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
-                                        <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}</td>
                                         <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
                                         <td class="p-2">
                                             {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
@@ -216,79 +249,54 @@
                     style="cursor: pointer;">Matriz</span> |
                 <span class="filter text-yellow-500 font-semibold" data-filter="Filial"
                     style="cursor: pointer;">Filial</span> |
-                <span class="filter text-green-500 font-semibold" data-filter="Transito"
-                    style="cursor: pointer;">Trânsito</span>
+                <span class="filter text-green-500 font-semibold" data-filter="Consignado"
+                    style="cursor: pointer;">Consignado</span>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
     <script>
+        function atualizarFiltro(chave, valor) {
+            let params = new URLSearchParams(window.location.search);
+
+            if (valor) {
+                params.set(chave, valor); // Adiciona ou substitui o filtro
+            } else {
+                params.delete(chave); // Remove o filtro se for vazio
+            }
+
+            // Redireciona para a rota correta com os filtros aplicados
+            window.location.href = "{{ route('veiculos.usados.index') }}?" + params.toString();
+        }
+
+        function atualizarValores() {
+            let minValor = document.getElementById('minValor');
+            let maxValor = document.getElementById('maxValor');
+            let minValorLabel = document.getElementById('minValorLabel');
+            let maxValorLabel = document.getElementById('maxValorLabel');
+
+            // Se o mínimo for maior que o máximo, ajusta automaticamente
+            if (parseInt(minValor.value) > parseInt(maxValor.value)) {
+                minValor.value = maxValor.value;
+            }
+
+            // Atualiza os rótulos na tela
+            minValorLabel.innerText = 'R$ ' + parseFloat(minValor.value).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2
+            });
+            maxValorLabel.innerText = 'R$ ' + parseFloat(maxValor.value).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2
+            });
+        }
+
+        function aplicarFiltroPreco() {
+            let min = document.getElementById('minValor').value;
+            let max = document.getElementById('maxValor').value;
+            window.location.href = "{{ url('/usados') }}?valor_min=" + min + "&valor_max=" + max;
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
-            // Inicializa o Swiper
-            var swiper = new Swiper(".mySwiper", {
-                slidesPerView: 4,
-                spaceBetween: 0,
-                loop: true,
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                },
-            });
-
-            // Função para selecionar o modelo do veículo e redirecionar
-            document.getElementById('modeloVeiculo').addEventListener('change', function() {
-                var veiculoSelecionado = this.value;
-                if (veiculoSelecionado) {
-                    window.location.href = "{{ url('/novos/modelo') }}/" + veiculoSelecionado;
-                }
-            });
-
-            // Função para buscar por chassi
-            document.getElementById('buscarChassi').addEventListener('click', function() {
-                // Obtém o valor da caixa de texto
-                var chassi = document.getElementById('chassiPesquisa').value.trim();
-
-                // Verifica se o campo de texto não está vazio
-                if (chassi !== '') {
-                    // Se não estiver vazio, redireciona para a rota
-                    window.location.href = "{{ route('veiculos.novos.filtroC', ['chassi' => ':chassi']) }}"
-                        .replace(':chassi', chassi);
-                } else {
-                    // Caso o campo esteja vazio, não faz nada ou pode exibir uma mensagem
-                    alert('Por favor, digite um chassi.');
-                }
-            });
-
-            // Função para buscar por Ano Modelo
-            document.getElementById('anoModelo').addEventListener('change', function() {
-                var anoModeloSelecionado = this.value;
-                if (anoModeloSelecionado) {
-                    window.location.href = "{{ url('/novos/ano-modelo') }}/" + encodeURIComponent(
-                        anoModeloSelecionado);
-                }
-            });
-
-            document.getElementById('combustivel').addEventListener('change', function() {
-                var combustivelSelecionado = this.value;
-                if (combustivelSelecionado) {
-                    var rota =
-                        "{{ route('veiculos.novos.filtroCombustivel', ['combustivel' => '__VALOR__']) }}";
-                    window.location.href = rota.replace('__VALOR__', encodeURIComponent(
-                        combustivelSelecionado));
-                }
-            });
-
-            // Função que executa o botao ao entrar na pesquisa por texto e pressionar Enter
-            document.getElementById('chassiPesquisa').addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    event
-                        .preventDefault(); // Impede o comportamento padrão de envio de formulário (se estiver em um formulário)
-                    document.getElementById('buscarChassi').click(); // Aciona o clique do botão
-                }
-            });
-
-
             // Ordenação da tabela ao clicar no cabeçalho
             const headers = document.querySelectorAll('.sortable');
             let sortDirection = 'asc'; // Direção inicial (ascendente)
@@ -363,6 +371,21 @@
             // Variável para filtro da legenda (Local)
             let activeFilter = null;
 
+
+
+            // Evento de clique nas legendas
+            document.querySelectorAll('.filter').forEach(filter => {
+                filter.addEventListener('click', function() {
+                    const filterValue = this.getAttribute('data-filter');
+
+                    // Se já estiver ativo, desativa o filtro
+                    activeFilter = (activeFilter === filterValue) ? null : filterValue;
+
+                    // Aplica o filtro e atualiza o contador
+                    applyFilter();
+                });
+            });
+
             // Função para aplicar o filtro e atualizar o contador
             function applyFilter() {
                 const rows = Array.from(document.querySelectorAll('tbody tr'));
@@ -377,7 +400,7 @@
                 } else {
                     // Exiba apenas as linhas que correspondem ao filtro ativo
                     rows.forEach(row => {
-                        const local = row.querySelector('td:nth-child(13)').textContent.trim();
+                        const local = row.querySelector('td:nth-child(11)').textContent.trim();
                         if (local === activeFilter) {
                             row.style.display = '';
                             visibleCount++;
@@ -393,19 +416,6 @@
                     `Filtro Aplicado [${activeFilter}] - Veículos listados: ${visibleCount}` :
                     `Veículos Listados: ${visibleCount}`;
             }
-
-            // Evento de clique nas legendas
-            document.querySelectorAll('.filter').forEach(filter => {
-                filter.addEventListener('click', function() {
-                    const filterValue = this.getAttribute('data-filter');
-
-                    // Se já estiver ativo, desativa o filtro
-                    activeFilter = (activeFilter === filterValue) ? null : filterValue;
-
-                    // Aplica o filtro e atualiza o contador
-                    applyFilter();
-                });
-            });
 
 
 

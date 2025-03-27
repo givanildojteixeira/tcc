@@ -19,11 +19,11 @@ class DatabaseSeeder extends Seeder
         // 'password' => '$2y$10$qYVsI51VL9Wg3qHqOExGe.WyOnPAywrCUh/UL0qiPAKGfHYOM48hK',  // => 'teste123'
         // 'level' => 'admin',]);
 
-    
+
         // \App\Models\Cliente::factory(50)->create();    // Cria 50 clientes fictícios
 
-        
-        \App\Models\Veiculo::factory(250)->create();  // Cria 150 veiculos fictícios
+
+        \App\Models\Veiculo::factory(150)->create();  // Cria 150 veiculos fictícios
 
     }
 }
