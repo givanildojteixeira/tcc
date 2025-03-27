@@ -5,9 +5,22 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
 
+                    <!-- Gráfico Pizza 1 -->
                     <div class="bg-white border-2 border-blue-200 rounded-lg shadow-lg p-6 flex flex-col items-center">
-                        <h2 class="text-lg font-bold text-blue-500">Veículos novos e usados</h2>
-                        <canvas id="graficoPizza" style="max-width: 200px; max-height: 200px;"></canvas>
+                        <h2 class="text-lg font-bold text-blue-500">Veículos Novos e Usados (Pizza)</h2>
+                        <canvas id="graficoPizza1" style="max-width: 200px; max-height: 200px;"></canvas>
+                    </div>
+
+                    <!-- Gráfico Barra -->
+                    <div class="bg-white border-2 border-blue-200 rounded-lg shadow-lg p-6 flex flex-col items-center">
+                        <h2 class="text-lg font-bold text-blue-500">Veículos Novos e Usados (Barra)</h2>
+                        <canvas id="graficoBarra" style="max-width: 200px; max-height: 200px;"></canvas>
+                    </div>
+
+                    <!-- Gráfico Linha -->
+                    <div class="bg-white border-2 border-blue-200 rounded-lg shadow-lg p-6 flex flex-col items-center">
+                        <h2 class="text-lg font-bold text-blue-500">Propostas ao Longo do Tempo</h2>
+                        <canvas id="graficoLinha" style="max-width: 200px; max-height: 200px;"></canvas>
                     </div>
 
                     <a href="{{ route('meus-clientes', Auth::user()->id) }}" class="block">
@@ -36,52 +49,191 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var ctx = document.getElementById('graficoPizza').getContext('2d');
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
 
-            var veiculosNovos = {{ $veiculosnovos }};
-            var veiculosUsados = {{ $veiculosusados }};
+        // Gráfico Pizza 1
+        var ctx1 = document.getElementById('graficoPizza1').getContext('2d');
+        
+        // Corrigir a passagem de dados para o JS
+        var veiculosNovos = {!! json_encode($veiculosnovos) !!};
+        var veiculosUsados = {!! json_encode($veiculosusados) !!};
 
-            var myPieChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ["Novos", "Usados"],
-                    datasets: [{
-                        data: [veiculosNovos, veiculosUsados],
-                        backgroundColor: ["#36A2EB", "#FF6384"], // Azul para novos, vermelho para usados
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: { display: false }, // Esconde a legenda externa
-                        datalabels: {
-                            color: 'white',
-                            font: { weight: 'bold', size: 14 },
-                            formatter: (value, ctx) => {
-                                let label = ctx.chart.data.labels[ctx.dataIndex];
-                                return `${label}: ${value}`;
-                            }
-                        }
+        var myPieChart1 = new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: ["Novos", "Usados"],
+                datasets: [{
+                    data: [veiculosNovos, veiculosUsados],
+                    backgroundColor: ["#36A2EB", "#4CAF50"], // Azul e Verde
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
                     },
-                    // Evento Onclick para Redireciona para a rota correspondente quando clica no grafico
-                    onClick: function(evt, elements) {
-                        if (elements.length > 0) {
-                            var index = elements[0].index;
-                            var rotas = [
-                                "{{ route('veiculos.novos.index') }}",
-                                "{{ route('veiculos.usados.index') }}"
-                            ];
-                            window.location.href = rotas[index];
+                    datalabels: {
+                        color: 'white',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: (value, ctx) => {
+                            let label = ctx.chart.data.labels[ctx.dataIndex];
+                            return `${label}: ${value}`;
                         }
                     }
                 },
-                plugins: [ChartDataLabels]
-            });
+                onClick: function(evt, elements) {
+                    if (elements.length > 0) {
+                        var index = elements[0].index;
+                        var rotas = [
+                            "{{ route('veiculos.novos.index') }}",
+                            "{{ route('veiculos.usados.index') }}"
+                        ];
+                        window.location.href = rotas[index];
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
         });
-    </script>
 
+        // Gráfico Barra (Vertical)
+        var ctx2 = document.getElementById('graficoBarra').getContext('2d');
 
+        var myBarChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ["Novos", "Usados"],
+                datasets: [{
+                    label: 'Veículos',
+                    data: [veiculosNovos, veiculosUsados],
+                    backgroundColor: ["#36A2EB", "#4CAF50"],
+                    borderColor: ["#2C6F9E", "#388E3C"],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 20,
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            display: true,
+                            color: '#e5e5e5',
+                            lineWidth: 1
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        color: 'white',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: (value) => {
+                            return `${value}`;
+                        }
+                    }
+                },
+                onClick: function(evt, elements) {
+                    if (elements.length > 0) {
+                        var index = elements[0].index;
+                        var rotas = [
+                            "{{ route('veiculos.novos.index') }}",
+                            "{{ route('veiculos.usados.index') }}"
+                        ];
+                        window.location.href = rotas[index];
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+
+        // Gráfico Linha (dados fictícios)
+        var ctx3 = document.getElementById('graficoLinha').getContext('2d');
+
+        var myLineChart = new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // Meses fictícios
+                datasets: [{
+                    label: 'Veículos Vendidos',
+                    data: [30, 45, 60, 80, 55, 100], // Dados fictícios de veículos vendidos
+                    fill: false, // Não preenche a área abaixo da linha
+                    borderColor: '#FF6384', // Cor da linha
+                    tension: 0.1, // Curvatura da linha
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        color: 'black',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        },
+                        formatter: (value) => {
+                            return `${value}`;
+                        }
+                    }
+                },
+                onClick: function(evt, elements) {
+                    if (elements.length > 0) {
+                        var index = elements[0].index;
+                        var rotas = [
+                            "{{ route('veiculos.novos.index') }}",
+                            "{{ route('veiculos.usados.index') }}"
+                        ];
+                        window.location.href = rotas[index];
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+
+    });
+</script>
 
 
 </x-app-layout>

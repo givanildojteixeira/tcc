@@ -65,6 +65,7 @@ class UsadosController extends Controller
         session()->forget('transmissao_selecionado');
         session()->forget('cor_selecionado');
         session()->forget('portas_selecionado');
+        session()->forget('chassi_selecionado');
 
         // Se um novo filtro for aplicado, salva na sessão
         if ($request->has('marca'))        session(['marca_selecionado' => $request->marca]);
@@ -74,6 +75,11 @@ class UsadosController extends Controller
         if ($request->has('transmissao'))  session(['transmissao_selecionado' => $request->transmissao]);
         if ($request->has('cor'))          session(['cor_selecionado' => $request->cor]);
         if ($request->has('portas'))       session(['portas_selecionado' => $request->portas]);
+        if ($request->has('chassi'))       session(['chassi_selecionado' => $request->chassi]);
+        // Armazena na sessão para manter os filtros após recarga  de Preço
+        $valorMin = $request->input('valor_min', 30000);
+        $valorMax = $request->input('valor_max', 200000);
+        session(['valor_min' => $valorMin, 'valor_max' => $valorMax]);
 
         // Carrega os dados compartilhados
         $dados = $this->carregarDadosVeiculos();
@@ -88,19 +94,16 @@ class UsadosController extends Controller
         if ($request->filled('ano'))           $query->where('Ano_Mod', $request->input('ano'));
         if ($request->filled('cor'))           $query->where('cor', $request->input('cor'));
         if ($request->filled('portas'))        $query->where('portas', $request->input('portas'));
+        if ($request->filled('chassi'))        $query->where('chassi', 'LIKE', '%' . $request->input('chassi') . '%');
+
         if ($request->filled('valor'))         $query->where('vlr_tabela', '<=', $request->input('valor'));
-
-        $valorMin = $request->input('valor_min', 30000);
-        $valorMax = $request->input('valor_max', 200000);
-
-        // Armazena na sessão para manter os filtros após recarga
-        session(['valor_min' => $valorMin, 'valor_max' => $valorMax]);
-        
         // Filtro de preço
         $query->whereBetween('vlr_tabela', [$valorMin, $valorMax]);
 
         // Executa a consulta
-        $veiculos = $query->orderBy('desc_veiculo')->paginate($this->pg());
+        $veiculos = $query->orderBy('desc_veiculo')
+                        ->paginate($this->pg())
+                        ->appends(request()->query());  // Mantém os parâmetros de filtro na URL
 
         // Retorna a view com os dados filtrados
         return view('veiculos.usados.index', array_merge($dados, ['veiculos' => $veiculos]));

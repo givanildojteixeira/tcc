@@ -1,10 +1,10 @@
 <!-- VEICULOS USADOS -->
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex gap-1">
+        <div class="flex gap-2">
             <!-- Card para Pesquisas Combinadas -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-4/6">
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-3 gap-2 items-center content-center h-full">
 
                     <!-- ComboBox Marca -->
                     <div class="flex items-center gap-2">
@@ -15,10 +15,10 @@
                             <option value="" {{ empty(session('marca_selecionado')) ? 'selected' : '' }}>Todos
                             </option>
                             @foreach ($marcas as $marca)
-                                <option value="{{ $marca->marca }}"
-                                    {{ session('marca_selecionado') == $marca->marca ? 'selected' : '' }}>
-                                    {{ $marca->marca }}
-                                </option>
+                            <option value="{{ $marca->marca }}"
+                                {{ session('marca_selecionado') == $marca->marca ? 'selected' : '' }}>
+                                {{ $marca->marca }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -32,10 +32,10 @@
                             <option value="" {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                                <option value="{{ $veiculo->desc_veiculo }}"
-                                    {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
-                                    {{ $veiculo->desc_veiculo }}
-                                </option>
+                            <option value="{{ $veiculo->desc_veiculo }}"
+                                {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
+                                {{ $veiculo->desc_veiculo }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -72,10 +72,10 @@
                             <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($cores as $cor)
-                                <option value="{{ $cor->cor }}"
-                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
-                                    {{ $cor->cor }}
-                                </option>
+                            <option value="{{ $cor->cor }}"
+                                {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
+                                {{ $cor->cor }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -90,10 +90,10 @@
                             <option value="" {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($anos as $ano)
-                                <option value="{{ $ano['Ano_Mod'] }}"
-                                    {{ session('ano_selecionado') == $ano['Ano_Mod'] ? 'selected' : '' }}>
-                                    {{ $ano['Ano_Mod'] }}
-                                </option>
+                            <option value="{{ $ano['Ano_Mod'] }}"
+                                {{ session('ano_selecionado') == $ano['Ano_Mod'] ? 'selected' : '' }}>
+                                {{ $ano['Ano_Mod'] }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -127,8 +127,10 @@
                         <span class="text-xs font-semibold text-gray-600">Chassi:</span>
                         <input type="text" id="chassiPesquisa"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            placeholder="Digite o chassi">
-                        <button id="buscarChassi" class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
+                            placeholder="Digite parte do chassi"
+                            value="{{ session('chassi_selecionado', '') }}">
+                        <button onclick="atualizarFiltro('chassi', document.getElementById('chassiPesquisa').value)"
+                            class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
                             🔍
                         </button>
                     </div>
@@ -136,7 +138,7 @@
                     <!-- Filtro de Preço -->
                     <span class="text-xs font-semibold text-gray-600 border-t border-gray-500">
                         Faixa de Preço:
-                        <span id="minValorLabel"> Min R$
+                        <span id="minValorLabel">Min R$
                             {{ number_format(session('valor_min', 30000), 2, ',', '.') }}</span>
                         &nbsp;⇄&nbsp;
                         <span id="maxValorLabel">Max R$
@@ -155,6 +157,17 @@
                         <button onclick="aplicarFiltroPreco()"
                             class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
                             🔍
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{-- Bloco Limpa filtro --}}
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-full w-1/6">
+                <div class="grid grid-cols-3 gap-2 items-center content-center h-full">
+                    <div class="flex justify-center items-center col-span-3">
+                        <button onclick="limparFiltros()"
+                            class="px-4 py-2 text-black border border-red-500 bg-white rounded-md text-xs hover:bg-red-100 hover:border-red-600 flex items-center gap-2">
+                            <span>❌</span> Limpar Filtros
                         </button>
                     </div>
                 </div>
@@ -195,32 +208,32 @@
                             </thead>
                             <tbody class="text-sm">
                                 @foreach ($veiculos as $veiculo)
-                                    @php
-                                        $rowColor = '';
-                                        if ($veiculo->local == 'Matriz') {
-                                            $rowColor = 'text-black';
-                                        } elseif ($veiculo->local == 'Filial') {
-                                            $rowColor = 'text-yellow-500';
-                                        } elseif ($veiculo->local == 'Consignado') {
-                                            $rowColor = 'text-green-500';
-                                        }
-                                    @endphp
-                                    <tr class="hover:bg-gray-100 {{ $rowColor }}">
-                                        <td class="p-2">{{ $veiculo->marca }}</td>
-                                        <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
-                                        <td class="p-2">{{ $veiculo->combustivel }}</td>
-                                        <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
-                                        <td class="p-2">{{ $veiculo->chassi }}</td>
-                                        <td class="p-2">{{ $veiculo->cor }}</td>
-                                        <td class="p-2">{{ $veiculo->portas }}</td>
-                                        <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
-                                        <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
-                                        <td class="p-2">
-                                            {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                            dias
-                                        </td>
-                                        <td class="hidden">{{ $veiculo->local }}</td>
-                                    </tr>
+                                @php
+                                $rowColor = '';
+                                if ($veiculo->local == 'Matriz') {
+                                $rowColor = 'text-black';
+                                } elseif ($veiculo->local == 'Filial') {
+                                $rowColor = 'text-yellow-500';
+                                } elseif ($veiculo->local == 'Consignado') {
+                                $rowColor = 'text-green-500';
+                                }
+                                @endphp
+                                <tr class="hover:bg-gray-100 {{ $rowColor }}">
+                                    <td class="p-2">{{ $veiculo->marca }}</td>
+                                    <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
+                                    <td class="p-2">{{ $veiculo->combustivel }}</td>
+                                    <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
+                                    <td class="p-2">{{ $veiculo->chassi }}</td>
+                                    <td class="p-2">{{ $veiculo->cor }}</td>
+                                    <td class="p-2">{{ $veiculo->portas }}</td>
+                                    <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
+                                    <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
+                                    <td class="p-2">
+                                        {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
+                                        dias
+                                    </td>
+                                    <td class="hidden">{{ $veiculo->local }}</td>
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -282,10 +295,10 @@
             }
 
             // Atualiza os rótulos na tela
-            minValorLabel.innerText = 'R$ ' + parseFloat(minValor.value).toLocaleString('pt-BR', {
+            minValorLabel.innerText = 'Min R$ ' + parseFloat(minValor.value).toLocaleString('pt-BR', {
                 minimumFractionDigits: 2
             });
-            maxValorLabel.innerText = 'R$ ' + parseFloat(maxValor.value).toLocaleString('pt-BR', {
+            maxValorLabel.innerText = 'Max R$ ' + parseFloat(maxValor.value).toLocaleString('pt-BR', {
                 minimumFractionDigits: 2
             });
         }
@@ -294,6 +307,11 @@
             let min = document.getElementById('minValor').value;
             let max = document.getElementById('maxValor').value;
             window.location.href = "{{ url('/usados') }}?valor_min=" + min + "&valor_max=" + max;
+        }
+
+        function limparFiltros() {
+            // Redireciona para a página sem parâmetros de filtro
+            window.location.href = window.location.pathname;
         }
 
         document.addEventListener("DOMContentLoaded", function() {

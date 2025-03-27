@@ -14,26 +14,32 @@
                 <!-- Navigation Links Simples-->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        <i class="fas fa-tachometer-alt mr-2"></i> <!-- Ícone de Dashboard -->
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('veiculos.novos.index')" :active="request()->routeIs('novos.index')">
+                    <x-nav-link :href="route('veiculos.novos.index')" :active="request()->routeIs('veiculos.novos.index')">
+                        <i class="fas fa-car mr-2"></i>
                         {{ __('Veículos Novos') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('veiculos.usados.index')" :active="request()->routeIs('usados.index')">
+                    <x-nav-link :href="route('veiculos.usados.index')" :active="request()->routeIs('veiculos.usados.index')">
+                        <i class="fas fa-car-crash mr-2"></i>
                         {{ __('Veículos Usados') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('propostas.index')" :active="request()->routeIs('propostas')">
+                    <x-nav-link :href="route('propostas.index')" :active="request()->routeIs('propostas.index')">
+                        <i class="fas fa-file-signature mr-2"></i>
                         {{ __('Propostas') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('financeiro.index')" :active="request()->routeIs('financeiro')">
+                    <x-nav-link :href="route('financeiro.index')" :active="request()->routeIs('financeiro.index')">
+                        <i class="fas fa-wallet mr-2"></i>
                         {{ __('Financeiro') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios')">
+                    <x-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.index')">
+                        <i class="fas fa-chart-line mr-2"></i>
                         {{ __('Relatórios') }}
                     </x-nav-link>
                 </div>
@@ -47,6 +53,7 @@
                     <x-slot name="trigger">
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                            <i class="fas fa-cogs mr-2"></i>
                             <div>Cadastros</div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -80,6 +87,7 @@
                     <x-slot name="trigger">
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                            <i class="fas fa-user mr-2"></i>
                             <div>{{ Auth::user()->name }}</div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
