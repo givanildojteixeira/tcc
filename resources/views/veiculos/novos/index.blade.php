@@ -14,7 +14,9 @@
                         <div class="swiper-slide text-center mt-3">
                             <a href="{{ route('veiculos.novos.filtroF', ['familia' => $familia]) }}">
                                 <img src="{{ asset('images/familia/' . basename($imagem)) }}" alt="Imagem do Veículo"
-                                    class="rounded-lg w-full object-cover">
+                                class="rounded-lg max-w-[80px] max-h-[80px] object-cover">
+                                {{-- class="rounded-lg w-full object-cover"> --}}
+                                {{-- class="rounded-lg w-10 h-10 object-cover"> --}}
                                 <div class="text-sm font-semibold mt-2 text-center">{{ $familia }}</div>
                             </a>
                         </div>

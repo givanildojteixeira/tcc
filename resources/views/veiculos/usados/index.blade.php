@@ -3,7 +3,7 @@
     <x-slot name="header">
         <div class="flex gap-2">
             <!-- Card para Pesquisas Combinadas -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-4/6">
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-8/12">
                 <div class="grid grid-cols-3 gap-2 items-center content-center h-full">
 
                     <!-- ComboBox Marca -->
@@ -120,7 +120,7 @@
             </div>
 
             {{-- Bloco de pesquisa especifica --}}
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-full w-2/6">
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-full w-4/12">
                 <div class="flex flex-col w-full">
                     <!-- Campo de Pesquisa Chassi com Botão -->
                     <div class="flex items-center gap-2">
@@ -162,7 +162,7 @@
                 </div>
             </div>
             {{-- Bloco Limpa filtro --}}
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-full w-1/6">
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-full w-1/12">
                 <div class="grid grid-cols-3 gap-2 items-center content-center h-full">
                     <div class="flex justify-center items-center col-span-3">
                         <button onclick="limparFiltros()"
