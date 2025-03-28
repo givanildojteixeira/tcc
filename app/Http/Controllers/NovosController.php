@@ -24,27 +24,31 @@ class NovosController extends Controller
     }
 
     // Método privado que carrega os dados compartilhados
-    private function carregarDadosVeiculos()
-    {
-        // Carrega os veículos únicos
-        $veiculosUnicos = Veiculo::select('desc_veiculo')
-            ->distinct()  // Garante que não haja repetições
-            ->where('marca', 'GM')  // Filtro pela marca 'GM'
-            ->where('novo_usado', 'Novo')  // Filtro de "Novo"
+private function carregarDadosVeiculos()
+{
+    $campos = ['desc_veiculo', 'cor'];
+    $dados = [];
+
+    foreach ($campos as $campo) {
+        $dados[$campo] = Veiculo::select($campo)
+            ->distinct()
+            ->where([
+                ['marca', 'GM'],
+                ['novo_usado', 'Novo']
+            ])
             ->get();
-
-        // Carrega as cores dos veiculos
-        $cores = Veiculo::select('cor')
-            ->distinct()  // Garante que não haja repetições
-            ->where('marca', 'GM')  // Filtro pela marca 'GM'
-            ->where('novo_usado', 'Novo')  // Filtro de "Novo"
-            ->get();
-
-        // Carrega as imagens das famílias
-        $imagens = File::allFiles(public_path('images/familia'));
-
-        return compact('veiculosUnicos', 'cores', 'imagens');
     }
+
+    // Carrega as imagens das famílias
+    $imagens = File::allFiles(public_path('images/familia'));
+
+    return [
+        'veiculosUnicos' => $dados['desc_veiculo'],
+        'cores' => $dados['cor'],
+        'imagens' => $imagens
+    ];
+}
+
 
     /**
      * Display a listing of the resource.

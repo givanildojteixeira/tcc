@@ -22,38 +22,26 @@ class UsadosController extends Controller
 
     // Método privado que carrega os dados gerais, desconsiderando qualquer filtro
     // com objetivo de alimentar as combos da view
-    private function carregarDadosVeiculos()
-    {
-        // Carrega os veículos únicos
-        $veiculosUnicos = Veiculo::select('desc_veiculo')
-            ->distinct()  // Garante que não haja repetições
-            ->where('novo_usado', 'Usado')  // Filtro de "Usado"
-            ->orderBy('desc_veiculo')
+private function carregarDadosVeiculos()
+{
+    $campos = ['desc_veiculo', 'cor', 'marca', 'Ano_Mod'];
+    $dados = [];
+
+    foreach ($campos as $campo) {
+        $dados[$campo] = Veiculo::select($campo)
+            ->distinct()
+            ->where('novo_usado', 'Usado')
+            ->orderBy($campo)
             ->get();
-
-        // Carrega as cores dos veiculos
-        $cores = Veiculo::select('cor')
-            ->distinct()  // Garante que não haja repetições
-            ->where('novo_usado', 'Usado')  // Filtro de "Usado"
-            ->orderBy('cor')
-            ->get();
-
-        // Carrega as cores dos veiculos
-        $marcas = Veiculo::select('marca')
-            ->distinct()  // Garante que não haja repetições
-            ->where('novo_usado', 'Usado')  // Filtro de "Usado"
-            ->orderBy('marca')
-            ->get();
-
-        // Carrega as Ano/mod dos veiculos
-        $anos = Veiculo::select('Ano_Mod')
-        ->distinct()  // Garante que não haja repetições
-        ->where('novo_usado', 'Usado')  // Filtro de "Usado"
-        ->orderBy('Ano_Mod')
-        ->get();
-
-        return compact('veiculosUnicos', 'cores', 'marcas', 'anos');
     }
+
+    return [
+        'veiculosUnicos' => $dados['desc_veiculo'],
+        'cores' => $dados['cor'],
+        'marcas' => $dados['marca'],
+        'anos' => $dados['Ano_Mod'],
+    ];
+}
 
     public function index(Request $request)
     {
