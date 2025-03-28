@@ -250,6 +250,21 @@
 
     <!-- Scripts -->
     <script>
+        function atualizarFiltro(chave, valor) {
+            let params = new URLSearchParams(window.location.search);
+
+            if (valor) {
+                params.set(chave, valor); // Adiciona ou substitui o filtro
+            } else {
+                params.delete(chave); // Remove o filtro se for vazio
+            }
+
+            // Redireciona para a rota correta com os filtros aplicados
+            window.location.href = "{{ route('veiculos.usados.index') }}?" + params.toString();
+        }
+
+
+
         document.addEventListener("DOMContentLoaded", function() {
             // Inicializa o Swiper
             var swiper = new Swiper(".mySwiper", {
@@ -313,6 +328,9 @@
                     document.getElementById('buscarChassi').click(); // Aciona o clique do botão
                 }
             });
+
+
+
 
 
             // Ordenação da tabela ao clicar no cabeçalho
