@@ -153,11 +153,17 @@
 
 
             <!-- Card para Botões de ajuda e limpa filtros -->
-            <div  class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-[4%] flex flex-col items-center justify-center gap-2">
+            <div
+                class="bg-white shadow-lg rounded-lg overflow-hidden w-[3%] flex flex-col items-center justify-center ">
                 <!-- Botão de Ajuda -->
                 <button onclick="document.getElementById('modalAjuda').classList.remove('hidden')"
                     class="text-blue-600 hover:text-blue-800 text-xl" title="Ajuda">
                     <i class="fas fa-question-circle"></i>
+                </button>
+
+                <!-- Botão Relatorios -->
+                <button onclick="gerarRelatorio()" title="Imprimir" class="text-green-600 hover:text-green-800 text-xl">
+                    <i class="fas fa-print"></i>
                 </button>
 
                 <!-- Botão de Limpar Filtros -->
@@ -179,37 +185,39 @@
                                 <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                     <tr>
                                         <th class="sortable p-2" data-column="veiculo">Veículo <i
-                                                class="fas fa-sort"></i>
-                                        </th>
-                                        <th class="sortable p-2" data-column="modelo">Modelo <i class="fas fa-sort"></i>
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
+                                        <th class="sortable p-2" data-column="modelo">Modelo <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         <th class="sortable p-2" data-column="combustivel">Comb <i
-                                                class="fas fa-sort"></i>
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i
-                                                class="fas fa-sort"></i>
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         <th class="sortable p-2" data-column="chassi">Chassi <i
-                                                class="fas fa-sort"></i>
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
-                                        <th class="sortable p-2" data-column="cor">Cor <i class="fas fa-sort"></i>
+                                        <th class="sortable p-2" data-column="cor">Cor <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
-                                        <th class="sortable p-2" data-column="pts">Pts <i class="fas fa-sort"></i>
+                                        <th class="sortable p-2" data-column="pts">Pts <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         <th class="sortable p-2" data-column="opcional">Opc. <i
-                                                class="fas fa-sort"></i>
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
-                                        <th class="sortable p-2" data-column="tabela">Tabela <i
-                                                class="fas fa-sort"></i>
+                                        <th class="sortable p-2 text-right" data-column="tabela">Tabela <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
-                                        <th class="sortable p-2" data-column="bonus">Bonus <i
-                                                class="fas fa-sort"></i>
+                                        <th class="sortable p-2 text-right" data-column="bonus">Bonus <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
-                                        <th class="sortable p-2" data-column="custo">Custo <i
-                                                class="fas fa-sort"></i>
+                                        <th class="sortable p-2 text-right" data-column="custo">Custo <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         <th class="sortable p-2" data-column="faturado">Faturado <i
-                                                class="fas fa-sort"></i>
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         <th class="hidden">Local</th> <!-- Coluna oculta -->
                                     </tr>
@@ -250,15 +258,18 @@
                                             <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
                                             <td class="p-2">{{ $veiculo->chassi }}</td>
                                             <td class="p-2">{{ $veiculo->cor }}</td>
-                                            <td class="p-2">{{ $veiculo->portas }}</td>
-                                            <td class="p-2">{{ $veiculo->cod_opcional }}</td>
-                                            <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
+                                            <td class="p-2 text-center">{{ $veiculo->portas }}</td>
+                                            <td class="p-2 text-center">{{ $veiculo->cod_opcional }}</td>
+                                            <td class="p-2 text-right">
+                                                {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
                                             </td>
-                                            <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
+                                            <td class="p-2 text-right">
+                                                {{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
                                             </td>
-                                            <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
+                                            <td class="p-2 text-right">
+                                                {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
                                             </td>
-                                            <td class="p-2">
+                                            <td class="p-2 text-center">
                                                 {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
                                                 dias
                                             </td>
@@ -309,27 +320,26 @@
     </div>
 
     <!-- Barra fixa abaixo da tabela -->
-    <div class="fixed bottom-0 left-0 w-full bg-white shadow-lg p-2 border-t border-gray-300">
-        <div class="flex justify-between items-center">
-            <!-- Número de veículos selecionados -->
-            <div class="text-lg font-semibold" id="selectedVehiclesCount">
-                Veículos Listados: {{ count($veiculos) }}
-            </div>
-            <!-- Exibir os links de navegação da página -->
-            <div class="pagination">
-                {{ $veiculos->links() }}
-            </div>
-            <!-- Legenda de cores -->
-            <div class="text-sm"> Legenda Alocação =>
-                <span class="filter text-black font-semibold" data-filter="Matriz"
-                    style="cursor: pointer;">Matriz</span> |
-                <span class="filter text-yellow-500 font-semibold" data-filter="Filial"
-                    style="cursor: pointer;">Filial</span> |
-                <span class="filter text-green-500 font-semibold" data-filter="Transito"
-                    style="cursor: pointer;">Trânsito</span>
-            </div>
+    <x-rodape>
+        <!-- Número de veículos listados -->
+        <div class="font-medium" id="selectedVehiclesCount">
+            Veículos Listados: {{ count($veiculos) }}
         </div>
-    </div>
+
+        <!-- Paginação -->
+        <div class="pagination">
+            {{ $veiculos->links() }}
+        </div>
+
+        <!-- Legenda de cores -->
+        <div class="flex flex-wrap gap-1 items-center">
+            <span class="font-medium">Legenda Alocação =&gt;</span>
+            <span class="filter font-semibold text-black cursor-pointer" data-filter="Matriz">Matriz</span> |
+            <span class="filter font-semibold text-yellow-500 cursor-pointer" data-filter="Filial">Filial</span> |
+            <span class="filter font-semibold text-green-500 cursor-pointer" data-filter="Transito">Trânsito</span>
+        </div>
+    </x-rodape>
+
 
     <!-- Modal de Ajuda -->
     <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
@@ -436,9 +446,18 @@
         });
 
         function limparFiltros() {
-            window.location.href = "{{ route('veiculos.novos.index') }}";
+            window.location.href = "{{ route('veiculos.novos.limparFiltros') }}";
         }
 
+        function gerarRelatorio() {
+            const url = new URL(window.location.href);
+
+            // Adiciona ou substitui o parâmetro 'relatorio'
+            url.searchParams.set('relatorio', '1');
+
+            // Redireciona para a nova URL
+            window.location.href = url.toString();
+        }
 
         // Ordenação da tabela ao clicar no cabeçalho
         const headers = document.querySelectorAll('.sortable');

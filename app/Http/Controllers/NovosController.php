@@ -115,10 +115,29 @@ class NovosController extends Controller
             ->paginate($this->pg())
             ->appends(request()->query());  // Mantém os parâmetros de filtro na URL
 
+        // Verifica se o usuário quer ver como relatório
+        if ($request->filled('relatorio')) {
+            return view('veiculos.novos.relatorios.lista', array_merge($dados, ['veiculos' => $veiculos]));
+        }
+
         // Retorna a view
         return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
     }
 
+    public function limparFiltros()
+    {
+        session()->forget([
+            'familia_selecionado',
+            'modelo_selecionado',
+            'chassi_selecionado',
+            'combustivel_selecionado',
+            'ano_selecionado',
+            'transmissao_selecionado',
+            'cor_selecionado',
+        ]);
+
+        return redirect()->route('veiculos.novos.index');
+    }
 
 
 

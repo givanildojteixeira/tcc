@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
 
     //Veiculos novos
     Route::get('/novos',[NovosController::class,'index'])->name('veiculos.novos.index');
+    Route::get('/veiculos/novos/limpar-filtros', [NovosController::class, 'limparFiltros'])->name('veiculos.novos.limparFiltros');
     // Route::get('/novos/chassi/{chassi}', [NovosController::class, 'filtrarPorChassi'])->name('veiculos.novos.filtroC');
     // Route::get('/novos/familia/{familia}', [NovosController::class, 'filtrarPorFamilia'])->name('veiculos.novos.filtroF');
     // Route::get('/novos/modelo/{veiculo}', [NovosController::class, 'filtrarPorVeiculo'])->name('veiculos.novos.filtroV');

@@ -1,7 +1,7 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 ">
     <!-- Primary Navigation Menu -->
     <!-- <div class="div-navegador  mx-auto px-4 sm:px-6 lg:px-8" style="background-image: url('/images/parede.jpg');"> -->
-    <div class="div-navegador mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="div-navegador mx-auto px-4 sm:px-6 lg:px-8 print:hidden">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
@@ -19,7 +19,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('veiculos.novos.index')" :active="request()->routeIs('veiculos.novos.index')">
+                    <x-nav-link :href="route('veiculos.novos.limparFiltros')" :active="request()->routeIs('veiculos.novos.index')">
                         <i class="fas fa-car mr-2"></i>
                         {{ __('Veículos Novos') }}
                     </x-nav-link>

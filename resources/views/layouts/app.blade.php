@@ -42,7 +42,6 @@
     <link href="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.js"></script>
 
-
 </head>
 
 <body class="font-sans antialiased">
@@ -51,11 +50,11 @@
 
         <!-- Page Heading -->
         @if (isset($header))
-        <header class="bg-white dark:bg-gray-800 shadow">
-            <div class="mx-auto sm:px-4 lg:px-6"> {{-- retirei: max-w-7xl para ocupar a tela toda --}}
-                {{ $header }}
-            </div>
-        </header>
+            <header class="bg-white dark:bg-gray-800 shadow">
+                <div class="mx-auto sm:px-4 lg:px-6"> {{-- retirei: max-w-7xl para ocupar a tela toda --}}
+                    {{ $header }}
+                </div>
+            </header>
         @endif
 
         <!-- Page Content -->

@@ -18,30 +18,33 @@ class UsadosController extends Controller
     }
 
     //paginador
-    public function pg() { return 50; }
+    public function pg()
+    {
+        return 50;
+    }
 
     // Método privado que carrega os dados gerais, desconsiderando qualquer filtro
     // com objetivo de alimentar as combos da view
-private function carregarDadosVeiculos()
-{
-    $campos = ['desc_veiculo', 'cor', 'marca', 'Ano_Mod'];
-    $dados = [];
+    private function carregarDadosVeiculos()
+    {
+        $campos = ['desc_veiculo', 'cor', 'marca', 'Ano_Mod'];
+        $dados = [];
 
-    foreach ($campos as $campo) {
-        $dados[$campo] = Veiculo::select($campo)
-            ->distinct()
-            ->where('novo_usado', 'Usado')
-            ->orderBy($campo)
-            ->get();
+        foreach ($campos as $campo) {
+            $dados[$campo] = Veiculo::select($campo)
+                ->distinct()
+                ->where('novo_usado', 'Usado')
+                ->orderBy($campo)
+                ->get();
+        }
+
+        return [
+            'veiculosUnicos' => $dados['desc_veiculo'],
+            'cores' => $dados['cor'],
+            'marcas' => $dados['marca'],
+            'anos' => $dados['Ano_Mod'],
+        ];
     }
-
-    return [
-        'veiculosUnicos' => $dados['desc_veiculo'],
-        'cores' => $dados['cor'],
-        'marcas' => $dados['marca'],
-        'anos' => $dados['Ano_Mod'],
-    ];
-}
 
     public function index(Request $request)
     {
@@ -65,8 +68,9 @@ private function carregarDadosVeiculos()
         if ($request->has('portas'))       session(['portas_selecionado' => $request->portas]);
         if ($request->has('chassi'))       session(['chassi_selecionado' => $request->chassi]);
         // Armazena na sessão para manter os filtros após recarga  de Preço
-        $valorMin = $request->input('valor_min', 30000);
-        $valorMax = $request->input('valor_max', 200000);
+        $valorMin = floatval($request->input('valor_min', 0));
+        $valorMax = floatval($request->input('valor_max', 1000000));
+
         session(['valor_min' => $valorMin, 'valor_max' => $valorMax]);
 
         // Carrega os dados compartilhados
@@ -85,13 +89,21 @@ private function carregarDadosVeiculos()
         if ($request->filled('chassi'))        $query->where('chassi', 'LIKE', '%' . $request->input('chassi') . '%');
 
         if ($request->filled('valor'))         $query->where('vlr_tabela', '<=', $request->input('valor'));
+
+
         // Filtro de preço
-        $query->whereBetween('vlr_tabela', [$valorMin, $valorMax]);
+        // Se valor único for informado, aplica ele
+        if ($request->filled('valor')) {
+            $query->where('vlr_tabela', '<=', floatval($request->input('valor')));
+        } else {
+            // Caso contrário, aplica o range
+            $query->whereBetween('vlr_tabela', [$valorMin, $valorMax]);
+        }
 
         // Executa a consulta
         $veiculos = $query->orderBy('desc_veiculo')
-                        ->paginate($this->pg())
-                        ->appends(request()->query());  // Mantém os parâmetros de filtro na URL
+            ->paginate($this->pg())
+            ->appends(request()->query());  // Mantém os parâmetros de filtro na URL
 
         // Retorna a view com os dados filtrados
         return view('veiculos.usados.index', array_merge($dados, ['veiculos' => $veiculos]));

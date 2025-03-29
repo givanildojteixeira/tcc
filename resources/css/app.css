@@ -59,3 +59,48 @@ html, body {
     text-align: center;
 }
 
+/* fundo azul no rodape */
+.div-rodape {
+    background-color: #96a5a5;
+    color: white;
+    text-align: center;
+}
+
+    /* Seletores mais específicos para garantir aplicação */
+    #slider-preco .noUi-handle-upper {
+        right: 0px!important;
+    }
+
+    #slider-preco .noUi-target {
+        height: 6px !important;
+        border: none !important;
+        background: linear-gradient(90deg, #e0e0e0, #f3f3f3) !important;
+        border-radius: 6px;
+    }
+
+    /* barra */
+    #slider-preco .noUi-base {
+        height: 16px !important;
+    }
+
+    #slider-preco .noUi-connect {
+        background: linear-gradient(90deg, #48bb78, #38a169) !important;
+        border-radius: 6px;
+    }
+
+    /* apontadores laterais */
+    #slider-preco .noUi-handle {
+        width: 16px !important;
+        height: 16px !important;
+        top: 0px !important;
+        background-color: #3a38a1 !important;
+        border: 2px solid white !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+        transition: transform 0.2s, background-color 0.2s;
+        cursor: pointer;
+    }
+
+    #slider-preco .noUi-handle:hover {
+        background-color: #2f855a !important;
+        transform: scale(1.1);
+    }
