@@ -59,19 +59,10 @@ Route::middleware('auth')->group(function () {
     //Veiculos novos
     Route::get('/novos',[NovosController::class,'index'])->name('veiculos.novos.index');
     Route::get('/veiculos/novos/limpar-filtros', [NovosController::class, 'limparFiltros'])->name('veiculos.novos.limparFiltros');
-    // Route::get('/novos/chassi/{chassi}', [NovosController::class, 'filtrarPorChassi'])->name('veiculos.novos.filtroC');
-    // Route::get('/novos/familia/{familia}', [NovosController::class, 'filtrarPorFamilia'])->name('veiculos.novos.filtroF');
-    // Route::get('/novos/modelo/{veiculo}', [NovosController::class, 'filtrarPorVeiculo'])->name('veiculos.novos.filtroV');
-    // Route::get('/novos/combustivel/{combustivel}', [NovosController::class, 'filtrarPorCombustivel'])->name('veiculos.novos.filtroCombustivel');
-    // Route::get('/novos/transmissao/{transmissao}', [NovosController::class, 'filtrarPorTransmissao'])->name('veiculos.novos.filtroTransmissao');
-    // Route::get('/novos/cor/{cor}', [NovosController::class, 'filtrarPorCor'])->name('veiculos.novos.filtroCor');
-    // Route::get('/novos/ano-modelo/{ano_modelo}', [NovosController::class, 'filtrarPorAnoModelo'])
-    // ->where('ano_modelo', '.*') // Permite qualquer caractere, incluindo "/"
-    // ->name('veiculos.novos.filtroAnoModelo');
-
 
     //Veiculos usados
     Route::get('/usados',[UsadosController::class,'index'])->name('veiculos.usados.index');
+    Route::get('/veiculos/usados/limpar-filtros', [UsadosController::class, 'limparFiltros'])->name('veiculos.usados.limparFiltros');
 
     //Propostas
     Route::get('/propostas.index',[PropostasController::class,'index'])->name('propostas.index');

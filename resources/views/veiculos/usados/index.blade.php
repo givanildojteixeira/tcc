@@ -3,11 +3,11 @@
     <x-slot name="header">
         <div class="flex gap-1">
             <!-- Card para Pesquisas Combinadas -->
-            <div class="relative bg-white shadow-lg rounded-lg overflow-hidden w-2/3 p-2">
-                <div class="grid grid-cols-3 gap-2 items-center content-center h-full">
+            <div class="relative bg-white shadow-lg rounded-lg overflow-hidden w-2/3 p-1 px-1 py-1">
+                <div class="grid grid-cols-3 gap-1 px-1 py-1 items-center content-center h-full">
 
                     <!-- ComboBox Marca -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1 px-1 py-1">
                         <span class="text-xs font-semibold text-gray-600">Marca:</span>
                         <select id="marcaVeiculo"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
@@ -24,7 +24,7 @@
                     </div>
 
                     <!-- ComboBox Modelo -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1 px-1 py-1">
                         <span class="text-xs font-semibold text-gray-600">Modelo:</span>
                         <select id="modeloVeiculo"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
@@ -64,7 +64,7 @@
                     </div>
 
                     <!-- Cores Veículos -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1 px-1 py-1">
                         <span class="text-xs font-semibold text-gray-600">Cor:</span>
                         <select id="corVeiculo"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
@@ -82,7 +82,7 @@
 
 
                     <!-- Ano_Mod Veículos -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1 px-1 py-1">
                         <span class="text-xs font-semibold text-gray-600">Ano/Modelo:</span>
                         <select id="anoVeiculo"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
@@ -120,10 +120,10 @@
             </div>
 
             {{-- Bloco de pesquisa especifica --}}
-            <div class="flex justify-center bg-white shadow-lg rounded-lg overflow-hidden w-1/3 p-2">
+            <div class="flex justify-center bg-white shadow-lg rounded-lg overflow-hidden w-1/3 p-1 px-1 py-1">
                 <div class="flex flex-col w-full">
                     <!-- Campo de Pesquisa Chassi com Botão -->
-                    <div class="flex items-center gap-2 mb-4">
+                    <div class="flex items-center gap-1 px-1 py-1 mb-4">
                         <span class="text-xs font-semibold text-gray-600">Chassi:</span>
                         <input type="text" id="chassiPesquisa"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
@@ -135,7 +135,7 @@
                     </div>
 
                     <!-- Filtro de Preço -->
-                    <div class="flex items-center justify-between gap-2 w-full text-xs text-gray-600">
+                    <div class="flex items-center justify-between gap-1 px-1 py-1 w-full text-xs text-gray-600">
                         <div class="text-xs font-semibold text-center leading-tight"> Faixa de Valor </div>
                         <div class="flex flex-col items-center w-full">
                             <div id="slider-preco" class="w-full"></div>
@@ -164,8 +164,7 @@
                     <i class="fas fa-question-circle"></i>
                 </button>
                 <!-- Botão Relatorios -->
-                <button onclick="limparFiltros()" title="Imprimir"
-                    class="text-green-600 hover:text-green-800 text-xl">
+                <button onclick="gerarRelatorio()" title="Imprimir" class="text-green-600 hover:text-green-800 text-xl">
                     <i class="fas fa-print"></i>
                 </button>
                 <!-- Botão de Limpar Filtros -->
@@ -185,27 +184,27 @@
                         <table class="table-auto w-full">
                             <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                 <tr>
-                                    <th class="sortable p-2" data-column="marca">Marca <i
+                                    <th class="sortable p-1 px-1 py-1" data-column="marca">Marca <i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
-                                    <th class="sortable p-2" data-column="veiculo">Modelo<i
+                                    <th class="sortable p-1 px-1 py-1" data-column="veiculo">Modelo<i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
-                                    <th class="sortable p-2" data-column="combustivel">Comb <i
+                                    <th class="sortable p-1 px-1 py-1" data-column="combustivel">Comb <i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
-                                    <th class="sortable p-2" data-column="ano/mod">Ano_Mod <i
+                                    <th class="sortable p-1 px-1 py-1" data-column="ano/mod">Ano_Mod <i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
-                                    <th class="sortable p-2" data-column="chassi">Chassi <i
+                                    <th class="sortable p-1 px-1 py-1" data-column="chassi">Chassi <i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
-                                    <th class="sortable p-2" data-column="cor">Cor <i
+                                    <th class="sortable p-1 px-1 py-1" data-column="cor">Cor <i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
-                                    <th class="sortable p-2" data-column="pts">Pts<i
+                                    <th class="sortable p-1 px-1 py-1" data-column="pts">Pts<i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
-                                    <th class="sortable p-2 text-right" data-column="custo">Custo <i
+                                    <th class="sortable p-1 px-1 py-1 text-right" data-column="custo">Custo <i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                     </th>
-                                    <th class="sortable p-2 text-right" data-column="tabela">Tabela <i
+                                    <th class="sortable p-1 px-1 py-1 text-right" data-column="tabela">Tabela <i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                     </th>
-                                    <th class="sortable p-2" data-column="faturado">Estoque<i
+                                    <th class="sortable p-1 px-1 py-1" data-column="faturado">Estoque<i
                                             class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                     </th>
                                     <th class="hidden">Local</th> <!-- Coluna oculta -->
@@ -224,16 +223,18 @@
                                         }
                                     @endphp
                                     <tr class="hover:bg-gray-100 {{ $rowColor }}">
-                                        <td class="p-2">{{ $veiculo->marca }}</td>
-                                        <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
-                                        <td class="p-2">{{ $veiculo->combustivel }}</td>
-                                        <td class="p-2 text-center">{{ $veiculo->Ano_Mod }}</td>
-                                        <td class="p-2">{{ $veiculo->chassi }}</td>
-                                        <td class="p-2">{{ $veiculo->cor }}</td>
-                                        <td class="p-2  text-center">{{ $veiculo->portas }}</td>
-                                        <td class="p-2 text-right"> {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
-                                        <td class="p-2 text-right"> {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
-                                        <td class="p-2 text-center">
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->marca }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
+                                        <td class="p-1 px-1 py-1 text-center">{{ $veiculo->Ano_Mod }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
+                                        <td class="p-1 px-1 py-1  text-center">{{ $veiculo->portas }}</td>
+                                        <td class="p-1 px-1 py-1 text-right">
+                                            {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
+                                        <td class="p-1 px-1 py-1 text-right">
+                                            {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
+                                        <td class="p-1 px-1 py-1 text-center">
                                             {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
                                             dias
                                         </td>
@@ -269,6 +270,60 @@
                 style="cursor: pointer;">Consignado</span>
         </div>
     </x-rodape>
+
+    <!-- Modal de Ajuda -->
+    <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
+
+            <!-- Ícone de Informação à esquerda -->
+            <div class="flex items-start">
+                <i class="fas fa-info-circle text-blue-500 text-6xl"></i>
+            </div>
+
+            <!-- Conteúdo do Modal -->
+            <div class="flex-1 relative">
+                <!-- Botão de Fechar -->
+                <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
+                    class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-2xl">
+                    &times;
+                </button>
+
+                <h2 class="text-2xl font-bold text-blue-600 mb-4">Instruções da Tela de Veículos Semi-Novos</h2>
+
+                <p class="mb-3 text-sm text-gray-700 leading-relaxed">
+                    Esta tela tem como objetivo <strong>exibir e filtrar veículos Semi-Novos</strong> disponíveis no
+                    estoque,
+                    tanto da Matriz quanto das filias ou até mesmo em consignação que são os veiculos que nao fazem
+                    parte do
+                    estoque da empresa, por serem veiculos, que os clientes deixaram para vender.
+                    Utilize os recursos abaixo para uma busca eficaz:
+                </p>
+
+                <ul class="list-disc list-inside text-sm text-gray-800 space-y-2">
+                    <li><strong>Combos de Filtro:</strong> Utilize as caixas Marca, Modelo, Combustível, Ano/Modelo,
+                        Portas ou Cor
+                        para refinar sua busca. </li>
+                    <li><strong>Busca por Chassi:</strong> É uma pesquisa direta, sem filtro, que permite localizar veículos digitando parte do número do
+                        chassi.</li>
+                    <li><strong>Busca por Faixa de Valor:</strong>  É uma pesquisa direta, sem filtro, que permite localizar veículos tendo como base seu valor Minimo
+                        e máximo, ao preço de tabela do semi-novo.</li>
+                    <li><strong>Legenda de Cores:</strong> Indica a localização dos veículos: <span
+                            class="text-black font-bold">Matriz</span>, <span
+                            class="text-yellow-500 font-bold">Filial</span> ou <span
+                            class="text-green-500 font-bold">Consignação</span>
+                        , clique sobre eles para refinar ainda mais sua busca.</li>
+                </ul>
+
+                <div class="mt-6 text-right">
+                    <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
+                        class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
+                        Entendi!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Scripts -->
     <script>
@@ -325,8 +380,20 @@
 
         // Redireciona para a página sem parâmetros de filtro
         function limparFiltros() {
-            window.location.href = window.location.pathname;
+            window.location.href = "{{ route('veiculos.usados.limparFiltros') }}";
         }
+
+        function gerarRelatorio() {
+            const url = new URL(window.location.href);
+
+            // Adiciona ou substitui o parâmetro 'relatorio'
+            url.searchParams.set('relatorio', '1');
+
+            // Redireciona para a nova URL
+            window.location.href = url.toString();
+        }
+
+
 
         // Ordenação da tabela ao clicar no cabeçalho
         document.addEventListener("DOMContentLoaded",

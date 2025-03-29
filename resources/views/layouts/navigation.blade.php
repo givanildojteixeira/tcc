@@ -24,7 +24,7 @@
                         {{ __('Veículos Novos') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('veiculos.usados.index')" :active="request()->routeIs('veiculos.usados.index')">
+                    <x-nav-link :href="route('veiculos.usados.limparFiltros')" :active="request()->routeIs('veiculos.usados.index')">
                         <i class="fas fa-car-crash mr-2"></i>
                         {{ __('Veículos Usados') }}
                     </x-nav-link>

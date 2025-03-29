@@ -252,24 +252,24 @@
                                                     faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}'
                                                 }
                                             ">
-                                            <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
-                                            <td class="p-2">{{ $veiculo->modelo_fab }}</td>
-                                            <td class="p-2">{{ $veiculo->combustivel }}</td>
-                                            <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
-                                            <td class="p-2">{{ $veiculo->chassi }}</td>
-                                            <td class="p-2">{{ $veiculo->cor }}</td>
-                                            <td class="p-2 text-center">{{ $veiculo->portas }}</td>
-                                            <td class="p-2 text-center">{{ $veiculo->cod_opcional }}</td>
-                                            <td class="p-2 text-right">
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->modelo_fab }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->Ano_Mod }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
+                                            <td class="p-1 px-1 py-1 text-center">{{ $veiculo->portas }}</td>
+                                            <td class="p-1 px-1 py-1 text-center">{{ $veiculo->cod_opcional }}</td>
+                                            <td class="p-1 px-1 py-1 text-right">
                                                 {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
                                             </td>
-                                            <td class="p-2 text-right">
+                                            <td class="p-1 px-1 py-1 text-right">
                                                 {{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
                                             </td>
-                                            <td class="p-2 text-right">
+                                            <td class="p-1 px-1 py-1 text-right">
                                                 {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
                                             </td>
-                                            <td class="p-2 text-center">
+                                            <td class="p-1 px-1 py-1text-center">
                                                 {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
                                                 dias
                                             </td>

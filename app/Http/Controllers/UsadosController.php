@@ -105,10 +105,28 @@ class UsadosController extends Controller
             ->paginate($this->pg())
             ->appends(request()->query());  // Mantém os parâmetros de filtro na URL
 
+        // Verifica se o usuário quer ver como relatório
+        if ($request->filled('relatorio')) {
+            return view('veiculos.usados.relatorios.lista', array_merge($dados, ['veiculos' => $veiculos]));
+        }
+
         // Retorna a view com os dados filtrados
         return view('veiculos.usados.index', array_merge($dados, ['veiculos' => $veiculos]));
     }
 
+    public function limparFiltros()
+    {
+        session()->forget('marca_selecionado');
+        session()->forget('modelo_selecionado');
+        session()->forget('ano_selecionado');
+        session()->forget('combustivel_selecionado');
+        session()->forget('transmissao_selecionado');
+        session()->forget('cor_selecionado');
+        session()->forget('portas_selecionado');
+        session()->forget('chassi_selecionado');
+
+        return redirect()->route('veiculos.usados.index');
+    }
 
     /**
      * Show the form for creating a new resource.
