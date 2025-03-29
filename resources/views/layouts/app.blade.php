@@ -33,12 +33,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
+    <!-- bara de busca por valor usado -->
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/js/splide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/css/splide.min.css">
 
-
+    <!-- bara de busca por valor usado -->
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.js"></script>
 
 
 </head>
@@ -49,11 +51,11 @@
 
         <!-- Page Heading -->
         @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="mx-auto sm:px-4 lg:px-6"> {{-- retirei: max-w-7xl para ocupar a tela toda --}}
-                    {{ $header }}
-                </div>
-            </header>
+        <header class="bg-white dark:bg-gray-800 shadow">
+            <div class="mx-auto sm:px-4 lg:px-6"> {{-- retirei: max-w-7xl para ocupar a tela toda --}}
+                {{ $header }}
+            </div>
+        </header>
         @endif
 
         <!-- Page Content -->
@@ -61,6 +63,8 @@
             {{ $slot }}
         </main>
     </div>
+
+
 
 
 

@@ -1,9 +1,9 @@
 <!-- VEICULOS USADOS -->
 <x-app-layout>
     <x-slot name="header">
-        <div class="grid grid-cols-6 gap-2 p-4">
+        <div class="flex gap-1">
             <!-- Card para Pesquisas Combinadas -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-4 col-span-6 md:col-span-3">
+            <div class="relative bg-white shadow-lg rounded-lg overflow-hidden w-2/3 p-2">
                 <div class="grid grid-cols-3 gap-2 items-center content-center h-full">
 
                     <!-- ComboBox Marca -->
@@ -118,59 +118,54 @@
                     </div>
                 </div>
             </div>
-
             {{-- Bloco de pesquisa especifica --}}
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-4 col-span-6 md:col-span-2">
+            <div class="flex justify-center bg-white shadow-lg rounded-lg overflow-hidden w-1/3 p-2">
                 <div class="flex flex-col w-full">
                     <!-- Campo de Pesquisa Chassi com Botão -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 mb-4">
                         <span class="text-xs font-semibold text-gray-600">Chassi:</span>
                         <input type="text" id="chassiPesquisa"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             placeholder="Digite parte do chassi"
                             value="{{ session('chassi_selecionado', '') }}">
                         <button onclick="atualizarFiltro('chassi', document.getElementById('chassiPesquisa').value)"
-                            class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
+                            class="px-1 py-1 text-white rounded-md hover:bg-blue-600">
                             🔍
                         </button>
                     </div>
 
                     <!-- Filtro de Preço -->
-                    <span class="text-xs font-semibold text-gray-600 border-t border-gray-500">
-                        Faixa de Preço:
-                        <span id="minValorLabel">Min R$
-                            {{ number_format(session('valor_min', 30000), 2, ',', '.') }}</span>
-                        &nbsp;⇄&nbsp;
-                        <span id="maxValorLabel">Max R$
-                            {{ number_format(session('valor_max', 200000), 2, ',', '.') }}</span>
-                    </span>
+                    <div class="w-full bg-gray-100 p-3 rounded-lg border border-gray-300 shadow-sm">
+                        <div id="slider-preco"></div>
 
-                    <!-- Sliders ocupando toda a largura -->
-                    <div class="flex items-center gap-2 w-full">
-                        <input type="range" id="minValor" name="valor_min" min="30000" max="200000"
-                            step="1000" value="{{ session('valor_min', 30000) }}" oninput="atualizarValores()"
-                            class="w-full">
+                        <div class="text-xs font-semibold text-gray-700 mt-2 text-center">
+                            Faixa de Preço:
+                            <span id="minValorLabel">R$ {{ number_format(session('valor_min', 30000), 2, ',', '.') }}</span>
+                            ⇄
+                            <span id="maxValorLabel">R$ {{ number_format(session('valor_max', 200000), 2, ',', '.') }}</span>
+                        </div>
 
-                        <input type="range" id="maxValor" name="valor_max" min="30000" max="200000"
-                            step="1000" value="{{ session('valor_max', 200000) }}" oninput="atualizarValores()"
-                            class="w-full">
-                        <button onclick="aplicarFiltroPreco()"
-                            class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
-                            🔍
+                        <button onclick="aplicarFiltroPreco()" class="mt-2 bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-3 rounded-full">
+                            Aplicar 🔍
                         </button>
                     </div>
+
+
                 </div>
             </div>
-            {{-- Bloco Limpa filtro --}}
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-4 col-span-6 md:col-span-1">
-                <div class="grid grid-cols-3 gap-2 items-center content-center h-full">
-                    <div class="flex justify-center items-center col-span-3">
-                        <button onclick="limparFiltros()"
-                            class="px-4 py-2 text-black border border-red-500 bg-white rounded-md text-xs hover:bg-red-100 hover:border-red-600 flex items-center gap-2">
-                            <span>❌</span> Limpar Filtros
-                        </button>
-                    </div>
-                </div>
+            <!-- Card para Botões de ajuda e limpa filtros -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-[4%] flex flex-col items-center justify-center gap-2">
+                <!-- Botão de Ajuda -->
+                <button onclick="document.getElementById('modalAjuda').classList.remove('hidden')"
+                    class="text-blue-600 hover:text-blue-800 text-xl" title="Ajuda">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+
+                <!-- Botão de Limpar Filtros -->
+                <button onclick="limparFiltros()" title="Limpar Filtros"
+                    class="text-red-600 hover:text-red-800 text-xl">
+                    <i class="fas fa-times-circle"></i>
+                </button>
             </div>
         </div>
     </x-slot>
@@ -283,25 +278,49 @@
             window.location.href = "{{ route('veiculos.usados.index') }}?" + params.toString();
         }
 
-        function atualizarValores() {
-            let minValor = document.getElementById('minValor');
-            let maxValor = document.getElementById('maxValor');
-            let minValorLabel = document.getElementById('minValorLabel');
-            let maxValorLabel = document.getElementById('maxValorLabel');
+        document.addEventListener("DOMContentLoaded", function() {
+            const slider = document.getElementById('slider-preco');
 
-            // Se o mínimo for maior que o máximo, ajusta automaticamente
-            if (parseInt(minValor.value) > parseInt(maxValor.value)) {
-                minValor.value = maxValor.value;
-            }
+            noUiSlider.create(slider, {
+                start: [{
+                    {
+                        session('valor_min', 30000)
+                    }
+                }, {
+                    {
+                        session('valor_max', 200000)
+                    }
+                }],
+                connect: true,
+                step: 1000,
+                range: {
+                    'min': 30000,
+                    'max': 200000
+                },
+                format: {
+                    to: value => parseInt(value),
+                    from: value => parseInt(value)
+                }
+            });
 
-            // Atualiza os rótulos na tela
-            minValorLabel.innerText = 'Min R$ ' + parseFloat(minValor.value).toLocaleString('pt-BR', {
-                minimumFractionDigits: 2
+            const minLabel = document.getElementById('minValorLabel');
+            const maxLabel = document.getElementById('maxValorLabel');
+
+            slider.noUiSlider.on('update', function(values) {
+                minLabel.innerText = `R$ ${parseInt(values[0]).toLocaleString('pt-BR')}`;
+                maxLabel.innerText = `R$ ${parseInt(values[1]).toLocaleString('pt-BR')}`;
             });
-            maxValorLabel.innerText = 'Max R$ ' + parseFloat(maxValor.value).toLocaleString('pt-BR', {
-                minimumFractionDigits: 2
-            });
-        }
+
+            window.aplicarFiltroPreco = function() {
+                const valores = slider.noUiSlider.get();
+                const params = new URLSearchParams(window.location.search);
+
+                params.set('valor_min', valores[0]);
+                params.set('valor_max', valores[1]);
+
+                window.location.href = "{{ route('veiculos.novos.index') }}?" + params.toString();
+            };
+        });
 
         function aplicarFiltroPreco() {
             let min = document.getElementById('minValor').value;

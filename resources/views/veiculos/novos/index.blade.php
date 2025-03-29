@@ -153,8 +153,7 @@
 
 
             <!-- Card para Botões de ajuda e limpa filtros -->
-            <div
-                class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-[4%] flex flex-col items-center justify-center gap-2">
+            <div  class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-[4%] flex flex-col items-center justify-center gap-2">
                 <!-- Botão de Ajuda -->
                 <button onclick="document.getElementById('modalAjuda').classList.remove('hidden')"
                     class="text-blue-600 hover:text-blue-800 text-xl" title="Ajuda">
