@@ -3,51 +3,45 @@
     <x-slot name="header">
         <div class="flex gap-1">
             <!-- Carrossel de Veículos -->
-            <div class="swiper mySwiper bg-white shadow-lg rounded-lg overflow-hidden w-2/3"
+            <div class="relative bg-white shadow-lg rounded-lg overflow-hidden w-2/3"
                 title="Clique sobre o veículo para filtrar todos os modelos de sua Família.">
-                <div class="swiper-wrapper">
-                    @foreach ($imagens as $imagem)
-                        @php
-                            $familia = ucfirst(pathinfo(basename($imagem), PATHINFO_FILENAME));
+                <div id="carrossel" class="splide w-full bg-white shadow-lg rounded-lg p-3">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            @foreach ($imagens as $index => $imagem)
+                                @php
+                                    $familia = ucfirst(pathinfo(basename($imagem), PATHINFO_FILENAME));
+                                    $familiaSelecionada = request()->query('familia');
+                                    $selecionado = $familiaSelecionada == $familia ? 'border-4 border-blue-500' : '';
+                                    $textoSelecionado =
+                                        $familiaSelecionada == $familia ? 'text-blue-600 font-bold' : '';
+                                @endphp
 
-                            // Verifica se o filtro 'familia' está presente na URL
-                            $familiaSelecionada = request()->query('familia');
-
-                            // Se a 'familiaSelecionada' for igual à família da imagem, aplica a borda
-                            $selecionado = $familiaSelecionada == $familia ? 'border-4 border-blue-500' : '';
-                            $textoSelecionado = $familiaSelecionada == $familia ? 'text-blue-600 font-bold' : '';
-                        @endphp
-                        <div>
-                            <div class="swiper-slide text-center mt-3 cursor-pointer"
-                                onclick="atualizarFiltro('familia', '{{ $familia }}')">
-                                <img src="{{ asset('images/familia/' . basename($imagem)) }}" alt="Imagem do Veículo"
-                                    class="rounded-lg max-w-[80px] max-h-[80px] object-cover {{ $selecionado }}">
-                                <div class="text-sm font-semibold mt-2 text-center {{ $textoSelecionado }}">
-                                    {{ $familia }}</div>
-                            </div>
-                        </div>
-                    @endforeach
+                                <li class="splide__slide text-center cursor-pointer" data-index="{{ $index }}"
+                                    onclick="atualizarFiltro('familia', '{{ $familia }}')">
+                                    <img src="{{ asset('images/familia/' . basename($imagem)) }}"
+                                        alt="{{ $familia }}"
+                                        class="rounded-lg max-w-[100px] max-h-[100px] object-cover {{ $selecionado }}">
+                                    <div class="text-sm font-semibold mt-2 text-center {{ $textoSelecionado }}">
+                                        {{ $familia }}
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
-                <!-- Botões de navegação -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
             </div>
 
-
-
-
-
-            <!-- Card de Filtros -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/3">
-                <div class="grid grid-cols-1 gap-2">
+            <!-- Filtros de modelo e chassi -->
+            <div class="flex justify-center bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/3">
+                <div class="grid grid-cols-1 gap-2 w-full">
                     <!-- ComboBox Modelo -->
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-semibold text-gray-600">Modelo:</span>
+                    <div class="flex items-center gap-2 w-full">
+                        <span class="text-xs font-semibold text-gray-600 whitespace-nowrap">Modelo:</span>
                         <select id="modeloVeiculo"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('modelo', this.value)">
-                            <option value="" disabled
-                                {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            <option value="" disabled {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
                             @foreach ($veiculosUnicos as $veiculo)
                                 <option value="{{ $veiculo->desc_veiculo }}"
                                     {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
@@ -58,109 +52,101 @@
                     </div>
 
                     <!-- Campo de Pesquisa Chassi com Botão -->
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-semibold text-gray-600">Chassi:</span>
+                    <div class="flex items-center gap-2 w-full">
+                        <span class="text-xs font-semibold text-gray-600 whitespace-nowrap">Chassi:</span>
                         <input type="text" id="chassiPesquisa"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             placeholder="Digite parte do chassi" value="{{ session('chassi_selecionado', '') }}">
                         <button onclick="atualizarFiltro('chassi', document.getElementById('chassiPesquisa').value)"
-                            class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
+                            class="px-3 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600 text-xs">
                             🔍
                         </button>
                     </div>
                 </div>
             </div>
 
+
             <!-- Card para Pesquisas Combinadas -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/2">
-                <div class="grid grid-cols-2 gap-2">
+            <div class="flex justify-center bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/2">
+                <div class="grid grid-cols-2 gap-2 w-full">
                     <!-- Combustível -->
-                    <div class="flex items-center gap-1">
-                        <span class="text-xs font-semibold text-gray-600">Combustível:</span>
+                    <div class="flex items-center gap-2 w-full">
+                        <span class="text-xs font-semibold text-gray-600 whitespace-nowrap">Combustível:</span>
                         <select id="combustivel"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('combustivel', this.value)">
-                            <option value="" disabled
-                                {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Selecione</option>
-                            <option value="Gasolina"
-                                {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : '' }}>Gasolina
-                            </option>
-                            <option value="Alcool"
-                                {{ session('combustivel_selecionado') == 'Alcool' ? 'selected' : '' }}>Álcool</option>
-                            <option value="Flex"
-                                {{ session('combustivel_selecionado') == 'Flex' ? 'selected' : '' }}>Flex</option>
-                            <option value="Diesel"
-                                {{ session('combustivel_selecionado') == 'Diesel' ? 'selected' : '' }}>Diesel</option>
-                            <option value="Eletrico"
-                                {{ session('combustivel_selecionado') == 'Eletrico' ? 'selected' : '' }}>Elétrico
-                            </option>
+                            <option value="" disabled {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            <option value="Gasolina" {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : '' }}>Gasolina</option>
+                            <option value="Alcool" {{ session('combustivel_selecionado') == 'Alcool' ? 'selected' : '' }}>Álcool</option>
+                            <option value="Flex" {{ session('combustivel_selecionado') == 'Flex' ? 'selected' : '' }}>Flex</option>
+                            <option value="Diesel" {{ session('combustivel_selecionado') == 'Diesel' ? 'selected' : '' }}>Diesel</option>
+                            <option value="Eletrico" {{ session('combustivel_selecionado') == 'Eletrico' ? 'selected' : '' }}>Elétrico</option>
                         </select>
                     </div>
 
                     <!-- Ano/Modelo -->
-                    <div class="flex items-center gap-1">
-                        <span class="text-xs font-semibold text-gray-600">Ano/Modelo:</span>
+                    <div class="flex items-center gap-2 w-full">
+                        <span class="text-xs font-semibold text-gray-600 whitespace-nowrap">Ano/Modelo:</span>
                         <select id="anoModelo"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('ano', this.value)">
-                            <option value="" disabled {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
-                                Selecione</option>
-                            <option value="2024/2024"
-                                {{ session('ano_selecionado') == '2024/2024' ? 'selected' : '' }}>2024/2024
-                            </option>
-                            <option value="2024/2025"
-                                {{ session('ano_selecionado') == '2024/2025' ? 'selected' : '' }}>2024/2025
-                            </option>
-                            <option value="2025/2025"
-                                {{ session('ano_selecionado') == '2025/2025' ? 'selected' : '' }}>2025/2025
-                            </option>
-                            <option value="2025/2026"
-                                {{ session('ano_selecionado') == '2025/2026' ? 'selected' : '' }}>2025/2026
-                            </option>
+                            <option value="" disabled {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            <option value="2024/2024" {{ session('ano_selecionado') == '2024/2024' ? 'selected' : '' }}>2024/2024</option>
+                            <option value="2024/2025" {{ session('ano_selecionado') == '2024/2025' ? 'selected' : '' }}>2024/2025</option>
+                            <option value="2025/2025" {{ session('ano_selecionado') == '2025/2025' ? 'selected' : '' }}>2025/2025</option>
+                            <option value="2025/2026" {{ session('ano_selecionado') == '2025/2026' ? 'selected' : '' }}>2025/2026</option>
                         </select>
                     </div>
 
                     <!-- Transmissão -->
-                    <div class="flex items-center gap-1">
-                        <span class="text-xs font-semibold text-gray-600">Transmissão:</span>
+                    <div class="flex items-center gap-2 w-full">
+                        <span class="text-xs font-semibold text-gray-600 whitespace-nowrap">Transmissão:</span>
                         <select name="transmissao"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('transmissao', this.value)">
                             <option value="" disabled selected>Selecione</option>
-                            <option value="Mecânica"
-                                {{ session('transmissao_selecionado') == 'Mecânica' ? 'selected' : '' }}>Mecânica
-                            </option>
-                            <option value="Automático"
-                                {{ session('transmissao_selecionado') == 'Automático' ? 'selected' : '' }}>Automático
-                            </option>
-                            <option value="CVT" {{ session('transmissao_selecionado') == 'CVT' ? 'selected' : '' }}>
-                                CVT</option>
+                            <option value="Mecânica" {{ session('transmissao_selecionado') == 'Mecânica' ? 'selected' : '' }}>Mecânica</option>
+                            <option value="Automático" {{ session('transmissao_selecionado') == 'Automático' ? 'selected' : '' }}>Automático</option>
+                            <option value="CVT" {{ session('transmissao_selecionado') == 'CVT' ? 'selected' : '' }}>CVT</option>
                         </select>
                     </div>
 
-                    <!-- Cores Veículos -->
-                    <div class="flex items-center gap-1">
-                        <span class="text-xs font-semibold text-gray-600">Cor:</span>
+                    <!-- Cor -->
+                    <div class="flex items-center gap-2 w-full">
+                        <span class="text-xs font-semibold text-gray-600 whitespace-nowrap">Cor:</span>
                         <select name="corVeiculos"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('cor', this.value)">
-                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>
-                                Todos</option>
+                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>Todos</option>
                             @foreach ($cores as $cor)
-                                <option value="{{ $cor->cor }}"
-                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
+                                <option value="{{ $cor->cor }}" {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
                                     {{ $cor->cor }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
-
                 </div>
+            </div>
+
+
+            <!-- Card para Botões de ajuda e limpa filtros -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-[4%] flex flex-col items-center justify-center gap-2">
+                <!-- Botão de Ajuda -->
+                <button onclick="document.getElementById('modalAjuda').classList.remove('hidden')"
+                    class="text-blue-600 hover:text-blue-800 text-xl" title="Ajuda">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+
+                <!-- Botão de Limpar Filtros -->
+                <button onclick="limparFiltros()" title="Limpar Filtros"
+                    class="text-red-600 hover:text-red-800 text-xl">
+                    <i class="fas fa-times-circle"></i>
+                </button>
             </div>
         </div>
     </x-slot>
 
-    <div> <!-- Container flexível -->
+    <div> <!-- Tabelas dos dados -->
         <div class="w-full max-w-full">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
@@ -233,8 +219,6 @@
         </div>
     </div>
 
-
-
     <!-- Barra fixa abaixo da tabela -->
     <div class="fixed bottom-0 left-0 w-full bg-white shadow-lg p-2 border-t border-gray-300">
         <div class="flex justify-between items-center">
@@ -258,6 +242,58 @@
         </div>
     </div>
 
+    <!-- Modal de Ajuda -->
+    <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
+
+            <!-- Ícone de Informação à esquerda -->
+            <div class="flex items-start">
+                <i class="fas fa-info-circle text-blue-500 text-6xl"></i>
+            </div>
+
+            <!-- Conteúdo do Modal -->
+            <div class="flex-1 relative">
+                <!-- Botão de Fechar -->
+                <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
+                    class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-2xl">
+                    &times;
+                </button>
+
+                <h2 class="text-2xl font-bold text-blue-600 mb-4">Instruções da Tela de Veículos Novos</h2>
+
+                <p class="mb-3 text-sm text-gray-700 leading-relaxed">
+                    Esta tela tem como objetivo <strong>exibir e filtrar veículos novos</strong> disponíveis no estoque,
+                    tanto da Matriz quanto das filias ou até mesmo em trânsito.
+                    Utilize os recursos abaixo para uma busca eficaz:
+                </p>
+
+                <ul class="list-disc list-inside text-sm text-gray-800 space-y-2">
+                    <li><strong>Carrossel de Imagens:</strong> Clique sobre a imagem de um veículo para filtrar modelos
+                        da mesma família.</li>
+                    <li><strong>Combos de Filtro:</strong> Utilize as caixas Combustível, Ano/Modelo, Transmissão ou Cor
+                        para refinar sua busca. </li>
+                    <li><strong>Busca por Modelo:</strong> Se uma familia estiver selecionada, estará visivel os modelos
+                        desta familia de veículos, caso contrário aparecerá todos os modelos
+                        disponiveis nos estoques ou em trânsito </li>
+                    <li><strong>Busca por Chassi:</strong> Permite localizar veículos digitando parte do número do
+                        chassi.</li>
+                    <li><strong>Legenda de Cores:</strong> Indica a localização dos veículos: <span
+                            class="text-black font-bold">Matriz</span>, <span
+                            class="text-yellow-500 font-bold">Filial</span> ou <span
+                            class="text-green-500 font-bold">Trânsito</span>
+                        , clique sobre eles para refinar ainda mais sua busca.</li>
+                </ul>
+
+                <div class="mt-6 text-right">
+                    <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
+                        class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
+                        Entendi!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script>
         function atualizarFiltro(chave, valor) {
@@ -273,153 +309,164 @@
             window.location.href = "{{ route('veiculos.novos.index') }}?" + params.toString();
         }
 
+        // Carrossel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verifica qual slide tem a borda azul (selecionado)
+            const slides = document.querySelectorAll('#carrossel .splide__slide');
+            let selectedIndex = 0;
 
+            slides.forEach((slide, index) => {
+                if (slide.querySelector('img')?.classList.contains('border-blue-500')) {
+                    selectedIndex = index;
+                }
+            });
 
-        document.addEventListener("DOMContentLoaded", function() {
-        // Inicializa o Swiper
-        var swiper = new Swiper(".mySwiper", {
-            slidesPerView: 4,  // Exibe 4 slides por vez
-            spaceBetween: 10,  // Espaçamento entre os slides
-            loop: true,        // Habilita o loop (os slides voltarão a aparecer após o último)
-            navigation: {
-                nextEl: ".swiper-button-next", // Botão de próxima slide
-                prevEl: ".swiper-button-prev", // Botão de slide anterior
-            },
-            breakpoints: {
-                // Responsividade para dispositivos menores
-                1024: {
-                    slidesPerView: 3, // Exibe 3 slides para telas grandes
+            const splide = new Splide('#carrossel', {
+                perPage: 5,
+                start: selectedIndex,
+                arrows: true,
+                gap: '1rem',
+                breakpoints: {
+                    1280: {
+                        perPage: 4
+                    },
+                    1024: {
+                        perPage: 3
+                    },
+                    768: {
+                        perPage: 2
+                    },
+                    480: {
+                        perPage: 1
+                    },
                 },
-                768: {
-                    slidesPerView: 2, // Exibe 2 slides para tablets
-                },
-                480: {
-                    slidesPerView: 1, // Exibe 1 slide para dispositivos móveis
-                },
-            },
+            });
+
+            splide.mount();
+
         });
 
+        function limparFiltros() {
+            window.location.href = "{{ route('veiculos.novos.index') }}";
+        }
 
-            // Ordenação da tabela ao clicar no cabeçalho
-            const headers = document.querySelectorAll('.sortable');
-            let sortDirection = 'asc'; // Direção inicial (ascendente)
 
-            headers.forEach(header => {
+        // Ordenação da tabela ao clicar no cabeçalho
+        const headers = document.querySelectorAll('.sortable');
+        let sortDirection = 'asc'; // Direção inicial (ascendente)
+
+        headers.forEach(header => {
+            const icon = header.querySelector('i');
+            if (icon) {
+                // Inicializa o ícone de ordenação
+                icon.classList.add('fa-sort');
+            }
+
+            header.addEventListener('click', function() {
+                const column = header.getAttribute('data-column');
+                sortTable(column, sortDirection);
+
+                // Alterna a direção de ordenação
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+
+                // Remove os ícones de todas as colunas
+                headers.forEach(h => {
+                    const icon = h.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-sort-up', 'fa-sort-down');
+                        icon.classList.add('fa-sort'); // Reseta o ícone para o padrão
+                    }
+                });
+
+                // Atualiza o ícone da coluna ordenada
                 const icon = header.querySelector('i');
-                if (icon) {
-                    // Inicializa o ícone de ordenação
-                    icon.classList.add('fa-sort');
-                }
-
-                header.addEventListener('click', function() {
-                    const column = header.getAttribute('data-column');
-                    sortTable(column, sortDirection);
-
-                    // Alterna a direção de ordenação
-                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-
-                    // Remove os ícones de todas as colunas
-                    headers.forEach(h => {
-                        const icon = h.querySelector('i');
-                        if (icon) {
-                            icon.classList.remove('fa-sort-up', 'fa-sort-down');
-                            icon.classList.add('fa-sort'); // Reseta o ícone para o padrão
-                        }
-                    });
-
-                    // Atualiza o ícone da coluna ordenada
-                    const icon = header.querySelector('i');
-                    if (sortDirection === 'asc') {
-                        icon.classList.remove('fa-sort');
-                        icon.classList.add('fa-sort-up'); // Ícone de ordenação ascendente
-                    } else {
-                        icon.classList.remove('fa-sort');
-                        icon.classList.add('fa-sort-down'); // Ícone de ordenação descendente
-                    }
-
-                    // Realce a coluna que foi ordenada
-                    headers.forEach(h => h.classList.remove('sorted'));
-                    header.classList.add('sorted'); // Adiciona a classe para a coluna ordenada
-                });
-            });
-
-            function sortTable(column, direction) {
-                const rows = Array.from(document.querySelectorAll('tbody tr'));
-                const index = Array.from(headers).findIndex(header => header.getAttribute('data-column') ===
-                    column);
-                const isNumeric = column === 'pts' || column === 'tabela' || column === 'bonus' || column ===
-                    'custo' || column === 'faturado'; // Defina quais colunas são numéricas
-
-                rows.sort((rowA, rowB) => {
-                    const cellA = rowA.cells[index].textContent.trim();
-                    const cellB = rowB.cells[index].textContent.trim();
-
-                    let a = isNumeric ? parseFloat(cellA.replace(/[^0-9.-]+/g, "")) : cellA.toLowerCase();
-                    let b = isNumeric ? parseFloat(cellB.replace(/[^0-9.-]+/g, "")) : cellB.toLowerCase();
-
-                    if (a < b) {
-                        return direction === 'asc' ? -1 : 1;
-                    }
-                    if (a > b) {
-                        return direction === 'asc' ? 1 : -1;
-                    }
-                    return 0;
-                });
-
-                // Reorganiza as linhas no corpo da tabela
-                const tbody = document.querySelector('tbody');
-                rows.forEach(row => tbody.appendChild(row));
-            }
-
-            // Variável para filtro da legenda (Local)
-            let activeFilter = null;
-
-            // Função para aplicar o filtro e atualizar o contador
-            function applyFilter() {
-                const rows = Array.from(document.querySelectorAll('tbody tr'));
-                let visibleCount = 0; // Contador de veículos visíveis
-
-                // Se nenhum filtro estiver ativo, exiba todas as linhas
-                if (!activeFilter) {
-                    rows.forEach(row => {
-                        row.style.display = '';
-                    });
-                    visibleCount = rows.length;
+                if (sortDirection === 'asc') {
+                    icon.classList.remove('fa-sort');
+                    icon.classList.add('fa-sort-up'); // Ícone de ordenação ascendente
                 } else {
-                    // Exiba apenas as linhas que correspondem ao filtro ativo
-                    rows.forEach(row => {
-                        const local = row.querySelector('td:nth-child(13)').textContent.trim();
-                        if (local === activeFilter) {
-                            row.style.display = '';
-                            visibleCount++;
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
+                    icon.classList.remove('fa-sort');
+                    icon.classList.add('fa-sort-down'); // Ícone de ordenação descendente
                 }
 
-                // Atualizar o contador na interface
-                const contador = document.getElementById('selectedVehiclesCount');
-                contador.textContent = activeFilter ?
-                    `Filtro Aplicado [${activeFilter}] - Veículos listados: ${visibleCount}` :
-                    `Veículos Listados: ${visibleCount}`;
-            }
+                // Realce a coluna que foi ordenada
+                headers.forEach(h => h.classList.remove('sorted'));
+                header.classList.add('sorted'); // Adiciona a classe para a coluna ordenada
+            });
+        });
 
-            // Evento de clique nas legendas
-            document.querySelectorAll('.filter').forEach(filter => {
-                filter.addEventListener('click', function() {
-                    const filterValue = this.getAttribute('data-filter');
+        function sortTable(column, direction) {
+            const rows = Array.from(document.querySelectorAll('tbody tr'));
+            const index = Array.from(headers).findIndex(header => header.getAttribute('data-column') ===
+                column);
+            const isNumeric = column === 'pts' || column === 'tabela' || column === 'bonus' || column ===
+                'custo' || column === 'faturado'; // Defina quais colunas são numéricas
 
-                    // Se já estiver ativo, desativa o filtro
-                    activeFilter = (activeFilter === filterValue) ? null : filterValue;
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[index].textContent.trim();
+                const cellB = rowB.cells[index].textContent.trim();
 
-                    // Aplica o filtro e atualiza o contador
-                    applyFilter();
-                });
+                let a = isNumeric ? parseFloat(cellA.replace(/[^0-9.-]+/g, "")) : cellA.toLowerCase();
+                let b = isNumeric ? parseFloat(cellB.replace(/[^0-9.-]+/g, "")) : cellB.toLowerCase();
+
+                if (a < b) {
+                    return direction === 'asc' ? -1 : 1;
+                }
+                if (a > b) {
+                    return direction === 'asc' ? 1 : -1;
+                }
+                return 0;
             });
 
+            // Reorganiza as linhas no corpo da tabela
+            const tbody = document.querySelector('tbody');
+            rows.forEach(row => tbody.appendChild(row));
+        }
 
+        // Variável para filtro da legenda (Local)
+        let activeFilter = null;
 
+        // Função para aplicar o filtro e atualizar o contador
+        function applyFilter() {
+            const rows = Array.from(document.querySelectorAll('tbody tr'));
+            let visibleCount = 0; // Contador de veículos visíveis
+
+            // Se nenhum filtro estiver ativo, exiba todas as linhas
+            if (!activeFilter) {
+                rows.forEach(row => {
+                    row.style.display = '';
+                });
+                visibleCount = rows.length;
+            } else {
+                // Exiba apenas as linhas que correspondem ao filtro ativo
+                rows.forEach(row => {
+                    const local = row.querySelector('td:nth-child(13)').textContent.trim();
+                    if (local === activeFilter) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            // Atualizar o contador na interface
+            const contador = document.getElementById('selectedVehiclesCount');
+            contador.textContent = activeFilter ?
+                `Filtro Aplicado [${activeFilter}] - Veículos listados: ${visibleCount}` :
+                `Veículos Listados: ${visibleCount}`;
+        }
+
+        // Evento de clique nas legendas
+        document.querySelectorAll('.filter').forEach(filter => {
+            filter.addEventListener('click', function() {
+                const filterValue = this.getAttribute('data-filter');
+
+                // Se já estiver ativo, desativa o filtro
+                activeFilter = (activeFilter === filterValue) ? null : filterValue;
+
+                // Aplica o filtro e atualiza o contador
+                applyFilter();
+            });
         });
     </script>
 </x-app-layout>
