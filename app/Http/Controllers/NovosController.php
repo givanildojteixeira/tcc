@@ -24,204 +24,101 @@ class NovosController extends Controller
     }
 
     // Método privado que carrega os dados compartilhados
-private function carregarDadosVeiculos()
-{
-    $campos = ['desc_veiculo', 'cor'];
-    $dados = [];
+    private function carregarDadosVeiculos($familia = null)
+    {
+        $campos = ['desc_veiculo', 'cor'];
+        $dados = [];
 
-    foreach ($campos as $campo) {
-        $dados[$campo] = Veiculo::select($campo)
-            ->distinct()
-            ->where([
-                ['marca', 'GM'],
-                ['novo_usado', 'Novo']
-            ])
-            ->get();
+        foreach ($campos as $campo) {
+            $query = Veiculo::select($campo)
+                ->distinct()
+                ->where([
+                    ['marca', 'GM'],
+                    ['novo_usado', 'Novo']
+                ]);
+
+            // Se houver um filtro de família, aplica o filtro no desc_veiculo
+            if ($familia) {
+                $query->where('desc_veiculo', 'LIKE', "%{$familia}%");
+            }
+
+            $dados[$campo] = $query->get();
+        }
+
+        // Carrega as imagens das famílias
+        $imagens = File::allFiles(public_path('images/familia'));
+
+        return [
+            'veiculosUnicos' => $dados['desc_veiculo'],
+            'cores' => $dados['cor'],
+            'imagens' => $imagens
+        ];
     }
 
-    // Carrega as imagens das famílias
-    $imagens = File::allFiles(public_path('images/familia'));
-
-    return [
-        'veiculosUnicos' => $dados['desc_veiculo'],
-        'cores' => $dados['cor'],
-        'imagens' => $imagens
-    ];
-}
-
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
+        // Verifica se o filtro de 'familia' foi alterado
+        $familia = $request->filled('familia') ? $request->input('familia') : null;
+
+        // Se a família foi alterada, limpa os filtros e redireciona para a URL apenas com 'familia'
+        if ($familia && session('familia_selecionado') !== $familia) {
+            // Limpa todos os filtros de sessão, exceto 'familia'
+            session()->forget([
+                'modelo_selecionado',
+                'chassi_selecionado',
+                'combustivel_selecionado',
+                'ano_selecionado',
+                'transmissao_selecionado',
+                'cor_selecionado'
+            ]);
+
+            // Salva apenas a nova família na sessão
+            session(['familia_selecionado' => $familia]);
+
+            // Redireciona para a URL atual com apenas o filtro 'familia'
+            return redirect()->route('veiculos.novos.index', ['familia' => $familia]);
+        }
+
+        // Se não houver alteração na família, mantém os filtros atuais na sessão
+        if ($request->has('familia'))      session(['familia_selecionado'     => $request->familia]);
+        if ($request->has('modelo'))       session(['modelo_selecionado'      => $request->modelo]);
+        if ($request->has('chassi'))       session(['chassi_selecionado'      => $request->chassi]);
+        if ($request->has('combustivel'))  session(['combustivel_selecionado' => $request->combustivel]);
+        if ($request->has('ano'))          session(['ano_selecionado'         => $request->ano]);
+        if ($request->has('transmissao'))  session(['transmissao_selecionado' => $request->transmissao]);
+        if ($request->has('cor'))          session(['cor_selecionado'         => $request->cor]);
+
         // Carrega os dados compartilhados
-        $dados = $this->carregarDadosVeiculos();
+        $dados = $this->carregarDadosVeiculos($familia);
 
-        //limpa filtros da sessão
-        session()->forget('modelo_selecionado');
-        session()->forget('ano_modelo_selecionado');
-        session()->forget('combustivel_selecionado');
-        session()->forget('transmissao_selecionada');
-        session()->forget('corVeiculos_selecionada');
+        // Inicia a query
+        $query = Veiculo::where('novo_usado', 'Novo')
+            ->where('marca', 'GM');
 
-        // Filtra
-        $veiculos = Veiculo::where('marca', 'GM')
-            ->where('novo_usado', 'Novo')
-            ->orderBy('desc_veiculo')
-            ->paginate($this->pg());
+        // Aplica os filtros baseados nos parâmetros da URL
+        if ($request->filled('familia'))       $query->where('familia', 'LIKE', '%' . $request->input('familia') . '%');
+        if ($request->filled('modelo'))        $query->where('desc_veiculo', $request->input('modelo'));
+        if ($request->filled('chassi'))        $query->where('chassi', 'LIKE', '%' . $request->input('chassi'));
+        if ($request->filled('cor'))           $query->where('cor', $request->input('cor'));
+        if ($request->filled('ano'))           $query->where('Ano_Mod', $request->input('ano'));
+        if ($request->filled('combustivel')) {
+            $combustivelAbreviado = strtoupper(substr($request->input('combustivel'), 0, 3));
+            $query->whereRaw('UPPER(SUBSTRING(combustivel, 1, 3)) = ?', [$combustivelAbreviado]);
+        }
+        if ($request->filled('transmissao')) {
+            $transmissaoAbreviada = strtoupper(substr($request->input('transmissao'), 0, 3));
+            $query->whereRaw('UPPER(SUBSTRING(combustivel, -3)) = ?', [$transmissaoAbreviada]);
+        }
+
+        // Executa a consulta
+        $veiculos = $query->orderBy('desc_veiculo')
+            ->paginate($this->pg())
+            ->appends(request()->query());  // Mantém os parâmetros de filtro na URL
 
         // Retorna a view
         return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
     }
 
-    //   FILTROS   **************************************
-
-    public function filtrarPorFamilia($familia)
-    {
-        // Carrega os dados compartilhados
-        $dados = $this->carregarDadosVeiculos();
-
-        // Filtro
-        $veiculos = Veiculo::where('desc_veiculo', 'LIKE', "%$familia%")
-            ->where('marca', 'GM')
-            ->where('novo_usado', 'Novo')
-            ->orderBy('desc_veiculo')
-            ->paginate($this->pg());
-
-        // Retorna a view
-        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
-    }
-
-    public function filtrarPorVeiculo($veiculo)
-    {
-        // Armazena o modelo na sessão
-        session(['modelo_selecionado' => $veiculo]);
-
-        // Carrega os dados compartilhados
-        $dados = $this->carregarDadosVeiculos();
-
-        // Filtra os veículos
-        $veiculos = Veiculo::where('desc_veiculo', '=', $veiculo)
-            ->where('marca', 'GM')
-            ->where('novo_usado', 'Novo')
-            ->orderBy('desc_veiculo')
-            ->paginate($this->pg());
-
-        // Retorna a view com os dados, incluindo o modelo selecionado na sessão
-        return view('veiculos.novos.index', array_merge($dados, [
-            'veiculos' => $veiculos,
-            'modelo' => $veiculo, // Passa o modelo selecionado para a view
-        ]));
-    }
-
-
-    public function filtrarPorChassi($chassi)
-    {
-        // Carrega os dados compartilhados
-        $dados = $this->carregarDadosVeiculos();
-
-        // Filtra
-        $veiculos = Veiculo::where('chassi', 'LIKE', "%$chassi")
-            ->where('marca', 'GM')
-            ->where('novo_usado', 'Novo')
-            ->orderBy('desc_veiculo')
-            ->paginate($this->pg());
-
-        // var_dump($veiculos); // Verifica se a consulta retorna resultados
-        // Retorna a view
-        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
-    }
-
-    public function filtrarPorAnoModelo($ano_modelo)
-    {
-        // Salvar o valor selecionado na sessão para manter a seleção no combo
-        session(['ano_modelo_selecionado' => $ano_modelo]);
-
-        // Carregar dados compartilhados (caso tenha outros filtros)
-        $dados = $this->carregarDadosVeiculos();
-
-        // Filtrar os veículos com base no Ano/Modelo selecionado
-        $veiculos = Veiculo::where('Ano_Mod', '=', $ano_modelo)
-            ->where('marca', 'GM')
-            ->where('novo_usado', 'Novo')
-            ->orderBy('desc_veiculo')
-            ->paginate($this->pg());
-
-        // Retorna a view com os dados filtrados
-        return view('veiculos.novos.index', array_merge($dados, [
-            'veiculos' => $veiculos,
-            'ano_modelo_selecionado' => $ano_modelo
-        ]));
-    }
-
-    public function filtrarPorCombustivel($combustivel)
-    {
-        // Salva o combustível selecionado na sessão
-        session(['combustivel_selecionado' => $combustivel]);
-
-        // Convertendo a primeira letra para maiúscula e pegando os 3 primeiros caracteres
-        $combustivelAbreviado = strtoupper(substr($combustivel, 0, 3));
-
-        // Carregar dados compartilhados (se houver outros filtros)
-        $dados = $this->carregarDadosVeiculos();
-
-        // Filtrando os veículos com base no combustível
-        $veiculos = Veiculo::whereRaw('UPPER(SUBSTRING(combustivel, 1, 3)) = ?', [$combustivelAbreviado])
-            ->where('marca', 'GM')
-            ->where('novo_usado', 'Novo')
-            ->orderBy('desc_veiculo')
-            ->paginate($this->pg());
-
-        // Retorna a view com os dados filtrados
-        return view('veiculos.novos.index', array_merge($dados, [
-            'veiculos' => $veiculos,
-            'combustivel_selecionado' => $combustivel
-        ]));
-    }
-
-    public function filtrarPorTransmissao($transmissao)
-    {
-        // Salva o valor da transmissão na sessão
-        session(['transmissao_selecionada' => $transmissao]);
-
-        // Carrega os dados compartilhados
-        $dados = $this->carregarDadosVeiculos();
-
-
-        // Pegando os 3 primeiros caracteres da transmissão e convertendo para maiúsculo
-        $transmissaoAbreviada = strtoupper(substr($transmissao, 0, 3));
-
-        // Filtra veículos com base nos últimos 3 caracteres da coluna 'combustivel'
-        $veiculos = Veiculo::whereRaw('UPPER(SUBSTRING(combustivel, -3)) = ?', [$transmissaoAbreviada])
-            ->where('marca', 'GM')
-            ->where('novo_usado', 'Novo')
-            ->orderBy('desc_veiculo')
-            ->paginate($this->pg()); // Paginação com 5 itens por página
-
-        // Retorna a view com os dados filtrados
-        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
-    }
-
-
-    public function filtrarPorCor($cor)
-    {
-        // Salva o valor da cor na sessão para persistir a seleção
-        session(['corVeiculos_selecionada' => $cor]);
-
-        // Carrega os dados compartilhados
-        $dados = $this->carregarDadosVeiculos();
-
-        // Realiza a consulta com o filtro de cor
-        $veiculos = Veiculo::where('cor', $cor)  // Filtra pelos veículos que possuem a cor selecionada
-            ->where('marca', 'GM')  // Filtro pela marca 'GM'
-            ->where('novo_usado', 'Novo')  // Filtro de "Novo"
-            ->orderBy('desc_veiculo')  // Ordenação por nome
-            ->paginate(10);  // Paginação de 10 resultados por página
-
-        // Retorna a view com os dados filtrados
-        return view('veiculos.novos.index', array_merge($dados, ['veiculos' => $veiculos]));
-    }
 
 
 

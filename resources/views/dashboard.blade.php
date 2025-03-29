@@ -54,7 +54,7 @@
 
         // Gráfico Pizza 1
         var ctx1 = document.getElementById('graficoPizza1').getContext('2d');
-        
+
         // Corrigir a passagem de dados para o JS
         var veiculosNovos = {!! json_encode($veiculosnovos) !!};
         var veiculosUsados = {!! json_encode($veiculosusados) !!};

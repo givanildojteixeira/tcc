@@ -4,29 +4,38 @@
         <div class="flex gap-1">
             <!-- Carrossel de Veículos -->
             <div class="swiper mySwiper bg-white shadow-lg rounded-lg overflow-hidden w-2/3"
-                title="Clique sobre o veiculo para filtrar todos os modelos de sua Família.">
+                title="Clique sobre o veículo para filtrar todos os modelos de sua Família.">
                 <div class="swiper-wrapper">
                     @foreach ($imagens as $imagem)
-                    @php
-                    $familia = ucfirst(pathinfo(basename($imagem), PATHINFO_FILENAME));
-                    @endphp
-                    <div>
-                        <div class="swiper-slide text-center mt-3">
-                            <a href="{{ route('veiculos.novos.filtroF', ['familia' => $familia]) }}">
+                        @php
+                            $familia = ucfirst(pathinfo(basename($imagem), PATHINFO_FILENAME));
+
+                            // Verifica se o filtro 'familia' está presente na URL
+                            $familiaSelecionada = request()->query('familia');
+
+                            // Se a 'familiaSelecionada' for igual à família da imagem, aplica a borda
+                            $selecionado = $familiaSelecionada == $familia ? 'border-4 border-blue-500' : '';
+                            $textoSelecionado = $familiaSelecionada == $familia ? 'text-blue-600 font-bold' : '';
+                        @endphp
+                        <div>
+                            <div class="swiper-slide text-center mt-3 cursor-pointer"
+                                onclick="atualizarFiltro('familia', '{{ $familia }}')">
                                 <img src="{{ asset('images/familia/' . basename($imagem)) }}" alt="Imagem do Veículo"
-                                class="rounded-lg max-w-[80px] max-h-[80px] object-cover">
-                                {{-- class="rounded-lg w-full object-cover"> --}}
-                                {{-- class="rounded-lg w-10 h-10 object-cover"> --}}
-                                <div class="text-sm font-semibold mt-2 text-center">{{ $familia }}</div>
-                            </a>
+                                    class="rounded-lg max-w-[80px] max-h-[80px] object-cover {{ $selecionado }}">
+                                <div class="text-sm font-semibold mt-2 text-center {{ $textoSelecionado }}">
+                                    {{ $familia }}</div>
+                            </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
                 <!-- Botões de navegação -->
-                {{-- <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div> --}}
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
             </div>
+
+
+
+
 
             <!-- Card de Filtros -->
             <div class="bg-white shadow-lg rounded-lg overflow-hidden p-3 w-1/3">
@@ -35,14 +44,15 @@
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-semibold text-gray-600">Modelo:</span>
                         <select id="modeloVeiculo"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="atualizarFiltro('modelo', this.value)">
                             <option value="" disabled
                                 {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                            <option value="{{ $veiculo->desc_veiculo }}"
-                                {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
-                                {{ $veiculo->desc_veiculo }}
-                            </option>
+                                <option value="{{ $veiculo->desc_veiculo }}"
+                                    {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
+                                    {{ $veiculo->desc_veiculo }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -52,8 +62,9 @@
                         <span class="text-xs font-semibold text-gray-600">Chassi:</span>
                         <input type="text" id="chassiPesquisa"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            placeholder="Digite o chassi">
-                        <button id="buscarChassi" class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
+                            placeholder="Digite parte do chassi" value="{{ session('chassi_selecionado', '') }}">
+                        <button onclick="atualizarFiltro('chassi', document.getElementById('chassiPesquisa').value)"
+                            class="px-3 py-1 text-white rounded-md hover:bg-blue-600">
                             🔍
                         </button>
                     </div>
@@ -67,7 +78,8 @@
                     <div class="flex items-center gap-1">
                         <span class="text-xs font-semibold text-gray-600">Combustível:</span>
                         <select id="combustivel"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="atualizarFiltro('combustivel', this.value)">
                             <option value="" disabled
                                 {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Selecione</option>
                             <option value="Gasolina"
@@ -89,20 +101,21 @@
                     <div class="flex items-center gap-1">
                         <span class="text-xs font-semibold text-gray-600">Ano/Modelo:</span>
                         <select id="anoModelo"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400">
-                            <option value="" disabled
-                                {{ empty(session('ano_modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            onchange="atualizarFiltro('ano', this.value)">
+                            <option value="" disabled {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
+                                Selecione</option>
                             <option value="2024/2024"
-                                {{ session('ano_modelo_selecionado') == '2024/2024' ? 'selected' : '' }}>2024/2024
+                                {{ session('ano_selecionado') == '2024/2024' ? 'selected' : '' }}>2024/2024
                             </option>
                             <option value="2024/2025"
-                                {{ session('ano_modelo_selecionado') == '2024/2025' ? 'selected' : '' }}>2024/2025
+                                {{ session('ano_selecionado') == '2024/2025' ? 'selected' : '' }}>2024/2025
                             </option>
                             <option value="2025/2025"
-                                {{ session('ano_modelo_selecionado') == '2025/2025' ? 'selected' : '' }}>2025/2025
+                                {{ session('ano_selecionado') == '2025/2025' ? 'selected' : '' }}>2025/2025
                             </option>
                             <option value="2025/2026"
-                                {{ session('ano_modelo_selecionado') == '2025/2026' ? 'selected' : '' }}>2025/2026
+                                {{ session('ano_selecionado') == '2025/2026' ? 'selected' : '' }}>2025/2026
                             </option>
                         </select>
                     </div>
@@ -112,18 +125,16 @@
                         <span class="text-xs font-semibold text-gray-600">Transmissão:</span>
                         <select name="transmissao"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            onchange="window.location.href=this.value;">
+                            onchange="atualizarFiltro('transmissao', this.value)">
                             <option value="" disabled selected>Selecione</option>
-                            <option
-                                value="{{ route('veiculos.novos.filtroTransmissao', ['transmissao' => 'Mecânica']) }}"
-                                {{ session('transmissao_selecionada') == 'Mecânica' ? 'selected' : '' }}>Mecânica
+                            <option value="Mecânica"
+                                {{ session('transmissao_selecionado') == 'Mecânica' ? 'selected' : '' }}>Mecânica
                             </option>
-                            <option
-                                value="{{ route('veiculos.novos.filtroTransmissao', ['transmissao' => 'Automático']) }}"
-                                {{ session('transmissao_selecionada') == 'Automático' ? 'selected' : '' }}>Automático
+                            <option value="Automático"
+                                {{ session('transmissao_selecionado') == 'Automático' ? 'selected' : '' }}>Automático
                             </option>
-                            <option value="{{ route('veiculos.novos.filtroTransmissao', ['transmissao' => 'CVT']) }}"
-                                {{ session('transmissao_selecionada') == 'CVT' ? 'selected' : '' }}>CVT</option>
+                            <option value="CVT" {{ session('transmissao_selecionado') == 'CVT' ? 'selected' : '' }}>
+                                CVT</option>
                         </select>
                     </div>
 
@@ -132,15 +143,14 @@
                         <span class="text-xs font-semibold text-gray-600">Cor:</span>
                         <select name="corVeiculos"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            onchange="window.location.href=this.value;">
-                            <option value="" disabled selected>Selecione</option>
-
-                            <!-- Iterando sobre a coleção $cores -->
+                            onchange="atualizarFiltro('cor', this.value)">
+                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>
+                                Todos</option>
                             @foreach ($cores as $cor)
-                            <option value="{{ route('veiculos.novos.filtroCor', ['cor' => $cor->cor]) }}"
-                                {{ session('corVeiculos_selecionada') == $cor->cor ? 'selected' : '' }}>
-                                {{ $cor->cor }}
-                            </option>
+                                <option value="{{ $cor->cor }}"
+                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
+                                    {{ $cor->cor }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -186,34 +196,34 @@
                             </thead>
                             <tbody class="text-sm">
                                 @foreach ($veiculos as $veiculo)
-                                @php
-                                $rowColor = '';
-                                if ($veiculo->local == 'Matriz') {
-                                $rowColor = 'text-black';
-                                } elseif ($veiculo->local == 'Filial') {
-                                $rowColor = 'text-yellow-500';
-                                } elseif ($veiculo->local == 'Transito') {
-                                $rowColor = 'text-green-500';
-                                }
-                                @endphp
-                                <tr class="hover:bg-gray-100 {{ $rowColor }}">
-                                    <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
-                                    <td class="p-2">{{ $veiculo->modelo_fab }}</td>
-                                    <td class="p-2">{{ $veiculo->combustivel }}</td>
-                                    <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
-                                    <td class="p-2">{{ $veiculo->chassi }}</td>
-                                    <td class="p-2">{{ $veiculo->cor }}</td>
-                                    <td class="p-2">{{ $veiculo->portas }}</td>
-                                    <td class="p-2">{{ $veiculo->cod_opcional }}</td>
-                                    <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
-                                    <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}</td>
-                                    <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
-                                    <td class="p-2">
-                                        {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                        dias
-                                    </td>
-                                    <td class="hidden">{{ $veiculo->local }}</td>
-                                </tr>
+                                    @php
+                                        $rowColor = '';
+                                        if ($veiculo->local == 'Matriz') {
+                                            $rowColor = 'text-black';
+                                        } elseif ($veiculo->local == 'Filial') {
+                                            $rowColor = 'text-yellow-500';
+                                        } elseif ($veiculo->local == 'Transito') {
+                                            $rowColor = 'text-green-500';
+                                        }
+                                    @endphp
+                                    <tr class="hover:bg-gray-100 {{ $rowColor }}">
+                                        <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
+                                        <td class="p-2">{{ $veiculo->modelo_fab }}</td>
+                                        <td class="p-2">{{ $veiculo->combustivel }}</td>
+                                        <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
+                                        <td class="p-2">{{ $veiculo->chassi }}</td>
+                                        <td class="p-2">{{ $veiculo->cor }}</td>
+                                        <td class="p-2">{{ $veiculo->portas }}</td>
+                                        <td class="p-2">{{ $veiculo->cod_opcional }}</td>
+                                        <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
+                                        <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}</td>
+                                        <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
+                                        <td class="p-2">
+                                            {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
+                                            dias
+                                        </td>
+                                        <td class="hidden">{{ $veiculo->local }}</td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -260,77 +270,34 @@
             }
 
             // Redireciona para a rota correta com os filtros aplicados
-            window.location.href = "{{ route('veiculos.usados.index') }}?" + params.toString();
+            window.location.href = "{{ route('veiculos.novos.index') }}?" + params.toString();
         }
 
 
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Inicializa o Swiper
-            var swiper = new Swiper(".mySwiper", {
-                slidesPerView: 4,
-                spaceBetween: 0,
-                loop: true,
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
+        // Inicializa o Swiper
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 4,  // Exibe 4 slides por vez
+            spaceBetween: 10,  // Espaçamento entre os slides
+            loop: true,        // Habilita o loop (os slides voltarão a aparecer após o último)
+            navigation: {
+                nextEl: ".swiper-button-next", // Botão de próxima slide
+                prevEl: ".swiper-button-prev", // Botão de slide anterior
+            },
+            breakpoints: {
+                // Responsividade para dispositivos menores
+                1024: {
+                    slidesPerView: 3, // Exibe 3 slides para telas grandes
                 },
-            });
-
-            // Função para selecionar o modelo do veículo e redirecionar
-            document.getElementById('modeloVeiculo').addEventListener('change', function() {
-                var veiculoSelecionado = this.value;
-                if (veiculoSelecionado) {
-                    window.location.href = "{{ url('/novos/modelo') }}/" + veiculoSelecionado;
-                }
-            });
-
-            // Função para buscar por chassi
-            document.getElementById('buscarChassi').addEventListener('click', function() {
-                // Obtém o valor da caixa de texto
-                var chassi = document.getElementById('chassiPesquisa').value.trim();
-
-                // Verifica se o campo de texto não está vazio
-                if (chassi !== '') {
-                    // Se não estiver vazio, redireciona para a rota
-                    window.location.href = "{{ route('veiculos.novos.filtroC', ['chassi' => ':chassi']) }}"
-                        .replace(':chassi', chassi);
-                } else {
-                    // Caso o campo esteja vazio, não faz nada ou pode exibir uma mensagem
-                    alert('Por favor, digite um chassi.');
-                }
-            });
-
-            // Função para buscar por Ano Modelo
-            document.getElementById('anoModelo').addEventListener('change', function() {
-                var anoModeloSelecionado = this.value;
-                if (anoModeloSelecionado) {
-                    window.location.href = "{{ url('/novos/ano-modelo') }}/" + encodeURIComponent(
-                        anoModeloSelecionado);
-                }
-            });
-
-            document.getElementById('combustivel').addEventListener('change', function() {
-                var combustivelSelecionado = this.value;
-                if (combustivelSelecionado) {
-                    var rota =
-                        "{{ route('veiculos.novos.filtroCombustivel', ['combustivel' => '__VALOR__']) }}";
-                    window.location.href = rota.replace('__VALOR__', encodeURIComponent(
-                        combustivelSelecionado));
-                }
-            });
-
-            // Função que executa o botao ao entrar na pesquisa por texto e pressionar Enter
-            document.getElementById('chassiPesquisa').addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    event
-                        .preventDefault(); // Impede o comportamento padrão de envio de formulário (se estiver em um formulário)
-                    document.getElementById('buscarChassi').click(); // Aciona o clique do botão
-                }
-            });
-
-
-
+                768: {
+                    slidesPerView: 2, // Exibe 2 slides para tablets
+                },
+                480: {
+                    slidesPerView: 1, // Exibe 1 slide para dispositivos móveis
+                },
+            },
+        });
 
 
             // Ordenação da tabela ao clicar no cabeçalho
