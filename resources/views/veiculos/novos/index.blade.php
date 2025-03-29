@@ -41,7 +41,8 @@
                         <select id="modeloVeiculo"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('modelo', this.value)">
-                            <option value="" disabled {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            <option value="" disabled
+                                {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
                             @foreach ($veiculosUnicos as $veiculo)
                                 <option value="{{ $veiculo->desc_veiculo }}"
                                     {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
@@ -58,9 +59,11 @@
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             placeholder="Digite parte do chassi" value="{{ session('chassi_selecionado', '') }}">
                         <button onclick="atualizarFiltro('chassi', document.getElementById('chassiPesquisa').value)"
-                            class="px-3 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600 text-xs">
-                            🔍
+                            class="w-8 h-8 flex items-center justify-center bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-200"
+                            title="Buscar Chassi">
+                            <i class="fas fa-search text-sm"></i>
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -75,12 +78,20 @@
                         <select id="combustivel"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('combustivel', this.value)">
-                            <option value="" disabled {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Selecione</option>
-                            <option value="Gasolina" {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : '' }}>Gasolina</option>
-                            <option value="Alcool" {{ session('combustivel_selecionado') == 'Alcool' ? 'selected' : '' }}>Álcool</option>
-                            <option value="Flex" {{ session('combustivel_selecionado') == 'Flex' ? 'selected' : '' }}>Flex</option>
-                            <option value="Diesel" {{ session('combustivel_selecionado') == 'Diesel' ? 'selected' : '' }}>Diesel</option>
-                            <option value="Eletrico" {{ session('combustivel_selecionado') == 'Eletrico' ? 'selected' : '' }}>Elétrico</option>
+                            <option value="" disabled
+                                {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            <option value="Gasolina"
+                                {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : '' }}>Gasolina
+                            </option>
+                            <option value="Alcool"
+                                {{ session('combustivel_selecionado') == 'Alcool' ? 'selected' : '' }}>Álcool</option>
+                            <option value="Flex"
+                                {{ session('combustivel_selecionado') == 'Flex' ? 'selected' : '' }}>Flex</option>
+                            <option value="Diesel"
+                                {{ session('combustivel_selecionado') == 'Diesel' ? 'selected' : '' }}>Diesel</option>
+                            <option value="Eletrico"
+                                {{ session('combustivel_selecionado') == 'Eletrico' ? 'selected' : '' }}>Elétrico
+                            </option>
                         </select>
                     </div>
 
@@ -90,11 +101,16 @@
                         <select id="anoModelo"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('ano', this.value)">
-                            <option value="" disabled {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>Selecione</option>
-                            <option value="2024/2024" {{ session('ano_selecionado') == '2024/2024' ? 'selected' : '' }}>2024/2024</option>
-                            <option value="2024/2025" {{ session('ano_selecionado') == '2024/2025' ? 'selected' : '' }}>2024/2025</option>
-                            <option value="2025/2025" {{ session('ano_selecionado') == '2025/2025' ? 'selected' : '' }}>2025/2025</option>
-                            <option value="2025/2026" {{ session('ano_selecionado') == '2025/2026' ? 'selected' : '' }}>2025/2026</option>
+                            <option value="" disabled {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
+                                Selecione</option>
+                            <option value="2024/2024"
+                                {{ session('ano_selecionado') == '2024/2024' ? 'selected' : '' }}>2024/2024</option>
+                            <option value="2024/2025"
+                                {{ session('ano_selecionado') == '2024/2025' ? 'selected' : '' }}>2024/2025</option>
+                            <option value="2025/2025"
+                                {{ session('ano_selecionado') == '2025/2025' ? 'selected' : '' }}>2025/2025</option>
+                            <option value="2025/2026"
+                                {{ session('ano_selecionado') == '2025/2026' ? 'selected' : '' }}>2025/2026</option>
                         </select>
                     </div>
 
@@ -105,9 +121,14 @@
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('transmissao', this.value)">
                             <option value="" disabled selected>Selecione</option>
-                            <option value="Mecânica" {{ session('transmissao_selecionado') == 'Mecânica' ? 'selected' : '' }}>Mecânica</option>
-                            <option value="Automático" {{ session('transmissao_selecionado') == 'Automático' ? 'selected' : '' }}>Automático</option>
-                            <option value="CVT" {{ session('transmissao_selecionado') == 'CVT' ? 'selected' : '' }}>CVT</option>
+                            <option value="Mecânica"
+                                {{ session('transmissao_selecionado') == 'Mecânica' ? 'selected' : '' }}>Mecânica
+                            </option>
+                            <option value="Automático"
+                                {{ session('transmissao_selecionado') == 'Automático' ? 'selected' : '' }}>Automático
+                            </option>
+                            <option value="CVT" {{ session('transmissao_selecionado') == 'CVT' ? 'selected' : '' }}>
+                                CVT</option>
                         </select>
                     </div>
 
@@ -117,9 +138,11 @@
                         <select name="corVeiculos"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('cor', this.value)">
-                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>Todos</option>
+                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>Todos
+                            </option>
                             @foreach ($cores as $cor)
-                                <option value="{{ $cor->cor }}" {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
+                                <option value="{{ $cor->cor }}"
+                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
                                     {{ $cor->cor }}
                                 </option>
                             @endforeach
@@ -130,7 +153,8 @@
 
 
             <!-- Card para Botões de ajuda e limpa filtros -->
-            <div class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-[4%] flex flex-col items-center justify-center gap-2">
+            <div
+                class="bg-white shadow-lg rounded-lg overflow-hidden p-2 w-[4%] flex flex-col items-center justify-center gap-2">
                 <!-- Botão de Ajuda -->
                 <button onclick="document.getElementById('modalAjuda').classList.remove('hidden')"
                     class="text-blue-600 hover:text-blue-800 text-xl" title="Ajuda">
@@ -151,68 +175,134 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
-                        <table class="table-auto w-full">
-                            <thead class="bg-gray-100 text-left sticky top-0 z-10">
-                                <tr>
-                                    <th class="sortable p-2" data-column="veiculo">Veículo <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="modelo">Modelo <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="combustivel">Comb <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="chassi">Chassi <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="cor">Cor <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="pts">Pts <i class="fas fa-sort"></i></th>
-                                    <th class="sortable p-2" data-column="opcional">Opc. <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="tabela">Tabela <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="bonus">Bonus <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="custo">Custo <i class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="sortable p-2" data-column="faturado">Faturado <i
-                                            class="fas fa-sort"></i>
-                                    </th>
-                                    <th class="hidden">Local</th> <!-- Coluna oculta -->
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm">
-                                @foreach ($veiculos as $veiculo)
-                                    @php
-                                        $rowColor = '';
-                                        if ($veiculo->local == 'Matriz') {
-                                            $rowColor = 'text-black';
-                                        } elseif ($veiculo->local == 'Filial') {
-                                            $rowColor = 'text-yellow-500';
-                                        } elseif ($veiculo->local == 'Transito') {
-                                            $rowColor = 'text-green-500';
-                                        }
-                                    @endphp
-                                    <tr class="hover:bg-gray-100 {{ $rowColor }}">
-                                        <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
-                                        <td class="p-2">{{ $veiculo->modelo_fab }}</td>
-                                        <td class="p-2">{{ $veiculo->combustivel }}</td>
-                                        <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
-                                        <td class="p-2">{{ $veiculo->chassi }}</td>
-                                        <td class="p-2">{{ $veiculo->cor }}</td>
-                                        <td class="p-2">{{ $veiculo->portas }}</td>
-                                        <td class="p-2">{{ $veiculo->cod_opcional }}</td>
-                                        <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
-                                        <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}</td>
-                                        <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
-                                        <td class="p-2">
-                                            {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                            dias
-                                        </td>
-                                        <td class="hidden">{{ $veiculo->local }}</td>
+                        <div x-data="{ open: false, veiculo: {} }"> <!-- Alpine no escopo global -->
+                            <table class="table-auto w-full">
+                                <thead class="bg-gray-100 text-left sticky top-0 z-10">
+                                    <tr>
+                                        <th class="sortable p-2" data-column="veiculo">Veículo <i
+                                                class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="modelo">Modelo <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="combustivel">Comb <i
+                                                class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i
+                                                class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="chassi">Chassi <i
+                                                class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="cor">Cor <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="pts">Pts <i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="opcional">Opc. <i
+                                                class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="tabela">Tabela <i
+                                                class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="bonus">Bonus <i
+                                                class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="custo">Custo <i
+                                                class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="sortable p-2" data-column="faturado">Faturado <i
+                                                class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="hidden">Local</th> <!-- Coluna oculta -->
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="text-sm">
+                                    @foreach ($veiculos as $veiculo)
+                                        @php
+                                            $rowColor = '';
+                                            if ($veiculo->local == 'Matriz') {
+                                                $rowColor = 'text-black';
+                                            } elseif ($veiculo->local == 'Filial') {
+                                                $rowColor = 'text-yellow-500';
+                                            } elseif ($veiculo->local == 'Transito') {
+                                                $rowColor = 'text-green-500';
+                                            }
+                                        @endphp
+                                        <tr class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
+                                            @click="
+                                                open = true;
+                                                veiculo = {
+                                                    desc_veiculo: '{{ $veiculo->desc_veiculo }}',
+                                                    modelo_fab: '{{ $veiculo->modelo_fab }}',
+                                                    combustivel: '{{ $veiculo->combustivel }}',
+                                                    Ano_Mod: '{{ $veiculo->Ano_Mod }}',
+                                                    chassi: '{{ $veiculo->chassi }}',
+                                                    cor: '{{ $veiculo->cor }}',
+                                                    portas: '{{ $veiculo->portas }}',
+                                                    cod_opcional: '{{ $veiculo->cod_opcional }}',
+                                                    vlr_tabela: '{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}',
+                                                    vlr_bonus: '{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}',
+                                                    vlr_nota: '{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}',
+                                                    faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}'
+                                                }
+                                            ">
+                                            <td class="p-2">{{ $veiculo->desc_veiculo }}</td>
+                                            <td class="p-2">{{ $veiculo->modelo_fab }}</td>
+                                            <td class="p-2">{{ $veiculo->combustivel }}</td>
+                                            <td class="p-2">{{ $veiculo->Ano_Mod }}</td>
+                                            <td class="p-2">{{ $veiculo->chassi }}</td>
+                                            <td class="p-2">{{ $veiculo->cor }}</td>
+                                            <td class="p-2">{{ $veiculo->portas }}</td>
+                                            <td class="p-2">{{ $veiculo->cod_opcional }}</td>
+                                            <td class="p-2">{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
+                                            </td>
+                                            <td class="p-2">{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
+                                            </td>
+                                            <td class="p-2">{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
+                                            </td>
+                                            <td class="p-2">
+                                                {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
+                                                dias
+                                            </td>
+                                            <td class="hidden">{{ $veiculo->local }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                            <!-- ✅ Modal de Detalhes -->
+                            <div x-show="open"
+                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                                style="display: none;">
+                                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+                                    <!-- Botão Fechar -->
+                                    <button @click="open = false"
+                                        class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
+                                        &times;
+                                    </button>
+
+                                    <h2 class="text-xl font-bold mb-4 text-blue-600">Detalhes do Veículo</h2>
+
+                                    <div class="text-sm text-gray-700 space-y-2">
+                                        <div><strong>Veículo:</strong> <span x-text="veiculo.desc_veiculo"></span>
+                                        </div>
+                                        <div><strong>Modelo:</strong> <span x-text="veiculo.modelo_fab"></span></div>
+                                        <div><strong>Combustível:</strong> <span x-text="veiculo.combustivel"></span>
+                                        </div>
+                                        <div><strong>Ano/Modelo:</strong> <span x-text="veiculo.Ano_Mod"></span></div>
+                                        <div><strong>Chassi:</strong> <span x-text="veiculo.chassi"></span></div>
+                                        <div><strong>Cor:</strong> <span x-text="veiculo.cor"></span></div>
+                                        <div><strong>Portas:</strong> <span x-text="veiculo.portas"></span></div>
+                                        <div><strong>Opcionais:</strong> <span x-text="veiculo.cod_opcional"></span>
+                                        </div>
+                                        <div><strong>Tabela:</strong> <span x-text="veiculo.vlr_tabela"></span></div>
+                                        <div><strong>Bônus:</strong> <span x-text="veiculo.vlr_bonus"></span></div>
+                                        <div><strong>Custo:</strong> <span x-text="veiculo.vlr_nota"></span></div>
+                                        <div><strong>Faturado há:</strong> <span x-text="veiculo.faturado"></span> dias
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
