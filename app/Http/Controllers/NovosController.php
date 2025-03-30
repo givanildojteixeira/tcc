@@ -101,14 +101,8 @@ class NovosController extends Controller
         if ($request->filled('chassi'))        $query->where('chassi', 'LIKE', '%' . $request->input('chassi'));
         if ($request->filled('cor'))           $query->where('cor', $request->input('cor'));
         if ($request->filled('ano'))           $query->where('Ano_Mod', $request->input('ano'));
-        if ($request->filled('combustivel')) {
-            $combustivelAbreviado = strtoupper(substr($request->input('combustivel'), 0, 3));
-            $query->whereRaw('UPPER(SUBSTRING(combustivel, 1, 3)) = ?', [$combustivelAbreviado]);
-        }
-        if ($request->filled('transmissao')) {
-            $transmissaoAbreviada = strtoupper(substr($request->input('transmissao'), 0, 3));
-            $query->whereRaw('UPPER(SUBSTRING(combustivel, -3)) = ?', [$transmissaoAbreviada]);
-        }
+        if ($request->filled('combustivel'))   $query->where('combustivel', $request->input('combustivel'));
+        if ($request->filled('transmissao'))   $query->where('transmissao', $request->input('transmissao'));
 
         // Executa a consulta
         $veiculos = $query->orderBy('desc_veiculo')

@@ -181,7 +181,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
-                        <table class="table-auto w-full">
+                        <table class="table-auto w-full ml-2 mr-2">
                             <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                 <tr>
                                     <th class="sortable p-1 px-1 py-1" data-column="marca">Marca <i

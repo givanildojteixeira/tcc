@@ -18,6 +18,7 @@ class Veiculo extends Model
         'cor',
         'cod_opcional',
         'combustivel',
+        'transmissao',
         'Ano_Mod',
         'motor',
         'portas',

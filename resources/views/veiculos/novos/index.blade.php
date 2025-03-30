@@ -124,11 +124,9 @@
                             <option value="Mecânica"
                                 {{ session('transmissao_selecionado') == 'Mecânica' ? 'selected' : '' }}>Mecânica
                             </option>
-                            <option value="Automático"
-                                {{ session('transmissao_selecionado') == 'Automático' ? 'selected' : '' }}>Automático
+                            <option value="Automática"
+                                {{ session('transmissao_selecionado') == 'Automática' ? 'selected' : '' }}>Automática
                             </option>
-                            <option value="CVT" {{ session('transmissao_selecionado') == 'CVT' ? 'selected' : '' }}>
-                                CVT</option>
                         </select>
                     </div>
 
@@ -181,7 +179,7 @@
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
                         <div x-data="{ open: false, veiculo: {} }"> <!-- Alpine no escopo global -->
-                            <table class="table-auto w-full">
+                            <table class="table-auto w-full ml-2 mr-2">
                                 <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                     <tr>
                                         <th class="sortable p-2" data-column="veiculo">Veículo <i
@@ -192,6 +190,9 @@
                                         <th class="sortable p-2" data-column="combustivel">Comb <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
+                                        <th class="sortable p-2" data-column="combustivel">Transm. <i
+                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i>
+                                    </th>
                                         <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
@@ -243,6 +244,7 @@
                                                     familia: '{{ $veiculo->familia }}',
                                                     modelo_fab: '{{ $veiculo->modelo_fab }}',
                                                     combustivel: '{{ $veiculo->combustivel }}',
+                                                    transmissao: '{{ $veiculo->transmissao }}',
                                                     Ano_Mod: '{{ $veiculo->Ano_Mod }}',
                                                     chassi: '{{ $veiculo->chassi }}',
                                                     cor: '{{ $veiculo->cor }}',
@@ -257,6 +259,7 @@
                                             <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
                                             <td class="p-1 px-1 py-1">{{ $veiculo->modelo_fab }}</td>
                                             <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->transmissao }}</td>
                                             <td class="p-1 px-1 py-1">{{ $veiculo->Ano_Mod }}</td>
                                             <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
                                             <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
@@ -271,7 +274,7 @@
                                             <td class="p-1 px-1 py-1 text-right">
                                                 {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
                                             </td>
-                                            <td class="p-1 px-1 py-1text-center">
+                                            <td class="p-1 px-1 py-1 text-center">
                                                 {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
                                                 dias
                                             </td>
