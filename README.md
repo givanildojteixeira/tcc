@@ -24,6 +24,20 @@ Faz a alteração automaticamente a cada salvamento
 ```markdown
 npm run dev
 ```
+# Estrutura  Arquivos Blade para veiculos novos e usados  📝 
+resources/views/
+├── veiculos/
+│   ├── index.blade.php         ← listagem
+│   ├── show.blade.php          ← se quiser detalhes em página
+│   ├── edit.blade.php          ← tela de edição (usada pelos dois tipos)
+│   ├── usados/
+│   │   └── index.blade.php     ← listagem específica se precisar
+│   └── novos/
+│       └── index.blade.php     ← idem acima
+└── components/
+    └── modal/
+        └── veiculo.blade.php   ← modal usado tanto por novos quanto usados
+
 
 
 # CRUD  📝 

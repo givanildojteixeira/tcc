@@ -7,6 +7,23 @@ use Illuminate\Http\Request;
 
 class VeiculoController extends Controller
 {
+
+
+    public function edit($id)
+    {
+        $veiculo = Veiculo::findOrFail($id);
+        return view('veiculos.edit', compact('veiculo'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $veiculo = Veiculo::findOrFail($id);
+        $veiculo->update($request->all());
+        return redirect()->route('veiculos.index')->with('success', 'Veículo atualizado com sucesso.');
+    }
+
+
+
     /**
      * Display a listing of the resource.
      */
@@ -39,21 +56,7 @@ class VeiculoController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Veiculo $veiculo)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Veiculo $veiculo)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.

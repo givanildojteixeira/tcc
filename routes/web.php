@@ -8,6 +8,7 @@ use App\Http\Controllers\NovosController;
 use App\Http\Controllers\PropostasController;
 use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\UsadosController;
+use App\Http\Controllers\VeiculoController;
 use App\Models\Cliente;
 use App\Models\User;
 use App\Models\Veiculo;
@@ -30,7 +31,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard',[
+    return view('dashboard', [
         'clientes' => Cliente::all(),
         'users' => User::all(),
         'veiculos' => Veiculo::all(),
@@ -45,34 +46,38 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Users
-    Route::get('/users-index',[UserController::class,'index'])->name('user.index');
-    Route::get('/user-edit/{id}',[UserController::class,'edit'])->name('user.edit');
-    Route::put('/user-edit/{id}',[UserController::class,'update'])->name('user.update');
+    Route::get('/users-index', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user-edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('user.update');
 
     //Clientes
     Route::resources([
-        'cliente'=>ClienteController::class
+        'cliente' => ClienteController::class
     ]);
     Route::get('/meus-clientes/{id}', [ClienteController::class, 'clientes_to_user'])->name('meus-clientes');
-    route::get('/confirma-delete/{id}',[ClienteController::class, 'confirma_delete'])->name('confirma_delete');
+    route::get('/confirma-delete/{id}', [ClienteController::class, 'confirma_delete'])->name('confirma_delete');
+
+    // //Veiculos Geral
+    Route::get('/veiculos/{id}/edit', [VeiculoController::class, 'edit'])->name('veiculos.edit');
+    Route::put('/veiculos/{id}', [VeiculoController::class, 'update'])->name('veiculos.update');
+
 
     //Veiculos novos
-    Route::get('/novos',[NovosController::class,'index'])->name('veiculos.novos.index');
+    Route::get('/novos', [NovosController::class, 'index'])->name('veiculos.novos.index');
     Route::get('/veiculos/novos/limpar-filtros', [NovosController::class, 'limparFiltros'])->name('veiculos.novos.limparFiltros');
 
     //Veiculos usados
-    Route::get('/usados',[UsadosController::class,'index'])->name('veiculos.usados.index');
+    Route::get('/usados', [UsadosController::class, 'index'])->name('veiculos.usados.index');
     Route::get('/veiculos/usados/limpar-filtros', [UsadosController::class, 'limparFiltros'])->name('veiculos.usados.limparFiltros');
 
     //Propostas
-    Route::get('/propostas.index',[PropostasController::class,'index'])->name('propostas.index');
+    Route::get('/propostas.index', [PropostasController::class, 'index'])->name('propostas.index');
 
     //Financeiro
-    Route::get('/financeiro.index',[FinanceiroController::class,'index'])->name('financeiro.index');
+    Route::get('/financeiro.index', [FinanceiroController::class, 'index'])->name('financeiro.index');
 
     //Financeiro
-    Route::get('/relatorios.index',[RelatoriosController::class,'index'])->name('relatorios.index');
-
+    Route::get('/relatorios.index', [RelatoriosController::class, 'index'])->name('relatorios.index');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

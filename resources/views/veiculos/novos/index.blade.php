@@ -238,7 +238,9 @@
                                             @click="
                                                 open = true;
                                                 veiculo = {
+                                                    id: '{{ $veiculo->id }}',
                                                     desc_veiculo: '{{ $veiculo->desc_veiculo }}',
+                                                    familia: '{{ $veiculo->familia }}',
                                                     modelo_fab: '{{ $veiculo->modelo_fab }}',
                                                     combustivel: '{{ $veiculo->combustivel }}',
                                                     Ano_Mod: '{{ $veiculo->Ano_Mod }}',
@@ -278,40 +280,8 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
                             <!-- ✅ Modal de Detalhes -->
-                            <div x-show="open"
-                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-                                style="display: none;">
-                                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
-                                    <!-- Botão Fechar -->
-                                    <button @click="open = false"
-                                        class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
-                                        &times;
-                                    </button>
-
-                                    <h2 class="text-xl font-bold mb-4 text-blue-600">Detalhes do Veículo</h2>
-
-                                    <div class="text-sm text-gray-700 space-y-2">
-                                        <div><strong>Veículo:</strong> <span x-text="veiculo.desc_veiculo"></span>
-                                        </div>
-                                        <div><strong>Modelo:</strong> <span x-text="veiculo.modelo_fab"></span></div>
-                                        <div><strong>Combustível:</strong> <span x-text="veiculo.combustivel"></span>
-                                        </div>
-                                        <div><strong>Ano/Modelo:</strong> <span x-text="veiculo.Ano_Mod"></span></div>
-                                        <div><strong>Chassi:</strong> <span x-text="veiculo.chassi"></span></div>
-                                        <div><strong>Cor:</strong> <span x-text="veiculo.cor"></span></div>
-                                        <div><strong>Portas:</strong> <span x-text="veiculo.portas"></span></div>
-                                        <div><strong>Opcionais:</strong> <span x-text="veiculo.cod_opcional"></span>
-                                        </div>
-                                        <div><strong>Tabela:</strong> <span x-text="veiculo.vlr_tabela"></span></div>
-                                        <div><strong>Bônus:</strong> <span x-text="veiculo.vlr_bonus"></span></div>
-                                        <div><strong>Custo:</strong> <span x-text="veiculo.vlr_nota"></span></div>
-                                        <div><strong>Faturado há:</strong> <span x-text="veiculo.faturado"></span> dias
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @include('components.modal.veiculo', ['tipo' => 'Novo'])
                         </div>
                     </div>
                 </div>
