@@ -72,9 +72,13 @@
                             <i class="fa-solid fa-people-group"></i>
                             <span class="ms-3">{{ __('Clientes') }}</span>
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('user.index')" class="items-center">
+                        {{-- <x-dropdown-link :href="route('veiculos.edit')" class="items-center">
                             <i class="fa-solid fa-car"></i>
                             <span class="ms-3">{{ __('Veículos') }}</span>
+                        </x-dropdown-link> --}}
+                        <x-dropdown-link :href="route('familia.index')" class="items-center">
+                            <i class="fa-solid fa-car"></i>
+                            <span class="ms-3">{{ __('Famílias') }}</span>
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('user.index')" class="items-center">
                             <i class="fa-solid fa-cart-shopping"></i>

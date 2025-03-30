@@ -7,59 +7,99 @@ use Illuminate\Http\Request;
 
 class FamiliaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        //
+        $familias = Familia::all();
+        return view('familia.index', compact('familias'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'descricao' => 'required|string|max:255',
+            'imagem' => 'nullable|image|mimes:jpg,jpeg|max:2048',
+        ]);
+
+        // Salva a família no banco
+        $familia = Familia::create([
+            'descricao' => $request->descricao
+        ]);
+
+        // Salva a imagem com o nome da família
+        if ($request->hasFile('imagem')) {
+            $extensao = $request->file('imagem')->getClientOriginalExtension();
+            $nomeArquivo = str_replace(' ', '_', $request->descricao) . '.' . $extensao;
+            $request->file('imagem')->move(public_path('images/familia'), $nomeArquivo);
+        }
+
+        return redirect()->route('familia.index')->with('success', 'Família cadastrada com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Familia $familia)
+
+
+
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'descricao' => 'required|string|max:255',
+            'imagem' => 'nullable|image|mimes:jpg,jpeg|max:2048',
+        ]);
+
+        $familia = Familia::findOrFail($id);
+
+        // Se o nome foi alterado, renomear a imagem
+        $nomeAntigo = str_replace(' ', '_', $familia->descricao) . '.jpg';
+        $caminhoAntigo = public_path('images/familia/' . $nomeAntigo);
+
+        // Atualiza descrição no banco
+        $familia->descricao = $request->descricao;
+        $familia->save();
+
+        // Se enviou nova imagem, substituir
+        if ($request->hasFile('imagem')) {
+            // Deleta imagem antiga
+            if (file_exists($caminhoAntigo)) {
+                unlink($caminhoAntigo);
+            }
+
+            $extensao = $request->file('imagem')->getClientOriginalExtension();
+            $novoNome = str_replace(' ', '_', $request->descricao) . '.' . $extensao;
+
+            $request->file('imagem')->move(public_path('images/familia'), $novoNome);
+        } else {
+            // Se apenas o nome foi alterado, renomeia a imagem
+            if ($request->descricao !== $familia->getOriginal('descricao') && file_exists($caminhoAntigo)) {
+                $novoNome = str_replace(' ', '_', $request->descricao) . '.jpg';
+                rename($caminhoAntigo, public_path('images/familia/' . $novoNome));
+            }
+        }
+
+        return redirect()->route('familia.index')->with('success', 'Família atualizada com sucesso!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Familia $familia)
+
+    public function destroy($id)
     {
-        //
+        $familia = Familia::findOrFail($id);
+
+        // Monta o nome do arquivo com base na descrição
+        $nomeArquivo = str_replace(' ', '_', $familia->descricao) . '.jpg';
+        $caminhoImagem = public_path('images/familia/' . $nomeArquivo);
+
+        // Remove o arquivo se existir
+        if (file_exists($caminhoImagem)) {
+            unlink($caminhoImagem);
+        }
+
+        // Exclui o registro do banco
+        $familia->delete();
+
+        return redirect()->route('familia.index')->with('success', 'Família excluída com sucesso!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Familia $familia)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Familia $familia)
-    {
-        //
-    }
+
+
+
 }

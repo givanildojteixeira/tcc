@@ -9,6 +9,7 @@ use App\Http\Controllers\PropostasController;
 use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\UsadosController;
 use App\Http\Controllers\VeiculoController;
+use App\Http\Controllers\FamiliaController;
 use App\Models\Cliente;
 use App\Models\User;
 use App\Models\Veiculo;
@@ -61,7 +62,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/veiculos/{id}/edit', [VeiculoController::class, 'edit'])->name('veiculos.edit');
     Route::put('/veiculos/{id}', [VeiculoController::class, 'update'])->name('veiculos.update');
 
-
     //Veiculos novos
     Route::get('/novos', [NovosController::class, 'index'])->name('veiculos.novos.index');
     Route::get('/veiculos/novos/limpar-filtros', [NovosController::class, 'limparFiltros'])->name('veiculos.novos.limparFiltros');
@@ -69,6 +69,9 @@ Route::middleware('auth')->group(function () {
     //Veiculos usados
     Route::get('/usados', [UsadosController::class, 'index'])->name('veiculos.usados.index');
     Route::get('/veiculos/usados/limpar-filtros', [UsadosController::class, 'limparFiltros'])->name('veiculos.usados.limparFiltros');
+
+    //Familias
+    Route::resource('/veiculos/familia', FamiliaController::class)->only(['index', 'store', 'update', 'destroy']);
 
     //Propostas
     Route::get('/propostas.index', [PropostasController::class, 'index'])->name('propostas.index');

@@ -1,9 +1,9 @@
 <x-app-layout>
-    {{-- <x-slot name="header">
+    <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Cadastrar Novo Veículo') }}
         </h2>
-    </x-slot> --}}
+    </x-slot>
     <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
 
         <!-- Título -->
