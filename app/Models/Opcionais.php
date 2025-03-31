@@ -12,5 +12,5 @@ class Opcionais extends Model
         'modelo_fab',
         'cod_opcional',
         'descricao',
-];
+    ];
 }

@@ -80,8 +80,8 @@
                             <i class="fa-solid fa-car"></i>
                             <span class="ms-3">{{ __('Famílias') }}</span>
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('user.index')" class="items-center">
-                            <i class="fa-solid fa-cart-shopping"></i>
+                        <x-dropdown-link :href="route('opcionais.index')" class="items-center">
+                            <i class="fa-solid fa-toolbox"></i>
                             <span class="ms-3">{{ __('Opcionais') }}</span>
                         </x-dropdown-link>
                     </x-slot>

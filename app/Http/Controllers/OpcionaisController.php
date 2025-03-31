@@ -7,59 +7,56 @@ use Illuminate\Http\Request;
 
 class OpcionaisController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $opcionais = Opcionais::all();
+        return view('opcionais.index', compact('opcionais'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('opcionais.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'modelo_fab' => 'required',
+            'cod_opcional' => 'required',
+            'descricao' => 'required',
+        ]);
+
+        Opcionais::create($request->all());
+
+        return redirect()->route('opcionais.index')->with('success', 'Opcional criado com sucesso.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Opcionais $opcionais)
+    public function edit(Opcionais $opcional)
     {
-        //
+        return view('opcionais.edit', compact('opcional'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Opcionais $opcionais)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'modelo_fab' => 'required',
+            'cod_opcional' => 'required',
+            'descricao' => 'required',
+        ]);
+
+        $opcional = Opcionais::findOrFail($id);
+        $opcional->update($request->all());
+
+        return redirect()->route('opcionais.index')->with('success', 'Opcional atualizado com sucesso.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Opcionais $opcionais)
+
+    public function destroy($id)
     {
-        //
+        $opcional = Opcionais::findOrFail($id);
+        $opcional->delete();
+
+        return redirect()->route('opcionais.index')->with('success', 'Opcional removido com sucesso.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Opcionais $opcionais)
-    {
-        //
-    }
 }

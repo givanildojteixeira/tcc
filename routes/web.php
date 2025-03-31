@@ -10,6 +10,7 @@ use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\UsadosController;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\FamiliaController;
+use App\Http\Controllers\OpcionaisController;
 use App\Models\Cliente;
 use App\Models\User;
 use App\Models\Veiculo;
@@ -72,6 +73,9 @@ Route::middleware('auth')->group(function () {
 
     //Familias
     Route::resource('/veiculos/familia', FamiliaController::class)->only(['index', 'store', 'update', 'destroy']);
+
+    //Opcionais
+    Route::resource('opcionais', OpcionaisController::class);
 
     //Propostas
     Route::get('/propostas.index', [PropostasController::class, 'index'])->name('propostas.index');
