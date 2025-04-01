@@ -23,11 +23,19 @@
                     <!-- Família -->
                     <div class="basis-[20%] flex-grow min-w-[150px]">
                         <label class="block text-gray-700 font-medium mb-1">Família</label>
-                        <input type="text" name="familia" value="{{ old('familia', $veiculo->familia) }}"
+                        <select name="familia"
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                            <option value="">Selecione uma família</option>
+                            @foreach ($familias as $familia)
+                            <option value="{{ $familia->descricao }}"
+                                {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
+                                {{ $familia->descricao }}
+                            </option>
+                            @endforeach
+                        </select>
                     </div>
-
                     <!-- Descrição do Veículo (mais largo) -->
+
                     <div class="basis-[40%] flex-grow min-w-[250px]">
                         <label class="block text-gray-700 font-medium mb-1">Descrição do Veículo</label>
                         <input type="text" name="desc_veiculo"
@@ -103,24 +111,32 @@
                 </div>
 
                 <!-- Linha com Valor Tabela, Bônus e Custo -->
+                @php
+                    $valor = old('vlr_tabela', $veiculo->vlr_nota);
+                    $valor_f_nota = number_format($valor, 2, ',', '.');
+                    $valor = old('vlr_tabela', $veiculo->vlr_bonus);
+                    $valor_f_bonus = number_format($valor, 2, ',', '.');
+                    $valor = old('vlr_tabela', $veiculo->vlr_tabela);
+                    $valor_f_tabela = number_format($valor, 2, ',', '.');
+                @endphp
                 <div class="flex flex-row gap-4 mb-4 ">
                     <div class="w-1/3">
                         <label class="block text-gray-700 font-medium mb-1">Valor Custo</label>
                         <input type="text" name="vlr_nota" id="vlr_nota"
-                            value="{{ old('vlr_nota', $veiculo->vlr_nota) }}"
+                            value="{{ old('vlr_nota', $valor_f_nota) }}"
                             class="w-full text-right border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-sm">
                     </div>
                     <div class="w-1/3">
                         <label class="block text-gray-700 font-medium mb-1">Valor Bônus</label>
                         <input type="text" name="vlr_bonus" id="vlr_bonus"
-                            value="{{ old('vlr_bonus', $veiculo->vlr_bonus) }}"
+                            value="{{ old('vlr_bonus', $valor_f_bonus) }}"
                             class="w-full text-right border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-sm">
                     </div>
 
                     <div class="w-1/3">
                         <label class="block text-gray-700 font-medium mb-1">Valor Tabela</label>
                         <input type="text" name="vlr_tabela" id="vlr_tabela"
-                            value="{{ old('vlr_tabela', $veiculo->vlr_tabela) }}"
+                            value="{{ old('vlr_tabela', $valor_f_tabela) }}"
                             class="w-full text-right border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-sm">
                     </div>
                 </div>
@@ -134,11 +150,11 @@
                 <a href="{{ route('veiculos.novos.index') }}"
                     class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
                     <i class="fas fa-times-circle"></i>
-                    Cancelar
+                    Voltar
                 </a>
 
                 <!-- Cadastro Famílias -->
-                <a href="{{ route('familia.index') }}"
+                <a href="{{ route('familia.index', ['from' => $veiculo->id]) }}"
                     class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
                     <i class="fas fa-users"></i>
                     Cadastro Famílias

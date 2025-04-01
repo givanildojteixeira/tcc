@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Veiculo;
 use Illuminate\Http\Request;
+use App\Models\Familia;
 
 class VeiculoController extends Controller
 {
@@ -12,16 +13,24 @@ class VeiculoController extends Controller
     public function edit($id)
     {
         $veiculo = Veiculo::findOrFail($id);
-        return view('veiculos.edit', compact('veiculo'));
+        $familias = Familia::all(); // <- aqui você pega os dados do banco
+        return view('veiculos.edit', compact('veiculo', 'familias'));
     }
 
     public function update(Request $request, $id)
     {
         $veiculo = Veiculo::findOrFail($id);
-        $veiculo->update($request->all());
-        return redirect()->route('veiculos.index')->with('success', 'Veículo atualizado com sucesso.');
-    }
 
+        // Corrige os valores monetários
+        $dados = $request->all();
+        $dados['vlr_tabela'] = limparMoeda($dados['vlr_tabela']);
+        $dados['vlr_bonus'] = limparMoeda($dados['vlr_bonus']);
+        $dados['vlr_nota'] = limparMoeda($dados['vlr_nota']);
+
+        $veiculo->update($dados);
+
+        return redirect()->route('veiculos.edit', $veiculo->id)->with('success', 'Veículo atualizado com sucesso!');
+    }
 
 
     /**
