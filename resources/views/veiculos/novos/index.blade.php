@@ -8,25 +8,25 @@
                 <div id="carrossel" class="splide w-full bg-white shadow-lg rounded-lg p-3">
                     <div class="splide__track">
                         <ul class="splide__list">
-                            @foreach ($imagens as $index => $imagem)
-                                @php
-                                    $familia = ucfirst(pathinfo(basename($imagem), PATHINFO_FILENAME));
-                                    $familiaSelecionada = request()->query('familia');
-                                    $selecionado = $familiaSelecionada == $familia ? 'border-4 border-blue-500' : '';
-                                    $textoSelecionado =
-                                        $familiaSelecionada == $familia ? 'text-blue-600 font-bold' : '';
-                                @endphp
+                            @foreach ($familiasValidas as $index => $familia)
+                            @php
+                            $nome = $familia['nome'];
+                            $imagem = $familia['imagem'];
+                            $familiaSelecionada = request()->query('familia');
+                            $selecionado = $familiaSelecionada == $nome ? 'border-4 border-blue-500' : '';
+                            $textoSelecionado = $familiaSelecionada == $nome ? 'text-blue-600 font-bold' : '';
+                            @endphp
 
-                                <li class="splide__slide text-center cursor-pointer" data-index="{{ $index }}"
-                                    onclick="atualizarFiltro('familia', '{{ $familia }}')">
-                                    <img src="{{ asset('images/familia/' . basename($imagem)) }}"
-                                        alt="{{ $familia }}"
-                                        class="rounded-lg max-w-[100px] max-h-[100px] object-cover {{ $selecionado }}">
-                                    <div class="text-sm font-semibold mt-2 text-center {{ $textoSelecionado }}">
-                                        {{ $familia }}
-                                    </div>
-                                </li>
+                            <li class="splide__slide text-center cursor-pointer" data-index="{{ $index }}"
+                                onclick="atualizarFiltro('familia', '{{ $nome }}')">
+                                <img src="{{ asset($imagem) }}" alt="{{ $nome }}"
+                                    class="rounded-lg max-w-[100px] max-h-[100px] object-cover {{ $selecionado }}">
+                                <div class="text-sm font-semibold mt-2 text-center {{ $textoSelecionado }}">
+                                    {{ $nome }}
+                                </div>
+                            </li>
                             @endforeach
+
                         </ul>
                     </div>
                 </div>
@@ -44,10 +44,10 @@
                             <option value="" disabled
                                 {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                                <option value="{{ $veiculo->desc_veiculo }}"
-                                    {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
-                                    {{ $veiculo->desc_veiculo }}
-                                </option>
+                            <option value="{{ $veiculo->desc_veiculo }}"
+                                {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
+                                {{ $veiculo->desc_veiculo }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -139,10 +139,10 @@
                             <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>Todos
                             </option>
                             @foreach ($cores as $cor)
-                                <option value="{{ $cor->cor }}"
-                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
-                                    {{ $cor->cor }}
-                                </option>
+                            <option value="{{ $cor->cor }}"
+                                {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
+                                {{ $cor->cor }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -225,26 +225,26 @@
                                 </thead>
                                 <tbody class="text-sm">
                                     @foreach ($veiculos as $veiculo)
-                                        @php
-                                            $rowColor = '';
-                                            if ($veiculo->local == 'Matriz') {
-                                                $rowColor = 'text-black';
-                                            } elseif ($veiculo->local == 'Filial') {
-                                                $rowColor = 'text-yellow-500';
-                                            } elseif ($veiculo->local == 'Transito') {
-                                                $rowColor = 'text-green-500';
-                                            }
-                                            $descricaoOpcional =
-                                                \App\Models\Opcionais::where('modelo_fab', $veiculo->modelo_fab)
-                                                    ->where('cod_opcional', $veiculo->cod_opcional)
-                                                    ->value('descricao') ?? 'Nenhum opcional encontrado.';
+                                    @php
+                                    $rowColor = '';
+                                    if ($veiculo->local == 'Matriz') {
+                                    $rowColor = 'text-black';
+                                    } elseif ($veiculo->local == 'Filial') {
+                                    $rowColor = 'text-yellow-500';
+                                    } elseif ($veiculo->local == 'Transito') {
+                                    $rowColor = 'text-green-500';
+                                    }
+                                    $descricaoOpcional =
+                                    \App\Models\Opcionais::where('modelo_fab', $veiculo->modelo_fab)
+                                    ->where('cod_opcional', $veiculo->cod_opcional)
+                                    ->value('descricao') ?? 'Nenhum opcional encontrado.';
 
-                                            $siteFamilia =
-                                                \App\Models\Familia::where('descricao', $veiculo->familia)->value(
-                                                    'site',) ?? '';
-                                        @endphp
-                                        <tr class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
-                                            @click="
+                                    $siteFamilia =
+                                    \App\Models\Familia::where('descricao', $veiculo->familia)->value(
+                                    'site',) ?? '';
+                                    @endphp
+                                    <tr class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
+                                        @click="
                                                 open = true;
                                                 veiculo = {
                                                     id: '{{ $veiculo->id }}',
@@ -266,30 +266,30 @@
                                                     faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}'
                                                 }
                                             ">
-                                            <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
-                                            <td class="p-1 px-1 py-1">{{ $veiculo->modelo_fab }}</td>
-                                            <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
-                                            <td class="p-1 px-1 py-1">{{ $veiculo->transmissao }}</td>
-                                            <td class="p-1 px-1 py-1">{{ $veiculo->Ano_Mod }}</td>
-                                            <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
-                                            <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
-                                            <td class="p-1 px-1 py-1 text-center">{{ $veiculo->portas }}</td>
-                                            <td class="p-1 px-1 py-1 text-center">{{ $veiculo->cod_opcional }}</td>
-                                            <td class="p-1 px-1 py-1 text-right">
-                                                {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
-                                            </td>
-                                            <td class="p-1 px-1 py-1 text-right">
-                                                {{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
-                                            </td>
-                                            <td class="p-1 px-1 py-1 text-right">
-                                                {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
-                                            </td>
-                                            <td class="p-1 px-1 py-1 text-center">
-                                                {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                                dias
-                                            </td>
-                                            <td class="hidden">{{ $veiculo->local }}</td>
-                                        </tr>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->modelo_fab }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->transmissao }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->Ano_Mod }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
+                                        <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
+                                        <td class="p-1 px-1 py-1 text-center">{{ $veiculo->portas }}</td>
+                                        <td class="p-1 px-1 py-1 text-center">{{ $veiculo->cod_opcional }}</td>
+                                        <td class="p-1 px-1 py-1 text-right">
+                                            {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
+                                        </td>
+                                        <td class="p-1 px-1 py-1 text-right">
+                                            {{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
+                                        </td>
+                                        <td class="p-1 px-1 py-1 text-right">
+                                            {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
+                                        </td>
+                                        <td class="p-1 px-1 py-1 text-center">
+                                            {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
+                                            dias
+                                        </td>
+                                        <td class="hidden">{{ $veiculo->local }}</td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>

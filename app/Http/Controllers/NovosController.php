@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Veiculo;
+use App\Models\Familia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -24,36 +25,56 @@ class NovosController extends Controller
     }
 
     // Método privado que carrega os dados compartilhados
-    private function carregarDadosVeiculos($familia = null)
-    {
-        $campos = ['desc_veiculo', 'cor'];
-        $dados = [];
+private function carregarDadosVeiculos($familia = null)
+{
+    $campos = ['desc_veiculo', 'cor'];
+    $dados = [];
 
-        foreach ($campos as $campo) {
-            $query = Veiculo::select($campo)
-                ->distinct()
-                ->where([
-                    ['marca', 'GM'],
-                    ['novo_usado', 'Novo']
-                ]);
+    foreach ($campos as $campo) {
+        $query = Veiculo::select($campo)
+            ->distinct()
+            ->where([
+                ['marca', 'GM'],
+                ['novo_usado', 'Novo']
+            ]);
 
-            // Se houver um filtro de família, aplica o filtro no desc_veiculo
-            if ($familia) {
-                $query->where('desc_veiculo', 'LIKE', "%{$familia}%");
-            }
-
-            $dados[$campo] = $query->get();
+        if ($familia) {
+            $query->where('desc_veiculo', 'LIKE', "%{$familia}%");
         }
 
-        // Carrega as imagens das famílias
-        $imagens = File::allFiles(public_path('images/familia'));
-
-        return [
-            'veiculosUnicos' => $dados['desc_veiculo'],
-            'cores' => $dados['cor'],
-            'imagens' => $imagens
-        ];
+        $dados[$campo] = $query->get();
     }
+
+    // Agora carrega as Familiasd carregadas no banco, verifique se tem veiculo dessa familai ativo no banco e se a imagem 
+    // esta na pasta, se sim, entao carrega familiasValidas para a view nao colocar veiculos que nao existem
+    $familias = Familia::pluck('descricao')->toArray();
+    $familiasValidas = [];
+
+    foreach ($familias as $nomeFamilia) {
+        $temVeiculos = Veiculo::where([
+            ['novo_usado', 'Novo'],
+            ['familia', $nomeFamilia],
+        ])->exists();
+
+        $nomeArquivo = str_replace(' ', '_', $nomeFamilia) . '.jpg';
+        $imagemExiste = File::exists(public_path('images/familia/' . $nomeArquivo));
+
+        if ($temVeiculos && $imagemExiste) {
+            $familiasValidas[] = [
+                'nome' => $nomeFamilia,
+                'imagem' => 'images/familia/' . $nomeArquivo,
+            ];
+        }
+    }
+
+    // Carrega a view
+    return [
+        'veiculosUnicos' => $dados['desc_veiculo'],
+        'cores' => $dados['cor'],
+        'familiasValidas' => $familiasValidas, 
+    ];
+}
+
 
     public function index(Request $request)
     {
