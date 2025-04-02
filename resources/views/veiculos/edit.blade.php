@@ -27,10 +27,10 @@
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                             <option value="">Selecione uma família</option>
                             @foreach ($familias as $familia)
-                            <option value="{{ $familia->descricao }}"
-                                {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
-                                {{ $familia->descricao }}
-                            </option>
+                                <option value="{{ $familia->descricao }}"
+                                    {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
+                                    {{ $familia->descricao }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -87,7 +87,8 @@
                         <select name="combustivel"
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                             <option value="Gasolina"
-                                {{ old('combustivel', $veiculo->combustivel) == 'Gasolina' ? 'selected' : '' }}>Gasolina
+                                {{ old('combustivel', $veiculo->combustivel) == 'Gasolina' ? 'selected' : '' }}>
+                                Gasolina
                             </option>
                             <option value="Etanol"
                                 {{ old('combustivel', $veiculo->combustivel) == 'Etanol' ? 'selected' : '' }}>Etanol
@@ -109,7 +110,6 @@
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                     </div>
                 </div>
-
                 <!-- Linha com Valor Tabela, Bônus e Custo -->
                 @php
                     $valor = old('vlr_tabela', $veiculo->vlr_nota);

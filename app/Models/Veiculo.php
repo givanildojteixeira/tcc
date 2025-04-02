@@ -29,5 +29,6 @@ class Veiculo extends Model
         'dta_faturamento',
         'user_reserva',
         'desc_nota',
+        'site',
     ];
 }

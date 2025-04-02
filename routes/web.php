@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
 
     //Familias
     Route::resource('/veiculos/familia', FamiliaController::class)->only(['index', 'store', 'update', 'destroy']);
-    
+
     //Opcionais
     Route::resource('opcionais', OpcionaisController::class);
 

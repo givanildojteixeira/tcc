@@ -18,12 +18,14 @@ class FamiliaController extends Controller
     {
         $request->validate([
             'descricao' => 'required|string|max:255',
+            'site' => 'required|string|max:255',
             'imagem' => 'nullable|image|mimes:jpg,jpeg|max:2048',
         ]);
 
         // Salva a família no banco
         $familia = Familia::create([
-            'descricao' => $request->descricao
+            'descricao' => $request->descricao,
+            'site' => $request->site,
         ]);
 
         // Salva a imagem com o nome da família
@@ -43,6 +45,7 @@ class FamiliaController extends Controller
     {
         $request->validate([
             'descricao' => 'required|string|max:255',
+            'site' => 'required|string|max:255',
             'imagem' => 'nullable|image|mimes:jpg,jpeg|max:2048',
         ]);
 
@@ -54,6 +57,7 @@ class FamiliaController extends Controller
 
         // Atualiza descrição no banco
         $familia->descricao = $request->descricao;
+        $familia->site = $request->site;
         $familia->save();
 
         // Se enviou nova imagem, substituir

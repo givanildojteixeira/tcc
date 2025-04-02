@@ -7,7 +7,8 @@
 
 
         <!-- Formulário -->
-        <form id="formFamilia" action="{{ route('familia.store') }}" method="POST" enctype="multipart/form-data" class="mb-8 space-y-4">
+        <form id="formFamilia" action="{{ route('familia.store') }}" method="POST" enctype="multipart/form-data"
+            class="mb-8 space-y-4">
 
             @csrf
 
@@ -29,14 +30,20 @@
                                file:bg-green-100 file:text-green-700
                                hover:file:bg-green-200">
                 </div>
+                <!-- Site -->
+            </div>
+            <div class="basis-[20%] flex-grow min-w-[180px]">
+                <label class="block text-gray-700 font-medium mb-1">Site de Apoio</label>
+                <input type="text" name="site"
+                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
             </div>
             <div class="flex flex-wrap items-center gap-4 mb-6">
-                @if(request('from'))
-                <a href="{{ url('/veiculos/' . request('from') . '/edit') }}"
-                    class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
-                    <i class="fas fa-arrow-left"></i>
-                    Voltar para edição do veículo
-                </a>
+                @if (request('from'))
+                    <a href="{{ url('/veiculos/' . request('from') . '/edit') }}"
+                        class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
+                        <i class="fas fa-arrow-left"></i>
+                        Voltar para edição do veículo
+                    </a>
                 @endif
 
                 <button type="submit"
@@ -61,46 +68,47 @@
                 </thead>
                 <tbody>
                     @foreach ($familias as $familia)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-2 border">{{ $familia->id }}</td>
-                        <td class="px-4 py-2 border">{{ $familia->descricao }}</td>
-                        <td class="px-4 py-2 border">
-                            @php
-                            $nomeArquivo = str_replace(' ', '_', $familia->descricao) . '.jpg';
-                            @endphp
-                            @if (file_exists(public_path('images/familia/' . $nomeArquivo)))
-                            <img src="{{ asset('images/familia/' . $nomeArquivo) }}" alt="Imagem"
-                                class="h-12 rounded">
-                            @else
-                            <span class="text-gray-400 italic">Sem imagem</span>
-                            @endif
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 border">{{ $familia->id }}</td>
+                            <td class="px-4 py-2 border">{{ $familia->descricao }}</td>
+                            <td class="px-4 py-2 border">
+                                @php
+                                    $nomeArquivo = str_replace(' ', '_', $familia->descricao) . '.jpg';
+                                @endphp
+                                @if (file_exists(public_path('images/familia/' . $nomeArquivo)))
+                                    <img src="{{ asset('images/familia/' . $nomeArquivo) }}" alt="Imagem"
+                                        class="h-12 rounded">
+                                @else
+                                    <span class="text-gray-400 italic">Sem imagem</span>
+                                @endif
 
-                        </td>
-                        <td class="px-4 py-2 border text-center">
-                            <!-- Form de exclusão -->
-                            <form action="{{ route('familia.destroy', $familia->id) }}" method="POST"
-                                onsubmit="return confirm('Tem certeza que deseja excluir esta família?')"
-                                class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-800 mr-3" title="Excluir">
-                                    <i class="fas fa-trash-alt"></i>
+                            </td>
+                            <td class="px-4 py-2 border text-center">
+                                <!-- Form de exclusão -->
+                                <form action="{{ route('familia.destroy', $familia->id) }}" method="POST"
+                                    onsubmit="return confirm('Tem certeza que deseja excluir esta família?')"
+                                    class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800 mr-3" title="Excluir">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+
+                                <!-- Botão Editar (abre modal ou navega) -->
+                                <button
+                                    onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')"
+                                    class="text-blue-600 hover:text-blue-800" title="Editar">
+                                    <i class="fas fa-edit"></i>
                                 </button>
-                            </form>
 
-                            <!-- Botão Editar (abre modal ou navega) -->
-                            <button
-                                onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}')"
-                                class="text-blue-600 hover:text-blue-800" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     @endforeach
                     @if ($familias->isEmpty())
-                    <tr>
-                        <td colspan="4" class="text-center text-gray-500 py-4">Nenhuma família cadastrada.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="4" class="text-center text-gray-500 py-4">Nenhuma família cadastrada.</td>
+                        </tr>
                     @endif
                 </tbody>
             </table>
@@ -109,7 +117,7 @@
 
     <!-- Script opcional para preencher o formulário ao clicar em editar -->
     <script>
-        function preencherFormulario(id, descricao) {
+        function preencherFormulario(id, descricao, site = '') {
             const form = document.getElementById('formFamilia');
             form.action = `/veiculos/familia/${id}`;
 
@@ -124,8 +132,11 @@
             methodInput.setAttribute('value', 'PUT');
             form.appendChild(methodInput);
 
+            // Preenche os campos
             form.querySelector('input[name="descricao"]').value = descricao;
+            form.querySelector('input[name="site"]').value = site;
         }
     </script>
+
 
 </x-app-layout>

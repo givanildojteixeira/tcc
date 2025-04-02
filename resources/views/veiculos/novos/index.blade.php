@@ -191,8 +191,8 @@
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         <th class="sortable p-2" data-column="combustivel">Transm. <i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i>
-                                    </th>
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
+                                        </th>
                                         <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
@@ -234,6 +234,14 @@
                                             } elseif ($veiculo->local == 'Transito') {
                                                 $rowColor = 'text-green-500';
                                             }
+                                            $descricaoOpcional =
+                                                \App\Models\Opcionais::where('modelo_fab', $veiculo->modelo_fab)
+                                                    ->where('cod_opcional', $veiculo->cod_opcional)
+                                                    ->value('descricao') ?? 'Nenhum opcional encontrado.';
+
+                                            $siteFamilia =
+                                                \App\Models\Familia::where('descricao', $veiculo->familia)->value(
+                                                    'site',) ?? '';
                                         @endphp
                                         <tr class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
                                             @click="
@@ -241,6 +249,7 @@
                                                 veiculo = {
                                                     id: '{{ $veiculo->id }}',
                                                     desc_veiculo: '{{ $veiculo->desc_veiculo }}',
+                                                    descricao_opcional: @js($descricaoOpcional),
                                                     familia: '{{ $veiculo->familia }}',
                                                     modelo_fab: '{{ $veiculo->modelo_fab }}',
                                                     combustivel: '{{ $veiculo->combustivel }}',
@@ -249,6 +258,7 @@
                                                     chassi: '{{ $veiculo->chassi }}',
                                                     cor: '{{ $veiculo->cor }}',
                                                     portas: '{{ $veiculo->portas }}',
+                                                    site: @js($siteFamilia),
                                                     cod_opcional: '{{ $veiculo->cod_opcional }}',
                                                     vlr_tabela: '{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}',
                                                     vlr_bonus: '{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}',
@@ -365,6 +375,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Scripts -->
 
     <!-- Scripts -->
     <script>

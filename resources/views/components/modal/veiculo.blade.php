@@ -9,7 +9,7 @@
 
         <!-- Cabeçalho -->
         <h2 class="text-2xl font-bold mb-4 text-blue-600 text-center">
-            Detalhes do Veículo {{ $tipo ?? '' }} =>
+            Detalhes do Veículo {{ $tipo ?? '' }}:
             <span x-text="veiculo.desc_veiculo" class="text-green-600"></span>
         </h2>
 
@@ -88,12 +88,38 @@
                 </div>
             </div>
 
-            <!-- Coluna Direita: Bloco 2 (Detalhes do Veículo) -->
-            <div class="w-full md:w-1/2 border border-gray-300 rounded-md p-4 text-sm text-gray-700 self-stretch">
-                <h3 class="font-semibold text-gray-700 mb-2">Opcionais do Modelo: </h3> <span
-                    x-text="veiculo.modelo_fab"></span>
-                <div x-text="veiculo.cod_opcional"></div>
+            <!-- Bloco dos Opcionais no Modal -->
+            <div x-show="open"
+                class="w-full md:w-1/2 border border-gray-300 rounded-md p-4 text-sm text-gray-700 self-stretch">
+
+                <h3 class="font-semibold text-gray-700">Opcionais do Modelo:
+                    <span x-text="veiculo.modelo_fab"></span>
+                    <span class="font-medium text-gray-500">| Código:</span>
+                    <span x-text="veiculo.cod_opcional"></span>
+                </h3>
+
+
+                <!-- Lista com scroll que ocupa o restante da div -->
+                <div class="flex-1 max-h-[400px] overflow-auto pr-2">
+                    <ul class="list-disc list-inside space-y-1">
+                        <template x-for="item in veiculo.descricao_opcional.split('/').filter(i => i.trim())"
+                            :key="item">
+                            <li x-text="item.trim()"></li>
+                        </template>
+                    </ul>
+                </div>
+
+                <!-- Fallback caso não tenha nada -->
+                <div class="text-gray-400 italic mt-2" x-show="!veiculo.descricao_opcional">
+                    Nenhum opcional encontrado.
+                </div>
+
             </div>
+
+
+
+
+
         </div>
 
         <!-- Botoes e Rodapé -->
@@ -101,7 +127,7 @@
 
             <button @click="open = false"
                 class="bg-gray-400 hover:bg-gray-500 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i> Voltar
+                <i class="fas fa-arrow-left"></i></i> Voltar
             </button>
 
             <button @click="window.location.href = `/veiculos/${veiculo.id}/edit`"
@@ -109,10 +135,20 @@
                 <i class="fas fa-pen-to-square"></i> Editar
             </button>
 
-            <button
-                class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
+            <!-- Botão site -->
+            <a x-show="veiculo.site" :href="veiculo.site.startsWith('http') ? veiculo.site : 'https://' + veiculo.site"
+                target="_blank"
+                class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2 transition">
+                <i class="fas fa-hands-helping"></i> Apoio GM
+            </a>
+
+            <!-- Botão desabilitado quando não há site -->
+            <button x-show="!veiculo.site" disabled
+                class="bg-gray-300 text-gray-500 cursor-not-allowed font-medium px-4 py-2 rounded shadow flex items-center gap-2">
                 <i class="fas fa-hands-helping"></i> Apoio GM
             </button>
+
+
 
             <button @click="window.open(`/mev/${veiculo.familia}.pdf`, '_blank')"
                 class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">

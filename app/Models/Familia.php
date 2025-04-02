@@ -8,5 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Familia extends Model
 {
     use HasFactory;
-    protected $fillable = ['descricao']; // <- recomendável
+    protected $fillable = [
+        'descricao',
+        'site',
+    ];
 }

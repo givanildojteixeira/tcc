@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Veiculo;
 use Illuminate\Http\Request;
 use App\Models\Familia;
+use App\Models\Opcionais;
 
 class VeiculoController extends Controller
 {
@@ -14,7 +15,10 @@ class VeiculoController extends Controller
     {
         $veiculo = Veiculo::findOrFail($id);
         $familias = Familia::all(); // <- aqui você pega os dados do banco
-        return view('veiculos.edit', compact('veiculo', 'familias'));
+        $opcionalDescricao = Opcionais::where('modelo_fab', $veiculo->modelo_fab)
+        ->where('cod_opcional', $veiculo->cod_opcional)
+        ->value('descricao');
+        return view('veiculos.edit', compact('veiculo', 'familias','opcionalDescricao'));
     }
 
     public function update(Request $request, $id)
