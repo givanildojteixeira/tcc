@@ -78,20 +78,15 @@
                         <select id="combustivel"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('combustivel', this.value)">
-                            <option value="" disabled
-                                {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Selecione</option>
-                            <option value="Gasolina"
-                                {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : '' }}>Gasolina
+                            <option value=""
+                                {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Todas</option>
+                            @foreach ($combustiveis as $combustivel)
+                            <option value="{{ $combustivel->combustivel }}"
+                                {{ session('combustivel_selecionado') == $combustivel->combustivel ? 'selected' : '' }}>
+                                {{ $combustivel->combustivel }}
                             </option>
-                            <option value="Alcool"
-                                {{ session('combustivel_selecionado') == 'Alcool' ? 'selected' : '' }}>Álcool</option>
-                            <option value="Flex"
-                                {{ session('combustivel_selecionado') == 'Flex' ? 'selected' : '' }}>Flex</option>
-                            <option value="Diesel"
-                                {{ session('combustivel_selecionado') == 'Diesel' ? 'selected' : '' }}>Diesel</option>
-                            <option value="Eletrico"
-                                {{ session('combustivel_selecionado') == 'Eletrico' ? 'selected' : '' }}>Elétrico
-                            </option>
+                            @endforeach
+
                         </select>
                     </div>
 
@@ -101,16 +96,14 @@
                         <select id="anoModelo"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('ano', this.value)">
-                            <option value="" disabled {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
-                                Selecione</option>
-                            <option value="2024/2024"
-                                {{ session('ano_selecionado') == '2024/2024' ? 'selected' : '' }}>2024/2024</option>
-                            <option value="2024/2025"
-                                {{ session('ano_selecionado') == '2024/2025' ? 'selected' : '' }}>2024/2025</option>
-                            <option value="2025/2025"
-                                {{ session('ano_selecionado') == '2025/2025' ? 'selected' : '' }}>2025/2025</option>
-                            <option value="2025/2026"
-                                {{ session('ano_selecionado') == '2025/2026' ? 'selected' : '' }}>2025/2026</option>
+                            <option value="" {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
+                                Todas</option>
+                            @foreach ($anosUnico as $ano)
+                            <option value="{{ $ano->Ano_Mod }}"
+                                {{ session('ano_selecionado') == $ano->Ano_Mod ? 'selected' : '' }}>
+                                {{ $ano->Ano_Mod }}
+                            </option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -121,12 +114,12 @@
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('transmissao', this.value)">
                             <option value="" disabled selected>Selecione</option>
-                            <option value="Mecânica"
-                                {{ session('transmissao_selecionado') == 'Mecânica' ? 'selected' : '' }}>Mecânica
+                            @foreach ($transmissoes as $transmissao)
+                            <option value="{{ $transmissao->transmissao }}"
+                                {{ session('transmissao_selecionado') == $transmissao->transmissao ? 'selected' : '' }}>
+                                {{ $transmissao->transmissao }}
                             </option>
-                            <option value="Automática"
-                                {{ session('transmissao_selecionado') == 'Automática' ? 'selected' : '' }}>Automática
-                            </option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -136,7 +129,7 @@
                         <select name="corVeiculos"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('cor', this.value)">
-                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>Todos
+                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>Todas
                             </option>
                             @foreach ($cores as $cor)
                             <option value="{{ $cor->cor }}"

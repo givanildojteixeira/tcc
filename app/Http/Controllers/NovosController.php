@@ -28,7 +28,7 @@ class NovosController extends Controller
     // Método privado que carrega os dados compartilhados
 private function carregarDadosVeiculos($familia = null)
 {
-    $campos = ['desc_veiculo', 'cor'];
+    $campos = ['desc_veiculo', 'cor', 'combustivel', 'transmissao', 'Ano_Mod'];
     $dados = [];
 
     foreach ($campos as $campo) {
@@ -74,11 +74,13 @@ private function carregarDadosVeiculos($familia = null)
         }
     }
 
-
     // Carrega a view
     return [
         'veiculosUnicos' => $dados['desc_veiculo'],
         'cores' => $dados['cor'],
+        'transmissoes' => $dados['transmissao'],
+        'combustiveis' => $dados['combustivel'],
+        'anosUnico' => $dados['Ano_Mod'],        
         'familiasValidas' => $familiasValidas,
     ];
 }
