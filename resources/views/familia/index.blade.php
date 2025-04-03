@@ -2,9 +2,9 @@
     <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
         <!-- Título e Feedback -->
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-semibold text-green-700">Gerenciar Famílias</h2>
+            <h2 class="text-2xl font-semibold text-green-700">Gerenciar famílias de veículos</h2>
+            <x-bt-ajuda /> <!-- Botão de Ajuda -->
         </div>
-
 
         <!-- Formulário -->
         <form id="formFamilia" action="{{ route('familia.store') }}" method="POST" enctype="multipart/form-data"
@@ -51,6 +51,21 @@
                     <i class="fas fa-plus-circle"></i>
                     Cadastrar ou Alterar Família
                 </button>
+
+                @php
+                    $mostrarTodas = config_sistema('mostrar_todas_familias', 'false') === 'true';
+                @endphp
+
+                <div class="flex items-center mb-4">
+                    <input type="checkbox" id="mostrar_todas" name="mostrar_todas" value="1"
+                        {{ $mostrarTodas ? 'checked' : '' }}
+                        class="mr-2 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                    <label for="mostrar_todas" class="text-gray-700">Mostrar todas as famílias no carrossel (mesmo
+                        sem
+                        veículos)</label>
+                </div>
+
+
             </div>
 
 
@@ -107,11 +122,68 @@
                     @endforeach
                     @if ($familias->isEmpty())
                         <tr>
-                            <td colspan="4" class="text-center text-gray-500 py-4">Nenhuma família cadastrada.</td>
+                            <td colspan="4" class="text-center text-gray-500 py-4">Nenhuma família cadastrada.
+                            </td>
                         </tr>
                     @endif
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- Modal de Ajuda -->
+    <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
+
+            <!-- Ícone de Informação à esquerda -->
+            <div class="flex items-start">
+                <i class="fas fa-info-circle text-blue-500 text-6xl"></i>
+            </div>
+
+            <!-- Conteúdo do Modal -->
+            <div class="flex-1 relative">
+                <!-- Botão de Fechar -->
+                <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
+                    class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-2xl">
+                    &times;
+                </button>
+
+                <h2 class="text-2xl font-bold text-blue-600 mb-4">Instruções para gerenciamento de famílias de veículos
+                </h2>
+
+                <p class="mb-3 text-sm text-gray-700 leading-relaxed">
+                    Esta tela tem como objetivo <strong>exibir as famílias de veículos</strong> cadastradas no sistema,
+                    incluindo arquivos de imagem e um site de apoio. Utilize os recursos abaixo para uma busca eficaz:
+                </p>
+
+                <ul class="list-disc list-inside text-sm text-gray-800 space-y-2">
+                    <li><strong>Nome da família:</strong> Coloque o nome básico do modelo que possa ser reunitilizado e
+                        que demonstre ligação de mais subtipos de veiculos. Esse nome será usado para renomear o arquivo
+                        e
+                        guardar na pasta de imagens.</li>
+                    <li><strong>Imagem da família:</strong> Clique em escolher arquivo para selecionar uma imagem
+                        ilustrativa. Arquivos válidos
+                        *.jpg.</li>
+                    <li><strong>Site de Apoio:</strong> Site de apoio para que o vendedor possa consultar mecanismos
+                        externos de auxilio a venda, vinculados ao modelo da família, como sites de Detran, montadora,
+                        etc. Ex: http://www.montadora.com.br </li>
+                    <li><strong>Voltar para edição do veículo</strong> Esse botão somente aparece se esta tela for
+                        seleciona a partir da tela do cadastro de veículo.</li>
+                    <li><strong>Cadastrar ou Alterar Família:</strong> Cadastra ou atualiza os dados da tela.</li>
+                    <li><strong>Mostrar todas as famílias no carrossel (mesmo sem veículos):</strong> Esse checkbox,
+                        grava no arquivo de configuração
+                        se o carrossel da tela de veiculos novos deve mostrar ou não, imagens de familias de unidades
+                        sem estoque. Para alterar esse checkbox, edite uma familia, sem alterar nome ou arquivo.</li>
+
+                </ul>
+
+                <div class="mt-6 text-right">
+                    <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
+                        class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
+                        Entendi!
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -137,6 +209,5 @@
             form.querySelector('input[name="site"]').value = site;
         }
     </script>
-
 
 </x-app-layout>

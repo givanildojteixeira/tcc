@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configuracao;
 use App\Models\Familia;
 use Illuminate\Http\Request;
 
@@ -43,6 +44,22 @@ class FamiliaController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Antes de iniciar a gravar familia, verifique a opçao de
+        // Mostrar todas as famílias no carrossel (mesmo sem veículos)
+        // ela grava no config
+        if ($request->has('mostrar_todas')) {
+            Configuracao::updateOrCreate(
+                ['chave' => 'mostrar_todas_familias'],
+                ['valor' => 'true']
+            );
+        } else {
+            Configuracao::updateOrCreate(
+                ['chave' => 'mostrar_todas_familias'],
+                ['valor' => 'false']
+            );
+        }
+
+        // Continua a gravação e dados
         $request->validate([
             'descricao' => 'required|string|max:255',
             'site' => 'required|string|max:255',

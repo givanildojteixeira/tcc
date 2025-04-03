@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Configuracao;
 use App\Models\Veiculo;
 use App\Models\Familia;
 use Illuminate\Http\Request;
@@ -45,21 +46,27 @@ private function carregarDadosVeiculos($familia = null)
         $dados[$campo] = $query->get();
     }
 
-    // Agora carrega as Familiasd carregadas no banco, verifique se tem veiculo dessa familai ativo no banco e se a imagem 
+    // Agora carrega as Familias registradas no banco, verifique se tem veiculo dessa familia ativo no banco e se a imagem
     // esta na pasta, se sim, entao carrega familiasValidas para a view nao colocar veiculos que nao existem
+    $mostrarTodas = Configuracao::where('chave', 'mostrar_todas_familias')->value('valor') === 'true';
+
+    // O método pluck(), extrai os valores de uma única coluna de uma coleção
     $familias = Familia::pluck('descricao')->toArray();
     $familiasValidas = [];
 
     foreach ($familias as $nomeFamilia) {
-        $temVeiculos = Veiculo::where([
-            ['novo_usado', 'Novo'],
-            ['familia', $nomeFamilia],
-        ])->exists();
-
         $nomeArquivo = str_replace(' ', '_', $nomeFamilia) . '.jpg';
         $imagemExiste = File::exists(public_path('images/familia/' . $nomeArquivo));
 
-        if ($temVeiculos && $imagemExiste) {
+        // Se a configuração permitir mostrar todas ou se tiver veículos + imagem
+        if (
+            $mostrarTodas ||
+            (
+                Veiculo::where('novo_usado', 'Novo')
+                    ->where('familia', $nomeFamilia)
+                    ->exists() && $imagemExiste
+            )
+        ) {
             $familiasValidas[] = [
                 'nome' => $nomeFamilia,
                 'imagem' => 'images/familia/' . $nomeArquivo,
@@ -67,11 +74,12 @@ private function carregarDadosVeiculos($familia = null)
         }
     }
 
+
     // Carrega a view
     return [
         'veiculosUnicos' => $dados['desc_veiculo'],
         'cores' => $dados['cor'],
-        'familiasValidas' => $familiasValidas, 
+        'familiasValidas' => $familiasValidas,
     ];
 }
 
@@ -154,73 +162,9 @@ private function carregarDadosVeiculos($familia = null)
         return redirect()->route('veiculos.novos.index');
     }
 
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('veiculos.novos.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        // $cliente = new Cliente();
-        // $cliente->user_id      = $request->user_id;
-        // $cliente->nome         = $request->nome;
-        // $cliente->email        = $request->email;
-        // $cliente->telefone     = $request->telefone;
-        // $cliente->telefonecom  = $request->telefonecom;
-        // $cliente->endereco     = $request->endereco;
-        // $cliente->bairro       = $request->bairro;
-        // $cliente->cidade       = $request->cidade;
-        // $cliente->uf           = $request->uf;
-        // $cliente->sexo         = $request->sexo;
-
-        // $cliente->save();
-        // return redirect()->route(route: 'cliente.create')->with('msg', 'Cliente cadastrado com sucesso!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Cliente $cliente)
-    {
-        return view('veiculos.novos.show', ['cliente' => $cliente]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cliente $cliente)
-    {
-        return view('veiculos.novos.edit', ['cliente' => $cliente]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Cliente $cliente)
-    {
-        // Cliente::findOrFail($cliente->id)->update($request->all());
-        // return redirect()->route('cliente.show', $cliente->id);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Cliente $cliente)
-    {
-        // Cliente::findOrFail($cliente->id)->delete();
-        // return redirect()->route('meus-clientes', Auth::user()->id);
-    }
-
-    public function confirma_delete(Cliente $id)
-    {
-        // return view('clientes.confirma_delete',['id' => $id]);
-    }
 }

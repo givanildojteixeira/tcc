@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Configuracao;
+
 if (!function_exists('limparMoeda')) {
     function limparMoeda($valor)
     {
@@ -46,5 +48,12 @@ if (!function_exists('formatarTelefone')) {
         return strlen($telefone) == 11
             ? preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $telefone)
             : preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $telefone);
+    }
+}
+
+if (!function_exists('config_sistema')) {
+    function config_sistema($chave, $padrao = null)
+    {
+        return Configuracao::where('chave', $chave)->value('valor') ?? $padrao;
     }
 }
