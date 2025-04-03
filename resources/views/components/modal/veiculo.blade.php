@@ -130,14 +130,14 @@
                 <i class="fas fa-arrow-left"></i></i> Voltar
             </button>
 
-            <button @click="window.location.href = `/veiculos/${veiculo.id}/edit`"
+            <button @click="window.location.href = `/veiculos/${veiculo.id}/edit`" title="Abre tela de edição do arquivo"
                 class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
                 <i class="fas fa-pen-to-square"></i> Editar
             </button>
 
             <!-- Botão site -->
             <a x-show="veiculo.site" :href="veiculo.site.startsWith('http') ? veiculo.site : 'https://' + veiculo.site"
-                target="_blank"
+                target="_blank" title="Link externo para site de apoio."
                 class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2 transition">
                 <i class="fas fa-hands-helping"></i> Apoio GM
             </a>
@@ -148,26 +148,24 @@
                 <i class="fas fa-hands-helping"></i> Apoio GM
             </button>
 
-
-
-            <button @click="window.open(`/mev/${veiculo.familia}.pdf`, '_blank')"
+            <button @click="window.open(`/mev/${veiculo.familia}.pdf`, '_blank')" title="Manual de Especificação de Vendas."
                 class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
                 <i class="fas fa-book-open"></i> M.E.V.
             </button>
 
             <button
-                class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
-                <i class="fas fa-folder-open"></i> Documentos
+                class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2"
+                title="Demais documentos, campanhas ou instrução para auxilio a venda"><i class="fas fa-folder-open"></i> Documentos
             </button>
 
-            <button @click="window.open(`/mev/precos.pdf`, '_blank')"
+            <button @click="window.open(`/mev/precos.pdf`, '_blank')" title="Ultima tabela de preço divulgada"
                 class="bg-pink-500 hover:bg-pink-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
                 <i class="fas fa-tags"></i> Tabela Preços
             </button>
 
             <button
-                class="bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
-                <i class="fas fa-file-signature"></i> Proposta
+                class="bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2"
+                title="Elaboração de Proposta de Venda" ><i class="fas fa-file-signature"></i> Proposta
             </button>
 
         </div>
