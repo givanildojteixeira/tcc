@@ -57,3 +57,10 @@ if (!function_exists('config_sistema')) {
         return Configuracao::where('chave', $chave)->value('valor') ?? $padrao;
     }
 }
+
+if (!function_exists('arquivo_existe')) {
+    function arquivo_existe($caminhoRelativo)
+    {
+        return file_exists(public_path($caminhoRelativo));
+    }
+}

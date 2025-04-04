@@ -181,344 +181,377 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
-                        <table class="table-auto w-full ml-2 mr-2">
-                            <thead class="bg-gray-100 text-left sticky top-0 z-10">
-                                <tr>
-                                    <th class="sortable p-1 px-1 py-1" data-column="marca">Marca <i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
-                                    <th class="sortable p-1 px-1 py-1" data-column="veiculo">Modelo<i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
-                                    <th class="sortable p-1 px-1 py-1" data-column="combustivel">Comb <i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
-                                    <th class="sortable p-1 px-1 py-1" data-column="ano/mod">Ano_Mod <i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
-                                    <th class="sortable p-1 px-1 py-1" data-column="chassi">Chassi <i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
-                                    <th class="sortable p-1 px-1 py-1" data-column="cor">Cor <i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
-                                    <th class="sortable p-1 px-1 py-1" data-column="pts">Pts<i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
-                                    <th class="sortable p-1 px-1 py-1 text-right" data-column="custo">Custo <i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i>
-                                    </th>
-                                    <th class="sortable p-1 px-1 py-1 text-right" data-column="tabela">Tabela <i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i>
-                                    </th>
-                                    <th class="sortable p-1 px-1 py-1" data-column="faturado">Estoque<i
-                                            class="fas fa-sort text-gray-400 text-xs ml-1"></i>
-                                    </th>
-                                    <th class="hidden">Local</th> <!-- Coluna oculta -->
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm">
-                                @foreach ($veiculos as $veiculo)
-                                    @php
-                                        $rowColor = '';
-                                        if ($veiculo->local == 'Matriz') {
-                                            $rowColor = 'text-black';
-                                        } elseif ($veiculo->local == 'Filial') {
-                                            $rowColor = 'text-yellow-500';
-                                        } elseif ($veiculo->local == 'Consignado') {
-                                            $rowColor = 'text-green-500';
-                                        }
-                                    @endphp
-                                    <tr class="hover:bg-gray-100 {{ $rowColor }}">
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->marca }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
-                                        <td class="p-1 px-1 py-1 text-center">{{ $veiculo->Ano_Mod }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
-                                        <td class="p-1 px-1 py-1  text-center">{{ $veiculo->portas }}</td>
-                                        <td class="p-1 px-1 py-1 text-right">
-                                            {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
-                                        <td class="p-1 px-1 py-1 text-right">
-                                            {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
-                                        <td class="p-1 px-1 py-1 text-center">
-                                            {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                            dias
-                                        </td>
-                                        <td class="hidden">{{ $veiculo->local }}</td>
+                        <div x-data="{ open: false, veiculo: {} }"> <!-- Alpine no escopo global -->
+                            <table class="table-auto w-full ml-2 mr-2">
+                                <thead class="bg-gray-100 text-left sticky top-0 z-10">
+                                    <tr>
+                                        <th class="sortable p-1 px-1 py-1" data-column="marca">Marca <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
+                                        <th class="sortable p-1 px-1 py-1" data-column="veiculo">Modelo<i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
+                                        <th class="sortable p-1 px-1 py-1" data-column="combustivel">Comb <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
+                                        <th class="sortable p-1 px-1 py-1" data-column="ano/mod">Ano_Mod <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
+                                        <th class="sortable p-1 px-1 py-1" data-column="chassi">Chassi <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
+                                        <th class="sortable p-1 px-1 py-1" data-column="cor">Cor <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
+                                        <th class="sortable p-1 px-1 py-1" data-column="pts">Pts<i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
+                                        <th class="sortable p-1 px-1 py-1 text-right" data-column="custo">Custo <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
+                                        </th>
+                                        <th class="sortable p-1 px-1 py-1 text-right" data-column="tabela">Tabela <i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
+                                        </th>
+                                        <th class="sortable p-1 px-1 py-1" data-column="faturado">Estoque<i
+                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
+                                        </th>
+                                        <th class="hidden">Local</th> <!-- Coluna oculta -->
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="text-sm">
+                                    @foreach ($veiculos as $veiculo)
+                                        @php
+                                            $rowColor = '';
+                                            if ($veiculo->local == 'Matriz') {
+                                                $rowColor = 'text-black';
+                                            } elseif ($veiculo->local == 'Filial') {
+                                                $rowColor = 'text-yellow-500';
+                                            } elseif ($veiculo->local == 'Consignado') {
+                                                $rowColor = 'text-green-500';
+                                            }
+                                        @endphp
+                                        <tr class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
+                                            {{-- evento de clicar Veículo Usado --}}
+                                            @click="
+                                            open = true;
+                                            veiculo = {
+                                                id: '{{ $veiculo->id }}',
+                                                desc_veiculo: '{{ $veiculo->desc_veiculo }}',
+
+                                                familia: '{{ $veiculo->familia }}',
+                                                modelo_fab: '{{ $veiculo->modelo_fab }}',
+                                                combustivel: '{{ $veiculo->combustivel }}',
+                                                transmissao: '{{ $veiculo->transmissao }}',
+                                                Ano_Mod: '{{ $veiculo->Ano_Mod }}',
+                                                chassi: '{{ $veiculo->chassi }}',
+                                                cor: '{{ $veiculo->cor }}',
+                                                portas: '{{ $veiculo->portas }}',
+
+                                                cod_opcional: '{{ $veiculo->cod_opcional }}',
+                                                vlr_tabela: '{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}',
+                                                vlr_bonus: '{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}',
+                                                vlr_nota: '{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}',
+                                                faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}',
+                                                {{-- Essa linha leva a origem para o modal, assim ele saberá como voltar --}}
+                                                origem: '{{ request()->routeIs("veiculos.novos.*") ? 'novos' : 'usados' }}'
+                                            }
+                                        ">
+                                            {{-- evento de clicar --}}
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->marca }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
+                                            <td class="p-1 px-1 py-1 text-center">{{ $veiculo->Ano_Mod }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
+                                            <td class="p-1 px-1 py-1  text-center">{{ $veiculo->portas }}</td>
+                                            <td class="p-1 px-1 py-1 text-right">
+                                                {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}</td>
+                                            <td class="p-1 px-1 py-1 text-right">
+                                                {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}</td>
+                                            <td class="p-1 px-1 py-1 text-center">
+                                                {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
+                                                dias
+                                            </td>
+                                            <td class="hidden">{{ $veiculo->local }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <!-- ✅ Modal de Detalhes -->
+                            @include('components.modal.veiculo', ['tipo' => 'Usado'])
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <!-- Barra fixa abaixo da tabela -->
-    <x-rodape>
-        <!-- Número de veículos selecionados -->
-        <div class="text-lg font-semibold" id="selectedVehiclesCount">
-            Veículos Listados: {{ count($veiculos) }}
-        </div>
-        <!-- Exibir os links de navegação da página -->
-        <div class="pagination">
-            {{ $veiculos->links() }}
-        </div>
-        <!-- Legenda de cores -->
-        <div class="text-sm"> Legenda Alocação =>
-            <span class="filter text-black font-semibold" data-filter="Matriz" style="cursor: pointer;">Matriz</span>
-            |
-            <span class="filter text-yellow-500 font-semibold" data-filter="Filial"
-                style="cursor: pointer;">Filial</span> |
-            <span class="filter text-green-500 font-semibold" data-filter="Consignado"
-                style="cursor: pointer;">Consignado</span>
-        </div>
-    </x-rodape>
-
-    <!-- Modal de Ajuda -->
-    <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
-
-            <!-- Ícone de Informação à esquerda -->
-            <div class="flex items-start">
-                <i class="fas fa-info-circle text-blue-500 text-6xl"></i>
+        <!-- Barra fixa abaixo da tabela -->
+        <x-rodape>
+            <!-- Número de veículos selecionados -->
+            <div class="text-lg font-semibold" id="selectedVehiclesCount">
+                Veículos Listados: {{ count($veiculos) }}
             </div>
+            <!-- Exibir os links de navegação da página -->
+            <div class="pagination">
+                {{ $veiculos->links() }}
+            </div>
+            <!-- Legenda de cores -->
+            <div class="text-sm"> Legenda Alocação =>
+                <span class="filter text-black font-semibold" data-filter="Matriz"
+                    style="cursor: pointer;">Matriz</span>
+                |
+                <span class="filter text-yellow-500 font-semibold" data-filter="Filial"
+                    style="cursor: pointer;">Filial</span> |
+                <span class="filter text-green-500 font-semibold" data-filter="Consignado"
+                    style="cursor: pointer;">Consignado</span>
+            </div>
+        </x-rodape>
 
-            <!-- Conteúdo do Modal -->
-            <div class="flex-1 relative">
-                <!-- Botão de Fechar -->
-                <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
-                    class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-2xl">
-                    &times;
-                </button>
+        <!-- Modal de Ajuda -->
+        <div id="modalAjuda"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
 
-                <h2 class="text-2xl font-bold text-blue-600 mb-4">Instruções da Tela de Veículos Semi-Novos</h2>
+                <!-- Ícone de Informação à esquerda -->
+                <div class="flex items-start">
+                    <i class="fas fa-info-circle text-blue-500 text-6xl"></i>
+                </div>
 
-                <p class="mb-3 text-sm text-gray-700 leading-relaxed">
-                    Esta tela tem como objetivo <strong>exibir e filtrar veículos Semi-Novos</strong> disponíveis no
-                    estoque,
-                    tanto da Matriz quanto das filias ou até mesmo em consignação que são os veiculos que nao fazem
-                    parte do
-                    estoque da empresa, por serem veiculos, que os clientes deixaram para vender.
-                    Utilize os recursos abaixo para uma busca eficaz:
-                </p>
-
-                <ul class="list-disc list-inside text-sm text-gray-800 space-y-2">
-                    <li><strong>Combos de Filtro:</strong> Utilize as caixas Marca, Modelo, Combustível, Ano/Modelo,
-                        Portas ou Cor
-                        para refinar sua busca. </li>
-                    <li><strong>Busca por Chassi:</strong> É uma pesquisa direta, sem filtro, que permite localizar veículos digitando parte do número do
-                        chassi.</li>
-                    <li><strong>Busca por Faixa de Valor:</strong>  É uma pesquisa direta, sem filtro, que permite localizar veículos tendo como base seu valor Minimo
-                        e máximo, ao preço de tabela do semi-novo.</li>
-                    <li><strong>Legenda de Cores:</strong> Indica a localização dos veículos: <span
-                            class="text-black font-bold">Matriz</span>, <span
-                            class="text-yellow-500 font-bold">Filial</span> ou <span
-                            class="text-green-500 font-bold">Consignação</span>
-                        , clique sobre eles para refinar ainda mais sua busca.</li>
-                </ul>
-
-                <div class="mt-6 text-right">
+                <!-- Conteúdo do Modal -->
+                <div class="flex-1 relative">
+                    <!-- Botão de Fechar -->
                     <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
-                        class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
-                        Entendi!
+                        class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-2xl">
+                        &times;
                     </button>
+
+                    <h2 class="text-2xl font-bold text-blue-600 mb-4">Instruções da Tela de Veículos Semi-Novos</h2>
+
+                    <p class="mb-3 text-sm text-gray-700 leading-relaxed">
+                        Esta tela tem como objetivo <strong>exibir e filtrar veículos Semi-Novos</strong> disponíveis no
+                        estoque,
+                        tanto da Matriz quanto das filias ou até mesmo em consignação que são os veiculos que nao fazem
+                        parte do
+                        estoque da empresa, por serem veiculos, que os clientes deixaram para vender.
+                        Utilize os recursos abaixo para uma busca eficaz:
+                    </p>
+
+                    <ul class="list-disc list-inside text-sm text-gray-800 space-y-2">
+                        <li><strong>Combos de Filtro:</strong> Utilize as caixas Marca, Modelo, Combustível, Ano/Modelo,
+                            Portas ou Cor
+                            para refinar sua busca. </li>
+                        <li><strong>Busca por Chassi:</strong> É uma pesquisa direta, sem filtro, que permite localizar
+                            veículos digitando parte do número do
+                            chassi.</li>
+                        <li><strong>Busca por Faixa de Valor:</strong> É uma pesquisa direta, sem filtro, que permite
+                            localizar veículos tendo como base seu valor Minimo
+                            e máximo, ao preço de tabela do semi-novo.</li>
+                        <li><strong>Legenda de Cores:</strong> Indica a localização dos veículos: <span
+                                class="text-black font-bold">Matriz</span>, <span
+                                class="text-yellow-500 font-bold">Filial</span> ou <span
+                                class="text-green-500 font-bold">Consignação</span>
+                            , clique sobre eles para refinar ainda mais sua busca.</li>
+                    </ul>
+
+                    <div class="mt-6 text-right">
+                        <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
+                            class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
+                            Entendi!
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <!-- Scripts -->
-    <script>
-        // Atualiza Filtros e redireciona para a rota correta com os filtros aplicados
-        function atualizarFiltro(chave, valor) {
-            let params = new URLSearchParams(window.location.search);
+        <!-- Scripts -->
+        <script>
+            // Atualiza Filtros e redireciona para a rota correta com os filtros aplicados
+            function atualizarFiltro(chave, valor) {
+                let params = new URLSearchParams(window.location.search);
 
-            if (valor) {
-                params.set(chave, valor); // Adiciona ou substitui o filtro
-            } else {
-                params.delete(chave); // Remove o filtro se for vazio
-            }
-
-            window.location.href = "{{ route('veiculos.usados.index') }}?" + params.toString();
-        }
-
-        // Aplica filtro por valor
-        document.addEventListener("DOMContentLoaded", function() {
-            const slider = document.getElementById('slider-preco');
-
-            noUiSlider.create(slider, {
-                start: [{{ session('valor_min', 0) }}, {{ session('valor_max', 1000000) }}],
-                connect: true,
-                step: 1000,
-                range: {
-                    'min': 0000,
-                    'max': 1000000
-                },
-                format: {
-                    to: value => parseInt(value),
-                    from: value => parseInt(value)
+                if (valor) {
+                    params.set(chave, valor); // Adiciona ou substitui o filtro
+                } else {
+                    params.delete(chave); // Remove o filtro se for vazio
                 }
-            });
-
-            const minLabel = document.getElementById('minValorLabel');
-            const maxLabel = document.getElementById('maxValorLabel');
-
-            slider.noUiSlider.on('update', function(values) {
-                minLabel.innerText = `R$ ${parseInt(values[0]).toLocaleString('pt-BR')}`;
-                maxLabel.innerText = `R$ ${parseInt(values[1]).toLocaleString('pt-BR')}`;
-            });
-
-            window.aplicarFiltroPreco = function() {
-                const valores = slider.noUiSlider.get();
-                const params = new URLSearchParams(window.location.search);
-
-                params.set('valor_min', valores[0]);
-                params.set('valor_max', valores[1]);
 
                 window.location.href = "{{ route('veiculos.usados.index') }}?" + params.toString();
-            };
-        });
+            }
 
+            // Aplica filtro por valor
+            document.addEventListener("DOMContentLoaded", function() {
+                const slider = document.getElementById('slider-preco');
 
-        // Redireciona para a página sem parâmetros de filtro
-        function limparFiltros() {
-            window.location.href = "{{ route('veiculos.usados.limparFiltros') }}";
-        }
-
-        function gerarRelatorio() {
-            const url = new URL(window.location.href);
-
-            // Adiciona ou substitui o parâmetro 'relatorio'
-            url.searchParams.set('relatorio', '1');
-
-            // Redireciona para a nova URL
-            window.location.href = url.toString();
-        }
-
-
-
-        // Ordenação da tabela ao clicar no cabeçalho
-        document.addEventListener("DOMContentLoaded",
-            function() {
-                const headers = document.querySelectorAll('.sortable');
-                let sortDirection = 'asc'; // Direção inicial (ascendente)
-
-                headers.forEach(header => {
-                    const icon = header.querySelector('i');
-                    if (icon) {
-                        // Inicializa o ícone de ordenação
-                        icon.classList.add('fa-sort');
+                noUiSlider.create(slider, {
+                    start: [{{ session('valor_min', 0) }}, {{ session('valor_max', 1000000) }}],
+                    connect: true,
+                    step: 1000,
+                    range: {
+                        'min': 0000,
+                        'max': 1000000
+                    },
+                    format: {
+                        to: value => parseInt(value),
+                        from: value => parseInt(value)
                     }
-
-                    header.addEventListener('click', function() {
-                        const column = header.getAttribute('data-column');
-                        sortTable(column, sortDirection);
-
-                        // Alterna a direção de ordenação
-                        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-
-                        // Remove os ícones de todas as colunas
-                        headers.forEach(h => {
-                            const icon = h.querySelector('i');
-                            if (icon) {
-                                icon.classList.remove('fa-sort-up', 'fa-sort-down');
-                                icon.classList.add('fa-sort'); // Reseta o ícone para o padrão
-                            }
-                        });
-
-                        // Atualiza o ícone da coluna ordenada
-                        const icon = header.querySelector('i');
-                        if (sortDirection === 'asc') {
-                            icon.classList.remove('fa-sort');
-                            icon.classList.add('fa-sort-up'); // Ícone de ordenação ascendente
-                        } else {
-                            icon.classList.remove('fa-sort');
-                            icon.classList.add('fa-sort-down'); // Ícone de ordenação descendente
-                        }
-
-                        // Realce a coluna que foi ordenada
-                        headers.forEach(h => h.classList.remove('sorted'));
-                        header.classList.add('sorted'); // Adiciona a classe para a coluna ordenada
-                    });
                 });
 
-                function sortTable(column, direction) {
-                    const rows = Array.from(document.querySelectorAll('tbody tr'));
-                    const index = Array.from(headers).findIndex(header => header.getAttribute('data-column') ===
-                        column);
-                    const isNumeric = column === 'pts' || column === 'tabela' || column === 'bonus' || column ===
-                        'custo' || column === 'faturado'; // Defina quais colunas são numéricas
+                const minLabel = document.getElementById('minValorLabel');
+                const maxLabel = document.getElementById('maxValorLabel');
 
-                    rows.sort((rowA, rowB) => {
-                        const cellA = rowA.cells[index].textContent.trim();
-                        const cellB = rowB.cells[index].textContent.trim();
-
-                        let a = isNumeric ? parseFloat(cellA.replace(/[^0-9.-]+/g, "")) : cellA.toLowerCase();
-                        let b = isNumeric ? parseFloat(cellB.replace(/[^0-9.-]+/g, "")) : cellB.toLowerCase();
-
-                        if (a < b) {
-                            return direction === 'asc' ? -1 : 1;
-                        }
-                        if (a > b) {
-                            return direction === 'asc' ? 1 : -1;
-                        }
-                        return 0;
-                    });
-
-                    // Reorganiza as linhas no corpo da tabela
-                    const tbody = document.querySelector('tbody');
-                    rows.forEach(row => tbody.appendChild(row));
-                }
-
-                // Variável para filtro da legenda (Local)
-                let activeFilter = null;
-
-
-
-                // Evento de clique nas legendas
-                document.querySelectorAll('.filter').forEach(filter => {
-                    filter.addEventListener('click', function() {
-                        const filterValue = this.getAttribute('data-filter');
-
-                        // Se já estiver ativo, desativa o filtro
-                        activeFilter = (activeFilter === filterValue) ? null : filterValue;
-
-                        // Aplica o filtro e atualiza o contador
-                        applyFilter();
-                    });
+                slider.noUiSlider.on('update', function(values) {
+                    minLabel.innerText = `R$ ${parseInt(values[0]).toLocaleString('pt-BR')}`;
+                    maxLabel.innerText = `R$ ${parseInt(values[1]).toLocaleString('pt-BR')}`;
                 });
 
-                // Função para aplicar o filtro e atualizar o contador
-                function applyFilter() {
-                    const rows = Array.from(document.querySelectorAll('tbody tr'));
-                    let visibleCount = 0; // Contador de veículos visíveis
+                window.aplicarFiltroPreco = function() {
+                    const valores = slider.noUiSlider.get();
+                    const params = new URLSearchParams(window.location.search);
 
-                    // Se nenhum filtro estiver ativo, exiba todas as linhas
-                    if (!activeFilter) {
-                        rows.forEach(row => {
-                            row.style.display = '';
-                        });
-                        visibleCount = rows.length;
-                    } else {
-                        // Exiba apenas as linhas que correspondem ao filtro ativo
-                        rows.forEach(row => {
-                            const local = row.querySelector('td:nth-child(11)').textContent.trim();
-                            if (local === activeFilter) {
-                                row.style.display = '';
-                                visibleCount++;
-                            } else {
-                                row.style.display = 'none';
-                            }
-                        });
-                    }
+                    params.set('valor_min', valores[0]);
+                    params.set('valor_max', valores[1]);
 
-                    // Atualizar o contador na interface
-                    const contador = document.getElementById('selectedVehiclesCount');
-                    contador.textContent = activeFilter ?
-                        `Filtro Aplicado [${activeFilter}] - Veículos listados: ${visibleCount}` :
-                        `Veículos Listados: ${visibleCount}`;
-                }
-
-
-
+                    window.location.href = "{{ route('veiculos.usados.index') }}?" + params.toString();
+                };
             });
-    </script>
+
+
+            // Redireciona para a página sem parâmetros de filtro
+            function limparFiltros() {
+                window.location.href = "{{ route('veiculos.usados.limparFiltros') }}";
+            }
+
+            function gerarRelatorio() {
+                const url = new URL(window.location.href);
+
+                // Adiciona ou substitui o parâmetro 'relatorio'
+                url.searchParams.set('relatorio', '1');
+
+                // Redireciona para a nova URL
+                window.location.href = url.toString();
+            }
+
+
+
+            // Ordenação da tabela ao clicar no cabeçalho
+            document.addEventListener("DOMContentLoaded",
+                function() {
+                    const headers = document.querySelectorAll('.sortable');
+                    let sortDirection = 'asc'; // Direção inicial (ascendente)
+
+                    headers.forEach(header => {
+                        const icon = header.querySelector('i');
+                        if (icon) {
+                            // Inicializa o ícone de ordenação
+                            icon.classList.add('fa-sort');
+                        }
+
+                        header.addEventListener('click', function() {
+                            const column = header.getAttribute('data-column');
+                            sortTable(column, sortDirection);
+
+                            // Alterna a direção de ordenação
+                            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+
+                            // Remove os ícones de todas as colunas
+                            headers.forEach(h => {
+                                const icon = h.querySelector('i');
+                                if (icon) {
+                                    icon.classList.remove('fa-sort-up', 'fa-sort-down');
+                                    icon.classList.add('fa-sort'); // Reseta o ícone para o padrão
+                                }
+                            });
+
+                            // Atualiza o ícone da coluna ordenada
+                            const icon = header.querySelector('i');
+                            if (sortDirection === 'asc') {
+                                icon.classList.remove('fa-sort');
+                                icon.classList.add('fa-sort-up'); // Ícone de ordenação ascendente
+                            } else {
+                                icon.classList.remove('fa-sort');
+                                icon.classList.add('fa-sort-down'); // Ícone de ordenação descendente
+                            }
+
+                            // Realce a coluna que foi ordenada
+                            headers.forEach(h => h.classList.remove('sorted'));
+                            header.classList.add('sorted'); // Adiciona a classe para a coluna ordenada
+                        });
+                    });
+
+                    function sortTable(column, direction) {
+                        const rows = Array.from(document.querySelectorAll('tbody tr'));
+                        const index = Array.from(headers).findIndex(header => header.getAttribute('data-column') ===
+                            column);
+                        const isNumeric = column === 'pts' || column === 'tabela' || column === 'bonus' || column ===
+                            'custo' || column === 'faturado'; // Defina quais colunas são numéricas
+
+                        rows.sort((rowA, rowB) => {
+                            const cellA = rowA.cells[index].textContent.trim();
+                            const cellB = rowB.cells[index].textContent.trim();
+
+                            let a = isNumeric ? parseFloat(cellA.replace(/[^0-9.-]+/g, "")) : cellA.toLowerCase();
+                            let b = isNumeric ? parseFloat(cellB.replace(/[^0-9.-]+/g, "")) : cellB.toLowerCase();
+
+                            if (a < b) {
+                                return direction === 'asc' ? -1 : 1;
+                            }
+                            if (a > b) {
+                                return direction === 'asc' ? 1 : -1;
+                            }
+                            return 0;
+                        });
+
+                        // Reorganiza as linhas no corpo da tabela
+                        const tbody = document.querySelector('tbody');
+                        rows.forEach(row => tbody.appendChild(row));
+                    }
+
+                    // Variável para filtro da legenda (Local)
+                    let activeFilter = null;
+
+
+
+                    // Evento de clique nas legendas
+                    document.querySelectorAll('.filter').forEach(filter => {
+                        filter.addEventListener('click', function() {
+                            const filterValue = this.getAttribute('data-filter');
+
+                            // Se já estiver ativo, desativa o filtro
+                            activeFilter = (activeFilter === filterValue) ? null : filterValue;
+
+                            // Aplica o filtro e atualiza o contador
+                            applyFilter();
+                        });
+                    });
+
+                    // Função para aplicar o filtro e atualizar o contador
+                    function applyFilter() {
+                        const rows = Array.from(document.querySelectorAll('tbody tr'));
+                        let visibleCount = 0; // Contador de veículos visíveis
+
+                        // Se nenhum filtro estiver ativo, exiba todas as linhas
+                        if (!activeFilter) {
+                            rows.forEach(row => {
+                                row.style.display = '';
+                            });
+                            visibleCount = rows.length;
+                        } else {
+                            // Exiba apenas as linhas que correspondem ao filtro ativo
+                            rows.forEach(row => {
+                                const local = row.querySelector('td:nth-child(11)').textContent.trim();
+                                if (local === activeFilter) {
+                                    row.style.display = '';
+                                    visibleCount++;
+                                } else {
+                                    row.style.display = 'none';
+                                }
+                            });
+                        }
+
+                        // Atualizar o contador na interface
+                        const contador = document.getElementById('selectedVehiclesCount');
+                        contador.textContent = activeFilter ?
+                            `Filtro Aplicado [${activeFilter}] - Veículos listados: ${visibleCount}` :
+                            `Veículos Listados: ${visibleCount}`;
+                    }
+
+
+
+                });
+        </script>
 </x-app-layout>

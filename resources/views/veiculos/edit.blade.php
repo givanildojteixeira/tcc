@@ -144,14 +144,23 @@
 
 
 
-            <!--Botões         TODO:   BOTAO CANCELAR PODE VOLTAR ERRADO PARA NOVOS SEMPRE-->
+            <!--Botões -->
             <div class="flex flex-wrap gap-4 justify-between mt-8">
-                <!-- Cancelar -->
-                <a href="{{ route('veiculos.novos.index') }}"
-                    class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
-                    <i class="fas fa-times-circle"></i>
-                    Voltar
-                </a>
+                <!-- Voltar -->
+                @if (request('from') === 'novos')
+                    <a href="{{ route('veiculos.novos.index') }}"
+                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
+                        <i class="fas fa-times-circle"></i>
+                        Voltar
+                    </a>
+                @elseif(request('from') === 'usados')
+                    <a href="{{ route('veiculos.usados.index') }}"
+                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
+                        <i class="fas fa-times-circle"></i>
+                        Voltar
+                    </a>
+                @endif
+
 
                 <!-- Cadastro Famílias -->
                 <a href="{{ route('familia.index', ['from' => $veiculo->id]) }}"

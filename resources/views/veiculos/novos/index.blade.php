@@ -142,7 +142,6 @@
                 </div>
             </div>
 
-
             <!-- Card para Botões de ajuda e limpa filtros -->
             <div
                 class="bg-white shadow-lg rounded-lg overflow-hidden w-[3%] flex flex-col items-center justify-center ">
@@ -256,7 +255,9 @@
                                                     vlr_tabela: '{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}',
                                                     vlr_bonus: '{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}',
                                                     vlr_nota: '{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}',
-                                                    faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}'
+                                                    faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}',
+                                                    {{-- Essa linha leva a origem para o modal, assim ele saberá como voltar --}}
+                                                    origem: '{{ request()->routeIs("veiculos.novos.*") ? 'novos' : 'usados' }}'
                                                 }
                                             ">
                                         <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
