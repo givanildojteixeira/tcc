@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout>    {{--  ✅  Gerenciar famílias de veículos - INDEX - FAMILIA --}}
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
         <!-- Título e Feedback -->
         <div class="flex justify-between items-center mb-4">
@@ -64,13 +64,16 @@
 
 
             <div class="flex flex-wrap items-center gap-4 ">
-                @if (request('from'))
-                    <a href="{{ url('/veiculos/' . request('from') . '/edit') }}"
+                @if(request('from') && request('origem'))
+                <div class="mb-4">
+                    <a href="{{ url('/veiculos/' . request('from') . '/edit?from=' . request('origem')) }}"
                         class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
                         <i class="fas fa-arrow-left"></i>
                         Voltar para edição do veículo
                     </a>
-                @endif
+                </div>
+            @endif
+
 
                 <button type="submit"
                     class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md shadow-md">

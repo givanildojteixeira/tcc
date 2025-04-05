@@ -1,16 +1,10 @@
-<x-app-layout>
+<x-app-layout> {{--  ✅  Alterar informações do Veículo -  EDIT  - INDEX  - VEICULOS - GENERICOS --}}
     <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
         <!-- Título com botão de ajuda ao lado direito -->
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-semibold text-blue-600">Alterar informações do Veículo</h2>
-
-            <!-- Botão de Ajuda -->
-            <button onclick="document.getElementById('modalAjuda').classList.remove('hidden')"
-                class="text-blue-600 hover:text-blue-800 text-2xl" title="Ajuda">
-                <i class="fas fa-circle-info"></i>
-            </button>
+            <x-bt-ajuda /> <!-- Botão de Ajuda -->
         </div>
-
 
         <!-- Formulário -->
         <form method="POST" action="{{ route('veiculos.update', $veiculo->id) }}" enctype="multipart/form-data"
@@ -34,8 +28,8 @@
                             @endforeach
                         </select>
                     </div>
-                    <!-- Descrição do Veículo (mais largo) -->
 
+                    <!-- Descrição do Veículo (mais largo) -->
                     <div class="basis-[40%] flex-grow min-w-[250px]">
                         <label class="block text-gray-700 font-medium mb-1">Descrição do Veículo</label>
                         <input type="text" name="desc_veiculo"
@@ -58,7 +52,7 @@
                     </div>
                 </div>
 
-
+                <!-- Ano modelo , Cor, portas  Combustivel, Opcional -->
                 <div class="flex flex-wrap gap-4 mb-4">
                     <!-- Ano/Modelo -->
                     <div class="flex-grow basis-[15%] min-w-[150px]">
@@ -110,64 +104,103 @@
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                     </div>
                 </div>
+
                 <!-- Linha com Valor Tabela, Bônus e Custo -->
-                @php
-                    $valor = old('vlr_tabela', $veiculo->vlr_nota);
-                    $valor_f_nota = number_format($valor, 2, ',', '.');
-                    $valor = old('vlr_tabela', $veiculo->vlr_bonus);
-                    $valor_f_bonus = number_format($valor, 2, ',', '.');
-                    $valor = old('vlr_tabela', $veiculo->vlr_tabela);
-                    $valor_f_tabela = number_format($valor, 2, ',', '.');
-                @endphp
                 <div class="flex flex-row gap-4 mb-4 ">
-                    <div class="w-1/3">
-                        <label class="block text-gray-700 font-medium mb-1">Valor Custo</label>
-                        <input type="text" name="vlr_nota" id="vlr_nota"
-                            value="{{ old('vlr_nota', $valor_f_nota) }}"
-                            class="w-full text-right border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-sm">
-                    </div>
-                    <div class="w-1/3">
-                        <label class="block text-gray-700 font-medium mb-1">Valor Bônus</label>
-                        <input type="text" name="vlr_bonus" id="vlr_bonus"
-                            value="{{ old('vlr_bonus', $valor_f_bonus) }}"
-                            class="w-full text-right border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-sm">
+                    <x-input-moeda name="vlr_nota" label="Valor Custo" :value="$veiculo->vlr_nota" />
+                    <x-input-moeda name="vlr_bonus" label="Valor Bônus" :value="$veiculo->vlr_bonus" />
+                    <x-input-moeda name="vlr_tabela" label="Valor Tabela" :value="$veiculo->vlr_tabela" />
+                </div>
+
+                <!-- Upload de Imagens do Veículo -->
+                <div class="flex flex-wrap md:flex-nowrap gap-6 mt-6">
+                    <!-- Upload -->
+                    <div class="md:w-1/3 w-full">
+                        <label class="block text-gray-700 font-medium mb-1">Imagens do Veículo (até 10 - apenas
+                            .jpg)</label>
+                        <input type="file" name="images[]" accept=".jpg" multiple
+                            class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+                   file:rounded-md file:border-0 file:text-sm file:font-semibold
+                   file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200">
+                        <p class="text-xs text-gray-500 mt-1">Nomes: chassi_01.jpg, chassi_02.jpg, ...</p>
                     </div>
 
-                    <div class="w-1/3">
-                        <label class="block text-gray-700 font-medium mb-1">Valor Tabela</label>
-                        <input type="text" name="vlr_tabela" id="vlr_tabela"
-                            value="{{ old('vlr_tabela', $valor_f_tabela) }}"
-                            class="w-full text-right border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-sm">
-                    </div>
+                    <!-- Visualização -->
+                    @php
+                        $images = [];
+                        $chassiBase = str_replace(' ', '_', $veiculo->chassi);
+                        for ($i = 1; $i <= 10; $i++) {
+                            $nome = "{$chassiBase}_" . str_pad($i, 2, '0', STR_PAD_LEFT) . '.jpg';
+                            if (file_exists(public_path("images/cars/$nome"))) {
+                                $imagens[] = asset("images/cars/$nome");
+                            }
+                        }
+                    @endphp
+
+                    @if (count($imagens))
+                        <div class="md:w-2/3 w-full">
+                            <div class="flex flex-wrap gap-2">
+                                @foreach ($imagens as $img)
+                                    @php
+                                        $nomeArquivo = basename($img);
+                                    @endphp
+
+                                    <div class="flex flex-col items-center">
+                                        <div class="flex flex-col items-center">
+                                            <img src="{{ $img }}" alt="Imagem do veículo"
+                                                class="w-16 h-16 object-cover rounded shadow border border-gray-300">
+
+                                            <button type="button"
+                                                onclick="excluirImagem('{{ $nomeArquivo }}', this)"
+                                                class="text-red-600 hover:text-red-800 text-sm mt-1"
+                                                title="Excluir imagem">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                @endforeach
+
+                            </div>
+                        </div>
+                    @endif
                 </div>
+
+
             </div>
 
 
-
             <!--Botões -->
+
             <div class="flex flex-wrap gap-4 justify-between mt-8">
+                {{-- Oculto para quando salvar recuperar a url --}}
+                @if (request('from'))
+                    <input type="hidden" name="from" value="{{ request('from') }}">
+                @endif
+
                 <!-- Voltar -->
                 @if (request('from') === 'novos')
                     <a href="{{ route('veiculos.novos.index') }}"
-                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
-                        <i class="fas fa-times-circle"></i>
-                        Voltar
+                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition"
+                        data-atalho="voltar">
+                        <i class="fas fa-arrow-left"></i> Voltar
                     </a>
                 @elseif(request('from') === 'usados')
                     <a href="{{ route('veiculos.usados.index') }}"
-                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
-                        <i class="fas fa-times-circle"></i>
-                        Voltar
+                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition"
+                        data-atalho="voltar">
+                        <i class="fas fa-arrow-left"></i> Voltar
                     </a>
                 @endif
 
 
                 <!-- Cadastro Famílias -->
-                <a href="{{ route('familia.index', ['from' => $veiculo->id]) }}"
+                <a href="{{ route('familia.index', ['from' => $veiculo->id, 'origem' => request('from')]) }}"
                     class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
                     <i class="fas fa-users"></i>
                     Cadastro Famílias
                 </a>
+
 
                 <!-- Cadastro Descrição Opcionais -->
                 <button type="button"
@@ -178,7 +211,8 @@
 
                 <!-- Salvar Alterações -->
                 <button type="submit"
-                    class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
+                    class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition"
+                    data-atalho="salvar">
                     <i class="fas fa-save"></i>
                     Salvar Alterações
                 </button>
@@ -190,44 +224,78 @@
 
     <!-- Modal de Ajuda -->
     <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white w-full max-w-md p-6 rounded-lg shadow-lg relative">
-            <h3 class="text-xl font-semibold text-blue-600 mb-4">Ajuda - Edição de Veículo</h3>
-            <p class="text-gray-700 mb-4">
-                Nesta tela você pode editar as informações principais de um veículo, como família, descrição,
-                chassi, ano/modelo, valores e mais. Certifique-se de preencher corretamente os campos obrigatórios e
-                clique em "Salvar Alterações".
-            </p>
-            <div class="flex justify-end">
+        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
+
+            <!-- Ícone de Informação à esquerda -->
+            <div class="flex items-start">
+                <i class="fas fa-info-circle text-blue-500 text-6xl"></i>
+            </div>
+
+            <!-- Conteúdo do Modal -->
+            <div class="flex-1 relative">
+                <!-- Botão de Fechar -->
                 <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
-                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                    Fechar
+                    class="absolute top-0 right-0 text-red-500 hover:text-red-700 text-2xl">
+                    &times;
                 </button>
+
+                <h2 class="text-2xl font-bold text-blue-600 mb-4">Instruções para Alterar informações do Veículo</h2>
+
+                <p class="mb-3 text-sm text-gray-700 leading-relaxed">
+                    Esta tela tem como objetivo <strong>editar ou excluir </strong> um veículo cadastrado no sistema.
+                    Utilize os recursos abaixo para uma busca eficaz:
+                </p>
+
+                <ul class="list-disc list-inside text-sm text-gray-800 space-y-2">
+                    <li><strong>Família:</strong> Caso nao encontre a familia correta, pode cadastrar atraves do botao
+                        Cadastro de Familia</li>
+                    <li><strong>Opcional:Novos</strong>É um codigo que será combinado com o Cod de Fabricao para ligar
+                        um opcional da familia ao veiculo</li>
+                    <li><strong>Opcional:Usados</strong>Será descritivo e vinculado ao chassis do veiculo</li>
+
+                </ul>
+
+                <div class="mt-6 text-right">
+                    <button onclick="document.getElementById('modalAjuda').classList.add('hidden')"
+                        class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
+                        Entendi!
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-
-    <script src="https://unpkg.com/imask"></script>
     <script>
-        const moedaMaskOptions = {
-            mask: 'R$ num',
-            blocks: {
-                num: {
-                    mask: Number,
-                    thousandsSeparator: '.',
-                    radix: ',',
-                    scale: 2,
-                    signed: false,
-                    padFractionalZeros: true,
-                    normalizeZeros: true
-                }
-            }
-        };
+        function excluirImagem(nomeArquivo, botao) {
+            if (!confirm('Deseja realmente excluir esta imagem?')) return;
 
-        IMask(document.getElementById('vlr_tabela'), moedaMaskOptions);
-        IMask(document.getElementById('vlr_bonus'), moedaMaskOptions);
-        IMask(document.getElementById('vlr_nota'), moedaMaskOptions);
+            fetch("{{ route('veiculos.imagem.excluir') }}", {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                body: JSON.stringify({ imagem: nomeArquivo })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove o contêiner da imagem
+                    const container = botao.closest('.flex-col');
+                    container.remove();
+                    window.mostrarToast?.('Imagem excluída com sucesso!');
+                } else {
+                    alert('Erro ao excluir a imagem.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Erro ao excluir a imagem.');
+            });
+        }
     </script>
+
+
 
 
 </x-app-layout>

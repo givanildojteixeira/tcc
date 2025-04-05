@@ -105,39 +105,101 @@
 
 
     {{-- Aqui vou colocar todos os Script que quero que fiquem disponiveis para as views --}}
+    {{-- Salva Configurações do sistema --}}
     <script>
         function salvarConfiguracao(chave, valor) {
             const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             fetch('/configuracoes/salvar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrf
-                },
-                body: JSON.stringify({
-                    chave: chave,
-                    valor: valor
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrf
+                    },
+                    body: JSON.stringify({
+                        chave: chave,
+                        valor: valor
+                    })
                 })
-            })
-            .then(async res => {
-                if (!res.ok) {
-                    const erroHtml = await res.text();
-                    throw new Error(erroHtml);
-                }
-                return res.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    window.mostrarToast?.('Configuração salva!');
-                }
-            })
-            .catch(err => {
-                console.error('❌ Erro ao salvar configuração:', err.message || err);
-                alert('Erro ao salvar configuração: ' + (err.message || 'Erro desconhecido'));
-            });
+                .then(async res => {
+                    if (!res.ok) {
+                        const erroHtml = await res.text();
+                        throw new Error(erroHtml);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        window.mostrarToast?.('Configuração salva!');
+                    }
+                })
+                .catch(err => {
+                    console.error('❌ Erro ao salvar configuração:', err.message || err);
+                    alert('Erro ao salvar configuração: ' + (err.message || 'Erro desconhecido'));
+                });
         }
     </script>
+
+    {{-- Salva Moedas --}}
+    <script src="https://unpkg.com/imask"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const moedaMaskOptions = {
+                mask: 'R$ num',
+                blocks: {
+                    num: {
+                        mask: Number,
+                        thousandsSeparator: '.',
+                        radix: ',',
+                        scale: 2,
+                        signed: false,
+                        padFractionalZeros: true,
+                        normalizeZeros: true
+                    }
+                }
+            };
+
+            document.querySelectorAll('input[id^="vlr_"]').forEach(el => {
+                IMask(el, moedaMaskOptions);
+            });
+        });
+    </script>
+
+        {{--
+            para botoes Salvar e voltar funcionarem com ENTER ou ESC
+            use os seletores data-atalho="salvar" ou votlar
+            ex:
+            <!-- Botão Voltar -->
+            <a href="{{ route('veiculos.novos.index') }}"
+            class="..." data-atalho="voltar">
+            <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        --}}
+    <script>
+        document.addEventListener('keydown', function(event) {
+            const tag = document.activeElement.tagName.toLowerCase();
+            const isEditable = ['textarea', 'input', 'select'].includes(tag);
+
+            // Enter = salvar
+            if (event.key === 'Enter' && !isEditable) {
+                const salvar = document.querySelector('[data-atalho="salvar"]');
+                if (salvar) {
+                    event.preventDefault();
+                    salvar.click();
+                }
+            }
+
+            // Esc = voltar
+            if (event.key === 'Escape') {
+                const voltar = document.querySelector('[data-atalho="voltar"]');
+                if (voltar?.href) {
+                    window.location.href = voltar.href;
+                }
+            }
+        });
+    </script>
+
+
 
 
 

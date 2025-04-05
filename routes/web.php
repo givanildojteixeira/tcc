@@ -63,6 +63,8 @@ Route::middleware('auth')->group(function () {
     // //Veiculos Geral
     Route::get('/veiculos/{id}/edit', [VeiculoController::class, 'edit'])->name('veiculos.edit');
     Route::put('/veiculos/{id}', [VeiculoController::class, 'update'])->name('veiculos.update');
+    Route::delete('/veiculos/imagem/excluir', [VeiculoController::class, 'excluirImagem'])->name('veiculos.imagem.excluir');
+
 
     //Veiculos novos
     Route::get('/novos', [NovosController::class, 'index'])->name('veiculos.novos.index');
