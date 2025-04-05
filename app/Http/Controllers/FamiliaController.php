@@ -15,6 +15,8 @@ class FamiliaController extends Controller
         return view('familia.index', compact('familias'));
     }
 
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -36,6 +38,20 @@ class FamiliaController extends Controller
             $request->file('imagem')->move(public_path('images/familia'), $nomeArquivo);
         }
 
+        // Salvar Arquivo MEV
+        if ($request->hasFile('arquivo_mev')) {
+            $extensao = $request->file('arquivo_mev')->getClientOriginalExtension();
+            $nomeArquivoMev = str_replace(' ', '_', $request->descricao) . '.' . $extensao;
+            $request->file('arquivo_mev')->move(public_path('mev'), $nomeArquivoMev);
+        }
+
+        // Salvar Documento Adicional
+        if ($request->hasFile('documentos')) {
+            $extensao = $request->file('documentos')->getClientOriginalExtension();
+            $nomeArquivoDoc = str_replace(' ', '_', $request->descricao) . '.' . $extensao;
+            $request->file('documentos')->move(public_path('docs'), $nomeArquivoDoc);
+        }
+
         return redirect()->route('familia.index')->with('success', 'Família cadastrada com sucesso!');
     }
 
@@ -44,42 +60,28 @@ class FamiliaController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Antes de iniciar a gravar familia, verifique a opçao de
-        // Mostrar todas as famílias no carrossel (mesmo sem veículos)
-        // ela grava no config
-        if ($request->has('mostrar_todas')) {
-            Configuracao::updateOrCreate(
-                ['chave' => 'mostrar_todas_familias'],
-                ['valor' => 'true']
-            );
-        } else {
-            Configuracao::updateOrCreate(
-                ['chave' => 'mostrar_todas_familias'],
-                ['valor' => 'false']
-            );
-        }
-
-        // Continua a gravação e dados
         $request->validate([
             'descricao' => 'required|string|max:255',
             'site' => 'required|string|max:255',
             'imagem' => 'nullable|image|mimes:jpg,jpeg|max:2048',
+            'arquivo_mev' => 'nullable|mimes:pdf|max:5120',
+            'documentos' => 'nullable|file|max:5120',
         ]);
 
         $familia = Familia::findOrFail($id);
 
-        // Se o nome foi alterado, renomear a imagem
+        // Caminhos para imagem antiga
         $nomeAntigo = str_replace(' ', '_', $familia->descricao) . '.jpg';
         $caminhoAntigo = public_path('images/familia/' . $nomeAntigo);
 
-        // Atualiza descrição no banco
+        // Atualiza os dados no banco
+        $descricaoOriginal = $familia->getOriginal('descricao');
         $familia->descricao = $request->descricao;
         $familia->site = $request->site;
         $familia->save();
 
-        // Se enviou nova imagem, substituir
+        // Substituição da imagem
         if ($request->hasFile('imagem')) {
-            // Deleta imagem antiga
             if (file_exists($caminhoAntigo)) {
                 unlink($caminhoAntigo);
             }
@@ -89,15 +91,30 @@ class FamiliaController extends Controller
 
             $request->file('imagem')->move(public_path('images/familia'), $novoNome);
         } else {
-            // Se apenas o nome foi alterado, renomeia a imagem
-            if ($request->descricao !== $familia->getOriginal('descricao') && file_exists($caminhoAntigo)) {
+            // Se apenas renomeou
+            if ($request->descricao !== $descricaoOriginal && file_exists($caminhoAntigo)) {
                 $novoNome = str_replace(' ', '_', $request->descricao) . '.jpg';
                 rename($caminhoAntigo, public_path('images/familia/' . $novoNome));
             }
         }
 
+        // Upload do arquivo MEV
+        if ($request->hasFile('arquivo_mev')) {
+            $extensao = $request->file('arquivo_mev')->getClientOriginalExtension();
+            $nomeArquivoMev = str_replace(' ', '_', $request->descricao) . '.' . $extensao;
+            $request->file('arquivo_mev')->move(public_path('mev'), $nomeArquivoMev);
+        }
+
+        // Upload do documento adicional
+        if ($request->hasFile('documentos')) {
+            $extensao = $request->file('documentos')->getClientOriginalExtension();
+            $nomeArquivoDoc = str_replace(' ', '_', $request->descricao) . '.' . $extensao;
+            $request->file('documentos')->move(public_path('docs'), $nomeArquivoDoc);
+        }
+
         return redirect()->route('familia.index')->with('success', 'Família atualizada com sucesso!');
     }
+
 
 
     public function destroy($id)
@@ -118,9 +135,4 @@ class FamiliaController extends Controller
 
         return redirect()->route('familia.index')->with('success', 'Família excluída com sucesso!');
     }
-
-
-
-
-
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\UsadosController;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\FamiliaController;
 use App\Http\Controllers\OpcionaisController;
+use App\Http\Controllers\ConfiguracaoController;
 use App\Models\Cliente;
 use App\Models\User;
 use App\Models\Veiculo;
@@ -73,6 +74,11 @@ Route::middleware('auth')->group(function () {
 
     //Familias
     Route::resource('/veiculos/familia', FamiliaController::class)->only(['index', 'store', 'update', 'destroy']);
+
+    //Configurações
+    Route::post('/configuracoes/salvar', [ConfiguracaoController::class, 'salvar'])->name('configuracoes.salvar');
+
+
 
     //Opcionais
     Route::resource('opcionais', OpcionaisController::class);

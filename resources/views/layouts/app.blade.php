@@ -104,6 +104,40 @@
     </div>
 
 
+    {{-- Aqui vou colocar todos os Script que quero que fiquem disponiveis para as views --}}
+    <script>
+        function salvarConfiguracao(chave, valor) {
+            const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch('/configuracoes/salvar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf
+                },
+                body: JSON.stringify({
+                    chave: chave,
+                    valor: valor
+                })
+            })
+            .then(async res => {
+                if (!res.ok) {
+                    const erroHtml = await res.text();
+                    throw new Error(erroHtml);
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    window.mostrarToast?.('Configuração salva!');
+                }
+            })
+            .catch(err => {
+                console.error('❌ Erro ao salvar configuração:', err.message || err);
+                alert('Erro ao salvar configuração: ' + (err.message || 'Erro desconhecido'));
+            });
+        }
+    </script>
 
 
 
