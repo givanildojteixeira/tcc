@@ -1,5 +1,4 @@
-<!-- VEICULOS NOVOS -->
-<x-app-layout>
+<x-app-layout> <!-- VEICULOS NOVOS FILTRO PRINCIPAL-->
     <x-slot name="header">
         <div class="flex gap-1">
             <!-- Carrossel de Veículos -->

@@ -1,5 +1,4 @@
-<!-- VEICULOS USADOS -->
-<x-app-layout>
+<x-app-layout> <!-- VEICULOS USADOS FILTRO PRINCIPAL-->
     <x-slot name="header">
         <div class="flex gap-1">
             <!-- Card para Pesquisas Combinadas -->

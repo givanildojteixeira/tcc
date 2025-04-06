@@ -3,7 +3,7 @@
         <!-- Título e Feedback -->
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-semibold text-green-700">Gerenciar famílias de veículos</h2>
-            <x-bt-ajuda /> <!-- Botão de Ajuda -->
+            <x-bt-ajuda/> <!-- Botão de Ajuda -->
         </div>
 
         <!-- Formulário -->

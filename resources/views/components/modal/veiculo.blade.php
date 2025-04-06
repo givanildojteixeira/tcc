@@ -3,9 +3,8 @@
         style="display: none;">
         <div class="bg-white p-2 rounded-lg shadow-lg w-full max-w-5xl relative">
             <!-- Botão Fechar -->
-            <button @click="open = false" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
-                &times;
-            </button>
+            <button @click="open = false"
+                class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">&times;</button>
 
             <!-- Cabeçalho -->
             <h2 class="text-2xl font-bold mb-4 text-blue-600 text-center">
@@ -99,7 +98,6 @@
                         <span x-text="veiculo.cod_opcional"></span>
                     </h3>
 
-
                     <!-- Lista com scroll que ocupa o restante da div -->
                     <div class="flex-1 max-h-[400px] overflow-auto pr-2">
                         <ul class="list-disc list-inside space-y-1">
@@ -116,107 +114,41 @@
                     </div>
 
                 </div>
-
-
-
-
-
             </div>
 
             <!-- Botoes e Rodapé -->
             <div class="mt-2 border-t pt-1 flex flex-wrap gap-2 justify-center">
 
-                <button @click="open = false"
-                    class="bg-gray-400 hover:bg-gray-500 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2"
-                    data-atalho="voltar">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </button>
+                <x-bt-padrao label="Voltar" color="gray" icon="arrow-left" title="Fechar ou voltar"
+                    data-atalho="voltar" @click="open = false" />
 
-                {{-- Botao para edição do veiculo com a origem para auxiliar o retorno --}}
-                <button @click="window.location.href = `/veiculos/${veiculo.id}/edit?from=${veiculo.origem}`"
-                    title="Abre tela de edição do arquivo"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2"
-                    data-atalho="voltar">
-                    <i class="fas fa-pen-to-square"></i> Editar
-                </button>
+                <x-bt-padrao label="Editar" color="blue" icon="pen-to-square" title="Abre tela de edição do arquivo"
+                    data-atalho="voltar"
+                    @click="window.location.href = `/veiculos/${veiculo.id}/edit?from=${veiculo.origem}`" />
 
 
                 <!-- Para veículos novos: "Apoio GM", MEV e Tabela Preços -->
                 <template x-if="veiculo.origem === 'novos'">
                     <div class="flex flex-wrap gap-2">
                         <!-- Botão com site -->
-                        <a x-show="veiculo.site"
-                            :href="veiculo.site.startsWith('http') ? veiculo.site : 'https://' + veiculo.site"
-                            target="_blank" title="Site de apoio da montadora."
-                            class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2 transition">
-                            <i class="fas fa-hands-helping"></i> Apoio GM
+                        <a x-show="veiculo.site"  :href="veiculo.site.startsWith('http') ? veiculo.site : 'https://' + veiculo.site"target="_blank" title="Site de apoio da montadora."
+                            class="min-w-[100px] relative flex items-center gap-2 px-6 py-2 rounded-md shadow-md transition font-medium text-white bg-green-500 hover:bg-green-600">
+                            <i class="fas fa-hands-helping"></i>Apoio
                         </a>
+                        <!-- Botão sem site -->
+                        <x-bt-padrao   x-show="!veiculo.site"  disabled color="gray"  icon="hands-helping" label="Apoio" title="Site indisponível"  class="cursor-not-allowed text-gray-500" />
 
-                        <!-- Botão desabilitado se não tiver site -->
-                        <button x-show="!veiculo.site" disabled
-                            class="bg-gray-300 text-gray-500 cursor-not-allowed font-medium px-4 py-2 rounded shadow flex items-center gap-2">
-                            <i class="fas fa-hands-helping"></i> Apoio GM
-                        </button>
-
-                        {{-- @php
-                        $caminhoPdf = 'mev/' . str_replace(' ', '_', $veiculo->familia) . '.pdf';
-                        $pdfExiste = arquivo_existe($caminhoPdf);
-                    @endphp
-
-                    @if ($pdfExiste)
-                        <!-- Botão M.E.V. -->
-                        <button type="button" @click="window.open('{{ asset($caminhoPdf) }}', '_blank')"
-                            title="Manual de Especificação de Vendas."
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
-                            <i class="fas fa-book-open"></i> M.E.V.
-                        </button>
-                    @else
-                        <!-- Botão desabilitado -->
-                        <button type="button"
-                            onclick="mostrarToast('Arquivo M.E.V. não encontrado para esta família.')"
-                            class="bg-gray-300 text-gray-500 font-medium px-4 py-2 rounded shadow flex items-center gap-2 cursor-not-allowed"
-                            title="Arquivo M.E.V. não disponível.">
-                            <i class="fas fa-book-open"></i> M.E.V.
-                        </button>
-                    @endif --}}
-
-
-                        <!-- Botão M.E.V. -->
-                        <button type="button" @click="window.open(`/mev/${veiculo.familia}.pdf`, '_blank')"
-                            title="Manual de Especificação de Vendas."
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
-                            <i class="fas fa-book-open"></i> M.E.V.
-                        </button>
-
-                        <!-- Botão Tabela de Preços -->
-                        <button @click="window.open(`/mev/precos.pdf`, '_blank')"
-                            title="Última tabela de preços divulgada"
-                            class="bg-pink-500 hover:bg-pink-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2">
-                            <i class="fas fa-tags"></i> Tabela Preços
-                        </button>
+                        <x-bt-padrao color="yellow" icon="book-open" label="M.E.V." title="Manual de Especificação de Vendas." data-atalho="voltar" @click="window.open(`/mev/${veiculo.familia}.pdf`, '_blank')" />
+                        <x-bt-padrao color="pink" icon="tags" label="Tabela Preços" title="Última tabela de preços" data-atalho="voltar" @click="window.open(`/mev/precos.pdf`, '_blank')" />
                     </div>
                 </template>
 
-
                 <!-- Para veículos usados: "Consulta Fipe" -->
                 <template x-if="veiculo.origem === 'usados'">
-                    <a href="https://www.fipe.org.br" target="_blank" title="Consultar valor do veículo na Tabela Fipe"
-                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2 transition">
-                        <i class="fas fa-chart-line"></i> Consulta Fipe
-                    </a>
+                    <x-bt-padrao color="indigo" icon="chart-line" label="Consulta Fipe" href="https://www.fipe.org.br" target="_blank" title="Consultar valor do veículo na Tabela Fipe" />
                 </template>
-
-                <button
-                    class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2"
-                    title="Demais documentos, campanhas ou instrução para auxilio a venda"><i
-                        class="fas fa-folder-open"></i> Documentos
-                </button>
-
-                <button
-                    class="bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-2 rounded shadow flex items-center gap-2"
-                    title="Elaboração de Proposta de Venda"><i class="fas fa-file-signature"></i> Proposta
-                </button>
-
+                <x-bt-padrao type="submit" color="teal" icon="folder-open" label="Documentos"  title="Demais documentos, campanhas ou instrução para auxilio a venda" />
+                <x-bt-padrao type="submit" color="green" icon="file-signature" label="Proposta"  title="Elaboração de Proposta de Venda" />
             </div>
 
 
