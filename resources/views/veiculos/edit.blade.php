@@ -1,119 +1,151 @@
 <x-app-layout> {{--  ✅  Alterar informações do Veículo -  EDIT  - INDEX  - VEICULOS - GENERICOS --}}
-    <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
+    <div x-data="{ tabAtiva: 'info' }" class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
         <!-- Título com botão de ajuda ao lado direito -->
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-semibold text-blue-600">Alterar informações do Veículo</h2>
             <x-bt-ajuda /> <!-- Botão de Ajuda -->
         </div>
-
+        {{-- Oculto para quando salvar recuperar a url --}}
+        @if (request('from'))
+            <input type="hidden" name="from" value="{{ request('from') }}">
+        @endif
+        <!-- Abas -->
+        <div class="flex border-b mb-6">
+            <button @click="tabAtiva = 'info'"
+                :class="tabAtiva === 'info' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'"
+                class="px-4 py-2 text-sm font-medium focus:outline-none">
+                Informações do Veículo
+            </button>
+            <button @click="tabAtiva = 'fotos'"
+                :class="tabAtiva === 'fotos' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'"
+                class="px-4 py-2 text-sm font-medium focus:outline-none">
+                Imagens do Veículo
+            </button>
+            <button @click="tabAtiva = 'opcionais'"
+                :class="tabAtiva === 'opcionais' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'"
+                class="px-4 py-2 text-sm font-medium focus:outline-none">
+                Opcionais do Veículo
+            </button>
+        </div>
         <!-- Formulário -->
         <form method="POST" action="{{ route('veiculos.update', $veiculo->id) }}" enctype="multipart/form-data"
             class="space-y-6">
             @csrf
             @method('PUT')
 
-            <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
-                <div class="flex flex-wrap gap-4 mb-4">
-                    <!-- Família -->
-                    <div class="basis-[20%] flex-grow min-w-[150px]">
-                        <label class="block text-gray-700 font-medium mb-1">Família</label>
-                        <select name="familia"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                            <option value="">Selecione uma família</option>
-                            @foreach ($familias as $familia)
-                                <option value="{{ $familia->descricao }}"
-                                    {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
-                                    {{ $familia->descricao }}
+
+            <div x-show="tabAtiva === 'info'">
+                <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
+                    <div class="flex flex-wrap gap-4 mb-4">
+                        <!-- Família -->
+                        <div class="basis-[20%] flex-grow min-w-[150px]">
+                            <label class="block text-gray-700 font-medium mb-1">Família</label>
+                            <select name="familia"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                <option value="">Selecione uma família</option>
+                                @foreach ($familias as $familia)
+                                    <option value="{{ $familia->descricao }}"
+                                        {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
+                                        {{ $familia->descricao }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Descrição do Veículo (mais largo) -->
+                        <div class="basis-[40%] flex-grow min-w-[250px]">
+                            <label class="block text-gray-700 font-medium mb-1">Descrição do Veículo</label>
+                            <input type="text" name="desc_veiculo"
+                                value="{{ old('desc_veiculo', $veiculo->desc_veiculo) }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
+
+                        <!-- Chassi -->
+                        <div class="basis-[20%] flex-grow min-w-[180px]">
+                            <label class="block text-gray-700 font-medium mb-1">Chassi</label>
+                            <input type="text" name="chassi" value="{{ old('chassi', $veiculo->chassi) }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
+                        @if (request('from') === 'novos')
+                            <!-- Modelo de Fabricação -->
+                            <div class="basis-[10%] flex-grow min-w-[100px]">
+                                <label class="block text-gray-700 font-medium mb-1">Fabricação</label>
+                                <input type="text" name="modelo_fab"
+                                    value="{{ old('modelo_fab', $veiculo->modelo_fab) }}"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Ano modelo , Cor, portas  Combustivel, Opcional -->
+                    <div class="flex flex-wrap gap-4 mb-4">
+                        <!-- Ano/Modelo -->
+                        <div class="flex-grow basis-[15%] min-w-[150px]">
+                            <label class="block text-gray-700 font-medium mb-1">Ano/Modelo</label>
+                            <input type="text" name="Ano_Mod" value="{{ old('Ano_Mod', $veiculo->Ano_Mod) }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
+
+                        <!-- Cor -->
+                        <div class="flex-grow basis-[25%] min-w-[150px]">
+                            <label class="block text-gray-700 font-medium mb-1">Cor</label>
+                            <input type="text" name="cor" value="{{ old('cor', $veiculo->cor) }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
+
+                        <!-- Portas (campo pequeno) -->
+                        <div class="basis-[10%] min-w-[80px]">
+                            <label class="block text-gray-700 font-medium mb-1">Portas</label>
+                            <input type="number" name="portas" value="{{ old('portas', $veiculo->portas) }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 text-center focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
+
+                        <!-- Combustível (campo maior) -->
+                        <div class="flex-grow basis-[25%] min-w-[200px]">
+                            <label class="block text-gray-700 font-medium mb-1">Combustível</label>
+                            <select name="combustivel"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                <option value="Gasolina"
+                                    {{ old('combustivel', $veiculo->combustivel) == 'Gasolina' ? 'selected' : '' }}>
+                                    Gasolina
                                 </option>
-                            @endforeach
-                        </select>
+                                <option value="Etanol"
+                                    {{ old('combustivel', $veiculo->combustivel) == 'Etanol' ? 'selected' : '' }}>
+                                    Etanol
+                                </option>
+                                <option value="Diesel"
+                                    {{ old('combustivel', $veiculo->combustivel) == 'Diesel' ? 'selected' : '' }}>
+                                    Diesel
+                                </option>
+                                <option value="Flex"
+                                    {{ old('combustivel', $veiculo->combustivel) == 'Flex' ? 'selected' : '' }}>Flex
+                                </option>
+                            </select>
+                        </div>
+
+                        @if (request('from') === 'novos')
+                            <!-- Opcionais -->
+                            <div class="basis-[15%] min-w-[80px]">
+                                <label class="block text-gray-700 font-medium mb-1">Opcional</label>
+                                <input type="text" name="cod_opcional"
+                                    value="{{ old('cod_opcional', $veiculo->cod_opcional) }}"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                            </div>
+                        @endif
                     </div>
 
-                    <!-- Descrição do Veículo (mais largo) -->
-                    <div class="basis-[40%] flex-grow min-w-[250px]">
-                        <label class="block text-gray-700 font-medium mb-1">Descrição do Veículo</label>
-                        <input type="text" name="desc_veiculo"
-                            value="{{ old('desc_veiculo', $veiculo->desc_veiculo) }}"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                    <!-- Linha com Valor Tabela, Bônus e Custo -->
+                    <div class="flex flex-row gap-4 mb-4 ">
+                        <x-input-moeda name="vlr_nota" label="Valor Custo" :value="$veiculo->vlr_nota" />
+                        <x-input-moeda name="vlr_bonus" label="Valor Bônus" :value="$veiculo->vlr_bonus" />
+                        <x-input-moeda name="vlr_tabela" label="Valor Tabela" :value="$veiculo->vlr_tabela" />
                     </div>
 
-                    <!-- Chassi -->
-                    <div class="basis-[20%] flex-grow min-w-[180px]">
-                        <label class="block text-gray-700 font-medium mb-1">Chassi</label>
-                        <input type="text" name="chassi" value="{{ old('chassi', $veiculo->chassi) }}"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
-
-                    <!-- Modelo de Fabricação -->
-                    <div class="basis-[10%] flex-grow min-w-[100px]">
-                        <label class="block text-gray-700 font-medium mb-1">Fabricação</label>
-                        <input type="text" name="modelo_fab" value="{{ old('modelo_fab', $veiculo->modelo_fab) }}"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
                 </div>
-
-                <!-- Ano modelo , Cor, portas  Combustivel, Opcional -->
-                <div class="flex flex-wrap gap-4 mb-4">
-                    <!-- Ano/Modelo -->
-                    <div class="flex-grow basis-[15%] min-w-[150px]">
-                        <label class="block text-gray-700 font-medium mb-1">Ano/Modelo</label>
-                        <input type="text" name="Ano_Mod" value="{{ old('Ano_Mod', $veiculo->Ano_Mod) }}"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
-
-                    <!-- Cor -->
-                    <div class="flex-grow basis-[25%] min-w-[150px]">
-                        <label class="block text-gray-700 font-medium mb-1">Cor</label>
-                        <input type="text" name="cor" value="{{ old('cor', $veiculo->cor) }}"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
-
-                    <!-- Portas (campo pequeno) -->
-                    <div class="basis-[10%] min-w-[80px]">
-                        <label class="block text-gray-700 font-medium mb-1">Portas</label>
-                        <input type="number" name="portas" value="{{ old('portas', $veiculo->portas) }}"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 text-center focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
-
-                    <!-- Combustível (campo maior) -->
-                    <div class="flex-grow basis-[25%] min-w-[200px]">
-                        <label class="block text-gray-700 font-medium mb-1">Combustível</label>
-                        <select name="combustivel"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                            <option value="Gasolina"
-                                {{ old('combustivel', $veiculo->combustivel) == 'Gasolina' ? 'selected' : '' }}>
-                                Gasolina
-                            </option>
-                            <option value="Etanol"
-                                {{ old('combustivel', $veiculo->combustivel) == 'Etanol' ? 'selected' : '' }}>Etanol
-                            </option>
-                            <option value="Diesel"
-                                {{ old('combustivel', $veiculo->combustivel) == 'Diesel' ? 'selected' : '' }}>Diesel
-                            </option>
-                            <option value="Flex"
-                                {{ old('combustivel', $veiculo->combustivel) == 'Flex' ? 'selected' : '' }}>Flex
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Opcionais -->
-                    <div class="basis-[15%] min-w-[80px]">
-                        <label class="block text-gray-700 font-medium mb-1">Opcional</label>
-                        <input type="text" name="cod_opcional"
-                            value="{{ old('cod_opcional', $veiculo->cod_opcional) }}"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
-                </div>
-
-                <!-- Linha com Valor Tabela, Bônus e Custo -->
-                <div class="flex flex-row gap-4 mb-4 ">
-                    <x-input-moeda name="vlr_nota" label="Valor Custo" :value="$veiculo->vlr_nota" />
-                    <x-input-moeda name="vlr_bonus" label="Valor Bônus" :value="$veiculo->vlr_bonus" />
-                    <x-input-moeda name="vlr_tabela" label="Valor Tabela" :value="$veiculo->vlr_tabela" />
-                </div>
-
+            </div>
+            <div x-show="tabAtiva === 'fotos'">
                 <!-- Upload de Imagens do Veículo -->
-                <div class="flex flex-wrap md:flex-nowrap gap-6 mt-6">
+                <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
                     <!-- Upload -->
                     <div class="md:w-1/3 w-full">
                         <label class="block text-gray-700 font-medium mb-1">Imagens do Veículo (até 10 - apenas
@@ -165,18 +197,61 @@
                         </div>
                     @endif
                 </div>
-
-
             </div>
+            <div x-show="tabAtiva === 'opcionais'">
+                <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        @if (request('from') === 'novos')
+                        <div class="flex flex-col md:flex-row gap-6 w-full">
+                            <!-- Coluna esquerda com os campos empilhados -->
+                            <div class="flex flex-col gap-4 w-full md:w-[280px]">
+                                <!-- Modelo/Fab -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Modelo/Fab</label>
+                                    <input disabled type="text" name="modelo_fab"
+                                        value="{{ old('modelo_fab', $veiculo->modelo_fab) }}"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                        required>
+                                </div>
+
+                                <!-- Código do Opcional -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Código do Opcional</label>
+                                    <input disabled type="text" name="cod_opcional"
+                                        value="{{ old('cod_opcional', $veiculo->cod_opcional) }}"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                        required>
+                                </div>
+                            </div>
+
+                            <!-- Coluna direita com textarea -->
+                            <div class="w-full md:flex-1">
+                                <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
+                                <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
+                                    class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    required>{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
+                            </div>
+                        </div>
 
 
+
+
+                        @elseif(request('from') === 'usados')
+                            <div class="basis-[20%] flex-grow min-w-[180px]">
+                                <label class="block text-gray-700 font-medium mb-1">Chassi</label>
+                                <input disabled type="text" name="chassi"
+                                    value="{{ old('chassi', $veiculo->chassi) }}"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                            </div>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
             <!--Botões -->
 
             <div class="flex flex-wrap gap-4 justify-between mt-8">
-                {{-- Oculto para quando salvar recuperar a url --}}
-                @if (request('from'))
-                    <input type="hidden" name="from" value="{{ request('from') }}">
-                @endif
 
                 <!-- Voltar -->
                 @if (request('from') === 'novos')
@@ -200,14 +275,6 @@
                     <i class="fas fa-users"></i>
                     Cadastro Famílias
                 </a>
-
-
-                <!-- Cadastro Descrição Opcionais -->
-                <button type="button"
-                    class="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
-                    <i class="fas fa-list"></i>
-                    Cadastro Opcionais
-                </button>
 
                 <!-- Salvar Alterações -->
                 <button type="submit"
@@ -270,28 +337,30 @@
             if (!confirm('Deseja realmente excluir esta imagem?')) return;
 
             fetch("{{ route('veiculos.imagem.excluir') }}", {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                },
-                body: JSON.stringify({ imagem: nomeArquivo })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    // Remove o contêiner da imagem
-                    const container = botao.closest('.flex-col');
-                    container.remove();
-                    window.mostrarToast?.('Imagem excluída com sucesso!');
-                } else {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        imagem: nomeArquivo
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove o contêiner da imagem
+                        const container = botao.closest('.flex-col');
+                        container.remove();
+                        window.mostrarToast?.('Imagem excluída com sucesso!');
+                    } else {
+                        alert('Erro ao excluir a imagem.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
                     alert('Erro ao excluir a imagem.');
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Erro ao excluir a imagem.');
-            });
+                });
         }
     </script>
 

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout>    {{-- opcionais > index --}}
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
         <div class="max-w-7xl mx-auto p-6" x-data="{
             showModal: false,
@@ -161,6 +161,7 @@
                     </form>
                 </div>
             </div>
+
             <!-- Modal de Edição -->
             <div x-show="editModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
                 style="display: none;">
