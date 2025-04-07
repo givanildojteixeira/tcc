@@ -11,6 +11,7 @@ class Opcionais extends Model
     protected $fillable = [
         'modelo_fab',
         'cod_opcional',
+        'chassi',
         'descricao',
     ];
 }

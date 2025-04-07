@@ -15,9 +15,17 @@ class VeiculoController extends Controller
     {
         $veiculo = Veiculo::findOrFail($id);
         $familias = Familia::all(); // <- aqui você pega os dados do banco
-        $opcionalDescricao = Opcionais::where('modelo_fab', $veiculo->modelo_fab)
-            ->where('cod_opcional', $veiculo->cod_opcional)
-            ->value('descricao');
+
+
+        if ($veiculo->novo_usado === 'Novo') {
+            $opcionalDescricao = Opcionais::where('modelo_fab', $veiculo->modelo_fab)
+                ->where('cod_opcional', $veiculo->cod_opcional)
+                ->value('descricao');
+        } else {
+            $opcionalDescricao = Opcionais::where('chassi', $veiculo->chassi)
+                ->value('descricao');
+        }
+
         return view('veiculos.edit', compact('veiculo', 'familias', 'opcionalDescricao'));
     }
 
@@ -28,6 +36,7 @@ class VeiculoController extends Controller
         // validações
         $request->validate([
             'images.*' => 'image|mimes:jpg,jpeg|max:2048',
+            'descricao' => 'nullable|string|max:10000',
         ]);
 
 
@@ -38,6 +47,11 @@ class VeiculoController extends Controller
         $dados['vlr_tabela'] = limparMoeda($dados['vlr_tabela']);
         $dados['vlr_bonus'] = limparMoeda($dados['vlr_bonus']);
         $dados['vlr_nota'] = limparMoeda($dados['vlr_nota']);
+
+        //Corrige dados de usados que nao sao necessarios por comparação com novos
+        if ($veiculo->novo_usado === 'Usado') {
+            $dados['familia'] = 'Seminovos';
+        }
 
         $veiculo->update($dados);
 
@@ -82,8 +96,30 @@ class VeiculoController extends Controller
             }
         }
 
-
-
+        // grava opcioanais para novos
+        // Atualiza ou cria o registro na tabela opcionais
+        if ($veiculo->novo_usado === 'Novo') {
+            Opcionais::updateOrCreate(
+                [
+                    'modelo_fab' => $veiculo->modelo_fab,
+                    'cod_opcional' => $veiculo->cod_opcional,
+                ],
+                [
+                    'descricao' => str_replace("\n", '/', $request->descricao),
+                ]
+            );
+        } else {
+            Opcionais::updateOrCreate(
+                [
+                    'chassi' => $veiculo->chassi,
+                ],
+                [
+                    'descricao' => str_replace("\n", '/', $request->descricao),
+                    'modelo_fab' => 'SemModelo',
+                    'cod_opcional' => '000',
+                ]
+            );
+        }
 
 
         // return com o item from para nao se perder entre as views
