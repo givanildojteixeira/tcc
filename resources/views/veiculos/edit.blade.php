@@ -122,12 +122,12 @@
                             class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
                    file:rounded-md file:border-0 file:text-sm file:font-semibold
                    file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200">
-                        <p class="text-xs text-gray-500 mt-1">Nomes: chassi_01.jpg, chassi_02.jpg, ...</p>
+                        {{-- <p class="text-xs text-gray-500 mt-1">Nomes: chassi_01.jpg, chassi_02.jpg, ...</p> --}}
                     </div>
 
                     <!-- Visualização -->
                     @php
-                        $images = [];
+                        $imagens = [];
                         $chassiBase = str_replace(' ', '_', $veiculo->chassi);
                         for ($i = 1; $i <= 10; $i++) {
                             $nome = "{$chassiBase}_" . str_pad($i, 2, '0', STR_PAD_LEFT) . '.jpg';
