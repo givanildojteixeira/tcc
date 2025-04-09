@@ -61,7 +61,13 @@ html, body {
 
 /* fundo azul no rodape */
 .div-rodape {
-    background-color: #96a5a5;
+    background-color: #95a0a0;
+    color: white;
+    text-align: center;
+}
+
+.dark .div-rodape {
+    background-color: white;
     color: white;
     text-align: center;
 }

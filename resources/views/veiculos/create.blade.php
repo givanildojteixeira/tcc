@@ -1,6 +1,9 @@
 <x-app-layout> {{-- Criação de veiculos NOVOS e USADOS --}}
     <div x-data="{
         tabAtiva: localStorage.getItem('aba_veiculo') || 'info',
+        modelo_fab: '{{ old('modelo_fab') }}',
+        cod_opcional: '{{ old('cod_opcional') }}',
+
         setTab(tab) {
             this.tabAtiva = tab;
             localStorage.setItem('aba_veiculo', tab);
@@ -58,20 +61,22 @@
             <div x-show="tabAtiva === 'info'" x-transition>
                 <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
                     <div class="flex flex-wrap gap-4 mb-4">
-                        <!-- Família -->
-                        <div class="basis-[20%] flex-grow min-w-[150px]">
-                            <label class="block text-gray-700 font-medium mb-1">Família</label>
-                            <select name="familia"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                                <option value="">Selecione uma família</option>
-                                @foreach ($familias as $familia)
-                                    <option value="{{ $familia->descricao }}"
-                                        {{ old('familia') == $familia->descricao ? 'selected' : '' }}>
-                                        {{ $familia->descricao }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if (request('from') === 'novos')
+                            <!-- Família -->
+                            <div class="basis-[20%] flex-grow min-w-[150px]">
+                                <label class="block text-gray-700 font-medium mb-1">Família</label>
+                                <select name="familia"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                    <option value="">Selecione uma família</option>
+                                    @foreach ($familias as $familia)
+                                        <option value="{{ $familia->descricao }}"
+                                            {{ old('familia') == $familia->descricao ? 'selected' : '' }}>
+                                            {{ $familia->descricao }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
 
                         <!-- Descrição -->
                         <div class="basis-[40%] flex-grow min-w-[250px]">
@@ -91,7 +96,8 @@
                             <!-- Modelo de Fabricação -->
                             <div class="basis-[10%] flex-grow min-w-[100px]">
                                 <label class="block text-gray-700 font-medium mb-1">Fabricação</label>
-                                <input type="text" name="modelo_fab" value="{{ old('modelo_fab') }}"
+                                <input type="text" name="modelo_fab" x-model="modelo_fab"
+                                    value="{{ old('modelo_fab') }}"
                                     class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                             </div>
                         @endif
@@ -137,7 +143,8 @@
                             <!-- Opcionais -->
                             <div class="basis-[15%] min-w-[80px]">
                                 <label class="block text-gray-700 font-medium mb-1">Opcional</label>
-                                <input type="text" name="cod_opcional" value="{{ old('cod_opcional') }}"
+                                <input type="text" name="cod_opcional" x-model="cod_opcional"
+                                    value="{{ old('cod_opcional') }}"
                                     class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                             </div>
                         @endif
@@ -156,34 +163,46 @@
             <div x-show="tabAtiva === 'fotos'" x-transition>
                 <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
                     <label class="block text-gray-700 font-medium mb-1">Imagens do Veículo (até 10 - .jpg)</label>
-                    <div x-data="previewImagesComAcumulo()" class="space-y-4">
-                        <!-- Input com preview -->
-                        <input type="file" accept=".jpg" multiple
+                    <div x-data="previewImagesAvancado()" class="space-y-4">
+                        <!-- Input de arquivos -->
+                        <input type="file" accept=".jpg" multiple @change="adicionarImagens($event)"
+                            x-ref="inputFile"
                             class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
                                    file:rounded-md file:border-0 file:text-sm file:font-semibold
-                                   file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-                            @change="adicionarImagens($event)"
-                            x-ref="inputFile"
-                        >
+                                   file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200">
 
-                        <!-- Lista de previews -->
-                        <template x-if="previews.length > 0">
-                            <div class="flex flex-wrap gap-4">
-                                <template x-for="(img, index) in previews" :key="index">
-                                    <div class="relative w-20 h-20">
-                                        <img :src="img.src"
-                                            class="w-full h-full object-cover rounded border border-gray-300 shadow-sm">
+                        <!-- Contador -->
+                        <div class="text-sm text-gray-600">
+                            <span x-text="arquivos.length"></span>/10 imagens selecionadas
+                        </div>
 
-                                        <button type="button"
-                                            @click="removerImagem(index)"
-                                            class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center shadow hover:bg-red-700"
-                                            title="Remover imagem">
-                                            ×
-                                        </button>
-                                    </div>
-                                </template>
+                        <!-- Mensagem de erro -->
+                        <template x-if="erroLimite">
+                            <div class="text-red-600 text-sm font-medium">
+                                Limite de 10 imagens atingido. Remova alguma para adicionar novas.
                             </div>
                         </template>
+
+                        <template x-if="erroFormato">
+                            <div class="text-red-600 text-sm font-medium">
+                                Apenas arquivos <strong>.jpg</strong> são permitidos.
+                            </div>
+                        </template>
+
+                        <!-- Preview com drag-and-drop -->
+                        <ul class="flex flex-wrap gap-4" x-ref="previewList" @dragover.prevent
+                            @drop="reordenarArquivos($event)">
+                            <template x-for="(img, index) in previews" :key="img.nome">
+                                <li class="relative w-20 h-20 cursor-move" draggable="true"
+                                    @dragstart="inicioArraste(index)" @dragend="fimArraste()">
+                                    <img :src="img.src"
+                                        class="w-full h-full object-cover rounded border border-gray-300 shadow-sm">
+                                    <button type="button" @click="removerImagem(index)"
+                                        class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center shadow hover:bg-red-700"
+                                        title="Remover imagem">×</button>
+                                </li>
+                            </template>
+                        </ul>
                     </div>
 
                 </div>
@@ -195,16 +214,32 @@
                     @if (request('from') === 'novos')
                         <div class="flex flex-col md:flex-row gap-6 w-full">
                             <div class="flex flex-col gap-4 w-full md:w-[280px]">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">Modelo/Fab</label>
-                                    <input type="text" name="modelo_fab" value="{{ old('modelo_fab') }}"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                <div class="relative">
+                                    <label class="block text-sm font-medium text-gray-700">Código Fabricação</label>
+                                    <input type="text" name="modelo_fab" :value="modelo_fab" disabled
+                                        title="Este campo é preenchido automaticamente"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-600 cursor-not-allowed pr-10">
+                                    <span class="absolute right-2 top-8 text-gray-400">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
                                 </div>
-                                <div>
+
+
+                                <div class="relative">
                                     <label class="block text-sm font-medium text-gray-700">Código do Opcional</label>
-                                    <input type="text" name="cod_opcional" value="{{ old('cod_opcional') }}"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                    <input type="text" name="cod_opcional" :value="cod_opcional" disabled
+                                        title="Este campo é preenchido automaticamente"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-600 cursor-not-allowed pr-10">
+                                    <span class="absolute right-2 top-8 text-gray-400">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
                                 </div>
+
+
+
+
+
+
                             </div>
                             <div class="w-full md:flex-1 mb-4">
                                 <label for="descricao"
@@ -230,6 +265,15 @@
                     <i class="fas fa-arrow-left"></i> Voltar
                 </a>
 
+                @if(request('from') === 'novos')
+                <a href="{{ route('familia.index', ['from' => 'create', 'origem' => request('from')]) }}"
+                    class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
+                    <i class="fas fa-users"></i>
+                    Cadastro Famílias
+                </a>
+            @endif
+
+
                 <button type="submit"
                     class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
                     <i class="fas fa-save"></i> Salvar Veículo
@@ -238,31 +282,48 @@
         </form>
     </div>
     <script>
-        function previewImagesComAcumulo() {
+        function previewImagesAvancado() {
             return {
                 arquivos: [],
                 previews: [],
+                erroLimite: false,
+                erroFormato: false,
+                dragIndex: null,
 
                 adicionarImagens(event) {
                     const novosArquivos = Array.from(event.target.files);
+                    let adicionados = 0;
 
                     novosArquivos.forEach(file => {
-                        // Evita duplicatas pelo nome
+                        // Verifica se é .jpg
+                        if (!file.name.toLowerCase().endsWith('.jpg')) {
+                            this.erroFormato = true;
+                            setTimeout(() => this.erroFormato = false, 4000);
+                            return;
+                        }
+
+                        // Evita duplicação por nome
                         if (!this.arquivos.find(f => f.name === file.name) && this.arquivos.length < 10) {
                             this.arquivos.push(file);
-
                             const reader = new FileReader();
                             reader.onload = (e) => {
-                                this.previews.push({ src: e.target.result, nome: file.name });
+                                this.previews.push({
+                                    src: e.target.result,
+                                    nome: file.name
+                                });
                             };
                             reader.readAsDataURL(file);
+                            adicionados++;
                         }
                     });
 
-                    // Limpa input após adicionar, para permitir adicionar o mesmo arquivo depois, se excluído
                     event.target.value = null;
 
-                    // Atualiza o input real com os arquivos válidos
+                    this.erroLimite = this.arquivos.length >= 10;
+                    if (this.erroLimite) {
+                        setTimeout(() => this.erroLimite = false, 4000);
+                    }
+
                     this.atualizarInputReal();
                 },
 
@@ -276,9 +337,32 @@
                     const dataTransfer = new DataTransfer();
                     this.arquivos.forEach(file => dataTransfer.items.add(file));
                     this.$refs.inputFile.files = dataTransfer.files;
+                },
+
+                // Drag and drop
+                inicioArraste(index) {
+                    this.dragIndex = index;
+                },
+
+                fimArraste() {
+                    this.dragIndex = null;
+                },
+
+                reordenarArquivos(event) {
+                    const dropIndex = Array.from(this.$refs.previewList.children).indexOf(event.target.closest('li'));
+                    if (this.dragIndex === null || dropIndex === -1 || this.dragIndex === dropIndex) return;
+
+                    const moverArquivo = this.arquivos.splice(this.dragIndex, 1)[0];
+                    const moverPreview = this.previews.splice(this.dragIndex, 1)[0];
+
+                    this.arquivos.splice(dropIndex, 0, moverArquivo);
+                    this.previews.splice(dropIndex, 0, moverPreview);
+
+                    this.atualizarInputReal();
                 }
             };
         }
     </script>
+
 
 </x-app-layout>

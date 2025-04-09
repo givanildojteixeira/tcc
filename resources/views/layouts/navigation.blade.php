@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+<nav x-data="{ open: false }" class="div-rodape bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 print:hidden">
         <div class="flex justify-between h-16 items-center">
             <!-- Logo -->

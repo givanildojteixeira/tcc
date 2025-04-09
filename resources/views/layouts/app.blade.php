@@ -103,8 +103,23 @@
         </main>
     </div>
 
+    <x-loading />
 
     {{-- Aqui vou colocar todos os Script que quero que fiquem disponiveis para as views --}}
+   {{-- Loading --}}
+   <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('a:not([target="_blank"])');
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    const alpine = document.querySelector('[x-data]');
+                    if (alpine && alpine.__x) {
+                        alpine.__x.$data.loading = true;
+                    }
+                });
+            });
+        });
+    </script>
     {{-- Salva Configurações do sistema --}}
     <script>
         function salvarConfiguracao(chave, valor) {

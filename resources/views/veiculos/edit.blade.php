@@ -48,20 +48,22 @@
             <div x-show="tabAtiva === 'info'">
                 <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
                     <div class="flex flex-wrap gap-4 mb-4">
-                        <!-- Família -->
-                        <div class="basis-[20%] flex-grow min-w-[150px]">
-                            <label class="block text-gray-700 font-medium mb-1">Família</label>
-                            <select name="familia"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                                <option value="">Selecione uma família</option>
-                                @foreach ($familias as $familia)
-                                <option value="{{ $familia->descricao }}"
-                                    {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
-                                    {{ $familia->descricao }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if (request('from') === 'novos')
+                            <!-- Família -->
+                            <div class="basis-[20%] flex-grow min-w-[150px]">
+                                <label class="block text-gray-700 font-medium mb-1">Família</label>
+                                <select name="familia"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                    <option value="">Selecione uma família</option>
+                                    @foreach ($familias as $familia)
+                                    <option value="{{ $familia->descricao }}"
+                                        {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
+                                        {{ $familia->descricao }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
 
                         <!-- Descrição do Veículo (mais largo) -->
                         <div class="basis-[40%] flex-grow min-w-[250px]">

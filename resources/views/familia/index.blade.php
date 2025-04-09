@@ -1,9 +1,9 @@
-<x-app-layout>    {{--  ✅  Gerenciar famílias de veículos - INDEX - FAMILIA --}}
+<x-app-layout> {{--  ✅  Gerenciar famílias de veículos - INDEX - FAMILIA --}}
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
         <!-- Título e Feedback -->
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-semibold text-green-700">Gerenciar famílias de veículos</h2>
-            <x-bt-ajuda/> <!-- Botão de Ajuda -->
+            <x-bt-ajuda /> <!-- Botão de Ajuda -->
         </div>
 
         <!-- Formulário -->
@@ -27,52 +27,58 @@
                 </div>
 
             </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <!-- Imagem da Família -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Imagem da Família</label>
-                        <input type="file" name="imagem" accept=".jpg,.jpeg"
-                            class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <!-- Imagem da Família -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Imagem da Família</label>
+                    <input type="file" name="imagem" accept=".jpg,.jpeg"
+                        class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
                                    file:rounded-md file:border-0
                                    file:text-sm file:font-semibold
                                    file:bg-green-100 file:text-green-700
                                    hover:file:bg-green-200">
-                    </div>
-
-                    <!-- Arquivo MEV -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Arquivo MEV</label>
-                        <input type="file" name="arquivo_mev" accept=".pdf"
-                            class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
-                                   file:rounded-md file:border-0
-                                   file:text-sm file:font-semibold
-                                   file:bg-green-100 file:text-green-700
-                                   hover:file:bg-green-200">
-                    </div>
-
-                    <!-- Documento Adicional -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Documentos</label>
-                        <input type="file" name="documentos" accept="*"
-                            class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
-                                   file:rounded-md file:border-0
-                                   file:text-sm file:font-semibold
-                                   file:bg-green-100 file:text-green-700
-                                   hover:file:bg-green-200">
-                    </div>
                 </div>
+
+                <!-- Arquivo MEV -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Arquivo MEV</label>
+                    <input type="file" name="arquivo_mev" accept=".pdf"
+                        class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+                                   file:rounded-md file:border-0
+                                   file:text-sm file:font-semibold
+                                   file:bg-green-100 file:text-green-700
+                                   hover:file:bg-green-200">
+                </div>
+
+                <!-- Documento Adicional -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">Documentos</label>
+                    <input type="file" name="documentos" accept="*"
+                        class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+                                   file:rounded-md file:border-0
+                                   file:text-sm file:font-semibold
+                                   file:bg-green-100 file:text-green-700
+                                   hover:file:bg-green-200">
+                </div>
+            </div>
 
 
             <div class="flex flex-wrap items-center gap-4 ">
-                @if(request('from') && request('origem'))
-                <div class="mb-4">
-                    <a href="{{ url('/veiculos/' . request('from') . '/edit?from=' . request('origem')) }}"
-                        class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
-                        <i class="fas fa-arrow-left"></i>
-                        Voltar para edição do veículo
-                    </a>
-                </div>
-            @endif
+                @if (request('from') && request('origem'))
+                    @php
+                        $voltarPara =
+                            request('from') === 'create'
+                                ? route('veiculos.create', ['from' => request('origem')])
+                                : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
+                    @endphp
+                    <div class="mb-4">
+                        <a href="{{ $voltarPara }}"
+                            class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
+                            <i class="fas fa-arrow-left"></i>
+                            Voltar para edição do veículo
+                        </a>
+                    </div>
+                @endif
 
 
                 <button type="submit"
@@ -81,9 +87,8 @@
                     Cadastrar ou Alterar Família
                 </button>
 
-                <x-checkbox-config
-                chave="mostrar_todas_familias"
-                label="Mostrar todas as famílias no carrossel (mesmo sem veículos)" />
+                <x-checkbox-config chave="mostrar_todas_familias"
+                    label="Mostrar todas as famílias no carrossel (mesmo sem veículos)" />
 
 
 
@@ -176,16 +181,19 @@
 
                 <p class="mb-3 text-sm text-gray-700 leading-relaxed">
                     Esta tela tem como objetivo <strong>exibir as famílias de veículos</strong> cadastradas no sistema,
-                    incluindo arquivos de imagem, site de apoio e documentos. Utilize os recursos abaixo para uma busca eficaz:
+                    incluindo arquivos de imagem, site de apoio e documentos. Utilize os recursos abaixo para uma busca
+                    eficaz:
                 </p>
 
                 <ul class="list-disc list-inside text-sm text-gray-800 space-y-2">
                     <li><strong>Nome da família:</strong> Coloque o nome básico do modelo que possa ser reunitilizado e
                         que demonstre ligação de mais subtipos de veiculos. Esse nome será usado para renomear o arquivo
                         e guardar na pasta de imagens.</li>
-                    <li><strong>*Imagem da família:</strong> Selecione uma imagem ilustrativa. Arquivos válidos *.jpg.</li>
+                    <li><strong>*Imagem da família:</strong> Selecione uma imagem ilustrativa. Arquivos válidos *.jpg.
+                    </li>
                     <li><strong>*Arquivo MEV:</strong> Documento específico. Arquivos válidos *.pdf.</li>
-                    <li><strong>*Documentos:</strong> Quaisquer documentos auxiliares a venda. Arquivos válidos *.*.</li>
+                    <li><strong>*Documentos:</strong> Quaisquer documentos auxiliares a venda. Arquivos válidos *.*.
+                    </li>
                     <li><strong>Site de Apoio:</strong> Site de apoio para que o vendedor possa consultar mecanismos
                         externos de auxilio a venda, vinculados ao modelo da família, como sites de Detran, montadora,
                         etc. Ex: http://www.montadora.com.br </li>
@@ -193,9 +201,10 @@
                         seleciona a partir da tela do cadastro de veículo.</li>
                     <li><strong>Cadastrar ou Alterar Família:</strong> Cadastra ou atualiza os dados da tela.</li>
                     <li><strong>Mostrar todas as famílias no carrossel (mesmo sem veículos):</strong> Esse checkbox,
-                        grava no arquivo de configuração se o carrossel da tela de veiculos novos deve mostrar ou não, imagens de familias de unidades
+                        grava no arquivo de configuração se o carrossel da tela de veiculos novos deve mostrar ou não,
+                        imagens de familias de unidades
                         sem estoque. *Salva automaticamente sem necesssidade de post no form.</li>
-                        <strong>*</strong>Os arquivos podem ser enviados separadamente.
+                    <strong>*</strong>Os arquivos podem ser enviados separadamente.
 
                 </ul>
 
