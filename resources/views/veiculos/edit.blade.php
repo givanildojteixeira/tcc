@@ -25,6 +25,7 @@
                 class="flex-1 px-4 py-2 text-sm transition-all duration-200"><i class="fas fa-image"></i>
                 Imagens do Veículo
             </button>
+            
             <button @click="tabAtiva = 'opcionais'"
                 :class="tabAtiva === 'opcionais'
             ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
@@ -41,7 +42,7 @@
             @method('PUT')
             <!-- Instrução para apos PUT, voltar para a origem correta (from) -->
             @if(request('from'))
-                <input type="hidden" name="from" value="{{ request('from') }}">
+            <input type="hidden" name="from" value="{{ request('from') }}">
             @endif
 
 
@@ -49,20 +50,20 @@
                 <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
                     <div class="flex flex-wrap gap-4 mb-4">
                         @if (request('from') === 'novos')
-                            <!-- Família -->
-                            <div class="basis-[20%] flex-grow min-w-[150px]">
-                                <label class="block text-gray-700 font-medium mb-1">Família</label>
-                                <select name="familia"
-                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                                    <option value="">Selecione uma família</option>
-                                    @foreach ($familias as $familia)
-                                    <option value="{{ $familia->descricao }}"
-                                        {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
-                                        {{ $familia->descricao }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                        <!-- Família -->
+                        <div class="basis-[20%] flex-grow min-w-[150px]">
+                            <label class="block text-gray-700 font-medium mb-1">Família</label>
+                            <select name="familia"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                <option value="">Selecione uma família</option>
+                                @foreach ($familias as $familia)
+                                <option value="{{ $familia->descricao }}"
+                                    {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
+                                    {{ $familia->descricao }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
                         @endif
 
                         <!-- Descrição do Veículo (mais largo) -->
@@ -107,14 +108,14 @@
                         </div>
 
                         <!-- Portas (campo pequeno) -->
-                        <div class="basis-[10%] min-w-[80px]">
+                        <div class="basis-[8%] min-w-[60px]">
                             <label class="block text-gray-700 font-medium mb-1">Portas</label>
                             <input type="number" name="portas" value="{{ old('portas', $veiculo->portas) }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 text-center focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
 
-                        <!-- Combustível (campo maior) -->
-                        <div class="flex-grow basis-[25%] min-w-[200px]">
+                        <!-- Combustível () -->
+                        <div class="flex-grow basis-[10%] min-w-[80px]">
                             <label class="block text-gray-700 font-medium mb-1">Combustível</label>
                             <select name="combustivel"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
@@ -136,9 +137,25 @@
                             </select>
                         </div>
 
+                        <!-- Tramsmissao (campo maior) -->
+                        <div class="flex-grow basis-[14%] min-w-[100px]">
+                            <label class="block text-gray-700 font-medium mb-1">Transmissão</label>
+                            <select name="transmissao"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                <option value="Mecanica"
+                                    {{ old('transmissao', $veiculo->transmissao) == 'Mecanica' ? 'selected' : '' }}>
+                                    Mecânica
+                                </option>
+                                <option value="Automatica"
+                                    {{ old('transmissao', $veiculo->transmissao) == 'Automatica' ? 'selected' : '' }}>
+                                    Automática
+                                </option>
+                            </select>
+                        </div>
+
                         @if (request('from') === 'novos')
                         <!-- Opcionais -->
-                        <div class="basis-[15%] min-w-[80px]">
+                        <div class="basis-[10%] min-w-[80px]">
                             <label class="block text-gray-700 font-medium mb-1">Opcional</label>
                             <input type="text" name="cod_opcional"
                                 value="{{ old('cod_opcional', $veiculo->cod_opcional) }}"
@@ -152,6 +169,22 @@
                         <x-input-moeda name="vlr_nota" label="Valor Custo" :value="$veiculo->vlr_nota" />
                         <x-input-moeda name="vlr_bonus" label="Valor Bônus" :value="$veiculo->vlr_bonus" />
                         <x-input-moeda name="vlr_tabela" label="Valor Tabela" :value="$veiculo->vlr_tabela" />
+                        <div class="mb-4">
+                            <label for="local" class="block text-sm font-medium text-gray-700">Local</label>
+                            <select name="local" id="local" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="{{ old('local', $veiculo->local) }}"></option>
+
+                                @if (request('from') === 'novos')
+                                <option value="Matriz" {{ old('local', $veiculo->local) == 'Matriz' ? 'selected' : '' }}>Matriz</option>
+                                <option value="Filial" {{ old('local', $veiculo->local) == 'Filial' ? 'selected' : '' }}>Filial</option>
+                                <option value="Transito" {{ old('local', $veiculo->local) == 'Transito' ? 'selected' : '' }}>Trânsito</option>
+                                @else
+                                <option value="Matriz" {{ old('local', $veiculo->local) == 'Matriz' ? 'selected' : '' }}>Matriz</option>
+                                <option value="Filial" {{ old('local', $veiculo->local) == 'Filial' ? 'selected' : '' }}>Filial</option>
+                                <option value="Consignado" {{ old('local', $veiculo->local) == 'Consignado' ? 'selected' : '' }}>Consignado</option>
+                                @endif
+                            </select>
+                        </div>
                     </div>
 
                 </div>
@@ -179,38 +212,38 @@
                             if (file_exists(public_path("images/cars/$nome"))) {
                             $imagens[]=asset("images/cars/$nome");
                             }
-                        }
-                        @endphp
-                        @if (count($imagens))
-                        <div class="md:w-2/3 w-full">
-                        <label class="block text-gray-700 font-medium mb-1">Imagens Gravadas:</label>
-                        <div class="flex flex-wrap gap-2">
-                            @foreach ($imagens as $img)
-                            @php
-                            $nomeArquivo = basename($img);
+                            }
                             @endphp
+                            @if (count($imagens))
+                            <div class="md:w-2/3 w-full">
+                            <label class="block text-gray-700 font-medium mb-1">Imagens Gravadas:</label>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach ($imagens as $img)
+                                @php
+                                $nomeArquivo = basename($img);
+                                @endphp
 
-                            <div class="flex flex-col items-center">
-                                <img src="{{ $img }}" alt="Imagem do veículo"
-                                    class="w-16 h-16 object-cover rounded shadow border border-gray-300">
+                                <div class="flex flex-col items-center">
+                                    <img src="{{ $img }}" alt="Imagem do veículo"
+                                        class="w-16 h-16 object-cover rounded shadow border border-gray-300">
 
-                                <button type="button"
-                                    onclick="excluirImagem('{{ $nomeArquivo }}', this)"
-                                    class="text-red-600 hover:text-red-800 text-sm mt-1"
-                                    title="Excluir imagem">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                    <button type="button"
+                                        onclick="excluirImagem('{{ $nomeArquivo }}', this)"
+                                        class="text-red-600 hover:text-red-800 text-sm mt-1"
+                                        title="Excluir imagem">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                                @endforeach
                             </div>
-                            @endforeach
-                        </div>
+                    </div>
+                    @endif
                 </div>
-                @endif
             </div>
-        </div>
     </div>
     <div x-show="tabAtiva === 'opcionais'">
         <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
-           <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4">
                 @if (request('from') === 'novos')
                 <div class="flex flex-col md:flex-row gap-6 w-full">
                     <!-- Coluna esquerda com os campos empilhados -->
@@ -238,25 +271,25 @@
                     <div class="w-full md:flex-1 mb-4">
                         <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
                         <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
-                            class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            required>{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
+                            class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            {{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
                     </div>
                 </div>
 
                 @elseif(request('from') === 'usados')
-                    <div class="flex-1 basis-[30%] min-w-[120px]">
-                        <label class="block text-gray-700 font-medium mb-1">Chassi</label>
-                        <input disabled type="text" name="chassi"
-                            value="{{ old('chassi', $veiculo->chassi) }}"
-                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
-                    <!-- Coluna direita com textarea -->
-                    <div class="flex-1 basis-[65%] min-w-[200px] mb-6">
-                        <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
-                        <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
-                            class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            required>{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
-                    </div>
+                <div class="flex-1 basis-[30%] min-w-[120px]">
+                    <label class="block text-gray-700 font-medium mb-1">Chassi</label>
+                    <input disabled type="text" name="chassi"
+                        value="{{ old('chassi', $veiculo->chassi) }}"
+                        class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                </div>
+                <!-- Coluna direita com textarea -->
+                <div class="flex-1 basis-[65%] min-w-[200px] mb-6">
+                    <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
+                    <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
+                        class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        required>{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
+                </div>
                 @endif
             </div>
 

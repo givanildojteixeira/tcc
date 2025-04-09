@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Veiculo;
 use App\Models\Familia;
 use App\Models\Opcionais;
+use Illuminate\Support\Facades\Auth;
 
 class VeiculoController extends Controller
 {
@@ -96,30 +97,39 @@ class VeiculoController extends Controller
             }
         }
 
-        // grava opcioanais para novos
-        // Atualiza ou cria o registro na tabela opcionais
+        // Prepara a descrição, substitui quebra de linha por barra
+        $descricao = str_replace("\n", '/', $request->descricao);
+
+        // Se vier em branco ou só com espaços, define um texto padrão
+        if (trim($descricao) === '') {
+            $descricao = 'Opcional não cadastrado';
+        }
+
         if ($veiculo->novo_usado === 'Novo') {
+            // Atualiza ou cria para veículos novos
             Opcionais::updateOrCreate(
                 [
                     'modelo_fab' => $veiculo->modelo_fab,
                     'cod_opcional' => $veiculo->cod_opcional,
                 ],
                 [
-                    'descricao' => str_replace("\n", '/', $request->descricao),
+                    'descricao' => $descricao,
                 ]
             );
         } else {
+            // Atualiza ou cria para veículos usados
             Opcionais::updateOrCreate(
                 [
                     'chassi' => $veiculo->chassi,
                 ],
                 [
-                    'descricao' => str_replace("\n", '/', $request->descricao),
+                    'descricao' => $descricao,
                     'modelo_fab' => 'SemModelo',
                     'cod_opcional' => '000',
                 ]
             );
         }
+
 
 
         // return com o item from para nao se perder entre as views
@@ -168,12 +178,19 @@ class VeiculoController extends Controller
 
     public function store(Request $request)
     {
+        // Corrige os valores monetários
+        $request['vlr_tabela'] = limparMoeda(valor: $request['vlr_tabela']);
+        $request['vlr_bonus'] = limparMoeda($request['vlr_bonus']);
+        $request['vlr_nota'] = limparMoeda($request['vlr_nota']);
+
+        // dd($request->all());
         $validated = $request->validate([
             'familia' => 'required|string|max:255',
             'desc_veiculo' => 'required|string|max:255',
             'chassi' => 'required|string|max:50|unique:veiculos,chassi',
             'Ano_Mod' => 'nullable|string|max:20',
             'cor' => 'nullable|string|max:50',
+            'motor' => 'nullable|string|max:10',
             'portas' => 'nullable|integer',
             'combustivel' => 'nullable|string|max:50',
             'vlr_nota' => 'nullable|numeric',
@@ -181,12 +198,23 @@ class VeiculoController extends Controller
             'vlr_tabela' => 'nullable|numeric',
             'images.*' => 'nullable|image|mimes:jpg|max:2048',
             'descricao' => 'nullable|string|max:5000',
+            'local' => 'required|string|in:matriz,filial,transito,consignado',
         ]);
 
         $veiculo = new Veiculo();
         $veiculo->fill($validated);
+
+        //espeficificos:
         $veiculo->modelo_fab = $request->modelo_fab;
         $veiculo->cod_opcional = $request->cod_opcional;
+        $veiculo->novo_usado = ($request->from === 'novos') ? 'novo' : 'usado';
+        $veiculo->marca = ($request->from === 'novos') ? 'GM' : $request->marca;
+        $veiculo->dta_faturamento = date('Y-m-d');  //now()
+        $veiculo->user_reserva = Auth::id(); // ou Auth::user()->id;
+        $veiculo->desc_nota = ($request->from === 'novos') ? 'veiculo novo' : 'veiculo semi novo';
+
+
+
         $veiculo->save();
 
         // ⬇️ Salvar imagens

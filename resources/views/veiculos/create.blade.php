@@ -32,7 +32,7 @@
             @csrf
 
             @if (request('from'))
-                <input type="hidden" name="from" value="{{ request('from') }}">
+            <input type="hidden" name="from" value="{{ request('from') }}">
             @endif
 
             <!-- Abas -->
@@ -62,20 +62,20 @@
                 <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
                     <div class="flex flex-wrap gap-4 mb-4">
                         @if (request('from') === 'novos')
-                            <!-- Família -->
-                            <div class="basis-[20%] flex-grow min-w-[150px]">
-                                <label class="block text-gray-700 font-medium mb-1">Família</label>
-                                <select name="familia"
-                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                                    <option value="">Selecione uma família</option>
-                                    @foreach ($familias as $familia)
-                                        <option value="{{ $familia->descricao }}"
-                                            {{ old('familia') == $familia->descricao ? 'selected' : '' }}>
-                                            {{ $familia->descricao }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                        <!-- Família -->
+                        <div class="basis-[20%] flex-grow min-w-[150px]">
+                            <label class="block text-gray-700 font-medium mb-1">Família</label>
+                            <select name="familia"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                <option value="">Selecione uma família</option>
+                                @foreach ($familias as $familia)
+                                <option value="{{ $familia->descricao }}"
+                                    {{ old('familia') == $familia->descricao ? 'selected' : '' }}>
+                                    {{ $familia->descricao }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
                         @endif
 
                         <!-- Descrição -->
@@ -93,19 +93,19 @@
                         </div>
 
                         @if (request('from') === 'novos')
-                            <!-- Modelo de Fabricação -->
-                            <div class="basis-[10%] flex-grow min-w-[100px]">
-                                <label class="block text-gray-700 font-medium mb-1">Fabricação</label>
-                                <input type="text" name="modelo_fab" x-model="modelo_fab"
-                                    value="{{ old('modelo_fab') }}"
-                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                            </div>
+                        <!-- Modelo de Fabricação -->
+                        <div class="basis-[10%] flex-grow min-w-[100px]">
+                            <label class="block text-gray-700 font-medium mb-1">Fabricação</label>
+                            <input type="text" name="modelo_fab" x-model="modelo_fab"
+                                value="{{ old('modelo_fab') }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
                         @endif
                     </div>
 
                     <div class="flex flex-wrap gap-4 mb-4">
                         <!-- Ano/Modelo -->
-                        <div class="flex-grow basis-[15%] min-w-[150px]">
+                        <div class="flex-grow basis-[12%] min-w-[100px]">
                             <label class="block text-gray-700 font-medium mb-1">Ano/Modelo</label>
                             <input type="text" name="Ano_Mod" value="{{ old('Ano_Mod') }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
@@ -118,8 +118,15 @@
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
 
+                        <!-- Cor -->
+                        <div class="flex-grow basis-[5%] min-w-[80px]">
+                            <label class="block text-gray-700 font-medium mb-1">Motor</label>
+                            <input type="text" name="motor" value="{{ old('motor') }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
+
                         <!-- Portas -->
-                        <div class="basis-[10%] min-w-[80px]">
+                        <div class="basis-[5%] min-w-[80px]">
                             <label class="block text-gray-700 font-medium mb-1">Portas</label>
                             <input type="number" name="portas" value="{{ old('portas') }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 text-center focus:ring-2 focus:ring-blue-400 focus:outline-none">
@@ -132,21 +139,21 @@
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                                 <option value="">Selecione</option>
                                 @foreach (['Gasolina', 'Etanol', 'Diesel', 'Flex'] as $comb)
-                                    <option value="{{ $comb }}"
-                                        {{ old('combustivel') == $comb ? 'selected' : '' }}>{{ $comb }}
-                                    </option>
+                                <option value="{{ $comb }}"
+                                    {{ old('combustivel') == $comb ? 'selected' : '' }}>{{ $comb }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
 
                         @if (request('from') === 'novos')
-                            <!-- Opcionais -->
-                            <div class="basis-[15%] min-w-[80px]">
-                                <label class="block text-gray-700 font-medium mb-1">Opcional</label>
-                                <input type="text" name="cod_opcional" x-model="cod_opcional"
-                                    value="{{ old('cod_opcional') }}"
-                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                            </div>
+                        <!-- Opcionais -->
+                        <div class="basis-[10%] min-w-[80px]">
+                            <label class="block text-gray-700 font-medium mb-1">Opcional</label>
+                            <input type="text" name="cod_opcional" x-model="cod_opcional"
+                                value="{{ old('cod_opcional') }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
                         @endif
                     </div>
 
@@ -155,6 +162,23 @@
                         <x-input-moeda name="vlr_nota" label="Valor Custo" :value="old('vlr_nota')" />
                         <x-input-moeda name="vlr_bonus" label="Valor Bônus" :value="old('vlr_bonus')" />
                         <x-input-moeda name="vlr_tabela" label="Valor Tabela" :value="old('vlr_tabela')" />
+                        <div class="mb-4">
+                            <label for="local" class="block text-sm font-medium text-gray-700">Local</label>
+                            <select name="local" id="local" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="">Selecione o local</option>
+
+                                @if($from === 'novos')
+                                <option value="matriz" {{ old('local') == 'matriz' ? 'selected' : '' }}>Matriz</option>
+                                <option value="filial" {{ old('local') == 'filial' ? 'selected' : '' }}>Filial</option>
+                                <option value="transito" {{ old('local') == 'transito' ? 'selected' : '' }}>Trânsito</option>
+                                @else
+                                <option value="matriz" {{ old('local') == 'matriz' ? 'selected' : '' }}>Matriz</option>
+                                <option value="filial" {{ old('local') == 'filial' ? 'selected' : '' }}>Filial</option>
+                                <option value="consignado" {{ old('local') == 'consignado' ? 'selected' : '' }}>Consignado</option>
+                                @endif
+                            </select>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -212,48 +236,48 @@
             <div x-show="tabAtiva === 'opcionais'" x-transition>
                 <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
                     @if (request('from') === 'novos')
-                        <div class="flex flex-col md:flex-row gap-6 w-full">
-                            <div class="flex flex-col gap-4 w-full md:w-[280px]">
-                                <div class="relative">
-                                    <label class="block text-sm font-medium text-gray-700">Código Fabricação</label>
-                                    <input type="text" name="modelo_fab" :value="modelo_fab" disabled
-                                        title="Este campo é preenchido automaticamente"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-600 cursor-not-allowed pr-10">
-                                    <span class="absolute right-2 top-8 text-gray-400">
-                                        <i class="fas fa-lock"></i>
-                                    </span>
-                                </div>
-
-
-                                <div class="relative">
-                                    <label class="block text-sm font-medium text-gray-700">Código do Opcional</label>
-                                    <input type="text" name="cod_opcional" :value="cod_opcional" disabled
-                                        title="Este campo é preenchido automaticamente"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-600 cursor-not-allowed pr-10">
-                                    <span class="absolute right-2 top-8 text-gray-400">
-                                        <i class="fas fa-lock"></i>
-                                    </span>
-                                </div>
-
-
-
-
-
-
+                    <div class="flex flex-col md:flex-row gap-6 w-full">
+                        <div class="flex flex-col gap-4 w-full md:w-[280px]">
+                            <div class="relative">
+                                <label class="block text-sm font-medium text-gray-700">Código Fabricação</label>
+                                <input type="text" name="modelo_fab" :value="modelo_fab" disabled
+                                    title="Este campo é preenchido automaticamente"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-600 cursor-not-allowed pr-10">
+                                <span class="absolute right-2 top-8 text-gray-400">
+                                    <i class="fas fa-lock"></i>
+                                </span>
                             </div>
-                            <div class="w-full md:flex-1 mb-4">
-                                <label for="descricao"
-                                    class="block text-sm font-medium text-gray-700">Descrição</label>
-                                <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
-                                    class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm">{{ old('descricao') }}</textarea>
+
+
+                            <div class="relative">
+                                <label class="block text-sm font-medium text-gray-700">Código do Opcional</label>
+                                <input type="text" name="cod_opcional" :value="cod_opcional" disabled
+                                    title="Este campo é preenchido automaticamente"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-600 cursor-not-allowed pr-10">
+                                <span class="absolute right-2 top-8 text-gray-400">
+                                    <i class="fas fa-lock"></i>
+                                </span>
                             </div>
+
+
+
+
+
+
                         </div>
-                    @elseif(request('from') === 'usados')
-                        <div class="flex flex-col gap-4">
-                            <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
+                        <div class="w-full md:flex-1 mb-4">
+                            <label for="descricao"
+                                class="block text-sm font-medium text-gray-700">Descrição</label>
                             <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
                                 class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm">{{ old('descricao') }}</textarea>
                         </div>
+                    </div>
+                    @elseif(request('from') === 'usados')
+                    <div class="flex flex-col gap-4">
+                        <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
+                        <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
+                            class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm">{{ old('descricao') }}</textarea>
+                    </div>
                     @endif
                 </div>
             </div>
@@ -271,7 +295,7 @@
                     <i class="fas fa-users"></i>
                     Cadastro Famílias
                 </a>
-            @endif
+                @endif
 
 
                 <button type="submit"

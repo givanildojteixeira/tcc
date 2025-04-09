@@ -182,7 +182,7 @@
             },
 
             imagemAtual() {
-                return this.imagens[this.indiceAtual] || '{{ asset('images/seminovos.jpg') }}';
+                return this.imagens[this.indiceAtual] || '{{ asset("images/seminovos.jpg") }}';
             },
 
             proxima() {
