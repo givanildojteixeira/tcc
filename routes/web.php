@@ -64,6 +64,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/veiculos/{id}/edit', [VeiculoController::class, 'edit'])->name('veiculos.edit');
     Route::put('/veiculos/{id}', [VeiculoController::class, 'update'])->name('veiculos.update');
     Route::delete('/veiculos/imagem/excluir', [VeiculoController::class, 'excluirImagem'])->name('veiculos.imagem.excluir');
+    Route::get('/veiculos/create', [VeiculoController::class, 'create'])->name('veiculos.create');
+    Route::post('/veiculos', [VeiculoController::class, 'store'])->name('veiculos.store');
 
 
     //Veiculos novos
@@ -79,7 +81,6 @@ Route::middleware('auth')->group(function () {
 
     //Configurações
     Route::post('/configuracoes/salvar', [ConfiguracaoController::class, 'salvar'])->name('configuracoes.salvar');
-
 
 
     //Opcionais

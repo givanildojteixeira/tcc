@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Veiculo;
 use Illuminate\Http\Request;
+use App\Models\Veiculo;
 use App\Models\Familia;
 use App\Models\Opcionais;
 
@@ -156,21 +156,55 @@ class VeiculoController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $familias = Familia::all();
+
+        return view('veiculos.create', [
+            'familias' => $familias,
+            'from' => $request->input('from') // 'novos' ou 'usados'
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'familia' => 'required|string|max:255',
+            'desc_veiculo' => 'required|string|max:255',
+            'chassi' => 'required|string|max:50|unique:veiculos,chassi',
+            'Ano_Mod' => 'nullable|string|max:20',
+            'cor' => 'nullable|string|max:50',
+            'portas' => 'nullable|integer',
+            'combustivel' => 'nullable|string|max:50',
+            'vlr_nota' => 'nullable|numeric',
+            'vlr_bonus' => 'nullable|numeric',
+            'vlr_tabela' => 'nullable|numeric',
+            'images.*' => 'nullable|image|mimes:jpg|max:2048',
+            'descricao' => 'nullable|string|max:5000',
+        ]);
+
+        $veiculo = new Veiculo();
+        $veiculo->fill($validated);
+        $veiculo->modelo_fab = $request->modelo_fab;
+        $veiculo->cod_opcional = $request->cod_opcional;
+        $veiculo->save();
+
+        // ⬇️ Salvar imagens
+        if ($request->hasFile('images')) {
+            $chassiBase = str_replace(' ', '_', $veiculo->chassi);
+            foreach ($request->file('images') as $index => $image) {
+                if ($index < 10) {
+                    $nome = $chassiBase . '_' . str_pad($index + 1, 2, '0', STR_PAD_LEFT) . '.jpg';
+                    $image->move(public_path('images/cars'), $nome);
+                }
+            }
+        }
+
+        // Redirecionamento inteligente
+        $rota = $request->from === 'usados' ? 'veiculos.usados.index' : 'veiculos.novos.index';
+        return redirect()->route($rota)->with('success', 'Veículo cadastrado com sucesso!');
     }
+
 
     /**
      * Display the specified resource.
