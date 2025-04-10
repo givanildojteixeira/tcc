@@ -1,4 +1,5 @@
-<nav x-data="{ open: false }" class="div-rodape bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+<nav x-data="{ open: false }"
+    class="div-rodape bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 print:hidden">
         <div class="flex justify-between h-16 items-center">
             <!-- Logo -->
@@ -119,6 +120,11 @@
                         <x-dropdown-link :href="route('user.index')">
                             <i class="fa-solid fa-users mr-2"></i> Lista de Usuários
                         </x-dropdown-link>
+                        <!-- Link para o GitHub -->
+                        <a href="https://github.com/givanildojteixeira/tcc" target="_blank"
+                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                            <i class="fa-brands fa-github mr-2"></i> Repositório Git
+                        </a>
 
                         <hr class="border-gray-200 dark:border-gray-600 my-2">
 
