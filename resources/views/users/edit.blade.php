@@ -24,7 +24,7 @@
                             <option value="Assistente">Assistente</option>
                             <option value="Gerente">Gerente</option>
                             <option value="Diretor">Diretor</option>
-                            <option value="Admin">Administrador</option>
+                            <option value="admin">Administrador</option>
                         </select>
                         <button type="submit" class="bg-blue-500 text-white rouded py-2 px-4">
                             <i class="fa-regular fa-floppy-disk mr-2"></i>Salvar alterações

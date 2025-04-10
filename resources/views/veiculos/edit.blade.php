@@ -270,9 +270,10 @@
                     <!-- Coluna direita com textarea -->
                     <div class="w-full md:flex-1 mb-4">
                         <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
+
                         <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
-                            class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            {{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
+                            class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            >{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
                     </div>
                 </div>
 
@@ -288,7 +289,7 @@
                     <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
                     <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
                         class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        required>{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
+                        >{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
                 </div>
                 @endif
             </div>

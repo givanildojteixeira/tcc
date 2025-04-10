@@ -18,7 +18,7 @@ class VeiculoController extends Controller
         $familias = Familia::all(); // <- aqui você pega os dados do banco
 
 
-        if ($veiculo->novo_usado === 'Novo') {
+        if ($veiculo->novo_usado === 'novo') {
             $opcionalDescricao = Opcionais::where('modelo_fab', $veiculo->modelo_fab)
                 ->where('cod_opcional', $veiculo->cod_opcional)
                 ->value('descricao');
@@ -105,7 +105,9 @@ class VeiculoController extends Controller
             $descricao = 'Opcional não cadastrado';
         }
 
-        if ($veiculo->novo_usado === 'Novo') {
+
+
+        if ($veiculo->novo_usado === 'novo') {
             // Atualiza ou cria para veículos novos
             Opcionais::updateOrCreate(
                 [
