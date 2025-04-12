@@ -1,4 +1,5 @@
-<x-app-layout> <!-- VEICULOS NOVOS FILTRO PRINCIPAL-->
+<x-app-layout>
+    <!-- VEICULOS NOVOS FILTRO PRINCIPAL-->
     <x-slot name="header">
         <div class="flex gap-1">
             <!-- Carrossel de Veículos -->
@@ -40,11 +41,11 @@
                         <select id="modeloVeiculo"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('modelo', this.value)">
-                            <option value="" disabled
-                                {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>Selecione</option>
+                            <option value="" disabled {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>
+                                Selecione</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                            <option value="{{ $veiculo->desc_veiculo }}"
-                                {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
+                            <option value="{{ $veiculo->desc_veiculo }}" {{ session('modelo_selecionado')==$veiculo->
+                                desc_veiculo ? 'selected' : '' }}>
                                 {{ $veiculo->desc_veiculo }}
                             </option>
                             @endforeach
@@ -77,11 +78,11 @@
                         <select id="combustivel"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('combustivel', this.value)">
-                            <option value=""
-                                {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Todas</option>
+                            <option value="" {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Todas
+                            </option>
                             @foreach ($combustiveis as $combustivel)
-                            <option value="{{ $combustivel->combustivel }}"
-                                {{ session('combustivel_selecionado') == $combustivel->combustivel ? 'selected' : '' }}>
+                            <option value="{{ $combustivel->combustivel }}" {{
+                                session('combustivel_selecionado')==$combustivel->combustivel ? 'selected' : '' }}>
                                 {{ $combustivel->combustivel }}
                             </option>
                             @endforeach
@@ -98,8 +99,8 @@
                             <option value="" {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
                                 Todas</option>
                             @foreach ($anosUnico as $ano)
-                            <option value="{{ $ano->Ano_Mod }}"
-                                {{ session('ano_selecionado') == $ano->Ano_Mod ? 'selected' : '' }}>
+                            <option value="{{ $ano->Ano_Mod }}" {{ session('ano_selecionado')==$ano->Ano_Mod ?
+                                'selected' : '' }}>
                                 {{ $ano->Ano_Mod }}
                             </option>
                             @endforeach
@@ -114,8 +115,8 @@
                             onchange="atualizarFiltro('transmissao', this.value)">
                             <option value="" disabled selected>Selecione</option>
                             @foreach ($transmissoes as $transmissao)
-                            <option value="{{ $transmissao->transmissao }}"
-                                {{ session('transmissao_selecionado') == $transmissao->transmissao ? 'selected' : '' }}>
+                            <option value="{{ $transmissao->transmissao }}" {{
+                                session('transmissao_selecionado')==$transmissao->transmissao ? 'selected' : '' }}>
                                 {{ $transmissao->transmissao }}
                             </option>
                             @endforeach
@@ -131,8 +132,8 @@
                             <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>Todas
                             </option>
                             @foreach ($cores as $cor)
-                            <option value="{{ $cor->cor }}"
-                                {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
+                            <option value="{{ $cor->cor }}" {{ session('cor_selecionado')==$cor->cor ? 'selected' : ''
+                                }}>
                                 {{ $cor->cor }}
                             </option>
                             @endforeach
@@ -164,12 +165,18 @@
         </div>
     </x-slot>
 
-    <div> <!-- Tabelas dos dados -->
+    <div>
+        <!-- Tabelas dos dados -->
         <div class="w-full max-w-full">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
-                        <div x-data="{ open: false, veiculo: {} }"> <!-- Alpine no escopo global -->
+                        <div x-data="{open: false, veiculo: {}}"
+                         x-init=" 
+                            @if(request('openModal') && request('veiculo_id'))
+                                $nextTick(() => {
+                                document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); });
+                            @endif">
                             <table class="table-auto w-full ml-2 mr-2">
                                 <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                     <tr>
@@ -234,8 +241,8 @@
                                     \App\Models\Familia::where('descricao', $veiculo->familia)->value(
                                     'site',) ?? '';
                                     @endphp
-                                    <tr class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
-                                        @click="
+                                    <tr id="veiculo-{{ $veiculo->id }}"
+                                        class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}" @click="
                                                 open = true;
                                                 veiculo = {
                                                     id: '{{ $veiculo->id }}',
@@ -256,10 +263,8 @@
                                                     vlr_nota: '{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}',
                                                     faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}',
                                                     {{-- Essa linha leva a origem para o modal, assim ele saberá como voltar --}}
-                                                    origem: '{{ request()->routeIs("veiculos.novos.*") ? 'novos' : 'usados' }}'
-                                                }
-                                            ">
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
+                                                    origem: 'novos' } ">
+                                        <td class=" p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
                                         <td class="p-1 px-1 py-1">{{ $veiculo->modelo_fab }}</td>
                                         <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
                                         <td class="p-1 px-1 py-1">{{ $veiculo->transmissao }}</td>

@@ -40,7 +40,7 @@ class VeiculoController extends Controller
             'descricao' => 'nullable|string|max:10000',
         ]);
 
-
+       
         $veiculo = Veiculo::findOrFail($id);
 
         // Corrige os valores monetários
@@ -85,7 +85,8 @@ class VeiculoController extends Controller
                         $proximaPosicao++;
                     }
 
-                    if ($proximaPosicao > 10) break; // Já atingiu o limite
+                    if ($proximaPosicao > 10)
+                        break; // Já atingiu o limite
 
                     $numero = str_pad($proximaPosicao, 2, '0', STR_PAD_LEFT);
                     $nomeArquivo = $chassiBase . '_' . $numero . '.jpg';
@@ -133,11 +134,28 @@ class VeiculoController extends Controller
         }
 
 
+        //Botao Salvar Alterações de Alterar informações do Veículo
+        //Aqui salva  e fica na mesma tela
+        // return redirect()
+        //     ->route('veiculos.edit', ['id' => $veiculo->id, 'from' => $request->input('from')])
+        //     ->with('success', 'Veículo atualizado com sucesso!');
 
-        // return com o item from para nao se perder entre as views
-        return redirect()
-            ->route('veiculos.edit', ['id' => $veiculo->id, 'from' => $request->input('from')])
-            ->with('success', 'Veículo atualizado com sucesso!');
+        //Aqui salva e volta para tela de novos ou usados
+        if ($request->from === 'novos') {
+            return redirect()
+                ->route('veiculos.novos.index', [
+                    'openModal' => 1,
+                    'veiculo_id' => $veiculo->id
+                ])
+                ->with('success', 'Veículo atualizado com sucesso!');
+        } else {
+            return redirect()
+                ->route('veiculos.usados.index', [
+                    'openModal' => 1,
+                    'veiculo_id' => $veiculo->id
+                ])
+                ->with('success', 'Veículo atualizado com sucesso!');
+        }
     }
 
 

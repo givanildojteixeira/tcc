@@ -180,7 +180,12 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
-                        <div x-data="{ open: false, veiculo: {} }"> <!-- Alpine no escopo global -->
+                        <div x-data="{open: false, veiculo: {}}"
+                         x-init=" 
+                            @if(request('openModal') && request('veiculo_id'))
+                                $nextTick(() => {
+                                document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); });
+                            @endif">
                             <table class="table-auto w-full ml-2 mr-2">
                                 <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                     <tr>
@@ -225,7 +230,7 @@
                                     \App\Models\Opcionais::where('chassi', $veiculo->chassi)
                                     ->value('descricao') ?? 'Nenhum opcional cadastrado.';
                                     @endphp
-                                    <tr class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
+                                   <tr id="veiculo-{{ $veiculo->id }}" class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
                                         {{-- evento de clicar Veículo Usado --}}
                                         @click="
                                             open = true;
@@ -248,9 +253,7 @@
                                                 vlr_nota: '{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}',
                                                 faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}',
                                                 {{-- Essa linha leva a origem para o modal, assim ele saberá como voltar --}}
-                                                origem: '{{ request()->routeIs("veiculos.novos.*") ? 'novos' : 'usados' }}'
-                                            }
-                                        ">
+                                                origem: 'usados' } ">
                                         {{-- evento de clicar --}}
                                         <td class="p-1 px-1 py-1">{{ $veiculo->marca }}</td>
                                         <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
