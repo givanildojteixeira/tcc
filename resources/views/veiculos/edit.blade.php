@@ -170,7 +170,7 @@
                         <x-input-moeda name="vlr_bonus" label="Valor Bônus" :value="$veiculo->vlr_bonus" />
                         <x-input-moeda name="vlr_tabela" label="Valor Tabela" :value="$veiculo->vlr_tabela" />
                         <div class="mb-4">
-                            <label for="local" class="block text-sm font-medium text-gray-700">Local</label>
+                            <label for="local" class="block text-gray-700 font-medium mb-1">Local</label>
                             <select name="local" id="local" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
                                 <option value="{{ old('local', $veiculo->local) }}"></option>
 
@@ -363,9 +363,10 @@
                 <ul class="list-disc list-inside text-sm text-gray-800 space-y-2">
                     <li><strong>Família:</strong> Caso nao encontre a familia correta, pode cadastrar atraves do botao
                         Cadastro de Familia</li>
-                    <li><strong>Opcional:Novos</strong>É um codigo que será combinado com o Cod de Fabricao para ligar
-                        um opcional da familia ao veiculo</li>
-                    <li><strong>Opcional:Usados</strong>Será descritivo e vinculado ao chassis do veiculo</li>
+                    <li><strong>Aba:Imagens do Veículo:</strong> É possivel inserir ate 10 imagens no formato jpeg que ficarao visiveis 
+                    na tela de Detalhes do Veículo</li>
+                    <li><strong>Aba: Opcionais do Veiculo:</strong> Insira os opcionais do veiculo, separando por quebra de linha para facilitar 
+                    a visibilidade na tela de Detalhes do Veículo</li>
 
                 </ul>
 
