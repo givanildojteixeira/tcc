@@ -246,7 +246,6 @@
                                                 chassi: '{{ $veiculo->chassi }}',
                                                 cor: '{{ $veiculo->cor }}',
                                                 portas: '{{ $veiculo->portas }}',
-
                                                 cod_opcional: '{{ $veiculo->cod_opcional }}',
                                                 vlr_tabela: '{{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}',
                                                 vlr_bonus: '{{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}',

@@ -106,9 +106,8 @@
                             class="min-w-[100px] flex items-center gap-2 px-6 py-2 rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md">
                             <i class="fas fa-hands-helping"></i>Apoio
                         </a>
-                        <x-bt-padrao x-show="!veiculo.site" disabled color="gray" icon="hands-helping" label="Apoio"
-                            title="Site de apoio nao cadastrado!" />
-
+                        <x-bt-padrao x-show="!veiculo.site" disabled color="gray" icon="hands-helping" label="Apoio" title="Site de apoio não cadastrado!" />
+                        
                         <a
                             :href="`/mev/${veiculo.familia}.pdf`"
                             target="_blank"

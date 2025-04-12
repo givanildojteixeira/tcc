@@ -55,16 +55,20 @@
                     <!-- Campo de Pesquisa Chassi com Botão -->
                     <div class="flex items-center gap-2 w-full">
                         <span class="text-xs font-semibold text-gray-600 whitespace-nowrap">Chassi:</span>
+                        
                         <input type="text" id="chassiPesquisa"
-                            class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            placeholder="Digite parte do chassi" value="{{ session('chassi_selecionado', '') }}">
+                        class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                        placeholder="Digite parte do chassi"
+                        value="{{ session('chassi_selecionado', '') }}"
+                        onkeydown="if(event.key === 'Enter'){ atualizarFiltro('chassi', this.value); }">
+                    
                         <button onclick="atualizarFiltro('chassi', document.getElementById('chassiPesquisa').value)"
                             class="w-8 h-8 flex items-center justify-center bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-200"
                             title="Buscar Chassi">
                             <i class="fas fa-search text-sm"></i>
                         </button>
-
                     </div>
+                    
                 </div>
             </div>
 
@@ -171,8 +175,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
-                        <div x-data="{open: false, veiculo: {}}"
-                         x-init=" 
+                        <div x-data="{open: false, veiculo: {}}" x-init=" 
                             @if(request('openModal') && request('veiculo_id'))
                                 $nextTick(() => {
                                 document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); });

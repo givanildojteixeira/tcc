@@ -37,12 +37,20 @@ Neutral	    bg-neutral-500	    hover:bg-neutral-600	    Neutro para tudo
     'icon' => null,
     'label' => 'Botão',
     'title' => null,
-    'target' => null, // <- incluído para links com target="_blank"
+    'target' => null, // Para links com target="_blank"
+    'disableOpacity' => true, // Para permitir desativar opacidade
 ])
 
 @php
-    $classes = "min-w-[100px] relative flex items-center gap-2 px-6 py-2 rounded-md shadow-md transition font-medium text-white bg-{$color}-500 hover:bg-{$color}-600";
+    $disabled = $attributes->has('disabled');
+
+    if ($disabled) {
+        $classes = "min-w-[100px] relative flex items-center gap-2 px-6 py-2 rounded-md shadow-md transition font-medium bg-gray-200 text-gray-400 cursor-not-allowed";
+    } else {
+        $classes = "min-w-[100px] relative flex items-center gap-2 px-6 py-2 rounded-md shadow-md transition font-medium text-white bg-{$color}-500 hover:bg-{$color}-600";
+    }
 @endphp
+
 
 <div x-data="{ showTooltip: false }" class="relative inline-block group">
     @if ($href)
@@ -55,7 +63,9 @@ Neutral	    bg-neutral-500	    hover:bg-neutral-600	    Neutro para tudo
             {{ $label }}
         </a>
     @else
-        <button type="{{ $type }}" @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
+        <button type="{{ $type }}" 
+            @mouseenter="if (!{{ $disabled ? 'true' : 'false' }}) showTooltip = true" 
+            @mouseleave="showTooltip = false"
             {{ $attributes->merge(['class' => $classes]) }}>
             @if ($icon)
                 <i class="fas fa-{{ $icon }}"></i>
@@ -65,18 +75,14 @@ Neutral	    bg-neutral-500	    hover:bg-neutral-600	    Neutro para tudo
     @endif
 
     @if ($title)
-    <div x-show="showTooltip"
-         x-transition.opacity.scale.duration.200ms
-         x-cloak
-         class="absolute -top-12 left-1/2 transform -translate-x-1/2 z-50">
-        <!-- Balão do tooltip -->
-        <div class="relative bg-gray-800 text-white text-xs rounded px-3 py-1 shadow-md whitespace-nowrap">
-            {{ $title }}
-            <!-- Seta -->
-            <div class="absolute bottom-[-5px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-800 rotate-45 z-[-1]"></div>
+        <div x-show="showTooltip"
+             x-transition.opacity.scale.duration.200ms
+             x-cloak
+             class="absolute -top-12 left-1/2 transform -translate-x-1/2 z-50">
+            <div class="relative bg-gray-800 text-white text-xs rounded px-3 py-1 shadow-md whitespace-nowrap">
+                {{ $title }}
+                <div class="absolute bottom-[-5px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-800 rotate-45 z-[-1]"></div>
+            </div>
         </div>
-    </div>
-@endif
-
-
+    @endif
 </div>
