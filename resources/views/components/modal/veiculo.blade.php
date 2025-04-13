@@ -27,7 +27,10 @@
                         </button>
 
                         <!-- Imagem Dinâmica -->
-                        <img :src="imagemAtual()" alt="Imagem veículo" class="w-full h-full object-cover rounded-md">
+                        <div class="flex items-center justify-center">
+                            {{-- Deixa a figura centraliza e com tamanhos fixos --}}
+                            <img :src="imagemAtual()" alt="Imagem veículo" class="w-[400px] h-[255px] object-cover rounded-md">
+                        </div>
 
 
                         <!-- Seta Direita -->
@@ -99,7 +102,7 @@
                     @click=" window.location.href = `/veiculos/${veiculo.id}/edit?from=${veiculo.origem}`" />
 
                 <template x-if="veiculo.origem === 'novos'">
-                    <div class="flex flex-wrap gap-2">
+                    <div class="flex flex-wrap gap-1">
                         <a x-show="veiculo.site"
                             :href="veiculo.site.startsWith('http') ? veiculo.site : 'https://' + veiculo.site"
                             target="_blank" title="Site de Apoio."
@@ -107,7 +110,7 @@
                             <i class="fas fa-hands-helping"></i>Apoio
                         </a>
                         <x-bt-padrao x-show="!veiculo.site" disabled color="gray" icon="hands-helping" label="Apoio" title="Site de apoio não cadastrado!" />
-                        
+
                         <a
                             :href="`/mev/${veiculo.familia}.pdf`"
                             target="_blank"
