@@ -29,7 +29,6 @@ Sky	        bg-sky-500	        hover:bg-sky-600	        Ações leves
 Neutral	    bg-neutral-500	    hover:bg-neutral-600	    Neutro para tudo
 
 --}}
-
 @props([
     'href' => null,
     'type' => 'button',
@@ -37,36 +36,45 @@ Neutral	    bg-neutral-500	    hover:bg-neutral-600	    Neutro para tudo
     'icon' => null,
     'label' => 'Botão',
     'title' => null,
-    'target' => null, // Para links com target="_blank"
-    'disableOpacity' => true, // Para permitir desativar opacidade
+    'target' => null,
+    'disableOpacity' => true,
 ])
 
 @php
     $disabled = $attributes->has('disabled');
 
-    if ($disabled) {
-        $classes = "min-w-[100px] relative flex items-center gap-2 px-6 py-2 rounded-md shadow-md transition font-medium bg-gray-200 text-gray-400 cursor-not-allowed";
-    } else {
-        $classes = "min-w-[100px] relative flex items-center gap-2 px-6 py-2 rounded-md shadow-md transition font-medium text-white bg-{$color}-500 hover:bg-{$color}-600";
-    }
-@endphp
+    $baseClasses = "min-w-[100px] relative flex items-center gap-2 px-6 py-2 rounded-md shadow-md transition font-medium";
 
+    if ($disabled) {
+        $colorClasses = "bg-gray-200 text-gray-400 cursor-not-allowed";
+    } else {
+        $colorClasses = "text-white bg-{$color}-500 hover:bg-{$color}-600";
+    }
+
+    $finalClasses = "{$baseClasses} {$colorClasses}";
+@endphp
 
 <div x-data="{ showTooltip: false }" class="relative inline-block group">
     @if ($href)
-        <a href="{{ $href }}" @if ($target) target="{{ $target }}" @endif
-            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
-            {{ $attributes->merge(['class' => $classes]) }}>
+        <a 
+            href="{{ $href }}" 
+            @if ($target) target="{{ $target }}" @endif
+            @mouseenter="showTooltip = true" 
+            @mouseleave="showTooltip = false"
+            {{ $attributes->merge(['class' => $finalClasses]) }}>
+            
             @if ($icon)
                 <i class="fas fa-{{ $icon }}"></i>
             @endif
             {{ $label }}
         </a>
     @else
-        <button type="{{ $type }}" 
+        <button 
+            type="{{ $type }}"
             @mouseenter="if (!{{ $disabled ? 'true' : 'false' }}) showTooltip = true" 
             @mouseleave="showTooltip = false"
-            {{ $attributes->merge(['class' => $classes]) }}>
+            {{ $attributes->merge(['class' => $finalClasses]) }}>
+            
             @if ($icon)
                 <i class="fas fa-{{ $icon }}"></i>
             @endif

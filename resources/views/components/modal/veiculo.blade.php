@@ -120,7 +120,6 @@
                             <i class="fas fa-book-open"></i> M.E.V.
                         </a>
 
-
                         <x-bt-padrao
                             href="/mev/precos.pdf"
                             target="_blank"

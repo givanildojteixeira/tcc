@@ -6,6 +6,12 @@
                     {{-- {{ __("You're logged in!") }} --}}
                     <p class="mb-4 text-center">Lista de Propostas</strong></p>
                 </div>
+                <li class="nav-icon-btn nav-icon-btn-success">
+                    <a href="/canal-comunicacao" class="btn btn-primary wiggle">
+                            <span class="badge badge-danger" style="color: black;">1</span>
+<i class="nav-icon fa fa-envelope"></i> MENSAGENS
+</a>
+</li>
             </div>
         </div>
     </div>
