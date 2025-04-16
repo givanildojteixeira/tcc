@@ -34,12 +34,12 @@
                 </button>
 
                 <!-- Botão Limpar -->
-                @if(request('busca'))
-                <a href="{{ route('opcionais.index') }}"
-                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-1">
-                    <i class="fas fa-broom"></i>
-                    Limpar
-                </a>
+                @if (request('busca'))
+                    <a href="{{ route('opcionais.index') }}"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-1">
+                        <i class="fas fa-broom"></i>
+                        Limpar
+                    </a>
                 @endif
             </form>
 
@@ -69,52 +69,77 @@
                             </thead>
                             <tbody class="text-sm">
                                 @foreach ($opcionais as $opcional)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 text-sm text-gray-800 border-x border-gray-600 ">{{
-                                        $opcional->modelo_fab }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-800">{{ $opcional->cod_opcional }}</td>
-                                    <td class="px-4 py-4 text-sm text-gray-800 max-w-[300px]">
-                                        <div class="flex items-center justify-between gap-2">
-                                            <div class="truncate max-w-[200px]">
-                                                {{ Str::limit($opcional->descricao, 120, '...') }}
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 text-sm text-gray-800 border-x border-gray-600 ">
+                                            {{ $opcional->modelo_fab }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-800">{{ $opcional->cod_opcional }}</td>
+                                        <td class="px-4 py-4 text-sm text-gray-800 max-w-[300px]">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <div class="truncate max-w-[200px]">
+                                                    {{ Str::limit($opcional->descricao, 120, '...') }}
+                                                </div>
+                                                <button @click="openDescricaoId = {{ $opcional->id }}"
+                                                    class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline text-sm transition whitespace-nowrap">
+                                                    <i class="fa-solid fa-eye"></i> Ver mais
+                                                </button>
                                             </div>
-                                            <button @click="openDescricaoId = {{ $opcional->id }}"
-                                                class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline text-sm transition whitespace-nowrap">
-                                                <i class="fa-solid fa-eye"></i> Ver mais
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-800">
-                                        <div class="flex gap-2">
-                                            <button @click="editModal = true; editData = {
+                                            <!-- Modal de Descrição -->
+                                            <div x-show="openDescricaoId === {{ $opcional->id }}"
+                                                class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+                                                style="display: none;">
+                                                <div @click.away="openDescricaoId = null"
+                                                    class="bg-white p-6 rounded-lg max-w-xl w-full shadow-lg">
+                                                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Descrição
+                                                        Completa =>  Modelo :  {{ $opcional->modelo_fab }}  Codigo: {{ $opcional->cod_opcional }}</h3>
+                                                    <ul
+                                                        class="text-gray-700 list-disc pl-5 space-y-1 max-h-64 overflow-y-auto pr-2">
+                                                        @foreach (explode('/', $opcional->descricao) as $item)
+                                                            <li>{{ trim($item) }}</li>
+                                                        @endforeach
+                                                    </ul>
+
+                                                    <div class="mt-6 text-right">
+                                                        <button @click="openDescricaoId = null"
+                                                            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                                            Fechar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-800">
+                                            <div class="flex gap-2">
+                                                <button
+                                                    @click="editModal = true; editData = {
                                                 id: {{ $opcional->id }},
                                                 modelo_fab: '{{ addslashes($opcional->modelo_fab) }}',
                                                 cod_opcional: '{{ addslashes($opcional->cod_opcional) }}',
                                                 descricao: `{{ addslashes($opcional->descricao) }}`
                                             }"
-                                                class="px-3 py-1 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 transition text-sm">
-                                                Editar
-                                            </button>
-
-                                            <form action="{{ route('opcionais.destroy', $opcional->id) }}" method="POST"
-                                                onsubmit="return confirm('Deseja realmente excluir esse opcional?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition text-sm">
-                                                    Excluir
+                                                    class="px-3 py-1 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 transition text-sm">
+                                                    Editar
                                                 </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
+
+                                                <form action="{{ route('opcionais.destroy', $opcional->id) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Deseja realmente excluir esse opcional?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition text-sm">
+                                                        Excluir
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforeach
 
                                 @if ($opcionais->isEmpty())
-                                <tr>
-                                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">Nenhum opcional
-                                        encontrado.</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Nenhum opcional
+                                            encontrado.</td>
+                                    </tr>
                                 @endif
                             </tbody>
                         </table>
