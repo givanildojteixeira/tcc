@@ -52,7 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/users-index', [UserController::class, 'index'])->name('user.index');
     Route::get('/user-edit/{id}', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('user.update');
-
+    Route::patch('/user-ativo/{id}/{ativo}', [UserController::class, 'ativo'])->name('user.ativo');
+    Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    
     //Clientes
     Route::resources([
         'cliente' => ClienteController::class

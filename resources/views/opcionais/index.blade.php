@@ -13,51 +13,49 @@
     }" class="flex flex-col h-screen">
 
         <!-- 🔝 Header -->
-        {{-- <div class="container mx-auto px-4 h-screen py-4 pb-4"> --}}
-            <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 px-4 h-screen py-4 pb-4">
- <!-- 🟩 Título -->
- <h2 class="text-2xl font-semibold text-green-700">
-    Gerenciar Opcionais dos Modelos
-</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 px-4 h-screen py-4 pb-4">
+            <!-- 🟩 Título -->
+            <h2 class="text-2xl font-semibold text-green-700">
+                Gerenciar Opcionais dos Modelos
+            </h2>
 
-<!-- 🔍 Filtro com botão buscar e limpar -->
-<form method="GET" action="{{ route('opcionais.index') }}" class="flex gap-2 w-full">
-    <!-- Campo de texto -->
-    <input type="text" name="busca" value="{{ request('busca') }}"
-        placeholder="Buscar por modelo ou código..."
-        class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <!-- 🔍 Filtro com botão buscar e limpar -->
+            <form method="GET" action="{{ route('opcionais.index') }}" class="flex gap-2 w-full">
+                <!-- Campo de texto -->
+                <input type="text" name="busca" value="{{ request('busca') }}"
+                    placeholder="Buscar por modelo ou código..."
+                    class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
 
-    <!-- Botão Buscar (verde) -->
-    <button type="submit"
-        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition flex items-center gap-1">
-        <i class="fas fa-search"></i>
-        Buscar
-    </button>
+                <!-- Botão Buscar (verde) -->
+                <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition flex items-center gap-1">
+                    <i class="fas fa-search"></i>
+                    Buscar
+                </button>
 
-    <!-- Botão Limpar -->
-    @if(request('busca'))
-        <a href="{{ route('opcionais.index') }}"
-            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-1">
-            <i class="fas fa-broom"></i>
-            Limpar
-        </a>
-    @endif
-</form>
+                <!-- Botão Limpar -->
+                @if(request('busca'))
+                <a href="{{ route('opcionais.index') }}"
+                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-1">
+                    <i class="fas fa-broom"></i>
+                    Limpar
+                </a>
+                @endif
+            </form>
 
-<!-- ➕ Botão novo -->
-<div class="text-right">
-    <button @click="showModal = true"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
-        + Novo Opcional
-    </button>
-</div>
+            <!-- ➕ Botão novo -->
+            <div class="text-right">
+                <button @click="showModal = true"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
+                    + Novo Opcional
+                </button>
+            </div>
 
-</div>
-                    <!-- 🧾 Conteúdo com scroll interno -->
+        </div>
 
+        <!-- 🧾 Conteúdo com scroll interno -->
         <div class="w-full max-w-full px-4 md:px-6">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg relative">
-
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
                         <table class="w-full table-fixed">
@@ -72,7 +70,8 @@
                             <tbody class="text-sm">
                                 @foreach ($opcionais as $opcional)
                                 <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 text-sm text-gray-800 border-x border-gray-600 ">{{ $opcional->modelo_fab }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-800 border-x border-gray-600 ">{{
+                                        $opcional->modelo_fab }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-800">{{ $opcional->cod_opcional }}</td>
                                     <td class="px-4 py-4 text-sm text-gray-800 max-w-[300px]">
                                         <div class="flex items-center justify-between gap-2">

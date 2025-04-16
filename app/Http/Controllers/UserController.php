@@ -14,12 +14,23 @@ class UserController extends Controller
         $this->middleware('can:level')->only('edit');  // oque nao pode acesar
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return view('users.index',[
-            'users' => DB::table('users')->orderBy('name')->paginate('20')
-        ]);
+        $query = DB::table('users')->orderBy('name');
+    
+        if ($request->filled('busca')) {
+            $busca = $request->input('busca');
+            $query->where(function ($q) use ($busca) {
+                $q->where('name', 'like', "%{$busca}%")
+                  ->orWhere('email', 'like', "%{$busca}%");
+            });
+        }
+    
+        $users = $query->paginate(15)->appends($request->only('busca'));
+    
+        return view('users.index', compact('users'));
     }
+    
 
     public function edit($id)
     {
@@ -33,5 +44,23 @@ class UserController extends Controller
         User::findOrfail($id->id)->update($id->all());
         return redirect()->route('user.index');
     }
+
+    public function ativo($id, $ativo)
+    {
+        $user = User::findOrFail($id);
+        $user->active = filter_var($ativo, FILTER_VALIDATE_BOOLEAN);
+        $user->save();
+    
+        return redirect()->route('user.index')->with('success', 'Status do usuário atualizado com sucesso!');
+    }
+    
+public function destroy($id)
+{
+    $user = User::findOrFail($id);
+    $user->delete();
+
+    return redirect()->route('user.index')->with('success', 'Usuário removido com sucesso.');
+}
+
 
 }
