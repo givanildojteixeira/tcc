@@ -40,7 +40,7 @@ class VeiculoController extends Controller
             'descricao' => 'nullable|string|max:10000',
         ]);
 
-       
+
         $veiculo = Veiculo::findOrFail($id);
 
         // Corrige os valores monetários
@@ -106,9 +106,7 @@ class VeiculoController extends Controller
             $descricao = 'Opcional não cadastrado';
         }
 
-
-
-        if ($veiculo->novo_usado === 'novo') {
+        if ($veiculo->novo_usado === 'Novo') {
             // Atualiza ou cria para veículos novos
             Opcionais::updateOrCreate(
                 [
@@ -269,6 +267,19 @@ class VeiculoController extends Controller
      */
     public function destroy(Veiculo $veiculo)
     {
-        //
+        // Excluir imagens do veículo, se necessário
+        $chassiBase = str_replace(' ', '_', $veiculo->chassi);
+        for ($i = 1; $i <= 10; $i++) {
+            $arquivo = public_path("images/cars/{$chassiBase}_" . str_pad($i, 2, '0', STR_PAD_LEFT) . '.jpg');
+            if (file_exists($arquivo)) {
+                unlink($arquivo);
+            }
+        }
+
+        $veiculo->delete();
+
+        return redirect()->route(
+            request('from') === 'usados' ? 'veiculos.usados.index' : 'veiculos.novos.index'
+        )->with('success', 'Veículo excluído com sucesso!');
     }
 }

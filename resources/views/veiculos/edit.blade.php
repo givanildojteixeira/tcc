@@ -7,29 +7,32 @@
         </div>
         {{-- Oculto para quando salvar recuperar a url --}}
         @if (request('from'))
-        <input type="hidden" name="from" value="{{ request('from') }}">
+            <input type="hidden" name="from" value="{{ request('from') }}">
         @endif
         <!-- Abas -->
         <div class="flex bg-gray-100 rounded-md overflow-hidden shadow-sm mb-6 font-bold">
             <button @click="tabAtiva = 'info'"
                 :class="tabAtiva === 'info'
-            ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-            : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
+                    ?
+                    'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
+                    'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 text-sm transition-all duration-200"><i class="fas fa-car"></i>
                 Informações do Veículo
             </button>
             <button @click="tabAtiva = 'fotos'"
                 :class="tabAtiva === 'fotos'
-            ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-            : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
+                    ?
+                    'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
+                    'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 text-sm transition-all duration-200"><i class="fas fa-image"></i>
                 Imagens do Veículo
             </button>
-            
+
             <button @click="tabAtiva = 'opcionais'"
                 :class="tabAtiva === 'opcionais'
-            ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-            : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
+                    ?
+                    'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
+                    'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 text-sm transition-all duration-200"><i class="fas fa-cogs"></i>
                 Opcionais do Veículo
             </button>
@@ -41,8 +44,8 @@
             @csrf
             @method('PUT')
             <!-- Instrução para apos PUT, voltar para a origem correta (from) -->
-            @if(request('from'))
-            <input type="hidden" name="from" value="{{ request('from') }}">
+            @if (request('from'))
+                <input type="hidden" name="from" value="{{ request('from') }}">
             @endif
 
 
@@ -50,20 +53,20 @@
                 <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
                     <div class="flex flex-wrap gap-4 mb-4">
                         @if (request('from') === 'novos')
-                        <!-- Família -->
-                        <div class="basis-[20%] flex-grow min-w-[150px]">
-                            <label class="block text-gray-700 font-medium mb-1">Família</label>
-                            <select name="familia"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                                <option value="">Selecione uma família</option>
-                                @foreach ($familias as $familia)
-                                <option value="{{ $familia->descricao }}"
-                                    {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
-                                    {{ $familia->descricao }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
+                            <!-- Família -->
+                            <div class="basis-[20%] flex-grow min-w-[150px]">
+                                <label class="block text-gray-700 font-medium mb-1">Família</label>
+                                <select name="familia"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                    <option value="">Selecione uma família</option>
+                                    @foreach ($familias as $familia)
+                                        <option value="{{ $familia->descricao }}"
+                                            {{ old('familia', $veiculo->familia) == $familia->descricao ? 'selected' : '' }}>
+                                            {{ $familia->descricao }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         @endif
 
                         <!-- Descrição do Veículo (mais largo) -->
@@ -81,13 +84,13 @@
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
                         @if (request('from') === 'novos')
-                        <!-- Modelo de Fabricação -->
-                        <div class="basis-[10%] flex-grow min-w-[100px]">
-                            <label class="block text-gray-700 font-medium mb-1">Fabricação</label>
-                            <input type="text" name="modelo_fab"
-                                value="{{ old('modelo_fab', $veiculo->modelo_fab) }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                        </div>
+                            <!-- Modelo de Fabricação -->
+                            <div class="basis-[10%] flex-grow min-w-[100px]">
+                                <label class="block text-gray-700 font-medium mb-1">Fabricação</label>
+                                <input type="text" name="modelo_fab"
+                                    value="{{ old('modelo_fab', $veiculo->modelo_fab) }}"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                            </div>
                         @endif
                     </div>
 
@@ -154,13 +157,13 @@
                         </div>
 
                         @if (request('from') === 'novos')
-                        <!-- Opcionais -->
-                        <div class="basis-[10%] min-w-[80px]">
-                            <label class="block text-gray-700 font-medium mb-1">Opcional</label>
-                            <input type="text" name="cod_opcional"
-                                value="{{ old('cod_opcional', $veiculo->cod_opcional) }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                        </div>
+                            <!-- Opcionais -->
+                            <div class="basis-[10%] min-w-[80px]">
+                                <label class="block text-gray-700 font-medium mb-1">Opcional</label>
+                                <input type="text" name="cod_opcional"
+                                    value="{{ old('cod_opcional', $veiculo->cod_opcional) }}"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                            </div>
                         @endif
                     </div>
 
@@ -171,17 +174,30 @@
                         <x-input-moeda name="vlr_tabela" label="Valor Tabela" :value="$veiculo->vlr_tabela" />
                         <div class="mb-4">
                             <label for="local" class="block text-gray-700 font-medium mb-1">Local</label>
-                            <select name="local" id="local" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                            <select name="local" id="local" required
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
                                 <option value="{{ old('local', $veiculo->local) }}"></option>
 
                                 @if (request('from') === 'novos')
-                                <option value="Matriz" {{ old('local', $veiculo->local) == 'Matriz' ? 'selected' : '' }}>Matriz</option>
-                                <option value="Filial" {{ old('local', $veiculo->local) == 'Filial' ? 'selected' : '' }}>Filial</option>
-                                <option value="Transito" {{ old('local', $veiculo->local) == 'Transito' ? 'selected' : '' }}>Trânsito</option>
+                                    <option value="Matriz"
+                                        {{ old('local', $veiculo->local) == 'Matriz' ? 'selected' : '' }}>Matriz
+                                    </option>
+                                    <option value="Filial"
+                                        {{ old('local', $veiculo->local) == 'Filial' ? 'selected' : '' }}>Filial
+                                    </option>
+                                    <option value="Transito"
+                                        {{ old('local', $veiculo->local) == 'Transito' ? 'selected' : '' }}>Trânsito
+                                    </option>
                                 @else
-                                <option value="Matriz" {{ old('local', $veiculo->local) == 'Matriz' ? 'selected' : '' }}>Matriz</option>
-                                <option value="Filial" {{ old('local', $veiculo->local) == 'Filial' ? 'selected' : '' }}>Filial</option>
-                                <option value="Consignado" {{ old('local', $veiculo->local) == 'Consignado' ? 'selected' : '' }}>Consignado</option>
+                                    <option value="Matriz"
+                                        {{ old('local', $veiculo->local) == 'Matriz' ? 'selected' : '' }}>Matriz
+                                    </option>
+                                    <option value="Filial"
+                                        {{ old('local', $veiculo->local) == 'Filial' ? 'selected' : '' }}>Filial
+                                    </option>
+                                    <option value="Consignado"
+                                        {{ old('local', $veiculo->local) == 'Consignado' ? 'selected' : '' }}>
+                                        Consignado</option>
                                 @endif
                             </select>
                         </div>
@@ -205,134 +221,146 @@
 
                         <!-- Visualização -->
                         @php
-                        $imagens = [];
-                        $chassiBase = str_replace(' ', '_', $veiculo->chassi);
-                        for ($i = 1; $i <= 10; $i++) {
-                            $nome="{$chassiBase}_" . str_pad($i, 2, '0' , STR_PAD_LEFT) . '.jpg' ;
-                            if (file_exists(public_path("images/cars/$nome"))) {
-                            $imagens[]=asset("images/cars/$nome");
+                            $imagens = [];
+                            $chassiBase = str_replace(' ', '_', $veiculo->chassi);
+                            for ($i = 1; $i <= 10; $i++) {
+                                $nome = "{$chassiBase}_" . str_pad($i, 2, '0', STR_PAD_LEFT) . '.jpg';
+                                if (file_exists(public_path("images/cars/$nome"))) {
+                                    $imagens[] = asset("images/cars/$nome");
+                                }
                             }
-                            }
-                            @endphp
-                            @if (count($imagens))
+                        @endphp
+                        @if (count($imagens))
                             <div class="md:w-2/3 w-full">
-                            <label class="block text-gray-700 font-medium mb-1">Imagens Gravadas:</label>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach ($imagens as $img)
-                                @php
-                                $nomeArquivo = basename($img);
-                                @endphp
+                                <label class="block text-gray-700 font-medium mb-1">Imagens Gravadas:</label>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach ($imagens as $img)
+                                        @php
+                                            $nomeArquivo = basename($img);
+                                        @endphp
 
-                                <div class="flex flex-col items-center">
-                                    <img src="{{ $img }}" alt="Imagem do veículo"
-                                        class="w-16 h-16 object-cover rounded shadow border border-gray-300">
+                                        <div class="flex flex-col items-center">
+                                            <img src="{{ $img }}" alt="Imagem do veículo"
+                                                class="w-16 h-16 object-cover rounded shadow border border-gray-300">
 
-                                    <button type="button"
-                                        onclick="excluirImagem('{{ $nomeArquivo }}', this)"
-                                        class="text-red-600 hover:text-red-800 text-sm mt-1"
-                                        title="Excluir imagem">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+                                            <button type="button"
+                                                onclick="excluirImagem('{{ $nomeArquivo }}', this)"
+                                                class="text-red-600 hover:text-red-800 text-sm mt-1"
+                                                title="Excluir imagem">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                @endforeach
                             </div>
+                        @endif
                     </div>
-                    @endif
                 </div>
             </div>
-    </div>
-    <div x-show="tabAtiva === 'opcionais'">
-        <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
-            <div class="flex flex-wrap gap-4">
+            <div x-show="tabAtiva === 'opcionais'">
+                <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
+                    <div class="flex flex-wrap gap-4">
+                        @if (request('from') === 'novos')
+                            <div class="flex flex-col md:flex-row gap-6 w-full">
+                                <!-- Coluna esquerda com os campos empilhados -->
+                                <div class="flex flex-col gap-4 w-full md:w-[280px]">
+                                    <!-- Modelo/Fab -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Modelo/Fab</label>
+                                        <input disabled type="text" name="modelo_fab"
+                                            value="{{ old('modelo_fab', $veiculo->modelo_fab) }}"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                            required>
+                                    </div>
+
+                                    <!-- Código do Opcional -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Código do
+                                            Opcional</label>
+                                        <input disabled type="text" name="cod_opcional"
+                                            value="{{ old('cod_opcional', $veiculo->cod_opcional) }}"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                            required>
+                                    </div>
+                                </div>
+
+                                <!-- Coluna direita com textarea -->
+                                <div class="w-full md:flex-1 mb-4">
+                                    <label for="descricao"
+                                        class="block text-sm font-medium text-gray-700">Descrição</label>
+
+                                    <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
+                                        class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
+                                </div>
+                            </div>
+                        @elseif(request('from') === 'usados')
+                            <div class="flex-1 basis-[30%] min-w-[120px]">
+                                <label class="block text-gray-700 font-medium mb-1">Chassi</label>
+                                <input disabled type="text" name="chassi"
+                                    value="{{ old('chassi', $veiculo->chassi) }}"
+                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                            </div>
+                            <!-- Coluna direita com textarea -->
+                            <div class="flex-1 basis-[65%] min-w-[200px] mb-6">
+                                <label for="descricao"
+                                    class="block text-sm font-medium text-gray-700">Descrição</label>
+                                <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
+                                    class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
+                            </div>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+            <!--Botões -->
+
+            <div class="flex flex-wrap gap-4 justify-between mt-8">
+
+                <!-- Voltar -->
                 @if (request('from') === 'novos')
-                <div class="flex flex-col md:flex-row gap-6 w-full">
-                    <!-- Coluna esquerda com os campos empilhados -->
-                    <div class="flex flex-col gap-4 w-full md:w-[280px]">
-                        <!-- Modelo/Fab -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Modelo/Fab</label>
-                            <input disabled type="text" name="modelo_fab"
-                                value="{{ old('modelo_fab', $veiculo->modelo_fab) }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                required>
-                        </div>
-
-                        <!-- Código do Opcional -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Código do Opcional</label>
-                            <input disabled type="text" name="cod_opcional"
-                                value="{{ old('cod_opcional', $veiculo->cod_opcional) }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                required>
-                        </div>
-                    </div>
-
-                    <!-- Coluna direita com textarea -->
-                    <div class="w-full md:flex-1 mb-4">
-                        <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
-
-                        <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
-                            class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            >{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
-                    </div>
-                </div>
-
+                    <a href="{{ route('veiculos.novos.index') }}"
+                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition"
+                        data-atalho="voltar">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
                 @elseif(request('from') === 'usados')
-                <div class="flex-1 basis-[30%] min-w-[120px]">
-                    <label class="block text-gray-700 font-medium mb-1">Chassi</label>
-                    <input disabled type="text" name="chassi"
-                        value="{{ old('chassi', $veiculo->chassi) }}"
-                        class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                </div>
-                <!-- Coluna direita com textarea -->
-                <div class="flex-1 basis-[65%] min-w-[200px] mb-6">
-                    <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
-                    <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
-                        class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        >{{ implode("\n", array_map('trim', explode('/', $opcionalDescricao))) }}</textarea>
-                </div>
+                    <a href="{{ route('veiculos.usados.index') }}"
+                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition"
+                        data-atalho="voltar">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
                 @endif
+
+
+                <!-- Cadastro Famílias -->
+                <a href="{{ route('familia.index', ['from' => $veiculo->id, 'origem' => request('from')]) }}"
+                    class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
+                    <i class="fas fa-users"></i>
+                    Cadastro Famílias
+                </a>
+
+                <!-- Excluir Veículo -->
+                <form method="POST" action="{{ route('veiculos.destroy', $veiculo->id) }}"
+                    onsubmit="return confirm('Tem certeza que deseja excluir este veículo? Esta ação não pode ser desfeita!')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
+                        <i class="fas fa-trash-alt"></i>
+                        Excluir Veículo
+                    </button>
+                </form>
+
+                <!-- Salvar Alterações -->
+                <button type="submit"
+                    class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition"
+                    data-atalho="salvar">
+                    <i class="fas fa-save"></i>
+                    Salvar Alterações
+                </button>
             </div>
 
-        </div>
-    </div>
-    <!--Botões -->
-
-    <div class="flex flex-wrap gap-4 justify-between mt-8">
-
-        <!-- Voltar -->
-        @if (request('from') === 'novos')
-        <a href="{{ route('veiculos.novos.index') }}"
-            class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition"
-            data-atalho="voltar">
-            <i class="fas fa-arrow-left"></i> Voltar
-        </a>
-        @elseif(request('from') === 'usados')
-        <a href="{{ route('veiculos.usados.index') }}"
-            class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition"
-            data-atalho="voltar">
-            <i class="fas fa-arrow-left"></i> Voltar
-        </a>
-        @endif
-
-
-        <!-- Cadastro Famílias -->
-        <a href="{{ route('familia.index', ['from' => $veiculo->id, 'origem' => request('from')]) }}"
-            class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
-            <i class="fas fa-users"></i>
-            Cadastro Famílias
-        </a>
-
-        <!-- Salvar Alterações -->
-        <button type="submit"
-            class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition"
-            data-atalho="salvar">
-            <i class="fas fa-save"></i>
-            Salvar Alterações
-        </button>
-    </div>
-
-    </form>
+        </form>
     </div>
 
 
@@ -363,10 +391,12 @@
                 <ul class="list-disc list-inside text-sm text-gray-800 space-y-2">
                     <li><strong>Família:</strong> Caso nao encontre a familia correta, pode cadastrar atraves do botao
                         Cadastro de Familia</li>
-                    <li><strong>Aba:Imagens do Veículo:</strong> É possivel inserir ate 10 imagens no formato jpeg que ficarao visiveis 
-                    na tela de Detalhes do Veículo</li>
-                    <li><strong>Aba: Opcionais do Veiculo:</strong> Insira os opcionais do veiculo, separando por quebra de linha para facilitar 
-                    a visibilidade na tela de Detalhes do Veículo</li>
+                    <li><strong>Aba:Imagens do Veículo:</strong> É possivel inserir ate 10 imagens no formato jpeg que
+                        ficarao visiveis
+                        na tela de Detalhes do Veículo</li>
+                    <li><strong>Aba: Opcionais do Veiculo:</strong> Insira os opcionais do veiculo, separando por quebra
+                        de linha para facilitar
+                        a visibilidade na tela de Detalhes do Veículo</li>
 
                 </ul>
 

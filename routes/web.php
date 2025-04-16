@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/veiculos/imagem/excluir', [VeiculoController::class, 'excluirImagem'])->name('veiculos.imagem.excluir');
     Route::get('/veiculos/create', [VeiculoController::class, 'create'])->name('veiculos.create');
     Route::post('/veiculos', [VeiculoController::class, 'store'])->name('veiculos.store');
+    Route::delete('/veiculos/{veiculo}', [VeiculoController::class, 'destroy'])->name('veiculos.destroy');
+
 
 
     //Veiculos novos
