@@ -14,10 +14,10 @@
                             <option value="" {{ empty(session('marca_selecionado')) ? 'selected' : '' }}>Todos
                             </option>
                             @foreach ($marcas as $marca)
-                            <option value="{{ $marca->marca }}"
-                                {{ session('marca_selecionado') == $marca->marca ? 'selected' : '' }}>
-                                {{ $marca->marca }}
-                            </option>
+                                <option value="{{ $marca->marca }}"
+                                    {{ session('marca_selecionado') == $marca->marca ? 'selected' : '' }}>
+                                    {{ $marca->marca }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -31,10 +31,10 @@
                             <option value="" {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                            <option value="{{ $veiculo->desc_veiculo }}"
-                                {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
-                                {{ $veiculo->desc_veiculo }}
-                            </option>
+                                <option value="{{ $veiculo->desc_veiculo }}"
+                                    {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
+                                    {{ $veiculo->desc_veiculo }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -71,10 +71,10 @@
                             <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($cores as $cor)
-                            <option value="{{ $cor->cor }}"
-                                {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
-                                {{ $cor->cor }}
-                            </option>
+                                <option value="{{ $cor->cor }}"
+                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
+                                    {{ $cor->cor }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -89,10 +89,10 @@
                             <option value="" {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($anos as $ano)
-                            <option value="{{ $ano['Ano_Mod'] }}"
-                                {{ session('ano_selecionado') == $ano['Ano_Mod'] ? 'selected' : '' }}>
-                                {{ $ano['Ano_Mod'] }}
-                            </option>
+                                <option value="{{ $ano['Ano_Mod'] }}"
+                                    {{ session('ano_selecionado') == $ano['Ano_Mod'] ? 'selected' : '' }}>
+                                    {{ $ano['Ano_Mod'] }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -180,12 +180,8 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
-                        <div x-data="{open: false, veiculo: {}}"
-                         x-init=" 
-                            @if(request('openModal') && request('veiculo_id'))
-                                $nextTick(() => {
-                                document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); });
-                            @endif">
+                        <div x-data="{ open: false, veiculo: {} }" x-init=" @if (request('openModal') && request('veiculo_id')) $nextTick(() => {
+                                document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); }); @endif">
                             <table class="w-full table-fixed">
                                 <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                     <tr>
@@ -217,22 +213,31 @@
                                 </thead>
                                 <tbody class="text-sm">
                                     @foreach ($veiculos as $veiculo)
-                                    @php
-                                    $rowColor = '';
-                                    if ($veiculo->local == 'Matriz') {
-                                    $rowColor = 'text-black';
-                                    } elseif ($veiculo->local == 'Filial') {
-                                    $rowColor = 'text-yellow-500';
-                                    } elseif ($veiculo->local == 'Consignado') {
-                                    $rowColor = 'text-green-500';
-                                    }
-                                    $descricaoOpcional =
-                                    \App\Models\Opcionais::where('chassi', $veiculo->chassi)
-                                    ->value('descricao') ?? 'Nenhum opcional cadastrado.';
-                                    @endphp
-                                   <tr id="veiculo-{{ $veiculo->id }}" class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
-                                        {{-- evento de clicar Veículo Usado --}}
-                                        @click="
+                                        @php
+                                            if ($veiculo->promocao) {
+                                                $rowColor = 'text-blue-600 font-bold';
+                                            } elseif (!$veiculo->ativo) {
+                                                $rowColor = 'text-gray-400';
+                                            } else {
+                                                if ($veiculo->local == 'Matriz') {
+                                                    $rowColor = 'text-black';
+                                                } elseif ($veiculo->local == 'Filial') {
+                                                    $rowColor = 'text-yellow-500';
+                                                } elseif ($veiculo->local == 'Consignado') {
+                                                    $rowColor = 'text-green-500';
+                                                } else {
+                                                    $rowColor = '';
+                                                }
+                                            }
+                                            $descricaoOpcional =
+                                                \App\Models\Opcionais::where('chassi', $veiculo->chassi)->value(
+                                                    'descricao',
+                                                ) ?? 'Nenhum opcional cadastrado.';
+                                        @endphp
+                                        <tr id="veiculo-{{ $veiculo->id }}"
+                                            class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
+                                            {{-- evento de clicar Veículo Usado --}}
+                                            @click="
                                             open = true;
                                             veiculo = {
                                                 id: '{{ $veiculo->id }}',
@@ -253,26 +258,31 @@
                                                 faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}',
                                                 {{-- Essa linha leva a origem para o modal, assim ele saberá como voltar --}}
                                                 origem: 'usados' } ">
-                                        {{-- evento de clicar --}}
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->marca }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
-                                        <td class="p-1 px-1 py-1 text-center">{{ $veiculo->Ano_Mod }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
-                                        <td class="p-1 px-1 py-1  text-center">{{ $veiculo->portas }}</td>
-                                        <td class="p-1 px-1 py-1 text-right">
-                                            {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
-                                        </td>
-                                        <td class="p-1 px-1 py-1 text-right">
-                                            {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
-                                        </td>
-                                        <td class="p-1 px-1 py-1 text-center">
-                                            {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                            dias
-                                        </td>
-                                        <td class="hidden">{{ $veiculo->local }}</td>
-                                    </tr>
+                                            {{-- evento de clicar --}}
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->marca }}</td>
+                                            <td class="p-1 px-1 py-1">
+                                                @if ($veiculo->promocao)
+                                                    <span class="ml-1 text-blue-600 font-bold"
+                                                        title="Veículo em promoção">🔥</span>
+                                                @endif{{ $veiculo->desc_veiculo }}
+                                            </td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
+                                            <td class="p-1 px-1 py-1 text-center">{{ $veiculo->Ano_Mod }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
+                                            <td class="p-1 px-1 py-1  text-center">{{ $veiculo->portas }}</td>
+                                            <td class="p-1 px-1 py-1 text-right">
+                                                {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
+                                            </td>
+                                            <td class="p-1 px-1 py-1 text-right">
+                                                {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
+                                            </td>
+                                            <td class="p-1 px-1 py-1 text-center">
+                                                {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
+                                                dias
+                                            </td>
+                                            <td class="hidden">{{ $veiculo->local }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>

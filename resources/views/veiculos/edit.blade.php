@@ -202,7 +202,13 @@
                             </select>
                         </div>
                     </div>
+                    <div class="flex justify-end items-center gap-4 mb-2 mt-[-8px]">
+                        <!-- Ativo -->
+                        <x-veiculo-switch :veiculo="$veiculo" campo="ativo" label="Disponível para venda" />
 
+                        <!-- Promoção -->
+                        <x-veiculo-switch :veiculo="$veiculo" campo="promocao" label="Veículo em promoção" />
+                    </div>
                 </div>
             </div>
             <div x-show="tabAtiva === 'fotos'"> <!-- Upload de Imagens do Veículo -->
@@ -314,7 +320,7 @@
             </div>
             <!--Botões -->
 
-            <div class="flex flex-wrap gap-4 justify-between mt-8">
+            <div class="flex flex-wrap gap-4 justify-between mt-8 items-center">
 
                 <!-- Voltar -->
                 @if (request('from') === 'novos')
@@ -339,18 +345,6 @@
                     Cadastro Famílias
                 </a>
 
-                <!-- Excluir Veículo -->
-                <form method="POST" action="{{ route('veiculos.destroy', $veiculo->id) }}"
-                    onsubmit="return confirm('Tem certeza que deseja excluir este veículo? Esta ação não pode ser desfeita!')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
-                        <i class="fas fa-trash-alt"></i>
-                        Excluir Veículo
-                    </button>
-                </form>
-
                 <!-- Salvar Alterações -->
                 <button type="submit"
                     class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition"
@@ -358,9 +352,24 @@
                     <i class="fas fa-save"></i>
                     Salvar Alterações
                 </button>
-            </div>
+            </form>
 
-        </form>
+            <!-- Excluir Veículo -->
+            <form method="POST" action="{{ route('veiculos.destroy', $veiculo->id) }}"
+                onsubmit="return confirm('Tem certeza que deseja excluir este veículo? Esta ação não pode ser desfeita!')">
+                @csrf
+                @method('DELETE')
+                <!-- Instrução para apos PUT, voltar para a origem correta (from) -->
+                @if (request('from'))
+                    <input type="hidden" name="from" value="{{ request('from') }}">
+                @endif
+                <button type="submit"
+                    class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
+                    <i class="fas fa-trash-alt"></i>
+                    Excluir Veículo
+                </button>
+            </form>
+        </div>
     </div>
 
 
@@ -438,6 +447,29 @@
                 .catch(err => {
                     console.error(err);
                     alert('Erro ao excluir a imagem.');
+                });
+        }
+
+
+        function alterarStatusVeiculo(id, campo, valor) {
+            fetch(`/veiculos/status/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        campo: campo,
+                        valor: valor
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.mostrarToast?.(`Campo "${data.campo}" atualizado com sucesso!`);
+                })
+                .catch(error => {
+                    alert('Erro ao atualizar o status do veículo.');
+                    console.error(error);
                 });
         }
     </script>

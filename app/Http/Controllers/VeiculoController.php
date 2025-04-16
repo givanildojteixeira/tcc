@@ -252,13 +252,24 @@ class VeiculoController extends Controller
     }
 
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Veiculo $veiculo)
+    public function alterarStatus(Request $request, $id)
     {
-        //
+        $veiculo = Veiculo::findOrFail($id);
+
+        $campo = $request->input('campo');
+        $valor = filter_var($request->input('valor'), FILTER_VALIDATE_BOOLEAN);
+
+        if (!in_array($campo, ['ativo', 'promocao'])) {
+            return response()->json(['error' => 'Campo inválido'], 400);
+        }
+
+        $veiculo->$campo = $valor;
+        $veiculo->save();
+
+        return response()->json(['success' => true, 'campo' => $campo, 'valor' => $valor]);
     }
+
+
 
 
 

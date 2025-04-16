@@ -9,22 +9,22 @@
                     <div class="splide__track">
                         <ul class="splide__list">
                             @foreach ($familiasValidas as $index => $familia)
-                            @php
-                            $nome = $familia['nome'];
-                            $imagem = $familia['imagem'];
-                            $familiaSelecionada = request()->query('familia');
-                            $selecionado = $familiaSelecionada == $nome ? 'border-4 border-blue-500' : '';
-                            $textoSelecionado = $familiaSelecionada == $nome ? 'text-blue-600 font-bold' : '';
-                            @endphp
+                                @php
+                                    $nome = $familia['nome'];
+                                    $imagem = $familia['imagem'];
+                                    $familiaSelecionada = request()->query('familia');
+                                    $selecionado = $familiaSelecionada == $nome ? 'border-4 border-blue-500' : '';
+                                    $textoSelecionado = $familiaSelecionada == $nome ? 'text-blue-600 font-bold' : '';
+                                @endphp
 
-                            <li class="splide__slide text-center cursor-pointer" data-index="{{ $index }}"
-                                onclick="atualizarFiltro('familia', '{{ $nome }}')">
-                                <img src="{{ asset($imagem) }}" alt="{{ $nome }}"
-                                    class="rounded-lg max-w-[100px] max-h-[100px] object-cover {{ $selecionado }}">
-                                <div class="text-sm font-semibold mt-2 text-center {{ $textoSelecionado }}">
-                                    {{ $nome }}
-                                </div>
-                            </li>
+                                <li class="splide__slide text-center cursor-pointer" data-index="{{ $index }}"
+                                    onclick="atualizarFiltro('familia', '{{ $nome }}')">
+                                    <img src="{{ asset($imagem) }}" alt="{{ $nome }}"
+                                        class="rounded-lg max-w-[100px] max-h-[100px] object-cover {{ $selecionado }}">
+                                    <div class="text-sm font-semibold mt-2 text-center {{ $textoSelecionado }}">
+                                        {{ $nome }}
+                                    </div>
+                                </li>
                             @endforeach
 
                         </ul>
@@ -41,13 +41,14 @@
                         <select id="modeloVeiculo"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('modelo', this.value)">
-                            <option value="" disabled {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>
+                            <option value="" disabled
+                                {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>
                                 Selecione</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                            <option value="{{ $veiculo->desc_veiculo }}" {{ session('modelo_selecionado')==$veiculo->
-                                desc_veiculo ? 'selected' : '' }}>
-                                {{ $veiculo->desc_veiculo }}
-                            </option>
+                                <option value="{{ $veiculo->desc_veiculo }}"
+                                    {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
+                                    {{ $veiculo->desc_veiculo }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -55,20 +56,19 @@
                     <!-- Campo de Pesquisa Chassi com Botão -->
                     <div class="flex items-center gap-2 w-full">
                         <span class="text-xs font-semibold text-gray-600 whitespace-nowrap">Chassi:</span>
-                        
+
                         <input type="text" id="chassiPesquisa"
-                        class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                        placeholder="Digite parte do chassi"
-                        value="{{ session('chassi_selecionado', '') }}"
-                        onkeydown="if(event.key === 'Enter'){ atualizarFiltro('chassi', this.value); }">
-                    
+                            class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                            placeholder="Digite parte do chassi" value="{{ session('chassi_selecionado', '') }}"
+                            onkeydown="if(event.key === 'Enter'){ atualizarFiltro('chassi', this.value); }">
+
                         <button onclick="atualizarFiltro('chassi', document.getElementById('chassiPesquisa').value)"
                             class="w-8 h-8 flex items-center justify-center bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-200"
                             title="Buscar Chassi">
                             <i class="fas fa-search text-sm"></i>
                         </button>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -82,13 +82,14 @@
                         <select id="combustivel"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('combustivel', this.value)">
-                            <option value="" {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>Todas
+                            <option value="" {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>
+                                Todas
                             </option>
                             @foreach ($combustiveis as $combustivel)
-                            <option value="{{ $combustivel->combustivel }}" {{
-                                session('combustivel_selecionado')==$combustivel->combustivel ? 'selected' : '' }}>
-                                {{ $combustivel->combustivel }}
-                            </option>
+                                <option value="{{ $combustivel->combustivel }}"
+                                    {{ session('combustivel_selecionado') == $combustivel->combustivel ? 'selected' : '' }}>
+                                    {{ $combustivel->combustivel }}
+                                </option>
                             @endforeach
 
                         </select>
@@ -103,10 +104,10 @@
                             <option value="" {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
                                 Todas</option>
                             @foreach ($anosUnico as $ano)
-                            <option value="{{ $ano->Ano_Mod }}" {{ session('ano_selecionado')==$ano->Ano_Mod ?
-                                'selected' : '' }}>
-                                {{ $ano->Ano_Mod }}
-                            </option>
+                                <option value="{{ $ano->Ano_Mod }}"
+                                    {{ session('ano_selecionado') == $ano->Ano_Mod ? 'selected' : '' }}>
+                                    {{ $ano->Ano_Mod }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -119,10 +120,10 @@
                             onchange="atualizarFiltro('transmissao', this.value)">
                             <option value="" disabled selected>Selecione</option>
                             @foreach ($transmissoes as $transmissao)
-                            <option value="{{ $transmissao->transmissao }}" {{
-                                session('transmissao_selecionado')==$transmissao->transmissao ? 'selected' : '' }}>
-                                {{ $transmissao->transmissao }}
-                            </option>
+                                <option value="{{ $transmissao->transmissao }}"
+                                    {{ session('transmissao_selecionado') == $transmissao->transmissao ? 'selected' : '' }}>
+                                    {{ $transmissao->transmissao }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -136,10 +137,10 @@
                             <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>Todas
                             </option>
                             @foreach ($cores as $cor)
-                            <option value="{{ $cor->cor }}" {{ session('cor_selecionado')==$cor->cor ? 'selected' : ''
-                                }}>
-                                {{ $cor->cor }}
-                            </option>
+                                <option value="{{ $cor->cor }}"
+                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
+                                    {{ $cor->cor }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -175,11 +176,8 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
-                        <div x-data="{open: false, veiculo: {}}" x-init=" 
-                            @if(request('openModal') && request('veiculo_id'))
-                                $nextTick(() => {
-                                document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); });
-                            @endif">
+                        <div x-data="{ open: false, veiculo: {} }" x-init=" @if (request('openModal') && request('veiculo_id')) $nextTick(() => {
+                                document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); }); @endif">
                             <table class="w-full table-fixed">
                                 <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                     <tr>
@@ -226,26 +224,37 @@
                                 </thead>
                                 <tbody class="text-sm">
                                     @foreach ($veiculos as $veiculo)
-                                    @php
-                                    $rowColor = '';
-                                    if ($veiculo->local == 'Matriz') {
-                                    $rowColor = 'text-black';
-                                    } elseif ($veiculo->local == 'Filial') {
-                                    $rowColor = 'text-yellow-500';
-                                    } elseif ($veiculo->local == 'Transito') {
-                                    $rowColor = 'text-green-500';
-                                    }
-                                    $descricaoOpcional =
-                                    \App\Models\Opcionais::where('modelo_fab', $veiculo->modelo_fab)
-                                    ->where('cod_opcional', $veiculo->cod_opcional)
-                                    ->value('descricao') ?? 'Nenhum opcional encontrado.';
+                                        @php
+                                            if ($veiculo->promocao) {
+                                                $rowColor = 'text-blue-600 font-bold';
+                                            } elseif (!$veiculo->ativo) {
+                                                $rowColor = 'text-gray-400';
+                                            } else {
+                                                if ($veiculo->local == 'Matriz') {
+                                                    $rowColor = 'text-black';
+                                                } elseif ($veiculo->local == 'Filial') {
+                                                    $rowColor = 'text-yellow-500';
+                                                } elseif ($veiculo->local == 'Transito') {
+                                                    $rowColor = 'text-green-500';
+                                                } else {
+                                                    $rowColor = '';
+                                                }
+                                            }
 
-                                    $siteFamilia =
-                                    \App\Models\Familia::where('descricao', $veiculo->familia)->value(
-                                    'site',) ?? '';
-                                    @endphp
-                                    <tr id="veiculo-{{ $veiculo->id }}"
-                                        class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}" @click="
+                                            // Descrição
+                                            $descricaoOpcional =
+                                                \App\Models\Opcionais::where('modelo_fab', $veiculo->modelo_fab)
+                                                    ->where('cod_opcional', $veiculo->cod_opcional)
+                                                    ->value('descricao') ?? 'Nenhum opcional encontrado.';
+
+                                            $siteFamilia =
+                                                \App\Models\Familia::where('descricao', $veiculo->familia)->value(
+                                                    'site',
+                                                ) ?? '';
+                                        @endphp
+                                        <tr id="veiculo-{{ $veiculo->id }}"
+                                            class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
+                                            @click="
                                                 open = true;
                                                 veiculo = {
                                                     id: '{{ $veiculo->id }}',
@@ -267,30 +276,36 @@
                                                     faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}',
                                                     {{-- Essa linha leva a origem para o modal, assim ele saberá como voltar --}}
                                                     origem: 'novos' } ">
-                                        <td class=" p-1 px-1 py-1">{{ $veiculo->desc_veiculo }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->modelo_fab }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->transmissao }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->Ano_Mod }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
-                                        <td class="p-1 px-1 py-1 text-center">{{ $veiculo->portas }}</td>
-                                        <td class="p-1 px-1 py-1 text-center">{{ $veiculo->cod_opcional }}</td>
-                                        <td class="p-1 px-1 py-1 text-right">
-                                            {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
-                                        </td>
-                                        <td class="p-1 px-1 py-1 text-right">
-                                            {{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
-                                        </td>
-                                        <td class="p-1 px-1 py-1 text-right">
-                                            {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
-                                        </td>
-                                        <td class="p-1 px-1 py-1 text-center">
-                                            {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                            dias
-                                        </td>
-                                        <td class="hidden">{{ $veiculo->local }}</td>
-                                    </tr>
+                                            <td class=" p-1 px-1 py-1">
+
+                                                @if ($veiculo->promocao)
+                                                    <span class="ml-1 text-blue-600 font-bold"
+                                                        title="Veículo em promoção">🔥</span>
+                                                @endif{{ $veiculo->desc_veiculo }}
+                                            </td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->modelo_fab }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->transmissao }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->Ano_Mod }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
+                                            <td class="p-1 px-1 py-1 text-center">{{ $veiculo->portas }}</td>
+                                            <td class="p-1 px-1 py-1 text-center">{{ $veiculo->cod_opcional }}</td>
+                                            <td class="p-1 px-1 py-1 text-right">
+                                                {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
+                                            </td>
+                                            <td class="p-1 px-1 py-1 text-right">
+                                                {{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
+                                            </td>
+                                            <td class="p-1 px-1 py-1 text-right">
+                                                {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
+                                            </td>
+                                            <td class="p-1 px-1 py-1 text-center">
+                                                {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
+                                                dias
+                                            </td>
+                                            <td class="hidden">{{ $veiculo->local }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>

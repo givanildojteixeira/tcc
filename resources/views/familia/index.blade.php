@@ -90,10 +90,6 @@
                 <x-checkbox-config chave="mostrar_todas_familias"
                     label="Mostrar todas as famílias no carrossel (mesmo sem veículos)" />
 
-
-
-
-
             </div>
 
 

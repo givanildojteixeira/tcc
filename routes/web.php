@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('user.update');
     Route::patch('/user-ativo/{id}/{ativo}', [UserController::class, 'ativo'])->name('user.ativo');
     Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
-    
+
     //Clientes
     Route::resources([
         'cliente' => ClienteController::class
@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
     route::get('/confirma-delete/{id}', [ClienteController::class, 'confirma_delete'])->name('confirma_delete');
 
     // //Veiculos Geral
+    Route::patch('/veiculos/status/{id}', [VeiculoController::class, 'alterarStatus'])->name('veiculos.status');
     Route::get('/veiculos/{id}/edit', [VeiculoController::class, 'edit'])->name('veiculos.edit');
     Route::put('/veiculos/{id}', [VeiculoController::class, 'update'])->name('veiculos.update');
     Route::delete('/veiculos/imagem/excluir', [VeiculoController::class, 'excluirImagem'])->name('veiculos.imagem.excluir');
