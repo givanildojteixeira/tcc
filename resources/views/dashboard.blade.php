@@ -48,7 +48,12 @@
             </div>
         </div>
     </div>
-
+    <x-rodape>
+        <!-- Número de veículos listados -->
+        <div class="font-medium" id="selectedVehiclesCount">
+            Dashboard
+        </div>
+    </x-rodape>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
 

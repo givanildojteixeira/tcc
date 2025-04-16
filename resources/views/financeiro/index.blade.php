@@ -9,4 +9,10 @@
             </div>
         </div>
     </div>
+    <x-rodape>
+        <!-- Número de veículos listados -->
+        <div class="font-medium" id="selectedVehiclesCount">
+            Dashboard
+        </div>
+    </x-rodape>
 </x-app-layout>

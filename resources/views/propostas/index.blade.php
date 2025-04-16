@@ -8,11 +8,17 @@
                 </div>
                 <li class="nav-icon-btn nav-icon-btn-success">
                     <a href="/canal-comunicacao" class="btn btn-primary wiggle">
-                            <span class="badge badge-danger" style="color: black;">1</span>
-<i class="nav-icon fa fa-envelope"></i> MENSAGENS
-</a>
-</li>
+                        <span class="badge badge-danger" style="color: black;">1</span>
+                        <i class="nav-icon fa fa-envelope"></i> MENSAGENS
+                    </a>
+                </li>
             </div>
         </div>
     </div>
+    <x-rodape>
+        <!-- Número de veículos listados -->
+        <div class="font-medium" id="selectedVehiclesCount">
+            Dashboard
+        </div>
+    </x-rodape>
 </x-app-layout>
