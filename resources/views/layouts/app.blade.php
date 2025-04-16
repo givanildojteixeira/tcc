@@ -17,7 +17,8 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Outros estilos -->
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" /> --}}
+    {{--
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" /> --}}
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
@@ -52,33 +53,33 @@
 </head>
 
 
-{{-- Mensgens e alertas na tela --}}
+{{-- Mensagens e alertas na tela --}}
 @if (session('success') || session('error') || session('warning') || session('info'))
-    @php
-        $type = session('success')
-            ? 'success'
-            : (session('error')
-                ? 'error'
-                : (session('warning')
-                    ? 'warning'
-                    : 'info'));
+@php
+$type = session('success')
+? 'success'
+: (session('error')
+? 'error'
+: (session('warning')
+? 'warning'
+: 'info'));
 
-        $messages = [
-            'success' => ['bg' => 'bg-green-100', 'text' => 'text-green-800', 'icon' => 'fa-check-circle'],
-            'error' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'icon' => 'fa-times-circle'],
-            'warning' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'icon' => 'fa-exclamation-triangle'],
-            'info' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-800', 'icon' => 'fa-info-circle'],
-        ];
-    @endphp
+$messages = [
+'success' => ['bg' => 'bg-green-100', 'text' => 'text-green-800', 'icon' => 'fa-check-circle'],
+'error' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'icon' => 'fa-times-circle'],
+'warning' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'icon' => 'fa-exclamation-triangle'],
+'info' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-800', 'icon' => 'fa-info-circle'],
+];
+@endphp
 
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
-        class="fixed top-6 right-6 {{ $messages[$type]['bg'] }} {{ $messages[$type]['text'] }} px-4 py-3 rounded-md shadow-lg z-50 transition"
-        style="display: none;">
-        <div class="flex items-center gap-2">
-            <i class="fas {{ $messages[$type]['icon'] }}"></i>
-            <span>{{ session($type) }}</span>
-        </div>
+<div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
+    class="fixed top-6 right-6 {{ $messages[$type]['bg'] }} {{ $messages[$type]['text'] }} px-4 py-3 rounded-md shadow-lg z-50 transition"
+    style="display: none;">
+    <div class="flex items-center gap-2">
+        <i class="fas {{ $messages[$type]['icon'] }}"></i>
+        <span>{{ session($type) }}</span>
     </div>
+</div>
 @endif
 
 
@@ -90,11 +91,12 @@
 
         <!-- Page Heading -->
         @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="mx-auto sm:px-4 lg:px-6"> {{-- retirei: max-w-7xl para ocupar a tela toda --}}
+        <header class="bg-white dark:bg-gray-800 shadow">
+            {{-- <div class="mx-auto sm:px-4 lg:px-6"> retirei: max-w-7xl para ocupar a tela toda --}}
+                <div>
                     {{ $header }}
                 </div>
-            </header>
+        </header>
         @endif
 
         <!-- Page Content -->
@@ -106,8 +108,8 @@
     <x-loading />
 
     {{-- Aqui vou colocar todos os Script que quero que fiquem disponiveis para as views --}}
-   {{-- Loading --}}
-   <script>
+    {{-- Loading --}}
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('a:not([target="_blank"])');
             links.forEach(link => {
@@ -180,16 +182,15 @@
         });
     </script>
 
-        {{--
-            para botoes Salvar e voltar funcionarem com ENTER ou ESC
-            use os seletores data-atalho="salvar" ou votlar
-            ex:
-            <!-- Botão Voltar -->
-            <a href="{{ route('veiculos.novos.index') }}"
-            class="..." data-atalho="voltar">
-            <i class="fas fa-arrow-left"></i> Voltar
-            </a>
-        --}}
+    {{--
+    para botoes Salvar e voltar funcionarem com ENTER ou ESC
+    use os seletores data-atalho="salvar" ou votlar
+    ex:
+    <!-- Botão Voltar -->
+    <a href="{{ route('veiculos.novos.index') }}" class="..." data-atalho="voltar">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+    --}}
     <script>
         document.addEventListener('keydown', function(event) {
             const tag = document.activeElement.tagName.toLowerCase();

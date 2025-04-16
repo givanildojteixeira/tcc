@@ -159,6 +159,13 @@
         </div>
     </div>
 
+    <!-- Barra fixa abaixo da tabela -->
+    <x-rodape>
+        <!-- Número de veículos listados -->
+        <div class="font-medium" id="selectedVehiclesCount">
+            Familias Listadas: {{ count($familias) }}
+        </div>
+    </x-rodape>
     <!-- Modal de Ajuda -->
     <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">

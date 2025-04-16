@@ -9,9 +9,23 @@ class OpcionaisController extends Controller
 {
     public function index()
     {
-        $opcionais = Opcionais::all();
+        $query = Opcionais::query();
+    
+        // Verifica se há busca
+        if (request()->filled('busca')) {
+            $busca = request('busca');
+            $query->where(function ($q) use ($busca) {
+                $q->where('modelo_fab', 'LIKE', "%{$busca}%")
+                  ->orWhere('cod_opcional', 'LIKE', "%{$busca}%");
+            });
+        }
+    
+        $opcionais = $query->orderBy('modelo_fab')->paginate(10)->appends(request()->query());
+    
         return view('opcionais.index', compact('opcionais'));
     }
+    
+    
 
     public function create()
     {

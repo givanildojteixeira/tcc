@@ -180,7 +180,7 @@
                                 $nextTick(() => {
                                 document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); });
                             @endif">
-                            <table class="table-auto w-full ml-2 mr-2">
+                            <table class="w-full table-fixed">
                                 <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                     <tr>
                                         <th class="sortable p-2" data-column="veiculo">Veículo <i

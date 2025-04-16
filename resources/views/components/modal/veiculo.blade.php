@@ -95,7 +95,7 @@
             </div>
 
             <!-- Rodapé -->
-            <div class="mt-2 border-t pt-1 flex flex-wrap gap-2 justify-center">
+            <div class="mt-2 pt-1 flex flex-wrap gap-2 justify-center">
                 <x-bt-padrao label="Voltar" color="gray" icon="arrow-left" title="Fechar ou voltar"
                     @click=" open = false" />
                 <x-bt-padrao label="Editar" color="blue" icon="pen-to-square" title="Editar veículo"
@@ -153,9 +153,6 @@
             indiceAtual: 0,
 
             carregarImagens(chassi) {
-                console.log('>>> CHASSI RECEBIDO:', chassi); // 👈 adicionado aqui
-                console.log(this.veiculo.origem);
-
 
                 this.imagens = [];
                 this.indiceAtual = 0;
