@@ -7,6 +7,7 @@ use App\Models\Veiculo;
 use App\Models\Familia;
 use App\Models\Opcionais;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class VeiculoController extends Controller
 {
@@ -31,32 +32,54 @@ class VeiculoController extends Controller
     }
 
 
-
     public function update(Request $request, $id)
     {
-        // validações
-        $request->validate([
-            'images.*' => 'image|mimes:jpg,jpeg|max:2048',
-            'descricao' => 'nullable|string|max:10000',
-        ]);
-
-
         $veiculo = Veiculo::findOrFail($id);
 
-        // Corrige os valores monetários
-        $dados = $request->all();
-        $dados['vlr_tabela'] = limparMoeda($dados['vlr_tabela']);
-        $dados['vlr_bonus'] = limparMoeda($dados['vlr_bonus']);
-        $dados['vlr_nota'] = limparMoeda($dados['vlr_nota']);
+        // Corrige os valores monetários ANTES da validação
+        $request->merge([
+            'vlr_tabela' => limparMoeda($request['vlr_tabela']),
+            'vlr_bonus' => limparMoeda($request['vlr_bonus']),
+            'vlr_nota' => limparMoeda($request['vlr_nota']),
+        ]);
 
-        //Corrige dados de usados que nao sao necessarios por comparação com novos
+        // Validador manual
+        $validator = Validator::make($request->all(), [
+            'familia' => 'required|string|max:255',
+            'desc_veiculo' => 'required|string|max:255',
+            'chassi' => 'required|string|max:50|unique:veiculos,chassi,' . $id,
+            'Ano_Mod' => 'nullable|string|max:20',
+            'cor' => 'nullable|string|max:50',
+            'motor' => 'nullable|string|max:10',
+            'portas' => 'nullable|integer',
+            'combustivel' => 'nullable|string|max:50',
+            'vlr_nota' => 'nullable|numeric',
+            'vlr_bonus' => 'nullable|numeric',
+            'vlr_tabela' => 'nullable|numeric',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg|max:2048',
+            'descricao' => 'nullable|string|max:10000',
+            'local' => 'required|string|in:Matriz,Filial,Transito,Consignado',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', implode('<br>', $validator->errors()->all()));
+        }
+
+        $dados = $validator->validated();
+
+        // Força maiúsculas
+        $dados['desc_veiculo'] = mb_strtoupper($dados['desc_veiculo'], 'UTF-8');
+
+        // Corrige campo de família em usados
         if ($veiculo->novo_usado === 'Usado') {
             $dados['familia'] = 'Seminovos';
         }
 
         $veiculo->update($dados);
 
-        // Gravação de imagens
+        // Upload de imagens (mantém como está)
         if ($request->hasFile('images')) {
             $arquivos = $request->file('images');
             $chassiBase = str_replace(' ', '_', $veiculo->chassi);
@@ -66,12 +89,8 @@ class VeiculoController extends Controller
                 mkdir($destino, 0755, true);
             }
 
-            // Verifica quais arquivos já existem
             $arquivosExistentes = collect(range(1, 10))
-                ->map(function ($i) use ($chassiBase, $destino) {
-                    $nome = $chassiBase . '_' . str_pad($i, 2, '0', STR_PAD_LEFT) . '.jpg';
-                    return file_exists($destino . '/' . $nome) ? $i : null;
-                })
+                ->map(fn($i) => file_exists("$destino/{$chassiBase}_" . str_pad($i, 2, '0', STR_PAD_LEFT) . '.jpg') ? $i : null)
                 ->filter()
                 ->values()
                 ->toArray();
@@ -80,49 +99,33 @@ class VeiculoController extends Controller
 
             foreach ($arquivos as $arquivo) {
                 if ($arquivo->isValid()) {
-                    // Encontra a próxima posição livre
                     while (in_array($proximaPosicao, $arquivosExistentes) && $proximaPosicao <= 10) {
                         $proximaPosicao++;
                     }
 
                     if ($proximaPosicao > 10)
-                        break; // Já atingiu o limite
+                        break;
 
                     $numero = str_pad($proximaPosicao, 2, '0', STR_PAD_LEFT);
                     $nomeArquivo = $chassiBase . '_' . $numero . '.jpg';
-
                     $arquivo->move($destino, $nomeArquivo);
-
                     $proximaPosicao++;
                 }
             }
         }
 
-        // Prepara a descrição, substitui quebra de linha por barra
+        // Atualiza ou cria opcionais
         $descricao = str_replace("\n", '/', $request->descricao);
-
-        // Se vier em branco ou só com espaços, define um texto padrão
-        if (trim($descricao) === '') {
-            $descricao = 'Opcional não cadastrado';
-        }
+        $descricao = trim($descricao) === '' ? 'Opcional não cadastrado' : $descricao;
 
         if ($veiculo->novo_usado === 'Novo') {
-            // Atualiza ou cria para veículos novos
             Opcionais::updateOrCreate(
-                [
-                    'modelo_fab' => $veiculo->modelo_fab,
-                    'cod_opcional' => $veiculo->cod_opcional,
-                ],
-                [
-                    'descricao' => $descricao,
-                ]
+                ['modelo_fab' => $veiculo->modelo_fab, 'cod_opcional' => $veiculo->cod_opcional],
+                ['descricao' => $descricao]
             );
         } else {
-            // Atualiza ou cria para veículos usados
             Opcionais::updateOrCreate(
-                [
-                    'chassi' => $veiculo->chassi,
-                ],
+                ['chassi' => $veiculo->chassi],
                 [
                     'descricao' => $descricao,
                     'modelo_fab' => 'SemModelo',
@@ -131,29 +134,12 @@ class VeiculoController extends Controller
             );
         }
 
-
-        //Botao Salvar Alterações de Alterar informações do Veículo
-        //Aqui salva  e fica na mesma tela
-        // return redirect()
-        //     ->route('veiculos.edit', ['id' => $veiculo->id, 'from' => $request->input('from')])
-        //     ->with('success', 'Veículo atualizado com sucesso!');
-
-        //Aqui salva e volta para tela de novos ou usados
-        if ($request->from === 'novos') {
-            return redirect()
-                ->route('veiculos.novos.index', [
-                    'openModal' => 1,
-                    'veiculo_id' => $veiculo->id
-                ])
-                ->with('success', 'Veículo atualizado com sucesso!');
-        } else {
-            return redirect()
-                ->route('veiculos.usados.index', [
-                    'openModal' => 1,
-                    'veiculo_id' => $veiculo->id
-                ])
-                ->with('success', 'Veículo atualizado com sucesso!');
-        }
+        // Redireciona com sucesso
+        $rota = $request->from === 'usados' ? 'veiculos.usados.index' : 'veiculos.novos.index';
+        return redirect()->route($rota, [
+            'openModal' => 1,
+            'veiculo_id' => $veiculo->id
+        ])->with('success', 'Veículo atualizado com sucesso!');
     }
 
 
@@ -196,13 +182,14 @@ class VeiculoController extends Controller
 
     public function store(Request $request)
     {
+
         // Corrige os valores monetários
         $request['vlr_tabela'] = limparMoeda(valor: $request['vlr_tabela']);
         $request['vlr_bonus'] = limparMoeda($request['vlr_bonus']);
         $request['vlr_nota'] = limparMoeda($request['vlr_nota']);
 
         // dd($request->all());
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'familia' => 'required|string|max:255',
             'desc_veiculo' => 'required|string|max:255',
             'chassi' => 'required|string|max:50|unique:veiculos,chassi',
@@ -215,12 +202,25 @@ class VeiculoController extends Controller
             'vlr_bonus' => 'nullable|numeric',
             'vlr_tabela' => 'nullable|numeric',
             'images.*' => 'nullable|image|mimes:jpg|max:2048',
-            'descricao' => 'nullable|string|max:5000',
-            'local' => 'required|string|in:matriz,filial,transito,consignado',
+            'descricao' => 'nullable|string|max:10000',
+            'local' => 'required|string|in:Matriz,Filial,Transito,Consignado',
         ]);
 
+        if ($validator->fails()) {
+            // Retorna com todos os erros unidos por <br>
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $validator->errors()->all() ? implode('<br>', $validator->errors()->all()) : 'Erro de validação.');
+        }
+
+        $validated = $validator->validated();
+
+        // Criação do veículo
         $veiculo = new Veiculo();
         $veiculo->fill($validated);
+
+        // Forçar descrição em letras maiúsculas
+        $veiculo->desc_veiculo = mb_strtoupper($veiculo->desc_veiculo, 'UTF-8');
 
         //espeficificos:
         $veiculo->modelo_fab = $request->modelo_fab;

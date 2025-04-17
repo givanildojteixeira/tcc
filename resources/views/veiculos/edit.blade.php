@@ -48,7 +48,6 @@
                 <input type="hidden" name="from" value="{{ request('from') }}">
             @endif
 
-
             <div x-show="tabAtiva === 'info'">
                 <div class="border border-green-500 rounded-xl p-6 mb-6 shadow-sm bg-white">
                     <div class="flex flex-wrap gap-4 mb-4">
@@ -352,24 +351,24 @@
                     <i class="fas fa-save"></i>
                     Salvar Alterações
                 </button>
-            </form>
+        </form>
 
-            <!-- Excluir Veículo -->
-            <form method="POST" action="{{ route('veiculos.destroy', $veiculo->id) }}"
-                onsubmit="return confirm('Tem certeza que deseja excluir este veículo? Esta ação não pode ser desfeita!')">
-                @csrf
-                @method('DELETE')
-                <!-- Instrução para apos PUT, voltar para a origem correta (from) -->
-                @if (request('from'))
-                    <input type="hidden" name="from" value="{{ request('from') }}">
-                @endif
-                <button type="submit"
-                    class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
-                    <i class="fas fa-trash-alt"></i>
-                    Excluir Veículo
-                </button>
-            </form>
-        </div>
+        <!-- Excluir Veículo -->
+        <form method="POST" action="{{ route('veiculos.destroy', $veiculo->id) }}"
+            onsubmit="return confirm('Tem certeza que deseja excluir este veículo? Esta ação não pode ser desfeita!')">
+            @csrf
+            @method('DELETE')
+            <!-- Instrução para apos PUT, voltar para a origem correta (from) -->
+            @if (request('from'))
+                <input type="hidden" name="from" value="{{ request('from') }}">
+            @endif
+            <button type="submit"
+                class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
+                <i class="fas fa-trash-alt"></i>
+                Excluir Veículo
+            </button>
+        </form>
+    </div>
     </div>
 
 

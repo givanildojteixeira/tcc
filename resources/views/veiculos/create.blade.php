@@ -3,7 +3,7 @@
         tabAtiva: localStorage.getItem('aba_veiculo') || 'info',
         modelo_fab: '{{ old('modelo_fab') }}',
         cod_opcional: '{{ old('cod_opcional') }}',
-
+    
         setTab(tab) {
             this.tabAtiva = tab;
             localStorage.setItem('aba_veiculo', tab);
@@ -16,7 +16,7 @@
         const tab = tabAtiva;
         const primeiroCampo = $refs[tab + '_first'];
         if (primeiroCampo) primeiroCampo.focus();
-
+    
         @if(session('success'))
         localStorage.removeItem('aba_veiculo');
         @endif
@@ -35,22 +35,22 @@
             <input type="hidden" name="from" value="{{ request('from') }}">
             @endif
 
+            {{-- Para validação de erros --}}
+            {{-- <x-validation-errors id="modalErrosCadastro" /> --}}
+
             <!-- Abas -->
             <div class="flex bg-gray-100 rounded-md overflow-hidden shadow-sm mb-6 font-bold">
-                <button type="button" @click="setTab('info')"
-                    :class="tabAtiva === 'info' ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
+                <button type="button" @click="setTab('info')" :class="tabAtiva === 'info' ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
                         'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                     class="flex-1 px-4 py-2 text-sm transition-all duration-200">
                     <i class="fas fa-car"></i> Informações do Veículo
                 </button>
-                <button type="button" @click="setTab('fotos')"
-                    :class="tabAtiva === 'fotos' ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
+                <button type="button" @click="setTab('fotos')" :class="tabAtiva === 'fotos' ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
                         'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                     class="flex-1 px-4 py-2 text-sm transition-all duration-200">
                     <i class="fas fa-image"></i> Imagens do Veículo
                 </button>
-                <button type="button" @click="setTab('opcionais')"
-                    :class="tabAtiva === 'opcionais' ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
+                <button type="button" @click="setTab('opcionais')" :class="tabAtiva === 'opcionais' ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
                         'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                     class="flex-1 px-4 py-2 text-sm transition-all duration-200">
                     <i class="fas fa-cogs"></i> Opcionais do Veículo
@@ -69,8 +69,8 @@
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                                 <option value="">Selecione uma família</option>
                                 @foreach ($familias as $familia)
-                                <option value="{{ $familia->descricao }}"
-                                    {{ old('familia') == $familia->descricao ? 'selected' : '' }}>
+                                <option value="{{ $familia->descricao }}" {{ old('familia')==$familia->descricao ?
+                                    'selected' : '' }}>
                                     {{ $familia->descricao }}
                                 </option>
                                 @endforeach
@@ -96,8 +96,7 @@
                         <!-- Modelo de Fabricação -->
                         <div class="basis-[10%] flex-grow min-w-[100px]">
                             <label class="block text-gray-700 font-medium mb-1">Fabricação</label>
-                            <input type="text" name="modelo_fab" x-model="modelo_fab"
-                                value="{{ old('modelo_fab') }}"
+                            <input type="text" name="modelo_fab" x-model="modelo_fab" value="{{ old('modelo_fab') }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
                         @endif
@@ -139,8 +138,8 @@
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                                 <option value="">Selecione</option>
                                 @foreach (['Gasolina', 'Etanol', 'Diesel', 'Flex'] as $comb)
-                                <option value="{{ $comb }}"
-                                    {{ old('combustivel') == $comb ? 'selected' : '' }}>{{ $comb }}
+                                <option value="{{ $comb }}" {{ old('combustivel')==$comb ? 'selected' : '' }}>{{ $comb
+                                    }}
                                 </option>
                                 @endforeach
                             </select>
@@ -164,17 +163,24 @@
                         <x-input-moeda name="vlr_tabela" label="Valor Tabela" :value="old('vlr_tabela')" />
                         <div class="mb-4">
                             <label for="local" class="block text-sm font-medium text-gray-700">Local</label>
-                            <select name="local" id="local" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                            <select name="local" id="local" required
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
                                 <option value="">Selecione o local</option>
 
-                                @if($from === 'novos')
-                                <option value="matriz" {{ old('local') == 'matriz' ? 'selected' : '' }}>Matriz</option>
-                                <option value="filial" {{ old('local') == 'filial' ? 'selected' : '' }}>Filial</option>
-                                <option value="transito" {{ old('local') == 'transito' ? 'selected' : '' }}>Trânsito</option>
+                                @if ($from === 'novos')
+                                <option value="matriz" {{ old('local')=='matriz' ? 'selected' : '' }}>Matriz
+                                </option>
+                                <option value="filial" {{ old('local')=='filial' ? 'selected' : '' }}>Filial
+                                </option>
+                                <option value="transito" {{ old('local')=='transito' ? 'selected' : '' }}>
+                                    Trânsito</option>
                                 @else
-                                <option value="matriz" {{ old('local') == 'matriz' ? 'selected' : '' }}>Matriz</option>
-                                <option value="filial" {{ old('local') == 'filial' ? 'selected' : '' }}>Filial</option>
-                                <option value="consignado" {{ old('local') == 'consignado' ? 'selected' : '' }}>Consignado</option>
+                                <option value="matriz" {{ old('local')=='matriz' ? 'selected' : '' }}>Matriz
+                                </option>
+                                <option value="filial" {{ old('local')=='filial' ? 'selected' : '' }}>Filial
+                                </option>
+                                <option value="consignado" {{ old('local')=='consignado' ? 'selected' : '' }}>
+                                    Consignado</option>
                                 @endif
                             </select>
                         </div>
@@ -189,8 +195,7 @@
                     <label class="block text-gray-700 font-medium mb-1">Imagens do Veículo (até 10 - .jpg)</label>
                     <div x-data="previewImagesAvancado()" class="space-y-4">
                         <!-- Input de arquivos -->
-                        <input type="file" accept=".jpg" multiple @change="adicionarImagens($event)"
-                            x-ref="inputFile"
+                        <input type="file" accept=".jpg" multiple @change="adicionarImagens($event)" x-ref="inputFile"
                             class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
                                    file:rounded-md file:border-0 file:text-sm file:font-semibold
                                    file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200">
@@ -266,8 +271,7 @@
 
                         </div>
                         <div class="w-full md:flex-1 mb-4">
-                            <label for="descricao"
-                                class="block text-sm font-medium text-gray-700">Descrição</label>
+                            <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
                             <textarea name="descricao" id="descricao" rows="6" maxlength="5000"
                                 class="mt-1 block w-full h-full border-gray-300 rounded-md shadow-sm">{{ old('descricao') }}</textarea>
                         </div>
@@ -289,7 +293,7 @@
                     <i class="fas fa-arrow-left"></i> Voltar
                 </a>
 
-                @if(request('from') === 'novos')
+                @if (request('from') === 'novos')
                 <a href="{{ route('familia.index', ['from' => 'create', 'origem' => request('from')]) }}"
                     class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-md shadow-md transition">
                     <i class="fas fa-users"></i>
