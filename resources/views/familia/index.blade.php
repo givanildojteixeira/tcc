@@ -1,75 +1,73 @@
-<x-app-layout> {{--  ✅  Gerenciar famílias de veículos - INDEX - FAMILIA --}}
+<x-app-layout> {{-- ✅ Gerenciar famílias de veículos - INDEX - FAMILIA --}}
     <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
         <!-- Título e Feedback -->
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-semibold text-green-700">Gerenciar famílias de veículos</h2>
             <x-bt-ajuda /> <!-- Botão de Ajuda -->
         </div>
+<!-- Container flexível -->
+<div class="flex flex-col md:flex-row gap-6" style="height: calc(100vh - 190px);">
+    <!-- Formulário com proporção maior (3 partes) -->
+    <form id="formFamilia"
+        class="border border-gray-300 rounded-lg shadow-lg p-6 overflow-y-auto"
+        style="height: 100%; flex: 3;">
+                @csrf
 
-        <!-- Formulário -->
-        <form id="formFamilia" action="{{ route('familia.store') }}" method="POST" enctype="multipart/form-data"
-            class="border border-gray-300 rounded-lg shadow-lg p-6 mb-8 ">
+                <div class="flex flex-wrap gap-4 mb-4">
+                    <!-- Nome da Família -->
+                    <div class="flex-grow basis-[10%] min-w-[100px]">
+                        <label class="block text-gray-700 font-medium mb-1">Nome da Família</label>
+                        <input type="text" name="descricao" required
+                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
+                    </div>
+                    <!-- Site -->
+                    <div class="basis-[70%] flex-grow min-w-[180px]">
+                        <label class="block text-gray-700 font-medium mb-1">Site de Apoio</label>
+                        <input type="text" name="site"
+                            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                    </div>
 
-            @csrf
-
-            <div class="flex flex-wrap gap-4 mb-4">
-                <!-- Nome da Família -->
-                <div class="flex-grow basis-[10%] min-w-[100px]">
-                    <label class="block text-gray-700 font-medium mb-1">Nome da Família</label>
-                    <input type="text" name="descricao" required
-                        class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
                 </div>
-                <!-- Site -->
-                <div class="basis-[70%] flex-grow min-w-[180px]">
-                    <label class="block text-gray-700 font-medium mb-1">Site de Apoio</label>
-                    <input type="text" name="site"
-                        class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                </div>
-
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <!-- Imagem da Família -->
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Imagem da Família</label>
-                    <input type="file" name="imagem" accept=".jpg,.jpeg"
-                        class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- Imagem da Família -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Imagem da Família</label>
+                        <input type="file" name="imagem" accept=".jpg,.jpeg" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
                                    file:rounded-md file:border-0
                                    file:text-sm file:font-semibold
                                    file:bg-green-100 file:text-green-700
                                    hover:file:bg-green-200">
-                </div>
+                    </div>
 
-                <!-- Arquivo MEV -->
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Arquivo MEV</label>
-                    <input type="file" name="arquivo_mev" accept=".pdf"
-                        class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+                    <!-- Arquivo MEV -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Arquivo MEV</label>
+                        <input type="file" name="arquivo_mev" accept=".pdf" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
                                    file:rounded-md file:border-0
                                    file:text-sm file:font-semibold
                                    file:bg-green-100 file:text-green-700
                                    hover:file:bg-green-200">
-                </div>
+                    </div>
 
-                <!-- Documento Adicional -->
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Documentos</label>
-                    <input type="file" name="documentos" accept="*"
-                        class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+                    <!-- Documento Adicional -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1">Documentos</label>
+                        <input type="file" name="documentos" accept="*" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
                                    file:rounded-md file:border-0
                                    file:text-sm file:font-semibold
                                    file:bg-green-100 file:text-green-700
                                    hover:file:bg-green-200">
+                    </div>
                 </div>
-            </div>
 
 
-            <div class="flex flex-wrap items-center gap-4 ">
-                @if (request('from') && request('origem'))
+                <div class="flex flex-wrap items-center gap-4 ">
+                    @if (request('from') && request('origem'))
                     @php
-                        $voltarPara =
-                            request('from') === 'create'
-                                ? route('veiculos.create', ['from' => request('origem')])
-                                : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
+                    $voltarPara =
+                    request('from') === 'create'
+                    ? route('veiculos.create', ['from' => request('origem')])
+                    : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
                     @endphp
                     <div class="mb-4">
                         <a href="{{ $voltarPara }}"
@@ -78,47 +76,50 @@
                             Voltar para edição do veículo
                         </a>
                     </div>
-                @endif
+                    @endif
 
 
-                <button type="submit"
-                    class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md shadow-md">
-                    <i class="fas fa-plus-circle"></i>
-                    Cadastrar ou Alterar Família
-                </button>
+                    <button type="submit"
+                        class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md shadow-md">
+                        <i class="fas fa-plus-circle"></i>
+                        Cadastrar ou Alterar Família
+                    </button>
 
-                <x-checkbox-config chave="mostrar_todas_familias"
-                    label="Mostrar todas as famílias no carrossel (mesmo sem veículos)" />
+                    <x-checkbox-config chave="mostrar_todas_familias"
+                        label="Mostrar todas as famílias no carrossel (mesmo sem veículos)" />
 
-            </div>
+                </div>
+            </form>
+    <!-- Lista  -->
+    <div id="listaFamilias"
+        class="border border-gray-300 rounded-lg shadow-lg  overflow-y-auto"
+        style="height: 100%; flex: 1.2; min-width: 450px;">
 
-
-        </form>
-        <!-- Lista de Famílias -->
-        <div class="max-w-4xl mx-auto overflow-x-auto">
-            <table class="min-w-full border text-sm text-left">
-                <thead class="bg-green-50 text-green-800 uppercase">
-                    <tr>
-                        <th class="px-4 py-2 border">ID</th>
-                        <th class="px-4 py-2 border">Descrição</th>
-                        <th class="px-4 py-2 border">Imagem</th>
-                        <th class="px-4 py-2 border text-center">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($familias as $familia)
-                        <tr class="hover:bg-gray-50">
+                <table class="min-w-full border text-sm text-left">
+                    <thead class="sticky top-0 z-10 bg-green-50 text-green-800 uppercase">
+                        <tr>
+                            <th class="px-4 py-2 border">ID</th>
+                            <th class="px-4 py-2 border">Descrição</th>
+                            <th class="px-4 py-2 border">Imagem</th>
+                            <th class="px-4 py-2 border text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($familias as $familia)
+                        <tr class="hover:bg-gray-50 cursor-pointer"
+                            onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')">
+                            
                             <td class="px-4 py-2 border">{{ $familia->id }}</td>
                             <td class="px-4 py-2 border">{{ $familia->descricao }}</td>
                             <td class="px-4 py-2 border">
                                 @php
-                                    $nomeArquivo = str_replace(' ', '_', $familia->descricao) . '.jpg';
+                                $nomeArquivo = str_replace(' ', '_', $familia->descricao) . '.jpg';
                                 @endphp
                                 @if (file_exists(public_path('images/familia/' . $nomeArquivo)))
-                                    <img src="{{ asset('images/familia/' . $nomeArquivo) }}" alt="Imagem"
-                                        class="h-12 rounded">
+                                <img src="{{ asset('images/familia/' . $nomeArquivo) }}" alt="Imagem"
+                                    class="h-12 rounded">
                                 @else
-                                    <span class="text-gray-400 italic">Sem imagem</span>
+                                <span class="text-gray-400 italic">Sem imagem</span>
                                 @endif
 
                             </td>
@@ -143,15 +144,16 @@
 
                             </td>
                         </tr>
-                    @endforeach
-                    @if ($familias->isEmpty())
+                        @endforeach
+                        @if ($familias->isEmpty())
                         <tr>
                             <td colspan="4" class="text-center text-gray-500 py-4">Nenhuma família cadastrada.
                             </td>
                         </tr>
-                    @endif
-                </tbody>
-            </table>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
