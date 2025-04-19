@@ -1,66 +1,67 @@
 <x-app-layout> {{-- ✅ Gerenciar famílias de veículos - INDEX - FAMILIA --}}
-    <!-- 🔝 Header -->  
-     <div class="flex flex-col h-screen">
-         <div class="flex items-center justify-between gap-4 px-4 py-4 bg-white shadow rounded-md p-4 border">
-             <div class="flex items-center gap-4 ">
-                 @if (request('from') && request('origem'))
-                 @php
-                     $voltarPara = request('from') === 'create'
-                         ? route('veiculos.create', ['from' => request('origem')])
-                         : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
-                 @endphp
-                 <a href="{{ $voltarPara }}"
-                     class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
-                     <i class="fas fa-arrow-left"></i>
-                     Voltar para edição do veículo
-                 </a>
-                 @endif
- 
-                 <h2 class="text-2xl font-semibold text-green-700 whitespace-nowrap">
-                     Gerenciar Famílias de Veículos
-                 </h2>
-             </div>
- 
-             <div class="flex items-center gap-4 ">
-                 <form method="GET" action="{{ route('familia.index') }}" class="flex items-center gap-2 ">
-                     <input type="text" name="busca" value="{{ request('busca') }}" placeholder="Buscar família..."
-                         class="min-w-[180px] px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
- 
-                     <button type="submit"
-                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition flex items-center gap-2">
-                         <i class="fas fa-search"></i> Buscar
-                     </button>
- 
-                     @if (request('busca'))
-                     <a href="{{ route('familia.index') }}"
-                         class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-2">
-                         <i class="fas fa-broom"></i> Limpar
-                     </a>
-                     @endif
-                 </form>
- 
-                 <div class="flex items-center gap-2">
-                     <x-checkbox-config chave="mostrar_todas_familias" label="Mostrar todas as famílias em Veiculos Novos" />
-                     <x-bt-ajuda /><!-- Botão de Ajuda -->
-                 </div>
-             </div>
-         </div>
- 
-         @if (request('from'))
-             @php
-                 $veiculo = \App\Models\Veiculo::find(request('from'));
-                 $familia = $veiculo ? \App\Models\Familia::where('descricao', $veiculo->familia)->first() : null;
-             @endphp
-             @if ($familia)
-                 <script>
-                     document.addEventListener('DOMContentLoaded', function () {
+    <!-- 🔝 Header -->
+    <div class="flex flex-col h-screen">
+        <div class="flex items-center justify-between gap-4 px-4 py-4 bg-white shadow rounded-md p-4 border">
+            <div class="flex items-center gap-4 ">
+                @if (request('from') && request('origem'))
+                @php
+                $voltarPara = request('from') === 'create'
+                ? route('veiculos.create', ['from' => request('origem')])
+                : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
+                @endphp
+                <a href="{{ $voltarPara }}"
+                    class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar para edição do veículo
+                </a>
+                @endif
+
+                <h2 class="text-2xl font-semibold text-green-700 whitespace-nowrap">
+                    Gerenciar Famílias de Veículos
+                </h2>
+            </div>
+
+            <div class="flex items-center gap-4 ">
+                <form method="GET" action="{{ route('familia.index') }}" class="flex items-center gap-2 ">
+                    <input type="text" name="busca" value="{{ request('busca') }}" placeholder="Buscar família..."
+                        class="min-w-[180px] px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
+
+                    <button type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition flex items-center gap-2">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+
+                    @if (request('busca'))
+                    <a href="{{ route('familia.index') }}"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-2">
+                        <i class="fas fa-broom"></i> Limpar
+                    </a>
+                    @endif
+                </form>
+
+                <div class="flex items-center gap-2">
+                    <x-checkbox-config chave="mostrar_todas_familias"
+                        label="Mostrar todas as famílias em Veiculos Novos" />
+                    <x-bt-ajuda /><!-- Botão de Ajuda -->
+                </div>
+            </div>
+        </div>
+
+        @if (request('from'))
+        @php
+        $veiculo = \App\Models\Veiculo::find(request('from'));
+        $familia = $veiculo ? \App\Models\Familia::where('descricao', $veiculo->familia)->first() : null;
+        @endphp
+        @if ($familia)
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
                          preencherFormulario("{{ $familia->id }}", "{{ $familia->descricao }}", "{{ $familia->site ?? '' }}");
                      });
-                 </script>
-             @endif
- 
-             <script>
-                 document.addEventListener('DOMContentLoaded', function () {
+        </script>
+        @endif
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
                      const form = document.getElementById('formFamilia');
  
                      form.addEventListener('submit', function (e) {
@@ -96,29 +97,31 @@
                          }
                      });
                  });
-             </script>
-         @endif
+        </script>
+        @endif
 
         {{-- Bloco Alterar / Cadastrar Familia --}}
-        <div class="flex flex-col md:flex-row gap-1 gap-4 px-4 h-screen py-4 pb-4 " style="height: calc(100vh - 180px);">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 px-4 py-4 h-screen"
+            style="height: calc(100vh - 180px);">
             <!-- Gerenciamento de familias-->
             <form id="formFamilia" method="POST" action="/veiculos/familia" enctype="multipart/form-data"
-                class="border border-gray-300 rounded-lg shadow-lg p-6 overflow-y-auto bg-white" style="height: 100%; flex: 3;">
+                class="border border-gray-300 rounded-lg shadow-lg p-3 overflow-y-auto bg-white"
+                style="height: 100%; flex: 3;">
                 @csrf
 
                 {{-- selecionar familia --}}
-                <div x-data="{ idSelecionado: null }" class="flex flex-wrap gap-4 mb-4">
+                <div x-data="{ idSelecionado: null }" class="flex flex-wrap gap-1 mb-1">
 
                     <!-- Nome da Família -->
                     <div class="basis-[10%] min-w-[100px]">
-                        <label class="block text-gray-700 font-medium mb-1">Nome:</label>
+                        <label class="block text-gray-700 font-medium ">Nome:</label>
                         <input type="text" name="descricao" required
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
                     </div>
 
                     <!-- Site -->
                     <div class="basis-[55%] flex-grow min-w-[180px]">
-                        <label class="block text-gray-700 font-medium mb-1">Site de Apoio:</label>
+                        <label class="block text-gray-700 font-medium ">Site de Apoio:</label>
                         <input type="text" name="site"
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                     </div>
@@ -143,7 +146,8 @@
 
                 <div class="flex gap-4">
                     {{-- Upload de arquivos com legenda --}}
-                    <fieldset class="border border-blue-200 rounded-md p-4 mb-4 w-full bg-blue-100" style="flex: 1.8">
+                    <fieldset id="Arquivos" class="border border-blue-200 rounded-md p-2 mb-4 w-full bg-blue-100"
+                        style="flex: 1.8">
                         <legend class="text-sm font-semibold text-gray-600 px-2"><i class="fas fa-folder"></i> Arquivos
                             da Família</legend>
 
@@ -153,7 +157,7 @@
                                 <form action="{{ route('familia.upload', ['tipo' => 'imagem']) }}" method="POST"
                                     enctype="multipart/form-data" class="flex items-center gap-3 w-full">
                                     @csrf
-                                    <label class="w-1/4 text-gray-700 font-medium">Imagem</label>
+                                    <label class="w-1/4 text-gray-700 font-medium">Imagem Unica</label>
                                     <input type="file" name="arquivo" accept=".jpg,.jpeg"
                                         class="flex-1 border rounded-md text-sm px-2 py-1 file:bg-green-100 file:text-green-700 hover:file:bg-green-200">
                                     <button type="submit"
@@ -167,7 +171,7 @@
                             <form action="{{ route('familia.upload', ['tipo' => 'mev']) }}" method="POST"
                                 enctype="multipart/form-data" class="flex items-center gap-3 w-full">
                                 @csrf
-                                <label class="w-1/4 text-gray-700 font-medium">Arquivo MEV</label>
+                                <label class="w-1/4 text-gray-700 font-medium">Arquivo M.E.V.</label>
                                 <input type="file" name="arquivo" accept=".pdf"
                                     class="flex-1 border rounded-md text-sm px-2 py-1 file:bg-green-100 file:text-green-700 hover:file:bg-green-200">
                                 <button type="submit"
@@ -177,40 +181,102 @@
                             </form>
 
                             <!-- 3️⃣ Documentos -->
+
+                        </div>
+
+                        <!-- 📂 Subgrupo opcional dentro do fieldset principal -->
+                        <fieldset class="border border-dashed border-gray-400 rounded-md p-3 mt-1 bg-blue-50">
+                            <legend class="text-xs font-semibold text-gray-500 px-2">
+                                <i class="fas fa-paperclip"></i> Outros Anexos (opcional) Planilhas, Folders, Campanhas, Material de Apoio, etc. ...
+                            </legend>
+                            {{-- <p class="text-sm text-gray-600">Aqui você pode inserir arquivos adicionais como planilhas,
+                                apresentações ou contratos relacionados à família.</p> --}}
+
                             <form action="{{ route('familia.upload', ['tipo' => 'documentos']) }}" method="POST"
-                                enctype="multipart/form-data" class="flex items-center gap-3 w-full">
+                                enctype="multipart/form-data" class="flex items-center gap-3 mt-2">
                                 @csrf
-                                <label class="w-1/4 text-gray-700 font-medium">Documentos</label>
-                                <input type="file" name="arquivo" accept="*"
+                                <input type="file" name="arquivo"
                                     class="flex-1 border rounded-md text-sm px-2 py-1 file:bg-green-100 file:text-green-700 hover:file:bg-green-200">
                                 <button type="submit"
                                     class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm">
                                     <i class="fas fa-cloud-upload-alt mr-1"></i> Upload
                                 </button>
                             </form>
-                        </div>
+
+
+                            <!-- 📄 Lista de arquivos já enviados -->
+                            <div class="mt-1 bg-white border border-gray-200 rounded-md p-2 shadow-inner">
+                                <h4 class="text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-file-alt mr-1"></i> Arquivos Enviados
+                                </h4>
+
+                                  @php
+                                $familiaId = $familia->id ?? request('from');
+                                $caminho = public_path('docs');
+                                $arquivosExtras = collect(\File::files($caminho))
+                                ->filter(fn($file) => str_starts_with($file->getFilename(), $familiaId . '_'));
+                                @endphp
+
+                                @if ($arquivosExtras->isEmpty())
+                                <p class="text-gray-500 text-sm italic">Nenhum anexo encontrado.</p>
+                                @else
+                                <ul class="divide-y divide-gray-200 text-sm">
+                                    @foreach ($arquivosExtras as $arquivo)
+                                    @php
+                                    $nomeArquivo = $arquivo->getFilename();
+                                    $nomeVisivel = Str::after($nomeArquivo, $familia->id . '_');
+                                    @endphp
+                                    <li class="flex justify-between items-center py-2">
+                                        <a href="{{ asset('docs/' . $nomeArquivo) }}" target="_blank"
+                                            class="text-blue-600 hover:underline">
+                                            <i class="fas fa-file mr-1"></i> {{ $nomeVisivel }}
+                                        </a>
+                                        <form method="POST" action="{{ route('familia.excluirArquivoSimples') }}">
+                                            @csrf
+                                            <input type="hidden" name="arquivo" value="{{ $nomeArquivo }}">
+                                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm">
+                                                <i class="fas fa-trash-alt"></i> Excluir
+                                            </button>
+                                        </form>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                                @endif
+                            </div>
+
+
+
+
+
+                        </fieldset>
+
+
                     </fieldset>
 
                     {{-- 🎨 Cores disponíveis --}}
-                    <fieldset class="border border-blue-200 rounded-md p-3 mb-4 w-full bg-blue-100" style="flex: 0.5">
+                    <fieldset id="Cores" class="border border-blue-200 rounded-md p-2 mb-4 w-full  bg-blue-100"
+                        style="flex: 0.5">
                         <legend class="text-sm font-semibold text-gray-600 px-2"><i class="fas fa-palette"></i> Cores
                             Disponíveis</legend>
 
-                        <div class="grid grid-cols-1 gap-1 text-sm">
-                            <label class="inline-flex items-center gap-2">
-                                <input type="checkbox" class="form-checkbox text-green-600">
-                                Verde Musgo
-                            </label>
-                            <label class="inline-flex items-center gap-2">
-                                <input type="checkbox" class="form-checkbox text-blue-600">
-                                Azul Infinito
-                            </label>
-                            <label class="inline-flex items-center gap-2">
-                                <input type="checkbox" class="form-checkbox text-red-600">
-                                Vermelho Rubi
-                            </label>
+                        <div class="overflow-y-auto " style="max-height: 240px;">
+                            <div class="grid grid-cols-1 gap-2 text-sm">
+                                @foreach ($cores as $cor)
+                                <label class="inline-flex items-center gap-2">
+                                    <input type="checkbox" class="form-checkbox text-green-600" name="cores[]"
+                                        value="{{ $cor->id }}">
+                                    {{ $cor->cor_desc }}
+                                </label>
+                                @endforeach
+                            </div>
                         </div>
-                    </fieldset>
+                        <div class="flex justify-center mt-1">
+                            <button id="relacionar" type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm">
+                                <i class="fas fa-cloud-upload-alt mr-1"></i> Relacionar
+                            </button>
+                        </div>
+                   </fieldset>
                 </div>
 
             </form>
@@ -384,7 +450,7 @@
             }
         }
     </script>
-    
+
 
 
 </x-app-layout>

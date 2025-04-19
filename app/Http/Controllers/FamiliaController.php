@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Configuracao;
+use App\Models\Cor;
 use App\Models\Familia;
+use App\Models\Configuracao;
 use Illuminate\Http\Request;
 
 class FamiliaController extends Controller
@@ -20,8 +21,9 @@ class FamiliaController extends Controller
         }
 
         $familias = $query->orderBy('descricao')->paginate(10)->appends($request->only('busca'));
+        $cores = Cor::orderBy('cor_desc')->get(); // busca todas as cores ordenadas
 
-        return view('familia.index', compact('familias'));
+        return view('familia.index', compact('familias', 'cores'));
     }
 
 
@@ -165,5 +167,19 @@ class FamiliaController extends Controller
 
         return back()->with('error', 'Nenhum arquivo selecionado.');
     }
+
+    public function excluirArquivoSimples(Request $request)
+{
+    $arquivo = $request->input('arquivo');
+    $caminho = public_path('docs/' . $arquivo);
+
+    if (file_exists($caminho)) {
+        unlink($caminho);
+        return back()->with('success', 'Arquivo removido com sucesso!');
+    }
+
+    return back()->with('error', 'Arquivo não encontrado.');
+}
+
 
 }
