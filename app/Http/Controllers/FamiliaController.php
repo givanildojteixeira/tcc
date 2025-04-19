@@ -6,25 +6,27 @@ use App\Models\Cor;
 use App\Models\Familia;
 use App\Models\Configuracao;
 use Illuminate\Http\Request;
+use App\Models\Veiculo;
 
 class FamiliaController extends Controller
 {
 
 
-    public function index(Request $request)
-    {
-        $query = Familia::query();
+public function index(Request $request)
+{
+    $familias = Familia::all();
+    $cores = Cor::all();
+    $familia = null;
 
-        if ($request->filled('busca')) {
-            $busca = $request->input('busca');
-            $query->where('descricao', 'like', "%{$busca}%");
+    if ($request->has('from')) {
+        $veiculo = Veiculo::find($request->input('from'));
+        if ($veiculo && $veiculo->familia) {
+            $familia = Familia::where('descricao', $veiculo->familia)->first();
         }
-
-        $familias = $query->orderBy('descricao')->paginate(10)->appends($request->only('busca'));
-        $cores = Cor::orderBy('cor_desc')->get(); // busca todas as cores ordenadas
-
-        return view('familia.index', compact('familias', 'cores'));
     }
+
+    return view('familia.index', compact('familias', 'cores', 'familia'));
+}
 
 
 

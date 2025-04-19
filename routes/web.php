@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\Cor;
 use App\Models\User;
 use App\Models\Cliente;
+use App\Models\Familia;
 use App\Models\Veiculo;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CorController;
 use App\Http\Controllers\UserController;
@@ -14,6 +17,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\OpcionaisController;
 use App\Http\Controllers\PropostasController;
+use App\Http\Controllers\CorFamiliaController;
 use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\ConfiguracaoController;
@@ -84,7 +88,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('/veiculos/familia', FamiliaController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::post('/veiculos/familia-upload/{tipo}', [FamiliaController::class, 'upload'])->name('familia.upload');
     Route::post('/familia/excluir-arquivo', [FamiliaController::class, 'excluirArquivoSimples'])->name('familia.excluirArquivoSimples');
-
+    Route::post('/familia/relacionar-cores', [CorFamiliaController::class, 'relacionar'])->name('cor_familia.relacionar');
+    Route::get('/familia/{id}/cores', function ($id) {
+        return DB::table('cor_familia')->where('familia_id', $id)->pluck('cor_id');
+    });
 
     // cores
     Route::resource('cores', CorController::class);
