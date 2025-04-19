@@ -144,12 +144,12 @@
                             <label class="block text-gray-700 font-medium mb-1">Transmissão</label>
                             <select name="transmissao"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                                <option value="Mecanica"
-                                    {{ old('transmissao', $veiculo->transmissao) == 'Mecanica' ? 'selected' : '' }}>
+                                <option value="Mecânica"
+                                    {{ old('transmissao', $veiculo->transmissao) == 'Mecânica' ? 'selected' : '' }}>
                                     Mecânica
                                 </option>
-                                <option value="Automatica"
-                                    {{ old('transmissao', $veiculo->transmissao) == 'Automatica' ? 'selected' : '' }}>
+                                <option value="Automática"
+                                    {{ old('transmissao', $veiculo->transmissao) == 'Automática' ? 'selected' : '' }}>
                                     Automática
                                 </option>
                             </select>
@@ -165,7 +165,6 @@
                             </div>
                         @endif
                     </div>
-
                     <!-- Linha com Valor Tabela, Bônus e Custo -->
                     <div class="flex flex-row gap-4 mb-4 ">
                         <x-input-moeda name="vlr_nota" label="Valor Custo" :value="$veiculo->vlr_nota" />
@@ -176,6 +175,7 @@
                             <select name="local" id="local" required
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
                                 <option value="{{ old('local', $veiculo->local) }}"></option>
+                           
 
                                 @if (request('from') === 'novos')
                                     <option value="Matriz"

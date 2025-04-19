@@ -71,8 +71,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/veiculos', [VeiculoController::class, 'store'])->name('veiculos.store');
     Route::delete('/veiculos/{veiculo}', [VeiculoController::class, 'destroy'])->name('veiculos.destroy');
 
-
-
     //Veiculos novos
     Route::get('/novos', [NovosController::class, 'index'])->name('veiculos.novos.index');
     Route::get('/veiculos/novos/limpar-filtros', [NovosController::class, 'limparFiltros'])->name('veiculos.novos.limparFiltros');
@@ -83,6 +81,8 @@ Route::middleware('auth')->group(function () {
 
     //Familias
     Route::resource('/veiculos/familia', FamiliaController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::post('/veiculos/familia-upload/{tipo}', [FamiliaController::class, 'upload'])->name('familia.upload');
+
 
     //Configurações
     Route::post('/configuracoes/salvar', [ConfiguracaoController::class, 'salvar'])->name('configuracoes.salvar');

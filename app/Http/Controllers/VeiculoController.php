@@ -51,6 +51,7 @@ class VeiculoController extends Controller
             'Ano_Mod' => 'nullable|string|max:20',
             'cor' => 'nullable|string|max:50',
             'motor' => 'nullable|string|max:10',
+            'transmissao' => 'required|string|in:Automática,Mecânica',
             'portas' => 'nullable|integer',
             'combustivel' => 'nullable|string|max:50',
             'vlr_nota' => 'nullable|numeric',
@@ -180,6 +181,7 @@ class VeiculoController extends Controller
         ]);
     }
 
+    // criação de novos veiculos
     public function store(Request $request)
     {
 
@@ -196,6 +198,7 @@ class VeiculoController extends Controller
             'Ano_Mod' => 'nullable|string|max:20',
             'cor' => 'nullable|string|max:50',
             'motor' => 'nullable|string|max:10',
+            'transmissao' => 'required|string|in:Automática,Mecânica',
             'portas' => 'nullable|integer',
             'combustivel' => 'nullable|string|max:50',
             'vlr_nota' => 'nullable|numeric',

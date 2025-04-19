@@ -1,99 +1,240 @@
 <x-app-layout> {{-- ✅ Gerenciar famílias de veículos - INDEX - FAMILIA --}}
-    <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
-        <!-- Título e Feedback -->
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-semibold text-green-700">Gerenciar famílias de veículos</h2>
-            <x-bt-ajuda /> <!-- Botão de Ajuda -->
-        </div>
-<!-- Container flexível -->
-<div class="flex flex-col md:flex-row gap-6" style="height: calc(100vh - 190px);">
-    <!-- Formulário com proporção maior (3 partes) -->
-    <form id="formFamilia"
-        class="border border-gray-300 rounded-lg shadow-lg p-6 overflow-y-auto"
-        style="height: 100%; flex: 3;">
+    <!-- 🔝 Header -->  
+     <div class="flex flex-col h-screen">
+         <div class="flex flex-wrap items-center justify-between gap-4 px-4 py-4">
+             <div class="flex items-center gap-4 flex-wrap">
+                 @if (request('from') && request('origem'))
+                 @php
+                     $voltarPara = request('from') === 'create'
+                         ? route('veiculos.create', ['from' => request('origem')])
+                         : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
+                 @endphp
+                 <a href="{{ $voltarPara }}"
+                     class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
+                     <i class="fas fa-arrow-left"></i>
+                     Voltar para edição do veículo
+                 </a>
+                 @endif
+ 
+                 <h2 class="text-2xl font-semibold text-green-700 whitespace-nowrap">
+                     Gerenciar Famílias de Veículos
+                 </h2>
+             </div>
+ 
+             <div class="flex items-center gap-4 flex-wrap">
+                 <form method="GET" action="{{ route('familia.index') }}" class="flex items-center gap-2 flex-wrap">
+                     <input type="text" name="busca" value="{{ request('busca') }}" placeholder="Buscar família..."
+                         class="min-w-[180px] px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
+ 
+                     <button type="submit"
+                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition flex items-center gap-2">
+                         <i class="fas fa-search"></i> Buscar
+                     </button>
+ 
+                     @if (request('busca'))
+                     <a href="{{ route('familia.index') }}"
+                         class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-2">
+                         <i class="fas fa-broom"></i> Limpar
+                     </a>
+                     @endif
+                 </form>
+ 
+                 <div class="flex items-center gap-2">
+                     <x-checkbox-config chave="mostrar_todas_familias" label="Mostrar todas as famílias em Veiculos Novos" />
+                     <x-bt-ajuda /><!-- Botão de Ajuda -->
+                 </div>
+             </div>
+         </div>
+ 
+         @if (request('from'))
+             @php
+                 $veiculo = \App\Models\Veiculo::find(request('from'));
+                 $familia = $veiculo ? \App\Models\Familia::where('descricao', $veiculo->familia)->first() : null;
+             @endphp
+             @if ($familia)
+                 <script>
+                     document.addEventListener('DOMContentLoaded', function () {
+                         preencherFormulario("{{ $familia->id }}", "{{ $familia->descricao }}", "{{ $familia->site ?? '' }}");
+                     });
+                 </script>
+             @endif
+ 
+             <script>
+                 document.addEventListener('DOMContentLoaded', function () {
+                     const form = document.getElementById('formFamilia');
+ 
+                     form.addEventListener('submit', function (e) {
+                         const methodField = form.querySelector('input[name="_method"]');
+                         const isAlterar = methodField && methodField.value === 'PUT';
+ 
+                         if (isAlterar) {
+                             e.preventDefault();
+ 
+                             const actionUrl = form.action;
+                             const formData = new FormData(form);
+ 
+                             fetch(actionUrl, {
+                                 method: 'POST',
+                                 headers: {
+                                     'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
+                                     'Accept': 'application/json',
+                                 },
+                                 body: formData
+                             })
+                             .then(response => {
+                                 if (response.ok) {
+                                     window.location.href = "{{ request('from') === 'create' 
+                                         ? route('veiculos.create', ['from' => request('origem')])
+                                         : url('/veiculos/' . request('from') . '/edit?from=' . request('origem')) }}";
+                                 } else {
+                                     return response.json().then(err => {
+                                         alert("Erro ao alterar: " + (err.message || "Verifique os dados."));
+                                     });
+                                 }
+                             })
+                             .catch(err => alert("Erro de rede: " + err));
+                         }
+                     });
+                 });
+             </script>
+         @endif
+
+        {{-- Bloco Alterar / Cadastrar Familia --}}
+        <div class="flex flex-col md:flex-row gap-1 gap-4 px-4 h-screen py-4 pb-4" style="height: calc(100vh - 180px);">
+            <!-- Gerenciamento de familias-->
+            <form id="formFamilia" method="POST" action="/veiculos/familia" enctype="multipart/form-data"
+                class="border border-gray-300 rounded-lg shadow-lg p-6 overflow-y-auto" style="height: 100%; flex: 3;">
                 @csrf
 
-                <div class="flex flex-wrap gap-4 mb-4">
+                {{-- selecionar familia --}}
+                <div x-data="{ idSelecionado: null }" class="flex flex-wrap gap-4 mb-4">
+
                     <!-- Nome da Família -->
-                    <div class="flex-grow basis-[10%] min-w-[100px]">
-                        <label class="block text-gray-700 font-medium mb-1">Nome da Família</label>
+                    <div class="basis-[10%] min-w-[100px]">
+                        <label class="block text-gray-700 font-medium mb-1">Nome:</label>
                         <input type="text" name="descricao" required
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none">
                     </div>
+
                     <!-- Site -->
-                    <div class="basis-[70%] flex-grow min-w-[180px]">
-                        <label class="block text-gray-700 font-medium mb-1">Site de Apoio</label>
+                    <div class="basis-[55%] flex-grow min-w-[180px]">
+                        <label class="block text-gray-700 font-medium mb-1">Site de Apoio:</label>
                         <input type="text" name="site"
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                     </div>
 
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <!-- Imagem da Família -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Imagem da Família</label>
-                        <input type="file" name="imagem" accept=".jpg,.jpeg" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
-                                   file:rounded-md file:border-0
-                                   file:text-sm file:font-semibold
-                                   file:bg-green-100 file:text-green-700
-                                   hover:file:bg-green-200">
-                    </div>
+                    <!-- Campo oculto para o ID -->
+                    <input type="hidden" name="id" x-model="idSelecionado">
 
-                    <!-- Arquivo MEV -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Arquivo MEV</label>
-                        <input type="file" name="arquivo_mev" accept=".pdf" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
-                                   file:rounded-md file:border-0
-                                   file:text-sm file:font-semibold
-                                   file:bg-green-100 file:text-green-700
-                                   hover:file:bg-green-200">
-                    </div>
-
-                    <!-- Documento Adicional -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Documentos</label>
-                        <input type="file" name="documentos" accept="*" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
-                                   file:rounded-md file:border-0
-                                   file:text-sm file:font-semibold
-                                   file:bg-green-100 file:text-green-700
-                                   hover:file:bg-green-200">
-                    </div>
-                </div>
-
-
-                <div class="flex flex-wrap items-center gap-4 ">
-                    @if (request('from') && request('origem'))
-                    @php
-                    $voltarPara =
-                    request('from') === 'create'
-                    ? route('veiculos.create', ['from' => request('origem')])
-                    : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
-                    @endphp
-                    <div class="mb-4">
-                        <a href="{{ $voltarPara }}"
-                            class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
-                            <i class="fas fa-arrow-left"></i>
-                            Voltar para edição do veículo
-                        </a>
-                    </div>
-                    @endif
-
-
-                    <button type="submit"
-                        class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md shadow-md">
-                        <i class="fas fa-plus-circle"></i>
-                        Cadastrar ou Alterar Família
+                    <!-- Botão dinâmico -->
+                    <button type="submit" id="botaoFamilia" :class="idSelecionado 
+                            ? 'flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600' 
+                            : 'flex items-center gap-1 bg-green-600 hover:bg-green-700'
+                            + ' text-white px-3 py-1.5 text-sm rounded-md shadow'" class="transition">
+                        <i :class="idSelecionado ? 'fas fa-pen' : 'fas fa-plus-circle'"></i>
+                        <span x-text="idSelecionado ? 'Alterar' : 'Cadastrar'"></span>
                     </button>
-
-                    <x-checkbox-config chave="mostrar_todas_familias"
-                        label="Mostrar todas as famílias no carrossel (mesmo sem veículos)" />
-
+                    <!-- Botão Limpar -->
+                    <button type="button" onclick="resetarFormulario()"
+                        class="flex items-center gap-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1.5 text-sm rounded-md shadow">
+                        <i class="fas fa-eraser text-sm"></i> Limpar
+                    </button>
                 </div>
+
+                <div class="flex gap-4">
+                    {{-- Upload de arquivos com legenda --}}
+                    <fieldset class="border border-blue-200 rounded-md p-4 mb-4 w-full bg-blue-100" style="flex: 1.8">
+                        <legend class="text-sm font-semibold text-gray-600 px-2"><i class="fas fa-folder"></i> Arquivos
+                            da Família</legend>
+
+                        <div class="grid grid-cols-1 gap-3">
+                            <!-- 1️⃣ Imagem da Família -->
+                            <div class="flex items-center gap-3 w-full">
+                                <form action="{{ route('familia.upload', ['tipo' => 'imagem']) }}" method="POST"
+                                    enctype="multipart/form-data" class="flex items-center gap-3 w-full">
+                                    @csrf
+                                    <label class="w-1/4 text-gray-700 font-medium">Imagem</label>
+                                    <input type="file" name="arquivo" accept=".jpg,.jpeg"
+                                        class="flex-1 border rounded-md text-sm px-2 py-1 file:bg-green-100 file:text-green-700 hover:file:bg-green-200">
+                                    <button type="submit"
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm">
+                                        <i class="fas fa-cloud-upload-alt mr-1"></i> Upload
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- 2️⃣ Arquivo MEV -->
+                            <form action="{{ route('familia.upload', ['tipo' => 'mev']) }}" method="POST"
+                                enctype="multipart/form-data" class="flex items-center gap-3 w-full">
+                                @csrf
+                                <label class="w-1/4 text-gray-700 font-medium">Arquivo MEV</label>
+                                <input type="file" name="arquivo" accept=".pdf"
+                                    class="flex-1 border rounded-md text-sm px-2 py-1 file:bg-green-100 file:text-green-700 hover:file:bg-green-200">
+                                <button type="submit"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm">
+                                    <i class="fas fa-cloud-upload-alt mr-1"></i> Upload
+                                </button>
+                            </form>
+
+                            <!-- 3️⃣ Documentos -->
+                            <form action="{{ route('familia.upload', ['tipo' => 'documentos']) }}" method="POST"
+                                enctype="multipart/form-data" class="flex items-center gap-3 w-full">
+                                @csrf
+                                <label class="w-1/4 text-gray-700 font-medium">Documentos</label>
+                                <input type="file" name="arquivo" accept="*"
+                                    class="flex-1 border rounded-md text-sm px-2 py-1 file:bg-green-100 file:text-green-700 hover:file:bg-green-200">
+                                <button type="submit"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm">
+                                    <i class="fas fa-cloud-upload-alt mr-1"></i> Upload
+                                </button>
+                            </form>
+                        </div>
+                    </fieldset>
+
+                    {{-- 🎨 Cores disponíveis --}}
+                    <fieldset class="border border-blue-200 rounded-md p-3 mb-4 w-full bg-blue-100" style="flex: 0.5">
+                        <legend class="text-sm font-semibold text-gray-600 px-2"><i class="fas fa-palette"></i> Cores
+                            Disponíveis</legend>
+
+                        <div class="grid grid-cols-1 gap-1 text-sm">
+                            <label class="inline-flex items-center gap-2">
+                                <input type="checkbox" class="form-checkbox text-green-600">
+                                Verde Musgo
+                            </label>
+                            <label class="inline-flex items-center gap-2">
+                                <input type="checkbox" class="form-checkbox text-blue-600">
+                                Azul Infinito
+                            </label>
+                            <label class="inline-flex items-center gap-2">
+                                <input type="checkbox" class="form-checkbox text-red-600">
+                                Vermelho Rubi
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+
             </form>
-    <!-- Lista  -->
-    <div id="listaFamilias"
-        class="border border-gray-300 rounded-lg shadow-lg  overflow-y-auto"
-        style="height: 100%; flex: 1.2; min-width: 450px;">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Lista  -->
+            <div id="listaFamilias" class="border border-gray-300 rounded-lg shadow-lg  overflow-y-auto"
+                style="height: 100%; flex: 1.2; min-width: 450px;">
 
                 <table class="min-w-full border text-sm text-left">
                     <thead class="sticky top-0 z-10 bg-green-50 text-green-800 uppercase">
@@ -108,7 +249,7 @@
                         @foreach ($familias as $familia)
                         <tr class="hover:bg-gray-50 cursor-pointer"
                             onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')">
-                            
+
                             <td class="px-4 py-2 border">{{ $familia->id }}</td>
                             <td class="px-4 py-2 border">{{ $familia->descricao }}</td>
                             <td class="px-4 py-2 border">
@@ -227,23 +368,40 @@
     <script>
         function preencherFormulario(id, descricao, site = '') {
             const form = document.getElementById('formFamilia');
+            if (!form) return;
+    
             form.action = `/veiculos/familia/${id}`;
-
+    
             // Remove qualquer _method anterior
             const oldMethod = form.querySelector('input[name="_method"]');
             if (oldMethod) oldMethod.remove();
-
+    
             // Adiciona _method PUT
             const methodInput = document.createElement('input');
             methodInput.setAttribute('type', 'hidden');
             methodInput.setAttribute('name', '_method');
             methodInput.setAttribute('value', 'PUT');
             form.appendChild(methodInput);
-
+    
             // Preenche os campos
-            form.querySelector('input[name="descricao"]').value = descricao;
-            form.querySelector('input[name="site"]').value = site;
+            const campoDescricao = form.querySelector('input[name="descricao"]');
+            const campoSite = form.querySelector('input[name="site"]');
+            const campoId = form.querySelector('input[name="id"]');
+    
+            if (campoDescricao) campoDescricao.value = descricao;
+            if (campoSite) campoSite.value = site;
+            if (campoId) campoId.value = id;
+    
+            // Atualiza botão para modo ALTERAR
+            const botao = document.getElementById('botaoFamilia');
+            if (botao) {
+                botao.innerHTML = '<i class="fas fa-pen-to-square text-sm"></i> Alterar';
+                botao.classList.remove('bg-green-600', 'hover:bg-green-700');
+                botao.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+            }
         }
     </script>
+    
+
 
 </x-app-layout>

@@ -9,11 +9,21 @@ use Illuminate\Http\Request;
 class FamiliaController extends Controller
 {
 
-    public function index()
+
+    public function index(Request $request)
     {
-        $familias = Familia::all();
+        $query = Familia::query();
+
+        if ($request->filled('busca')) {
+            $busca = $request->input('busca');
+            $query->where('descricao', 'like', "%{$busca}%");
+        }
+
+        $familias = $query->orderBy('descricao')->paginate(10)->appends($request->only('busca'));
+
         return view('familia.index', compact('familias'));
     }
+
 
 
 
@@ -135,4 +145,25 @@ class FamiliaController extends Controller
 
         return redirect()->route('familia.index')->with('success', 'Família excluída com sucesso!');
     }
+
+    public function upload(Request $request, $tipo)
+    {
+        $arquivo = $request->file('arquivo');
+
+        if ($arquivo) {
+            $nomeArquivo = match ($tipo) {
+                'imagem' => 'imagem_' . time() . '.' . $arquivo->getClientOriginalExtension(),
+                'mev' => 'mev_' . time() . '.' . $arquivo->getClientOriginalExtension(),
+                'documentos' => 'doc_' . time() . '.' . $arquivo->getClientOriginalExtension(),
+                default => 'arquivo_' . time() . '.' . $arquivo->getClientOriginalExtension(),
+            };
+
+            $arquivo->move(public_path('uploads/familia'), $nomeArquivo);
+
+            return back()->with('success', 'Arquivo enviado com sucesso!');
+        }
+
+        return back()->with('error', 'Nenhum arquivo selecionado.');
+    }
+
 }
