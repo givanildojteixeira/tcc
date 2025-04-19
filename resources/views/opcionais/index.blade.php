@@ -53,7 +53,7 @@
 
         </div>
 
-        <!-- 🧾 Conteúdo com scroll interno -->
+         <!-- 📄 Tabela -->
         <div class="w-full max-w-full px-4 md:px-6">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg relative">
                 <div class="text-gray-900 dark:text-gray-100">

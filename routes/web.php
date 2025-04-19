@@ -1,21 +1,22 @@
 <?php
 
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\FinanceiroController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\NovosController;
-use App\Http\Controllers\PropostasController;
-use App\Http\Controllers\RelatoriosController;
-use App\Http\Controllers\UsadosController;
-use App\Http\Controllers\VeiculoController;
-use App\Http\Controllers\FamiliaController;
-use App\Http\Controllers\OpcionaisController;
-use App\Http\Controllers\ConfiguracaoController;
-use App\Models\Cliente;
 use App\Models\User;
+use App\Models\Cliente;
 use App\Models\Veiculo;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CorController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\NovosController;
+use App\Http\Controllers\UsadosController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\FamiliaController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VeiculoController;
+use App\Http\Controllers\OpcionaisController;
+use App\Http\Controllers\PropostasController;
+use App\Http\Controllers\FinanceiroController;
+use App\Http\Controllers\RelatoriosController;
+use App\Http\Controllers\ConfiguracaoController;
 
 
 /*
@@ -82,6 +83,9 @@ Route::middleware('auth')->group(function () {
     //Familias
     Route::resource('/veiculos/familia', FamiliaController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::post('/veiculos/familia-upload/{tipo}', [FamiliaController::class, 'upload'])->name('familia.upload');
+
+    // cores
+    Route::resource('cores', CorController::class);
 
 
     //Configurações

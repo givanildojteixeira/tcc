@@ -12,4 +12,9 @@ class Familia extends Model
         'descricao',
         'site',
     ];
+    public function cores()
+    {
+        return $this->belongsToMany(Cor::class, 'cor_familia');
+    }
+
 }
