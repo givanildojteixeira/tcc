@@ -1,8 +1,8 @@
 <x-app-layout> {{-- ✅ Gerenciar famílias de veículos - INDEX - FAMILIA --}}
     <!-- 🔝 Header -->  
      <div class="flex flex-col h-screen">
-         <div class="flex flex-wrap items-center justify-between gap-4 px-4 py-4">
-             <div class="flex items-center gap-4 flex-wrap">
+         <div class="flex items-center justify-between gap-4 px-4 py-4 bg-white shadow rounded-md p-4 border">
+             <div class="flex items-center gap-4 ">
                  @if (request('from') && request('origem'))
                  @php
                      $voltarPara = request('from') === 'create'
@@ -21,8 +21,8 @@
                  </h2>
              </div>
  
-             <div class="flex items-center gap-4 flex-wrap">
-                 <form method="GET" action="{{ route('familia.index') }}" class="flex items-center gap-2 flex-wrap">
+             <div class="flex items-center gap-4 ">
+                 <form method="GET" action="{{ route('familia.index') }}" class="flex items-center gap-2 ">
                      <input type="text" name="busca" value="{{ request('busca') }}" placeholder="Buscar família..."
                          class="min-w-[180px] px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
  
@@ -100,10 +100,10 @@
          @endif
 
         {{-- Bloco Alterar / Cadastrar Familia --}}
-        <div class="flex flex-col md:flex-row gap-1 gap-4 px-4 h-screen py-4 pb-4" style="height: calc(100vh - 180px);">
+        <div class="flex flex-col md:flex-row gap-1 gap-4 px-4 h-screen py-4 pb-4 " style="height: calc(100vh - 180px);">
             <!-- Gerenciamento de familias-->
             <form id="formFamilia" method="POST" action="/veiculos/familia" enctype="multipart/form-data"
-                class="border border-gray-300 rounded-lg shadow-lg p-6 overflow-y-auto" style="height: 100%; flex: 3;">
+                class="border border-gray-300 rounded-lg shadow-lg p-6 overflow-y-auto bg-white" style="height: 100%; flex: 3;">
                 @csrf
 
                 {{-- selecionar familia --}}
@@ -215,25 +215,8 @@
 
             </form>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <!-- Lista  -->
-            <div id="listaFamilias" class="border border-gray-300 rounded-lg shadow-lg  overflow-y-auto"
+            <div id="listaFamilias" class="border border-gray-300 rounded-lg shadow-lg  overflow-y-auto bg-white"
                 style="height: 100%; flex: 1.2; min-width: 450px;">
 
                 <table class="min-w-full border text-sm text-left">

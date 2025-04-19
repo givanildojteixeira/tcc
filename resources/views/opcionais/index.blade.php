@@ -13,7 +13,7 @@
     }" class="flex flex-col h-screen">
 
         <!-- 🔝 Header -->
-        <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 px-4 h-screen py-4 pb-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-4 px-4 h-screen py-4 pb-4 bg-white shadow rounded-md border">
             <!-- 🟩 Título -->
             <h2 class="text-2xl font-semibold text-green-700">
                 Gerenciar Opcionais dos Modelos
