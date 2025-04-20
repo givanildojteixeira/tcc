@@ -12,21 +12,31 @@ class FamiliaController extends Controller
 {
 
 
-public function index(Request $request)
-{
-    $familias = Familia::all();
-    $cores = Cor::all();
-    $familia = null;
-
-    if ($request->has('from')) {
-        $veiculo = Veiculo::find($request->input('from'));
-        if ($veiculo && $veiculo->familia) {
-            $familia = Familia::where('descricao', $veiculo->familia)->first();
+    public function index(Request $request)
+    {
+        $query = Familia::query(); // inicia query dinâmica
+    
+        // Se a busca for preenchida, filtra por descrição
+        if ($request->filled('busca')) {
+            $query->where('descricao', 'like', '%' . $request->busca . '%');
         }
+    
+        $familias = $query->orderBy('descricao')->get(); // carrega ordenado
+    
+        $cores = Cor::orderBy('cor_desc')->get();
+        $familia = null;
+    
+        // Preenchimento automático se veio de um veículo
+        if ($request->has('from')) {
+            $veiculo = Veiculo::find($request->input('from'));
+            if ($veiculo && $veiculo->familia) {
+                $familia = Familia::where('descricao', $veiculo->familia)->first();
+            }
+        }
+    
+        return view('familia.index', compact('familias', 'cores', 'familia'));
     }
-
-    return view('familia.index', compact('familias', 'cores', 'familia'));
-}
+    
 
 
 
