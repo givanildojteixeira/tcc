@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Veiculo;
 use App\Models\Familia;
+use App\Models\Cor;
 use App\Models\Opcionais;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -12,12 +13,14 @@ use Illuminate\Support\Facades\Validator;
 class VeiculoController extends Controller
 {
 
-
     public function edit($id)
     {
         $veiculo = Veiculo::findOrFail($id);
         $familias = Familia::all(); // <- aqui você pega os dados do banco
 
+        //relacionamento de familia <> cor
+        $familia = Familia::where('descricao', $veiculo->familia)->first();
+        $coresRelacionadas = $familia ? $familia->cores : collect();
 
         if ($veiculo->novo_usado === 'novo') {
             $opcionalDescricao = Opcionais::where('modelo_fab', $veiculo->modelo_fab)
@@ -28,7 +31,7 @@ class VeiculoController extends Controller
                 ->value('descricao');
         }
 
-        return view('veiculos.edit', compact('veiculo', 'familias', 'opcionalDescricao'));
+        return view('veiculos.edit', compact('veiculo', 'familias', 'opcionalDescricao', 'coresRelacionadas'));
     }
 
 
@@ -174,9 +177,11 @@ class VeiculoController extends Controller
     public function create(Request $request)
     {
         $familias = Familia::all();
-
+        $cores = Cor::orderBy('cor_desc')->get();
+    
         return view('veiculos.create', [
             'familias' => $familias,
+            'cores' => $cores, // ✅ adiciona essa linha
             'from' => $request->input('from') // 'novos' ou 'usados'
         ]);
     }

@@ -26,64 +26,102 @@ class NovosController extends Controller
     }
 
     // Método privado que carrega os dados compartilhados
-private function carregarDadosVeiculos($familia = null)
-{
-    $campos = ['desc_veiculo', 'cor', 'combustivel', 'transmissao', 'Ano_Mod'];
-    $dados = [];
-
-    foreach ($campos as $campo) {
-        $query = Veiculo::select($campo)
-            ->distinct()
-            ->where([
-                ['marca', 'GM'],
-                ['novo_usado', 'Novo']
-            ]);
-
+    private function carregarDadosVeiculos($familia = null)
+    {
+        $campos = ['desc_veiculo', 'combustivel', 'transmissao', 'Ano_Mod'];
+        $dados = [];
+    
+        foreach ($campos as $campo) {
+            $query = Veiculo::select($campo)
+                ->distinct()
+                ->where([
+                    ['marca', 'GM'],
+                    ['novo_usado', 'Novo']
+                ]);
+    
+            if ($familia && $campo === 'desc_veiculo') {
+                $query->where('desc_veiculo', 'LIKE', "%{$familia}%");
+            }
+    
+            $dados[$campo] = $query->get();
+        }
+    
+        //  Carregar cores (Se tiver familia selecionada pega o relacionamento, caso contrario todas as cores do estoque)
         if ($familia) {
-            $query->where('desc_veiculo', 'LIKE', "%{$familia}%");
+            $familiaModel = Familia::where('descricao', $familia)->first();
+        
+            if ($familiaModel) {
+                $coresRelacionadas = $familiaModel->cores()->orderBy('cor_desc')->get();
+        
+                $cores = $coresRelacionadas->map(function ($cor) use ($familia) {
+                    $temEstoque = Veiculo::where([
+                            ['novo_usado', 'Novo'],
+                            ['marca', 'GM'],
+                            ['familia', $familia],
+                            ['cor', $cor->cor_desc]
+                        ])->exists();
+        
+                    return (object)[
+                        'cor' => $cor->cor_desc,
+                        'disponivel' => $temEstoque
+                    ];
+                });
+            } else {
+                $cores = collect();
+            }
+        } else {
+            // Quando não há família, cores disponíveis no estoque (todas válidas)
+            $cores = Veiculo::select('cor')
+                ->distinct()
+                ->where([
+                    ['marca', 'GM'],
+                    ['novo_usado', 'Novo']
+                ])
+                ->orderBy('cor')
+                ->get()
+                ->map(function ($cor) {
+                    return (object)[
+                        'cor' => $cor->cor,
+                        'disponivel' => true
+                    ];
+                });
         }
-
-        $dados[$campo] = $query->get();
-    }
-
-    // Agora carrega as Familias registradas no banco, verifique se tem veiculo dessa familia ativo no banco e se a imagem
-    // esta na pasta, se sim, entao carrega familiasValidas para a view nao colocar veiculos que nao existem
-    $mostrarTodas = Configuracao::where('chave', 'mostrar_todas_familias')->value('valor') === 'true';
-
-    // O método pluck(), extrai os valores de uma única coluna de uma coleção
-    $familias = Familia::pluck('descricao')->toArray();
-    $familiasValidas = [];
-
-    foreach ($familias as $nomeFamilia) {
-        $nomeArquivo = str_replace(' ', '_', $nomeFamilia) . '.jpg';
-        $imagemExiste = File::exists(public_path('images/familia/' . $nomeArquivo));
-
-        // Se a configuração permitir mostrar todas ou se tiver veículos + imagem
-        if (
-            $mostrarTodas ||
-            (
-                Veiculo::where('novo_usado', 'Novo')
-                    ->where('familia', $nomeFamilia)
-                    ->exists() && $imagemExiste
-            )
-        ) {
-            $familiasValidas[] = [
-                'nome' => $nomeFamilia,
-                'imagem' => 'images/familia/' . $nomeArquivo,
-            ];
+        
+    
+        // Verificação de famílias válidas com imagem + veículo
+        $mostrarTodas = Configuracao::where('chave', 'mostrar_todas_familias')->value('valor') === 'true';
+        $familias = Familia::pluck('descricao')->toArray();
+        $familiasValidas = [];
+    
+        foreach ($familias as $nomeFamilia) {
+            $nomeArquivo = str_replace(' ', '_', $nomeFamilia) . '.jpg';
+            $imagemExiste = File::exists(public_path('images/familia/' . $nomeArquivo));
+    
+            if (
+                $mostrarTodas ||
+                (
+                    Veiculo::where('novo_usado', 'Novo')
+                        ->where('familia', $nomeFamilia)
+                        ->exists() && $imagemExiste
+                )
+            ) {
+                $familiasValidas[] = [
+                    'nome' => $nomeFamilia,
+                    'imagem' => 'images/familia/' . $nomeArquivo,
+                ];
+            }
         }
+    
+        return [
+            'veiculosUnicos' => $dados['desc_veiculo'],
+            'cores' => $cores,
+            'transmissoes' => $dados['transmissao'],
+            'combustiveis' => $dados['combustivel'],
+            'anosUnico' => $dados['Ano_Mod'],
+            'familiasValidas' => $familiasValidas,
+        ];
     }
-
-    // Carrega a view
-    return [
-        'veiculosUnicos' => $dados['desc_veiculo'],
-        'cores' => $dados['cor'],
-        'transmissoes' => $dados['transmissao'],
-        'combustiveis' => $dados['combustivel'],
-        'anosUnico' => $dados['Ano_Mod'],        
-        'familiasValidas' => $familiasValidas,
-    ];
-}
+    
 
 
     public function index(Request $request)

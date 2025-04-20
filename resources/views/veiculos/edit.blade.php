@@ -103,11 +103,19 @@
                         </div>
 
                         <!-- Cor -->
-                        <div class="flex-grow basis-[25%] min-w-[150px]">
-                            <label class="block text-gray-700 font-medium mb-1">Cor</label>
-                            <input type="text" name="cor" value="{{ old('cor', $veiculo->cor) }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                        </div>
+<!-- Cor -->
+<div class="flex-grow basis-[25%] min-w-[150px]">
+    <label class="block text-gray-700 font-medium mb-1">Cor</label>
+    <select name="cor" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+        <option value="">Selecione uma cor</option>
+        @foreach ($coresRelacionadas as $cor)
+            <option value="{{ $cor->cor_desc }}" {{ $veiculo->cor === $cor->cor_desc ? 'selected' : '' }}>
+                {{ $cor->cor_desc }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
 
                         <!-- Portas (campo pequeno) -->
                         <div class="basis-[8%] min-w-[60px]">

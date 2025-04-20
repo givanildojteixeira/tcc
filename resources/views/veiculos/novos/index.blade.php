@@ -134,16 +134,22 @@
                         <select name="corVeiculos"
                             class="flex-1 px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('cor', this.value)">
-                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>Todas
+                            
+                            <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>
+                                Todas
                             </option>
+                    
                             @foreach ($cores as $cor)
-                                <option value="{{ $cor->cor }}"
-                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
-                                    {{ $cor->cor }}
+                                <option 
+                                    value="{{ $cor->cor }}"
+                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}
+                                    {{ !$cor->disponivel ? 'disabled class=text-gray-400 italic' : '' }}>
+                                    {{ $cor->cor }}{{ !$cor->disponivel ? ' (sem estoque)' : '' }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
+                    
                 </div>
             </div>
 

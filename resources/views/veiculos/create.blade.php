@@ -36,7 +36,8 @@
             @endif
 
             {{-- Para validação de erros --}}
-            {{-- <x-validation-errors id="modalErrosCadastro" /> --}}
+            {{--
+            <x-validation-errors id="modalErrosCadastro" /> --}}
 
             <!-- Abas -->
             <div class="flex bg-gray-100 rounded-md overflow-hidden shadow-sm mb-6 font-bold">
@@ -110,14 +111,32 @@
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
 
+
                         <!-- Cor -->
                         <div class="flex-grow basis-[25%] min-w-[150px]">
                             <label class="block text-gray-700 font-medium mb-1">Cor</label>
+
+                            @if (request('from') === 'usados')
+                            {{-- Campo digitável para veículos usados --}}
                             <input type="text" name="cor" value="{{ old('cor') }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                            @else
+                            {{-- Combo com cores disponíveis para veículos novos --}}
+                            <select name="cor"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                <option value="">Selecione uma cor</option>
+                                @foreach ($cores as $cor)
+                                <option value="{{ $cor->cor_desc }}" {{ old('cor')===$cor->cor_desc ? 'selected' : ''
+                                    }}>
+                                    {{ $cor->cor_desc }}
+                                </option>
+                                @endforeach
+                            </select>
+                            @endif
                         </div>
 
-                        <!-- Cor -->
+
+                        <!-- Motor -->
                         <div class="flex-grow basis-[5%] min-w-[80px]">
                             <label class="block text-gray-700 font-medium mb-1">Motor</label>
                             <input type="text" name="motor" value="{{ old('motor') }}"
