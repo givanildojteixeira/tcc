@@ -10,26 +10,47 @@
 
                 <!-- Navegação Principal -->
                 <div class="hidden sm:flex space-x-4">
+
+                    {{-- Dashboard --}}
+                    @acessoGerente
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                     </x-nav-link>
+                    @else
+                    <x-nav-link :href="'#'" :disabled="true">
+                        <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                    </x-nav-link>
+                    @endacessoGerente
 
-                    <x-nav-link :href="route('veiculos.novos.limparFiltros')" :active="request()->routeIs('veiculos.novos.index')">
+                    {{-- Novos --}}
+                    <x-nav-link :href="route('veiculos.novos.limparFiltros')"
+                        :active="request()->routeIs('veiculos.novos.index')">
                         <i class="fas fa-car mr-2"></i> Novos
                     </x-nav-link>
 
-                    <x-nav-link :href="route('veiculos.usados.limparFiltros')" :active="request()->routeIs('veiculos.usados.index')">
+                    {{-- Usados --}}
+                    <x-nav-link :href="route('veiculos.usados.limparFiltros')"
+                        :active="request()->routeIs('veiculos.usados.index')">
                         <i class="fas fa-car-crash mr-2"></i> Usados
                     </x-nav-link>
 
+                    {{-- Propostas --}}
                     <x-nav-link :href="route('propostas.index')" :active="request()->routeIs('propostas.index')">
                         <i class="fas fa-file-signature mr-2"></i> Propostas
                     </x-nav-link>
 
+                    {{-- Financeiro --}}
+                    @acessoAssistente()
                     <x-nav-link :href="route('financeiro.index')" :active="request()->routeIs('financeiro.index')">
                         <i class="fas fa-wallet mr-2"></i> Financeiro
                     </x-nav-link>
+                    @else
+                    <x-nav-link :href="'#'" :disabled="true">
+                        <i class="fas fa-wallet mr-2"></i> Financeiro
+                    </x-nav-link>
+                    @endacessoAssistente
 
+                    {{-- Relatórios --}}
                     <x-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.index')">
                         <i class="fas fa-chart-line mr-2"></i> Relatórios
                     </x-nav-link>
@@ -56,6 +77,7 @@
                         <x-dropdown-link :href="route('cliente.create')">
                             <i class="fa-solid fa-people-group mr-2"></i> Clientes
                         </x-dropdown-link>
+                        @acessoAssistente()
                         <x-dropdown-link :href="route('familia.index')">
                             <i class="fa-solid fa-car mr-2"></i> Famílias
                         </x-dropdown-link>
@@ -65,6 +87,7 @@
                         <x-dropdown-link :href="route('cores.index')">
                             <i class="fa-solid fa-toolbox mr-2"></i> Cores
                         </x-dropdown-link>
+
 
                         <!-- Submenu Veículos -->
                         <div x-data="{ open: false }" class="relative group">
@@ -86,7 +109,7 @@
                                 <div class="group relative">
                                     <a href="{{ route('veiculos.create', ['from' => 'novos']) }}"
                                         class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <i class="fas fa-plus-circle mr-1"></i> Cadastrar Novo
+                                        <i class="fas fa-plus-circle mr-1"></i>Cadastrar Novo
                                     </a>
                                 </div>
 
@@ -94,11 +117,12 @@
                                 <div class="group relative">
                                     <a href="{{ route('veiculos.create', ['from' => 'usados']) }}"
                                         class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <i class="fas fa-plus-circle mr-1"></i> Cadastrar Usado
+                                        <i class="fas fa-plus-circle mr-1"></i>Cadastrar Usado
                                     </a>
                                 </div>
                             </div>
                         </div>
+                        @endacessoAssistente
                     </x-slot>
                 </x-dropdown>
 
@@ -120,6 +144,7 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             <i class="fa-solid fa-user-tie mr-2"></i> Meus Dados
                         </x-dropdown-link>
+                        @acessoAdmin()
                         <x-dropdown-link :href="route('user.index')">
                             <i class="fa-solid fa-users mr-2"></i> Lista de Usuários
                         </x-dropdown-link>
@@ -128,7 +153,7 @@
                             class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                             <i class="fa-brands fa-github mr-2"></i> Repositório Git
                         </a>
-
+                        @endacessoAdmin
                         <hr class="border-gray-200 dark:border-gray-600 my-2">
 
                         <form method="POST" action="{{ route('logout') }}">
