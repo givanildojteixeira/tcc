@@ -40,12 +40,15 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'level' => 'user', // 'Vendedor'
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
+        // return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('aguarde.validacao');
 
-        return redirect(RouteServiceProvider::HOME);
+
     }
 }

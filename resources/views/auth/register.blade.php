@@ -2,6 +2,9 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+        <!-- Level Padrao -->
+        <input type="hidden" name="level" value="Vendedor">
+
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Nome do usuário')" />

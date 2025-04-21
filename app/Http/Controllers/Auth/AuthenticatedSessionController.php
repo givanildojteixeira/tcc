@@ -21,7 +21,8 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Trata sobre a autenticação de um usuario, 
+     * ele ja existe e agora vai entrar no sistema.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -29,7 +30,28 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $user = Auth::user();
+
+        if ($user->level === 'user') {
+            return redirect()->route('aguarde.validacao');
+        }
+
+        // Redirecionamento com base no nível
+        switch ($user->level) {
+            case 'Assistente':
+                return redirect()->route('financeiro.index');
+
+
+            case 'Vendedor':
+                return redirect()->route('veiculos.novos.index');
+
+            case 'user':
+                return redirect()->route('veiculos.novos.index');
+
+
+            default:
+                return redirect()->route('dashboard');
+        }
     }
 
     /**
