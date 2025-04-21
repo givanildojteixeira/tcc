@@ -1,4 +1,5 @@
-<div x-data="galeriaVeiculo" x-init="$watch('veiculo.chassi', chassi => carregarImagens(chassi))"> <!-- ✅ MODAL VEICULO NOVOS E USADOS -->
+<div x-data="galeriaVeiculo" x-init="$watch('veiculo.chassi', chassi => carregarImagens(chassi))">
+    <!-- ✅ MODAL VEICULO NOVOS E USADOS -->
     <div x-show="open" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         style="display: none;">
         <div class="bg-white p-2 rounded-lg shadow-lg w-full max-w-5xl relative">
@@ -29,7 +30,8 @@
                         <!-- Imagem Dinâmica -->
                         <div class="flex items-center justify-center">
                             {{-- Deixa a figura centraliza e com tamanhos fixos --}}
-                            <img :src="imagemAtual()" alt="Imagem veículo" class="w-[400px] h-[255px] object-cover rounded-md">
+                            <img :src="imagemAtual()" alt="Imagem veículo"
+                                class="w-[400px] h-[255px] object-cover rounded-md">
                         </div>
 
 
@@ -45,7 +47,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="flex items-center gap-2"><i
                                     class="fas fa-layer-group text-blue-500"></i><span><strong>Família:</strong> <span
-                                        x-text="veiculo.familia"></span></span></div>
+                                        id="nomeFamilia" x-text="veiculo.familia"></span></span></div>
                             <div class="flex items-center gap-2"><i
                                     class="fas fa-industry text-blue-500"></i><span><strong>Modelo:</strong> <span
                                         x-text="veiculo.modelo_fab"></span></span></div>
@@ -109,25 +111,17 @@
                             class="min-w-[100px] flex items-center gap-2 px-6 py-2 rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md">
                             <i class="fas fa-hands-helping"></i>Apoio
                         </a>
-                        <x-bt-padrao x-show="!veiculo.site" disabled color="gray" icon="hands-helping" label="Apoio" title="Site de apoio não cadastrado!" />
+                        <x-bt-padrao x-show="!veiculo.site" disabled color="gray" icon="hands-helping" label="Apoio"
+                            title="Site de apoio não cadastrado!" />
 
-                        <a
-                            :href="`/mev/${veiculo.familia}.pdf`"
-                            target="_blank"
+                        <a :href="`/mev/${veiculo.familia}.pdf`" target="_blank"
                             class="min-w-[100px] flex items-center gap-2 px-6 py-2 rounded-md shadow-md transition font-medium text-white bg-yellow-500 hover:bg-yellow-600"
-                            title="Manual de Especificação de Venda."
-                        >
+                            title="Manual de Especificação de Venda.">
                             <i class="fas fa-book-open"></i> M.E.V.
                         </a>
 
-                        <x-bt-padrao
-                            href="/mev/precos.pdf"
-                            target="_blank"
-                            color="pink"
-                            icon="tags"
-                            label="Tabela Preços"
-                            title="Tabela de Preço Geral Atualizada"
-                        />
+                        <x-bt-padrao href="/mev/precos.pdf" target="_blank" color="pink" icon="tags"
+                            label="Tabela Preços" title="Tabela de Preço Geral Atualizada" />
 
                     </div>
                 </template>
@@ -137,8 +131,94 @@
                         target="_blank" title="Consulta de Preço Padrão." />
                 </template>
 
+                {{--
                 <x-bt-padrao type="submit" color="teal" icon="folder-open" label="Documentos"
-                    title="Pasta de Apoio Documentos" />
+                    title="Pasta de Apoio Documentos" /> --}}
+
+                <div x-data="{ abrirModalDoc: false, familiaAtual: '' }">
+                    <!-- Botão -->
+                    <button @click="
+                                familiaAtual = veiculo.familia;
+                                abrirModalDoc = true;
+                            " class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm shadow">
+                        <i class="fas fa-folder-open mr-1"></i> Ver Documentos
+                    </button>
+
+                    <!-- Modal -->
+                    @php
+                    $pasta = public_path('upload/familia');
+                    $familiasDisponiveis = collect(\File::files($pasta))
+                    ->map(fn($file) => $file->getFilename())
+                    ->groupBy(function ($filename) {
+                    return explode('-', $filename)[0]; // parte antes do "-"
+                    });
+                    @endphp
+
+                    <template x-if="abrirModalDoc">
+                        <div x-data="{ familia: familiaAtual }" x-init="console.log('✅ Família no modal:', familia)"
+                            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60">
+                            <div class="bg-white rounded-lg shadow-lg p-6 max-w-3xl w-full relative">
+                                <!-- Título -->
+                                <h2 class="text-xl font-bold text-gray-700 mb-4">
+                                    Documentos para a família: <span x-text="familia"></span>
+                                </h2>
+
+                                <!-- Conteúdo dinâmico com PHP -->
+                                @foreach ($familiasDisponiveis as $familiaSlug => $arquivos)
+                                <template x-if="familia.toLowerCase() === '{{ strtolower($familiaSlug) }}'">
+                                    <ul class="space-y-2">
+                                        @foreach ($arquivos as $nomeArquivo)
+                                        @php
+                                        $visivel = \Illuminate\Support\Str::after($nomeArquivo, $familiaSlug . '-');
+                                        @endphp
+                                        <li class="flex justify-between items-center">
+                                            <a href="{{ asset('upload/familia/' . $nomeArquivo) }}" target="_blank"
+                                                class="text-blue-600 hover:underline">
+                                                <i class="fas fa-file mr-1"></i> {{ $visivel }}
+                                            </a>
+                                            {{-- <form method="POST"
+                                                action="{{ route('familia.excluirArquivoSimples') }}">
+                                                @csrf
+                                                <input type="hidden" name="arquivo_excluir" value="{{ $nomeArquivo }}">
+                                                <button type="submit" class="text-red-600 hover:text-red-800 text-sm">
+                                                    <i class="fas fa-trash-alt"></i> Excluir
+                                                </button>
+                                            </form> --}}
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </template>
+                                @endforeach
+
+                                <!-- Fallback: nenhuma família encontrada -->
+                                <template
+                                    x-if="!Object.keys({!! json_encode($familiasDisponiveis->keys()) !!}).includes(familia.toLowerCase())">
+                                    <p class="text-gray-500 italic">Nenhum documento encontrado para esta família.</p>
+                                </template>
+
+                                <!-- Botão fechar no canto -->
+                                <button @click="abrirModalDoc = false"
+                                    class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">&times;</button>
+
+                                <!-- Botão Fechar Modal -->
+                                <button @click="open = false"
+                                    class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">&times;</button>
+
+                                <div class="mt-6 flex justify-center">
+                                    <button @click="abrirModalDoc = false"
+                                        class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md shadow flex items-center gap-2">
+                                        <i class="fas fa-circle-xmark text-lg"></i>
+                                        Fechar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+
+
+                {{-- fim --}}
                 <x-bt-padrao type="submit" color="green" icon="file-signature" label="Proposta"
                     title="Abertura de Proposta" />
             </div>

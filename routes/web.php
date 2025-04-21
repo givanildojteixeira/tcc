@@ -7,6 +7,8 @@ use App\Models\Familia;
 use App\Models\Veiculo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use App\Http\Controllers\CorController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NovosController;
@@ -86,13 +88,36 @@ Route::middleware('auth')->group(function () {
 
     //Familias
     Route::resource('/veiculos/familia', FamiliaController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::post('/veiculos/familia-upload/{tipo}', [FamiliaController::class, 'upload'])->name('familia.upload');
+    Route::post('/familia/upload/{tipo}', [FamiliaController::class, 'upload'])->name('familia.upload');
     Route::post('/familia/excluir-arquivo', [FamiliaController::class, 'excluirArquivoSimples'])->name('familia.excluirArquivoSimples');
     Route::post('/familia/relacionar-cores', [CorFamiliaController::class, 'relacionar'])->name('cor_familia.relacionar');
     Route::get('/familia/{id}/cores', function ($id) {
         return DB::table('cor_familia')->where('familia_id', $id)->pluck('cor_id');
     });
+    Route::get('/familia/{id}/arquivos', function ($id) {
+        $familia =Familia::find($id);
+        if (!$familia) return response()->json([]);
+    
+        $nomeSlug = Str::slug($familia->descricao, '-');
+        $caminho = public_path("upload/familia");
+    
+        $arquivos = collect(File::files($caminho))->filter(function ($file) use ($nomeSlug) {
+            return str_starts_with($file->getFilename(), $nomeSlug . '-');
+        })->map(function ($file) use ($nomeSlug) {
+            $nomeCompleto = $file->getFilename();
+            return [
+                'nome' => Str::after($nomeCompleto, $nomeSlug . '-'),
+                'link' => asset("upload/familia/{$nomeCompleto}"),
+                'arquivo' => $nomeCompleto
+            ];
+        });
+    
+        return response()->json($arquivos->values());
+    });
 
+
+
+    
     // cores
     Route::resource('cores', CorController::class);
 

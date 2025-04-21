@@ -5,17 +5,17 @@
         <div class="flex items-center justify-between gap-4 px-4 py-4 bg-white shadow rounded-md p-4 border">
             <div class="flex items-center gap-4 ">
                 @if (request('from') && request('origem'))
-                    @php
-                        $voltarPara =
-                            request('from') === 'create'
-                                ? route('veiculos.create', ['from' => request('origem')])
-                                : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
-                    @endphp
-                    <a href="{{ $voltarPara }}"
-                        class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
-                        <i class="fas fa-arrow-left"></i>
-                        Voltar para edição do veículo
-                    </a>
+                @php
+                $voltarPara =
+                request('from') === 'create'
+                ? route('veiculos.create', ['from' => request('origem')])
+                : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
+                @endphp
+                <a href="{{ $voltarPara }}"
+                    class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar para edição do veículo
+                </a>
                 @endif
 
                 <h2 class="text-2xl font-semibold text-green-700 whitespace-nowrap">
@@ -34,10 +34,10 @@
                     </button>
 
                     @if (request('busca'))
-                        <a href="{{ route('familia.index') }}"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-2">
-                            <i class="fas fa-broom"></i> Limpar
-                        </a>
+                    <a href="{{ route('familia.index') }}"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-2">
+                        <i class="fas fa-broom"></i> Limpar
+                    </a>
                     @endif
                 </form>
 
@@ -50,20 +50,20 @@
         </div>
 
         @if (request('from'))
-            @php
-                $veiculo = \App\Models\Veiculo::find(request('from'));
-                $familia = $veiculo ? \App\Models\Familia::where('descricao', $veiculo->familia)->first() : null;
-            @endphp
-            @if ($familia)
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
+        @php
+        $veiculo = \App\Models\Veiculo::find(request('from'));
+        $familia = $veiculo ? \App\Models\Familia::where('descricao', $veiculo->familia)->first() : null;
+        @endphp
+        @if ($familia)
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
                         preencherFormulario("{{ $familia->id }}", "{{ $familia->descricao }}", "{{ $familia->site ?? '' }}");
                     });
-                </script>
-            @endif
+        </script>
+        @endif
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
                     const form = document.getElementById('formFamilia');
 
                     form.addEventListener('submit', function(e) {
@@ -101,7 +101,7 @@
                         }
                     });
                 });
-            </script>
+        </script>
         @endif
 
         {{-- Bloco Alterar / Cadastrar Familia --}}
@@ -134,13 +134,11 @@
                     <input type="hidden" name="id" x-model="idSelecionado">
 
                     <!-- Botão dinâmico -->
-                    <button type="submit" id="botaoFamilia"
-                        :class="idSelecionado
+                    <button type="submit" id="botaoFamilia" :class="idSelecionado
                             ?
                             'flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600' :
                             'flex items-center gap-1 bg-green-600 hover:bg-green-700' +
-                            ' text-white px-3 py-1.5 text-sm rounded-md shadow'"
-                        class="transition">
+                            ' text-white px-3 py-1.5 text-sm rounded-md shadow'" class="transition">
                         <i :class="idSelecionado ? 'fas fa-pen' : 'fas fa-plus-circle'"></i>
                         <span x-text="idSelecionado ? 'Alterar' : 'Cadastrar'"></span>
                     </button>
@@ -203,8 +201,15 @@
                             <form action="{{ route('familia.upload', ['tipo' => 'documentos']) }}" method="POST"
                                 enctype="multipart/form-data" class="flex items-center gap-3 mt-2">
                                 @csrf
-                                <input type="file" name="arquivo"
+
+                                <!-- ID da família como campo oculto -->
+                                <input type="hidden" name="familia_id" id="input_familia_id"
+                                    value="{{ $familia->id ?? '' }}">
+
+                                <!-- Campo de upload do arquivo -->
+                                <input type="file" name="arquivo" required
                                     class="flex-1 border rounded-md text-sm px-2 py-1 file:bg-green-100 file:text-green-700 hover:file:bg-green-200">
+
                                 <button type="submit"
                                     class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm">
                                     <i class="fas fa-cloud-upload-alt mr-1"></i> Upload
@@ -212,49 +217,29 @@
                             </form>
 
 
-                            <!-- 📄 Lista de arquivos já enviados -->
-                            <div class="mt-1 bg-white border border-gray-200 rounded-md p-2 shadow-inner">
+                            {{-- @if(isset($familia))
+                            @php
+                            $nomeFamilia = Str::slug($familia->descricao, '-');
+                            $caminho = public_path('upload/familia');
+                            $arquivosExtras = collect(File::files($caminho))->filter(function ($file) use ($nomeFamilia)
+                            {
+                            return str_starts_with($file->getFilename(), $nomeFamilia . '-');
+                            });
+                            @endphp
+                            @endif --}}
+
+
+
+                            <!-- 📄 Lista dinâmica de arquivos já enviados -->
+                            <div id="listaArquivosExtras"
+                                class="mt-1 bg-white border border-gray-200 rounded-md p-2 shadow-inner">
                                 <h4 class="text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-file-alt mr-1"></i> Arquivos Enviados
                                 </h4>
-
-                                @php
-                                    $familiaId = $familia->id ?? request('from');
-                                    $caminho = public_path('docs');
-                                    $arquivosExtras = collect(\File::files($caminho))->filter(
-                                        fn($file) => str_starts_with($file->getFilename(), $familiaId . '_'),
-                                    );
-                                @endphp
-
-                                @if ($arquivosExtras->isEmpty())
-                                    <p class="text-gray-500 text-sm italic">Nenhum anexo encontrado.</p>
-                                @else
-                                    <ul class="divide-y divide-gray-200 text-sm">
-                                        @foreach ($arquivosExtras as $arquivo)
-                                            @php
-                                                $nomeArquivo = $arquivo->getFilename();
-                                                $nomeVisivel = Str::after($nomeArquivo, $familia->id . '_');
-                                            @endphp
-                                            <li class="flex justify-between items-center py-2">
-                                                <a href="{{ asset('docs/' . $nomeArquivo) }}" target="_blank"
-                                                    class="text-blue-600 hover:underline">
-                                                    <i class="fas fa-file mr-1"></i> {{ $nomeVisivel }}
-                                                </a>
-                                                <form method="POST"
-                                                    action="{{ route('familia.excluirArquivoSimples') }}">
-                                                    @csrf
-                                                    <input type="hidden" name="arquivo"
-                                                        value="{{ $nomeArquivo }}">
-                                                    <button type="submit"
-                                                        class="text-red-600 hover:text-red-800 text-sm">
-                                                        <i class="fas fa-trash-alt"></i> Excluir
-                                                    </button>
-                                                </form>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
+                                <p class="text-gray-500 text-sm italic">Selecione uma família para visualizar os anexos.
+                                </p>
                             </div>
+
 
 
 
@@ -282,11 +267,11 @@
                             <div class="flex-1 overflow-y-auto mt-2 pr-1">
                                 <div class="grid grid-cols-1 gap-2 text-sm">
                                     @foreach ($cores as $cor)
-                                        <label class="inline-flex items-center gap-2">
-                                            <input type="checkbox" class="form-checkbox text-green-600"
-                                                name="cores[]" value="{{ $cor->id }}">
-                                            {{ $cor->cor_desc }}
-                                        </label>
+                                    <label class="inline-flex items-center gap-2">
+                                        <input type="checkbox" class="form-checkbox text-green-600" name="cores[]"
+                                            value="{{ $cor->id }}">
+                                        {{ $cor->cor_desc }}
+                                    </label>
                                     @endforeach
                                 </div>
                             </div>
@@ -324,51 +309,50 @@
                     </thead>
                     <tbody>
                         @foreach ($familias as $familia)
-                            <tr class="hover:bg-gray-50 cursor-pointer"
-                                onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')">
+                        <tr class="hover:bg-gray-50 cursor-pointer"
+                            onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')">
 
-                                <td class="px-4 py-2 border">{{ $familia->id }}</td>
-                                <td class="px-4 py-2 border">{{ $familia->descricao }}</td>
-                                <td class="px-4 py-2 border">
-                                    @php
-                                        $nomeArquivo = str_replace(' ', '_', $familia->descricao) . '.jpg';
-                                    @endphp
-                                    @if (file_exists(public_path('images/familia/' . $nomeArquivo)))
-                                        <img src="{{ asset('images/familia/' . $nomeArquivo) }}" alt="Imagem"
-                                            class="h-12 rounded">
-                                    @else
-                                        <span class="text-gray-400 italic">Sem imagem</span>
-                                    @endif
+                            <td class="px-4 py-2 border">{{ $familia->id }}</td>
+                            <td class="px-4 py-2 border">{{ $familia->descricao }}</td>
+                            <td class="px-4 py-2 border">
+                                @php
+                                $nomeArquivo = str_replace(' ', '_', $familia->descricao) . '.jpg';
+                                @endphp
+                                @if (file_exists(public_path('images/familia/' . $nomeArquivo)))
+                                <img src="{{ asset('images/familia/' . $nomeArquivo) }}" alt="Imagem"
+                                    class="h-12 rounded">
+                                @else
+                                <span class="text-gray-400 italic">Sem imagem</span>
+                                @endif
 
-                                </td>
-                                <td class="px-4 py-2 border text-center">
-                                    <!-- Form de exclusão -->
-                                    <form action="{{ route('familia.destroy', $familia->id) }}" method="POST"
-                                        onsubmit="return confirm('Tem certeza que deseja excluir esta família?')"
-                                        class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-800 mr-3"
-                                            title="Excluir">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
-
-                                    <!-- Botão Editar (abre modal ou navega) -->
-                                    <button
-                                        onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')"
-                                        class="text-blue-600 hover:text-blue-800" title="Editar">
-                                        <i class="fas fa-edit"></i>
+                            </td>
+                            <td class="px-4 py-2 border text-center">
+                                <!-- Form de exclusão -->
+                                <form action="{{ route('familia.destroy', $familia->id) }}" method="POST"
+                                    onsubmit="return confirm('Tem certeza que deseja excluir esta família?')"
+                                    class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800 mr-3" title="Excluir">
+                                        <i class="fas fa-trash-alt"></i>
                                     </button>
+                                </form>
 
-                                </td>
-                            </tr>
+                                <!-- Botão Editar (abre modal ou navega) -->
+                                <button
+                                    onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')"
+                                    class="text-blue-600 hover:text-blue-800" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+
+                            </td>
+                        </tr>
                         @endforeach
                         @if ($familias->isEmpty())
-                            <tr>
-                                <td colspan="4" class="text-center text-gray-500 py-4">Nenhuma família cadastrada.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="4" class="text-center text-gray-500 py-4">Nenhuma família cadastrada.
+                            </td>
+                        </tr>
                         @endif
                     </tbody>
                 </table>
@@ -506,6 +490,51 @@
                 .catch(error => {
                     console.error("Erro ao carregar cores:", error);
                 });
+
+            // 🔄 Carrega arquivos anexados dinamicamente
+            fetch(`/familia/${id}/arquivos`)
+                .then(res => res.json())
+                .then(arquivos => {
+                    const lista = document.getElementById('listaArquivosExtras');
+                    if (!lista) return;
+
+                    lista.innerHTML = ''; // limpa antes de inserir
+
+                    if (arquivos.length === 0) {
+                        lista.innerHTML = `<p class="text-gray-500 text-sm italic">Nenhum anexo encontrado.</p>`;
+                        return;
+                    }
+
+                    const ul = document.createElement('ul');
+                    ul.className = 'divide-y divide-gray-200 text-sm';
+
+                    arquivos.forEach(arquivo => {
+                        const li = document.createElement('li');
+                        li.className = 'flex justify-between items-center py-2';
+                        li.innerHTML = `
+                            <a href="${arquivo.link}" target="_blank" class="text-blue-600 hover:underline">
+                                <i class="fas fa-file mr-1"></i> ${arquivo.nome}
+                            </a>
+                            
+                            <form method="POST" action="{{ route('familia.excluirArquivoSimples') }}">
+                                @csrf
+                                <input type="hidden" name="arquivo_excluir" value="${arquivo.nome}">
+                                <input type="hidden" name="familia" value="${descricao}">
+                                <button type="submit" class="text-red-600 hover:text-red-800 text-sm">
+                                    <i class="fas fa-trash-alt"></i> Excluir
+                                </button>
+                            </form>
+
+                        `;
+                        ul.appendChild(li);
+                    });
+
+                    lista.appendChild(ul);
+                })
+                .catch(err => console.error('Erro ao carregar anexos:', err));
+
+
+
         }
     </script>
 

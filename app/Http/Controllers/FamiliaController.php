@@ -7,6 +7,9 @@ use App\Models\Familia;
 use App\Models\Configuracao;
 use Illuminate\Http\Request;
 use App\Models\Veiculo;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+
 
 class FamiliaController extends Controller
 {
@@ -15,17 +18,17 @@ class FamiliaController extends Controller
     public function index(Request $request)
     {
         $query = Familia::query(); // inicia query dinâmica
-    
+
         // Se a busca for preenchida, filtra por descrição
         if ($request->filled('busca')) {
             $query->where('descricao', 'like', '%' . $request->busca . '%');
         }
-    
+
         $familias = $query->orderBy('descricao')->get(); // carrega ordenado
-    
+
         $cores = Cor::orderBy('cor_desc')->get();
         $familia = null;
-    
+
         // Preenchimento automático se veio de um veículo
         if ($request->has('from')) {
             $veiculo = Veiculo::find($request->input('from'));
@@ -33,10 +36,10 @@ class FamiliaController extends Controller
                 $familia = Familia::where('descricao', $veiculo->familia)->first();
             }
         }
-    
+
         return view('familia.index', compact('familias', 'cores', 'familia'));
     }
-    
+
 
 
 
@@ -162,36 +165,65 @@ class FamiliaController extends Controller
 
     public function upload(Request $request, $tipo)
     {
+        $request->validate([
+            'arquivo' => 'required|file|max:10240', // 10MB
+        ]);
+
         $arquivo = $request->file('arquivo');
+        // dd($arquivo);
 
-        if ($arquivo) {
-            $nomeArquivo = match ($tipo) {
-                'imagem' => 'imagem_' . time() . '.' . $arquivo->getClientOriginalExtension(),
-                'mev' => 'mev_' . time() . '.' . $arquivo->getClientOriginalExtension(),
-                'documentos' => 'doc_' . time() . '.' . $arquivo->getClientOriginalExtension(),
-                default => 'arquivo_' . time() . '.' . $arquivo->getClientOriginalExtension(),
-            };
+        // Nome da família enviado pelo form (id ou nome, depende do seu input)
+        $familiaId = $request->input('familia_id');
+        $familia = Familia::find($familiaId);
 
-            $arquivo->move(public_path('uploads/familia'), $nomeArquivo);
-
-            return back()->with('success', 'Arquivo enviado com sucesso!');
+        if (!$familia) {
+            return back()->with('error', 'Família não encontrada para o upload.');
         }
 
-        return back()->with('error', 'Nenhum arquivo selecionado.');
-    }
+        $nomeFamiliaSanitizado = Str::slug($familia->descricao, '-');
+        $nomeOriginal = $arquivo->getClientOriginalName();
+        $extensao = $arquivo->getClientOriginalExtension();
 
+        // Define pasta destino
+        $pastaDestino = public_path('upload/familia');
+        if (!File::exists($pastaDestino)) {
+            File::makeDirectory($pastaDestino, 0755, true);
+        }
+
+        // Contador baseado em arquivos já existentes com esse padrão
+        $arquivosExistentes = File::files($pastaDestino);
+        $contador = 1;
+        foreach ($arquivosExistentes as $file) {
+            if (Str::startsWith($file->getFilename(), $nomeFamiliaSanitizado)) {
+                $contador++;
+            }
+        }
+
+        // Nome final: nomefamilia-contador-nomeoriginal.extensao
+        $nomeFinal = "{$nomeFamiliaSanitizado}-{$contador}-{$nomeOriginal}";
+
+        // Move o arquivo
+        $arquivo->move($pastaDestino, $nomeFinal);
+
+        return back()->with('success', 'Arquivo enviado com sucesso!');
+    }
+    
+    
     public function excluirArquivoSimples(Request $request)
-{
-    $arquivo = $request->input('arquivo');
-    $caminho = public_path('docs/' . $arquivo);
-
-    if (file_exists($caminho)) {
-        unlink($caminho);
-        return back()->with('success', 'Arquivo removido com sucesso!');
+    {
+        $arquivo = $request->input('arquivo_excluir'); 
+        $familia = $request->input('familia'); 
+        $caminho = public_path('upload/familia/'. Str::slug($familia) . '-' . $arquivo);
+        // dd($caminho) ;
+        
+        if (file_exists($caminho)) {
+            unlink($caminho);
+            return back()->with('success', 'Arquivo excluído com sucesso.');
+        }
+    
+        return back()->with('error', 'Arquivo não encontrado.');
     }
-
-    return back()->with('error', 'Arquivo não encontrado.');
-}
+    
 
 
 }
