@@ -103,23 +103,24 @@
 
                             <!-- Submenu Dropdown -->
                             <div x-show="open" @mouseleave="open = false"
-                                class="absolute top-0 left-full mt-0 ml-2 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50">
+                                class="absolute top-0 left-full mt-0 ml-2 min-w-max bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50">
 
                                 <!-- Novos + Cadastro -->
                                 <div class="group relative">
                                     <a href="{{ route('veiculos.create', ['from' => 'novos']) }}"
-                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <i class="fas fa-plus-circle mr-1"></i>Cadastrar Novo
+                                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <i class="fas fa-plus-circle"></i><span>Cadastrar Novo</span>
                                     </a>
                                 </div>
 
                                 <!-- Usados + Cadastro -->
                                 <div class="group relative">
                                     <a href="{{ route('veiculos.create', ['from' => 'usados']) }}"
-                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <i class="fas fa-plus-circle mr-1"></i>Cadastrar Usado
+                                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <i class="fas fa-plus-circle"></i><span>Cadastrar Usado</span>
                                     </a>
                                 </div>
+
                             </div>
                         </div>
                         @endacessoAssistente

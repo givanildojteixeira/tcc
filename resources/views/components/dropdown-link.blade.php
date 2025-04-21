@@ -1,9 +1,8 @@
 @props(['disabled' => false, 'title' => null])
 
 @php
-    $baseClasses = 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600';
+    $baseClasses = 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 text-left w-full';
     $extraClasses = $disabled ? 'pointer-events-none' : '';
-
     $classes = $baseClasses . ' ' . $extraClasses;
     $finalTitle = $disabled ? ($title ?? 'Acesso restrito') : ($title ?? null);
 @endphp
@@ -27,7 +26,7 @@
     </a>
 
     <template x-if="showDenied">
-        <div class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-red-500 text-white text-xs px-2 py-1 rounded shadow z-50">
+        <div class="absolute left-0 top-full mt-1 bg-red-500 text-white text-xs px-2 py-1 rounded shadow z-50 whitespace-nowrap">
             ⚠️ Acesso restrito!
         </div>
     </template>
