@@ -105,20 +105,16 @@
 
                 <template x-if="veiculo.origem === 'novos'">
                     <div class="flex flex-wrap gap-1">
-                        <a x-show="veiculo.site"
-                            :href="veiculo.site.startsWith('http') ? veiculo.site : 'https://' + veiculo.site"
-                            target="_blank" title="Site de Apoio."
-                            class="min-w-[100px] flex items-center gap-2 px-6 py-2 rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md">
-                            <i class="fas fa-hands-helping"></i>Apoio
-                        </a>
+
+                        <x-bt-padrao x-show="veiculo.site" label="Apoio" icon="hands-helping" color="green" target="_blank"
+                        title="Site de Apoio." x-bind:href="veiculo.site.startsWith('http') ? veiculo.site : 'https://' + veiculo.site" />
+
                         <x-bt-padrao x-show="!veiculo.site" disabled color="gray" icon="hands-helping" label="Apoio"
                             title="Site de apoio não cadastrado!" />
 
-                        <a :href="`/mev/${veiculo.familia}.pdf`" target="_blank"
-                            class="min-w-[100px] flex items-center gap-2 px-6 py-2 rounded-md shadow-md transition font-medium text-white bg-yellow-500 hover:bg-yellow-600"
-                            title="Manual de Especificação de Venda.">
-                            <i class="fas fa-book-open"></i> M.E.V.
-                        </a>
+
+                        <x-bt-padrao label="M.E.V." icon="book-open" color="yellow" target="_blank"
+                            title="Manual de Especificação de Venda" x-bind:href="`/mev/${veiculo.familia}.pdf`" />
 
                         <x-bt-padrao href="/mev/precos.pdf" target="_blank" color="pink" icon="tags"
                             label="Tabela Preços" title="Tabela de Preço Geral Atualizada" />
@@ -131,19 +127,10 @@
                         target="_blank" title="Consulta de Preço Padrão." />
                 </template>
 
-                {{--
-                <x-bt-padrao type="submit" color="teal" icon="folder-open" label="Documentos"
-                    title="Pasta de Apoio Documentos" /> --}}
-
                 <div x-data="{ abrirModalDoc: false, familiaAtual: '' }">
-                    <!-- Botão -->
-                    <button @click="
-                                familiaAtual = veiculo.familia;
-                                abrirModalDoc = true;
-                            " class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm shadow">
-                        <i class="fas fa-folder-open mr-1"></i> Ver Documentos
-                    </button>
-
+                    <x-bt-padrao label="Documentos" icon="folder-open" color="indigo" colorValueNormal="600"
+                        colorValueHover="700" title="Pasta de Apoio Documentos"
+                        @click="familiaAtual = veiculo.familia; abrirModalDoc = true" />
                     <!-- Modal -->
                     @php
                     $pasta = public_path('upload/familia');
