@@ -22,5 +22,23 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+
+        Blade::if('acessoAssistente', function () {
+            return in_array(auth()->user()->level, ['Assistente','Gerente', 'Diretor', 'admin']);
+        });
+
+
+        Blade::if('acessoGerente', function () {
+            return in_array(auth()->user()->level, ['Gerente', 'Diretor', 'admin']);
+        });
+
+        Blade::if('acessoDiretor', function () {
+            return in_array(auth()->user()->level, ['Diretor', 'admin']);
+        });
+
+        Blade::if('acessoAdmin', function () {
+            return auth()->user()->level === 'admin';
+        });
     }
+
 }

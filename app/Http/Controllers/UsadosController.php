@@ -14,7 +14,7 @@ class UsadosController extends Controller
     // Criando restrição para quem pode acessar o metodo index
     public function __construct()
     {
-        $this->middleware(middleware: 'can:level')->only(methods: 'index');
+        // $this->middleware(middleware: 'can:level')->only(methods: 'index');
     }
 
     //paginador

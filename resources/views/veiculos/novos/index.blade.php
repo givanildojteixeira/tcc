@@ -216,12 +216,18 @@
                                         <th class="sortable p-2 text-right" data-column="tabela">Tabela <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
+
+                                        @acessoGerente
                                         <th class="sortable p-2 text-right" data-column="bonus">Bonus <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
+                                        @endacessoGerente
+
+                                        @acessoDiretor
                                         <th class="sortable p-2 text-right" data-column="custo">Custo <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
+                                        @endacessoDiretor
                                         <th class="sortable p-2" data-column="faturado">Faturado <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
@@ -300,12 +306,16 @@
                                             <td class="p-1 px-1 py-1 text-right">
                                                 {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
                                             </td>
+                                            @acessoGerente
                                             <td class="p-1 px-1 py-1 text-right">
                                                 {{ number_format($veiculo->vlr_bonus, 0, ',', '.') }}
                                             </td>
+                                            @endacessoGerente
+                                            @acessoDiretor
                                             <td class="p-1 px-1 py-1 text-right">
                                                 {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
                                             </td>
+                                            @endacessoDiretor
                                             <td class="p-1 px-1 py-1 text-center">
                                                 {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
                                                 dias

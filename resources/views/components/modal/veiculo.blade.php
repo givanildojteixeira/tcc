@@ -100,25 +100,27 @@
             <div class="mt-2 pt-1 flex flex-wrap gap-2 justify-center">
                 <x-bt-padrao label="Voltar" color="gray" icon="arrow-left" title="Fechar ou voltar"
                     @click=" open = false" />
+
+                @acessoAssistente
                 <x-bt-padrao label="Editar" color="blue" icon="pen-to-square" title="Editar veículo"
                     @click=" window.location.href = `/veiculos/${veiculo.id}/edit?from=${veiculo.origem}`" />
-
+                @else
+                <x-bt-padrao disabled label="Editar" color="blue" icon="pen-to-square" title="Editar veículo" />
+                @endif
                 <template x-if="veiculo.origem === 'novos'">
                     <div class="flex flex-wrap gap-1">
-
-                        <x-bt-padrao x-show="veiculo.site" label="Apoio" icon="hands-helping" color="green" target="_blank"
-                        title="Site de Apoio." x-bind:href="veiculo.site.startsWith('http') ? veiculo.site : 'https://' + veiculo.site" />
+                        <x-bt-padrao x-show="veiculo.site" label="Apoio" icon="hands-helping" color="green"
+                            target="_blank" title="Site de Apoio."
+                            x-bind:href="veiculo.site.startsWith('http') ? veiculo.site : 'https://' + veiculo.site" />
 
                         <x-bt-padrao x-show="!veiculo.site" disabled color="gray" icon="hands-helping" label="Apoio"
                             title="Site de apoio não cadastrado!" />
-
 
                         <x-bt-padrao label="M.E.V." icon="book-open" color="yellow" target="_blank"
                             title="Manual de Especificação de Venda" x-bind:href="`/mev/${veiculo.familia}.pdf`" />
 
                         <x-bt-padrao href="/mev/precos.pdf" target="_blank" color="pink" icon="tags"
                             label="Tabela Preços" title="Tabela de Preço Geral Atualizada" />
-
                     </div>
                 </template>
 
@@ -180,7 +182,8 @@
                                 <!-- Fallback: nenhuma família encontrada -->
                                 <template
                                     x-if="!Object.keys({!! json_encode($familiasDisponiveis->keys()) !!}).includes(familia.toLowerCase())">
-                                    <p class="text-gray-500 italic">Nenhum documento encontrado para esta família.</p>
+                                    <p class="text-gray-500 italic">Nenhum documento encontrado para esta família.
+                                    </p>
                                 </template>
 
                                 <!-- Botão fechar no canto -->

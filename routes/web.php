@@ -51,16 +51,20 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Users
-    Route::get('/users-index', [UserController::class, 'index'])->name('user.index');
-    Route::get('/user-edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-    Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('user.update');
-    Route::patch('/user-ativo/{id}/{ativo}', [UserController::class, 'ativo'])->name('user.ativo');
-    Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    // Users =>somente para o admin
+    Route::middleware(['auth', 'check.level:admin'])->group(function () {
+        Route::get('/users-index', [UserController::class, 'index'])->name('user.index');
+        Route::get('/user-edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+        Route::put('/user-edit/{id}', [UserController::class, 'update'])->name('user.update');
+        Route::patch('/user-ativo/{id}/{ativo}', [UserController::class, 'ativo'])->name('user.ativo');
+        Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    });
+
 
     //Clientes
     Route::resources([
@@ -95,12 +99,13 @@ Route::middleware('auth')->group(function () {
         return DB::table('cor_familia')->where('familia_id', $id)->pluck('cor_id');
     });
     Route::get('/familia/{id}/arquivos', function ($id) {
-        $familia =Familia::find($id);
-        if (!$familia) return response()->json([]);
-    
+        $familia = Familia::find($id);
+        if (!$familia)
+            return response()->json([]);
+
         $nomeSlug = Str::slug($familia->descricao, '-');
         $caminho = public_path("upload/familia");
-    
+
         $arquivos = collect(File::files($caminho))->filter(function ($file) use ($nomeSlug) {
             return str_starts_with($file->getFilename(), $nomeSlug . '-');
         })->map(function ($file) use ($nomeSlug) {
@@ -111,13 +116,13 @@ Route::middleware('auth')->group(function () {
                 'arquivo' => $nomeCompleto
             ];
         });
-    
+
         return response()->json($arquivos->values());
     });
 
 
 
-    
+
     // cores
     Route::resource('cores', CorController::class);
 
