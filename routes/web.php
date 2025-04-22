@@ -68,9 +68,9 @@ Route::middleware('auth')->group(function () {
 
 
     //Clientes
-    Route::resources([
-        'cliente' => ClienteController::class
-    ]);
+    // Route::resources(['cliente' => ClienteController::class ]);
+    Route::resource('clientes', ClienteController::class)->except(['create', 'edit', 'show']);
+
     Route::get('/meus-clientes/{id}', [ClienteController::class, 'clientes_to_user'])->name('meus-clientes');
     route::get('/confirma-delete/{id}', [ClienteController::class, 'confirma_delete'])->name('confirma_delete');
 

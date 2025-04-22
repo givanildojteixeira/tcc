@@ -2,111 +2,128 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\Authenticate;
 use App\Models\Cliente;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
-// use App\Http\Controllers\Auth;
+use Illuminate\Support\Facades\Validator;
 
 
 class ClienteController extends Controller
 {
-
-    // Criando restrição para quem pode acessar o metodo index
-    public function __construct()
+    public function index(Request $request)
     {
-        $this->middleware(middleware: 'can:level')->only(methods: 'index');
+        $busca = $request->input('busca');
+
+        $clientes = Cliente::when($busca, function ($query, $busca) {
+            $query->where('nome', 'like', "%$busca%")
+                ->orWhere('email', 'like', "%$busca%")
+                ->orWhere('cpf_cnpj', 'like', "%$busca%");
+        })
+            ->orderBy('nome')
+            ->paginate(15);
+
+        return view('clientes.index', compact('clientes'));
     }
 
-    public function clientes_to_user(User $id)
-    {
-        $user = User::where('id', $id->id)->first();
-        $clientes = $user->customers()->get();
-
-        return view('clientes.clientes_to_user', [
-            'clientes' => $clientes
-        ]);
-    }
-
-
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return view('clientes.index', [
-            'clientes' => Cliente::orderBy('nome')->paginate('20')
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('clientes.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $cliente = new Cliente();
-        $cliente->user_id      = $request->user_id;
-        $cliente->nome         = $request->nome;
-        $cliente->email        = $request->email;
-        $cliente->telefone     = $request->telefone;
-        $cliente->telefonecom  = $request->telefonecom;
-        $cliente->endereco     = $request->endereco;
-        $cliente->bairro       = $request->bairro;
-        $cliente->cidade       = $request->cidade;
-        $cliente->uf           = $request->uf;
-        $cliente->sexo         = $request->sexo;
+        $validator = Validator::make($request->all(), [
+            'nome' => 'required|string|max:255',
+            'tipo_pessoa' => 'required|in:Física,Jurídica',
+            'cpf_cnpj' => 'required|string|max:20|unique:clientes,cpf_cnpj',
+            'email' => 'nullable|email|max:255',
+            'celular' => 'nullable|string|max:20',
+            'telefone' => 'nullable|string|max:20',
+            'telefone_comercial' => 'nullable|string|max:20',
+            'cep' => 'nullable|string|max:9',
+            'endereco' => 'nullable|string|max:255',
+            'numero' => 'nullable|string|max:10',
+            'complemento' => 'nullable|string|max:255',
+            'bairro' => 'nullable|string|max:255',
+            'cidade' => 'nullable|string|max:255',
+            'uf' => 'nullable|string|max:2',
+            'sexo' => 'required|in:M,F,Outro,Não Informado',
+            'estado_civil' => 'required|string|max:50',
+            'data_nascimento' => 'required|date',
+            'data_fundacao' => 'nullable|date',
+            'razao_social' => 'nullable|string|max:255',
+            'nome_fantasia' => 'nullable|string|max:255',
+            'inscricao_estadual' => 'nullable|string|max:50',
+            'inscricao_municipal' => 'nullable|string|max:50',
+            'observacoes' => 'nullable|string',
+            'ativo' => 'nullable|boolean',
+        ]);
 
-        $cliente->save();
-        return redirect()->route(route: 'cliente.create')->with('msg', 'Cliente cadastrado com sucesso!');
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', implode('<br>', $validator->errors()->all()))
+                ->with('abrirModalCreate', true);
+        }
+
+        $dados = $validator->validated();
+        $dados['ativo'] = $request->has('ativo');
+        $dados['user_id'] = auth()->id();
+
+        Cliente::create($dados);
+
+        return redirect()->route('clientes.index')->with('success', 'Cliente cadastrado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Cliente $cliente)
-    {
-        return view('clientes.show', ['cliente' => $cliente]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cliente $cliente)
-    {
-        return view('clientes.edit', ['cliente' => $cliente]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Cliente $cliente)
     {
-        Cliente::findOrFail($cliente->id)->update($request->all());
-        return redirect()->route('cliente.show', $cliente->id);
+        $validator = Validator::make($request->all(), [
+            'nome' => 'required|string|max:255',
+            'tipo_pessoa' => 'required|in:Física,Jurídica',
+            'cpf_cnpj' => 'required|string|max:20|unique:clientes,cpf_cnpj,' . $cliente->id,
+            'email' => 'nullable|email|max:255',
+            'celular' => 'nullable|string|max:20',
+            'telefone' => 'nullable|string|max:20',
+            'telefone_comercial' => 'nullable|string|max:20',
+            'cep' => 'nullable|string|max:9',
+            'endereco' => 'nullable|string|max:255',
+            'numero' => 'nullable|string|max:10',
+            'complemento' => 'nullable|string|max:255',
+            'bairro' => 'nullable|string|max:255',
+            'cidade' => 'nullable|string|max:255',
+            'uf' => 'nullable|string|max:2',
+            'sexo' => 'required|in:M,F,Outro,Não Informado',
+            'estado_civil' => 'required|string|max:50',
+            'data_nascimento' => 'required|date',
+            'data_fundacao' => 'nullable|date',
+            'razao_social' => 'nullable|string|max:255',
+            'nome_fantasia' => 'nullable|string|max:255',
+            'inscricao_estadual' => 'nullable|string|max:50',
+            'inscricao_municipal' => 'nullable|string|max:50',
+            'observacoes' => 'nullable|string',
+            'ativo' => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+            ->withInput()
+            ->with('error', implode('<br>', $validator->errors()->all()))
+            ->with('abrirModalEdit', true)
+            ->with('editData', $cliente->only([
+                'id', 'nome', 'tipo_pessoa', 'cpf_cnpj', 'email', 'celular', 'telefone',
+                'telefone_comercial', 'cep', 'endereco', 'numero', 'complemento',
+                'bairro', 'cidade', 'uf', 'sexo', 'estado_civil', 'data_nascimento',
+                'data_fundacao', 'razao_social', 'nome_fantasia', 'inscricao_estadual',
+                'inscricao_municipal', 'observacoes', 'ativo'
+            ]));
+        }
+
+        $dados = $validator->validated();
+        $dados['ativo'] = $request->has('ativo');
+
+        $cliente->update($dados);
+
+        return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Cliente $cliente)
     {
-        Cliente::findOrFail($cliente->id)->delete();
-        return redirect()->route('meus-clientes', Auth::user()->id);
-    }
-
-    public function confirma_delete(Cliente $id)
-    {
-        return view('clientes.confirma_delete',['id' => $id]);
+        $cliente->delete();
+        return redirect()->route('clientes.index')->with('success', 'Cliente removido com sucesso!');
     }
 }

@@ -74,9 +74,10 @@
 
                     <x-slot name="content">
                         <!-- Itens Diretos -->
-                        <x-dropdown-link :href="route('cliente.create')">
+                        <x-dropdown-link :href="route('clientes.index')">
                             <i class="fa-solid fa-people-group mr-2"></i> Clientes
                         </x-dropdown-link>
+                        
                         @acessoAssistente()
                         <x-dropdown-link :href="route('familia.index')">
                             <i class="fa-solid fa-car mr-2"></i> Famílias

@@ -108,7 +108,7 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-800">
-                                            <div class="flex gap-2">
+                                            <div class="flex gap-2">d
                                                 <button
                                                     @click="editModal = true; editData = {
                                                 id: {{ $opcional->id }},
