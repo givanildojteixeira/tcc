@@ -184,7 +184,7 @@
                     <div class="text-gray-900" id="tabela-wrapper">
                         <div x-data="{ open: false, veiculo: {} }" x-init=" @if (request('openModal') && request('veiculo_id')) $nextTick(() => {
                                 document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); }); @endif">
-                            <table class="w-full table-fixed">
+                            <table class="w-full table-auto">
                                 <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                     <tr>
                                         <th class="sortable p-1 px-1 py-1" data-column="marca">Marca <i
