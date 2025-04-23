@@ -35,7 +35,7 @@
                     </x-nav-link>
 
                     {{-- Propostas --}}
-                    <x-nav-link :href="route('propostas.index')" :active="request()->routeIs('propostas.index')">
+                    <x-nav-link :href="route('propostas.create')" :active="request()->routeIs('propostas.create')">
                         <i class="fas fa-file-signature mr-2"></i> Propostas
                     </x-nav-link>
 

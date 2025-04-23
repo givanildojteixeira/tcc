@@ -206,11 +206,11 @@
                     </template>
                 </div>
 
-
-
                 {{-- fim --}}
-                <x-bt-padrao type="submit" color="green" icon="file-signature" label="Proposta"
-                    title="Abertura de Proposta" />
+                <x-bt-padrao color="green" icon="file-signature" label="Proposta"  title="Abertura de Proposta"
+                      @click="window.location.href = `/propostas/create?veiculo_id=${veiculo.id}`" 
+                />
+
             </div>
         </div>
     </div>

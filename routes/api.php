@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Cliente;
+use App\Models\Veiculo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +18,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+Route::get('/veiculos/buscar-chassi/{chassi}', function ($chassi) {
+    return Veiculo::where('chassi', $chassi)->firstOrFail();
+});
+Route::get('/clientes/buscar/{query}', function ($query) {
+    return Cliente::where('nome', 'like', "%{$query}%")
+        ->orWhere('cpf_cnpj', 'like', "%{$query}%")
+        ->limit(10)
+        ->get();
+});
+Route::get('/veiculos-usados/buscar-chassi/{chassi}', function ($chassi) {
+    return App\Models\Veiculo::where('chassi', $chassi)
+        ->where('novo_usado', 'Usado')
+        ->firstOrFail();
 });

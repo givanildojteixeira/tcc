@@ -5,10 +5,10 @@ use App\Models\User;
 use App\Models\Cliente;
 use App\Models\Familia;
 use App\Models\Veiculo;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CorController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NovosController;
@@ -17,8 +17,8 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\FamiliaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VeiculoController;
+use App\Http\Controllers\PropostaController;
 use App\Http\Controllers\OpcionaisController;
-use App\Http\Controllers\PropostasController;
 use App\Http\Controllers\CorFamiliaController;
 use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\RelatoriosController;
@@ -145,7 +145,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('opcionais', OpcionaisController::class);
 
     //Propostas
-    Route::get('/propostas.index', [PropostasController::class, 'index'])->name('propostas.index');
+    // Route::get('/propostas.index', [PropostasController::class, 'index'])->name('propostas.index');
+    Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
+
 
     //Financeiro
     Route::get('/financeiro.index', [FinanceiroController::class, 'index'])->name('financeiro.index');
