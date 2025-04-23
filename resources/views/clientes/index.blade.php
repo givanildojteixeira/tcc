@@ -149,11 +149,11 @@
                     </div>
                 </x-rodape>
 
-
             </div>
+        </div>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
                     @if (session('abrirModalCreate'))
                         setTimeout(() => { document.querySelector('[x-data]').__x.$data.showModal = true }, 100);
                     @endif
@@ -167,7 +167,7 @@
                         }, 100);
                     @endif
                 });
-            </script>
+        </script>
 
 
 </x-app-layout>

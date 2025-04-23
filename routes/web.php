@@ -23,6 +23,7 @@ use App\Http\Controllers\CorFamiliaController;
 use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\ConfiguracaoController;
+use App\Http\Controllers\CondicaoPagamentoController;
 
 
 /*
@@ -130,6 +131,14 @@ Route::middleware('auth')->group(function () {
 
     //Configurações
     Route::post('/configuracoes/salvar', [ConfiguracaoController::class, 'salvar'])->name('configuracoes.salvar');
+
+    //Condições de Pagamento
+    Route::prefix('condicoes-pagamento')->name('condicao_pagamento.')->group(function () {
+        Route::get('/', [CondicaoPagamentoController::class, 'index'])->name('index');
+        Route::post('/', [CondicaoPagamentoController::class, 'store'])->name('store');
+        Route::put('/{condicao_pagamento}', [CondicaoPagamentoController::class, 'update'])->name('update');
+        Route::delete('/{condicao_pagamento}', [CondicaoPagamentoController::class, 'destroy'])->name('destroy');
+    });
 
 
     //Opcionais

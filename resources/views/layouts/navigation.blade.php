@@ -86,9 +86,12 @@
                             <i class="fa-solid fa-toolbox mr-2"></i> Opcionais
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('cores.index')">
-                            <i class="fa-solid fa-toolbox mr-2"></i> Cores
+                            <i class="fa-solid fa-palette mr-2"></i> Cores
                         </x-dropdown-link>
-
+                        <x-dropdown-link :href="route('condicao_pagamento.index')">
+                            <i class="fa-solid fa-money-check-dollar mr-2"></i> Condições de Pagamento
+                        </x-dropdown-link>
+                        
 
                         <!-- Submenu Veículos -->
                         <div x-data="{ open: false }" class="relative group">
