@@ -1,4 +1,4 @@
-<div x-data="veiculoNovo">
+<div x-data="veiculoNovo" x-init="carregarVeiculoPorId()">
     <!-- Campo de busca -->
     <div class="flex gap-4 items-end mb-4">
         <div class="flex flex-col flex-grow">

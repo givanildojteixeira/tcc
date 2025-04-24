@@ -93,40 +93,49 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
-            document.addEventListener('alpine:init', () => {
-                Alpine.data('veiculoNovo', () => ({
-                    chassiBusca: '',
-                    veiculos: [],
-                    veiculo: null,
+            Alpine.data('veiculoNovo', () => ({
+                chassiBusca: '',
+                veiculos: [],
+                veiculo: null,
 
-                    buscarVeiculo() {
-                        if (this.chassiBusca.trim() === '') {
-                            alert('Informe o chassi para buscar!');
-                            return;
-                        }
+                buscarVeiculo() {
+                    if (this.chassiBusca.trim() === '') {
+                        alert('Informe o chassi para buscar!');
+                        return;
+                    }
 
-                        fetch(`/api/veiculos/buscar-chassi/${this.chassiBusca}`)
+                    fetch(`/api/veiculos/buscar-chassi/${this.chassiBusca}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            this.veiculos = data;
+                            if (data.length === 1) {
+                                this.veiculo = data[0];
+                            }
+                        });
+                },
+
+                selecionarVeiculo(v) {
+                    this.veiculo = v;
+                    this.veiculos = [];
+                },
+
+                carregarVeiculoPorId() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const veiculoId = urlParams.get('veiculo_id');
+                    console.log('🔍 veiculo_id detectado:', veiculoId); // ← Aqui!
+
+                    if (veiculoId) {
+                        fetch(`/api/veiculos/${veiculoId}`)
                             .then(res => res.json())
                             .then(data => {
-                                console.log('🔍 Veículos encontrados:', data);
-                                this.veiculos = data;
-
-                                if (data.length === 1) {
-                                    this.veiculo = data[0];
-                                } else if (data.length > 1) {
-                                    this.veiculo = null;
-                                } else {
-                                    alert("Nenhum veículo encontrado.");
-                                }
+                                console.log('✅ Veículo carregado:', data); // ← E aqui!
+                                this.veiculo = data;
                             })
-                            .catch(() => alert("Erro ao buscar veículo."));
-                    },
-
-                    selecionarVeiculo(v) {
-                        this.veiculo = v;
-                        this.veiculos = []; // esconde a lista
+                            .catch(err => console.error('❌ Erro ao carregar veículo:', err));
                     }
-                }))
+                }
+            }));
+
 
             Alpine.data('clienteBusca', () => ({
                 busca: '',
@@ -213,7 +222,6 @@
                     return 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
                 }
             }));
-
 
         });
     </script>
