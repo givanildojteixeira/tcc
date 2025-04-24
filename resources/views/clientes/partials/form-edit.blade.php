@@ -25,7 +25,7 @@
             </div>
 
             <!-- Container fixo para abas -->
-            <div class="h-[600px] flex flex-col justify-between">
+            <div class="min-h-[600px] flex flex-col justify-between">
                 <!-- Aba Dados -->
                 <div x-show="tabAtiva === 'dados'" class="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
                     <x-input label="Nome" name="nome" required x-model="editData.nome" />
