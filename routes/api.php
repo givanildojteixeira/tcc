@@ -20,8 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/veiculos/buscar-chassi/{chassi}', function ($chassi) {
-    return Veiculo::where('chassi', $chassi)->firstOrFail();
+    return Veiculo::where('chassi', 'like', '%' . $chassi . '%')
+        ->where('novo_usado', 'Novo')
+        ->limit(5)
+        ->get(); // agora retorna uma lista
 });
+
 Route::get('/clientes/buscar/{query}', function ($query) {
     return Cliente::where('nome', 'like', "%{$query}%")
         ->orWhere('cpf_cnpj', 'like', "%{$query}%")
@@ -29,7 +33,7 @@ Route::get('/clientes/buscar/{query}', function ($query) {
         ->get();
 });
 Route::get('/veiculos-usados/buscar-chassi/{chassi}', function ($chassi) {
-    return App\Models\Veiculo::where('chassi', $chassi)
+    return Veiculo::where('chassi', $chassi)
         ->where('novo_usado', 'Usado')
         ->firstOrFail();
 });

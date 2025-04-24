@@ -22,7 +22,9 @@ class VeiculoController extends Controller
         $familia = Familia::where('descricao', $veiculo->familia)->first();
         $coresRelacionadas = $familia ? $familia->cores : collect();
 
-        if ($veiculo->novo_usado === 'novo') {
+        // dd($veiculo->novo_usado);
+
+        if ($veiculo->novo_usado === 'Novo') {
             $opcionalDescricao = Opcionais::where('modelo_fab', $veiculo->modelo_fab)
                 ->where('cod_opcional', $veiculo->cod_opcional)
                 ->value('descricao');
@@ -30,6 +32,7 @@ class VeiculoController extends Controller
             $opcionalDescricao = Opcionais::where('chassi', $veiculo->chassi)
                 ->value('descricao');
         }
+        // dd($opcionalDescricao);
 
         return view('veiculos.edit', compact('veiculo', 'familias', 'opcionalDescricao', 'coresRelacionadas'));
     }

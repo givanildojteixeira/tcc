@@ -13,37 +13,37 @@
                 ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
                 : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 transition-all duration-200">
-                <i class="fas fa-car mr-1"></i> 1. Veículo Novo 
+                <i class="fas fa-car mr-1"></i> 1. Veículo Novo
             </button>
-        
+
             <button @click="aba = 'cliente'" :class="aba === 'cliente'
                 ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
                 : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 transition-all duration-200">
-                <i class="fas fa-user mr-1"></i> 2. Cliente 
+                <i class="fas fa-user mr-1"></i> 2. Cliente
             </button>
-        
+
             <button @click="aba = 'usado'" :class="aba === 'usado'
                 ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
                 : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 transition-all duration-200">
                 <i class="fas fa-car-side mr-1"></i> 3. Veículo Usado
             </button>
-        
+
             <button @click="aba = 'negociacao'" :class="aba === 'negociacao'
                 ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
                 : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 transition-all duration-200">
                 <i class="fas fa-handshake mr-1"></i> 4. Negociação
             </button>
-        
+
             <button @click="aba = 'observacoes'" :class="aba === 'observacoes'
                 ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
                 : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 transition-all duration-200">
                 <i class="fas fa-sticky-note mr-1"></i> 5. Observações
             </button>
-        
+
             <button @click="aba = 'resumo'" :class="aba === 'resumo'
                 ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
                 : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
@@ -51,7 +51,7 @@
                 <i class="fas fa-clipboard-check mr-1"></i> 6. Resumo
             </button>
         </div>
-        
+
 
         <!-- Conteúdo de cada aba -->
         <div x-show="aba === 'veiculo'" class="space-y-4">
@@ -78,42 +78,55 @@
             @include('propostas.partials.aba-resumo')
         </div>
     </div>
-                <!-- Rodapé -->
-                <x-rodape>
-                    <div class="font-medium">Propostas</div>
+    <!-- Rodapé -->
+    <x-rodape>
+        <div class="font-medium">Propostas</div>
 
-                    <!-- Legenda de cores -->
-                    <div class="flex flex-wrap gap-1 items-center">
-                        Perfil do Usuario => <strong>{{ Auth::user()->level}}</strong>
-                    </div>
-                </x-rodape>
+        <!-- Legenda de cores -->
+        <div class="flex flex-wrap gap-1 items-center">
+            Perfil do Usuario => <strong>{{ Auth::user()->level}}</strong>
+        </div>
+    </x-rodape>
     {{-- Modal de Ajuda --}}
     @include('propostas.partials.modal-ajuda')
 
 
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('veiculoNovo', () => ({
-                chassiBusca: '',
-                veiculo: @json($veiculoNovo ?? null),
-                buscarVeiculo() {
-                    if (this.chassiBusca.trim() === '') {
-                        alert('Informe o chassi para buscar!');
-                        return;
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('veiculoNovo', () => ({
+                    chassiBusca: '',
+                    veiculos: [],
+                    veiculo: null,
+
+                    buscarVeiculo() {
+                        if (this.chassiBusca.trim() === '') {
+                            alert('Informe o chassi para buscar!');
+                            return;
+                        }
+
+                        fetch(`/api/veiculos/buscar-chassi/${this.chassiBusca}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log('🔍 Veículos encontrados:', data);
+                                this.veiculos = data;
+
+                                if (data.length === 1) {
+                                    this.veiculo = data[0];
+                                } else if (data.length > 1) {
+                                    this.veiculo = null;
+                                } else {
+                                    alert("Nenhum veículo encontrado.");
+                                }
+                            })
+                            .catch(() => alert("Erro ao buscar veículo."));
+                    },
+
+                    selecionarVeiculo(v) {
+                        this.veiculo = v;
+                        this.veiculos = []; // esconde a lista
                     }
-    
-                    fetch(`/api/veiculos/buscar-chassi/${this.chassiBusca}`)
-                        .then(res => {
-                            if (!res.ok) throw new Error("Veículo não encontrado");
-                            return res.json();
-                        })
-                        .then(data => this.veiculo = data)
-                        .catch(err => {
-                            alert("Veículo não encontrado!");
-                            this.veiculo = null;
-                        });
-                }
-            }));
+                }))
 
             Alpine.data('clienteBusca', () => ({
                 busca: '',

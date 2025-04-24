@@ -20,14 +20,14 @@
                 <button type="button" @click="tabAtiva = 'observacoes'"
                     :class="tabAtiva === 'observacoes' ? 'bg-blue-100 text-blue-700 shadow-inner' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                     class="flex-1 px-4 py-2 transition-all duration-200">
-                    <i class="fas fa-sticky-note"></i> Observações
+                    <i class="fas fa-sticky-note"></i> Observações 
                 </button>
             </div>
 
             <!-- Container fixo para abas -->
-            <div class="min-h-[600px]">
+            <div class="h-[600px] flex flex-col justify-between">
                 <!-- Aba Dados -->
-                <div x-show="tabAtiva === 'dados'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div x-show="tabAtiva === 'dados'" class="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
                     <x-input label="Nome" name="nome" required x-model="editData.nome" />
                     <x-select label="Tipo Pessoa" name="tipo_pessoa" required x-model="editData.tipo_pessoa">
                         <option value="Física">Física</option>
@@ -60,7 +60,7 @@
                 </div>
 
                 <!-- Aba Endereço -->
-                <div x-show="tabAtiva === 'endereco'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div x-show="tabAtiva === 'endereco'" class="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
                     <x-input label="CEP" name="cep" x-model="editData.cep" />
                     <x-input label="Endereço" name="endereco" x-model="editData.endereco" />
                     <x-input label="Número" name="numero" x-model="editData.numero" />
@@ -76,7 +76,7 @@
                 </div>
 
                 <!-- Aba Observações -->
-                <div x-show="tabAtiva === 'observacoes'" class="grid grid-cols-1 gap-4">
+                <div x-show="tabAtiva === 'observacoes'" class="grid grid-cols-1 gap-4 h-full">
                     <x-textarea label="Observações" name="observacoes" rows="6" x-model="editData.observacoes" />
                 </div>
             </div>
