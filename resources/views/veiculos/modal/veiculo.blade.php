@@ -30,8 +30,7 @@
                         <!-- Imagem Dinâmica -->
                         <div class="flex items-center justify-center">
                             {{-- Deixa a figura centraliza e com tamanhos fixos --}}
-                            <img :src="imagemAtual()" alt="Imagem veículo"
-                                class="w-[400px] h-[255px] object-cover rounded-md">
+                            <img :src="imagemAtual()" alt="Imagem veículo" class="w-[450px] h-[255px] rounded-md">
                         </div>
 
 
@@ -207,9 +206,30 @@
                 </div>
 
                 {{-- fim --}}
-                <x-bt-padrao color="green" icon="file-signature" label="Proposta"  title="Abertura de Proposta"
-                      @click="window.location.href = `/propostas/create?veiculo_id=${veiculo.id}`" 
-                />
+                <x-bt-padrao color="green" icon="file-signature" label="Proposta" title="Abertura de Proposta" @click="
+                    {{-- console.log('🚀 veiculo:', veiculo); --}}
+                    if (veiculo && veiculo.id) {
+                        fetch('/propostas/iniciar', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ id_veiculoNovo: veiculo.id })
+                        }).then(response => {
+                            if (response.ok) {
+                                window.location.href = '/propostas/create';
+                            } else {
+                                alert('Erro ao iniciar proposta! Ja existe uma proposta en andamento');
+                                window.location.href = '/propostas/create';
+                            }
+                        });
+                    } else {
+                        alert('⚠️ Por favor, selecione um veículo antes de iniciar a proposta.');
+                    }
+                " />
+
+
 
             </div>
         </div>

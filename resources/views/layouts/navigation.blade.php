@@ -13,24 +13,22 @@
 
                     {{-- Dashboard --}}
                     @acessoGerente
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
-                    </x-nav-link>
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                        </x-nav-link>
                     @else
-                    <x-nav-link :href="'#'" :disabled="true">
-                        <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
-                    </x-nav-link>
+                        <x-nav-link :href="'#'" :disabled="true">
+                            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                        </x-nav-link>
                     @endacessoGerente
 
                     {{-- Novos --}}
-                    <x-nav-link :href="route('veiculos.novos.limparFiltros')"
-                        :active="request()->routeIs('veiculos.novos.index')">
+                    <x-nav-link :href="route('veiculos.novos.limparFiltros')" :active="request()->routeIs('veiculos.novos.index')">
                         <i class="fas fa-car mr-2"></i> Novos
                     </x-nav-link>
 
                     {{-- Usados --}}
-                    <x-nav-link :href="route('veiculos.usados.limparFiltros')"
-                        :active="request()->routeIs('veiculos.usados.index')">
+                    <x-nav-link :href="route('veiculos.usados.limparFiltros')" :active="request()->routeIs('veiculos.usados.index')">
                         <i class="fas fa-car-crash mr-2"></i> Usados
                     </x-nav-link>
 
@@ -41,13 +39,13 @@
 
                     {{-- Financeiro --}}
                     @acessoAssistente()
-                    <x-nav-link :href="route('financeiro.index')" :active="request()->routeIs('financeiro.index')">
-                        <i class="fas fa-wallet mr-2"></i> Financeiro
-                    </x-nav-link>
+                        <x-nav-link :href="route('financeiro.index')" :active="request()->routeIs('financeiro.index')">
+                            <i class="fas fa-wallet mr-2"></i> Financeiro
+                        </x-nav-link>
                     @else
-                    <x-nav-link :href="'#'" :disabled="true">
-                        <i class="fas fa-wallet mr-2"></i> Financeiro
-                    </x-nav-link>
+                        <x-nav-link :href="'#'" :disabled="true">
+                            <i class="fas fa-wallet mr-2"></i> Financeiro
+                        </x-nav-link>
                     @endacessoAssistente
 
                     {{-- Relatórios --}}
@@ -77,56 +75,56 @@
                         <x-dropdown-link :href="route('clientes.index')">
                             <i class="fa-solid fa-people-group mr-2"></i> Clientes
                         </x-dropdown-link>
-                        
+
                         @acessoAssistente()
-                        <x-dropdown-link :href="route('familia.index')">
-                            <i class="fa-solid fa-car mr-2"></i> Famílias
-                        </x-dropdown-link>
-                        <x-dropdown-link :href="route('opcionais.index')">
-                            <i class="fa-solid fa-toolbox mr-2"></i> Opcionais
-                        </x-dropdown-link>
-                        <x-dropdown-link :href="route('cores.index')">
-                            <i class="fa-solid fa-palette mr-2"></i> Cores
-                        </x-dropdown-link>
-                        <x-dropdown-link :href="route('condicao_pagamento.index')">
-                            <i class="fa-solid fa-money-check-dollar mr-2"></i> Condições de Pagamento
-                        </x-dropdown-link>
-                        
+                            <x-dropdown-link :href="route('familia.index')">
+                                <i class="fa-solid fa-car mr-2"></i> Famílias
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('opcionais.index')">
+                                <i class="fa-solid fa-toolbox mr-2"></i> Opcionais
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('cores.index')">
+                                <i class="fa-solid fa-palette mr-2"></i> Cores
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('condicao_pagamento.index')">
+                                <i class="fa-solid fa-money-check-dollar mr-2"></i> Condições de Pagamento
+                            </x-dropdown-link>
 
-                        <!-- Submenu Veículos -->
-                        <div x-data="{ open: false }" class="relative group">
-                            <button @mouseenter="open = true" @mouseleave="open = true"
-                                class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <i class="fa-solid fa-car-side mr-2"></i> Veículos
-                                <svg class="ml-auto h-4 w-4 transform group-hover:rotate-90 transition-transform"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
 
-                            <!-- Submenu Dropdown -->
-                            <div x-show="open" @mouseleave="open = false"
-                                class="absolute top-0 left-full mt-0 ml-2 min-w-max bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50">
+                            <!-- Submenu Veículos -->
+                            <div x-data="{ open: false }" class="relative group">
+                                <button @mouseenter="open = true" @mouseleave="open = true"
+                                    class="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="fa-solid fa-car-side mr-2"></i> Veículos
+                                    <svg class="ml-auto h-4 w-4 transform group-hover:rotate-90 transition-transform"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
 
-                                <!-- Novos + Cadastro -->
-                                <div class="group relative">
-                                    <a href="{{ route('veiculos.create', ['from' => 'novos']) }}"
-                                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <i class="fas fa-plus-circle"></i><span>Cadastrar Novo</span>
-                                    </a>
+                                <!-- Submenu Dropdown -->
+                                <div x-show="open" @mouseleave="open = false"
+                                    class="absolute top-0 left-full mt-0 ml-2 min-w-max bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50">
+
+                                    <!-- Novos + Cadastro -->
+                                    <div class="group relative">
+                                        <a href="{{ route('veiculos.create', ['from' => 'novos']) }}"
+                                            class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                            <i class="fas fa-plus-circle"></i><span>Cadastrar Novo</span>
+                                        </a>
+                                    </div>
+
+                                    <!-- Usados + Cadastro -->
+                                    <div class="group relative">
+                                        <a href="{{ route('veiculos.create', ['from' => 'usados']) }}"
+                                            class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                            <i class="fas fa-plus-circle"></i><span>Cadastrar Usado</span>
+                                        </a>
+                                    </div>
+
                                 </div>
-
-                                <!-- Usados + Cadastro -->
-                                <div class="group relative">
-                                    <a href="{{ route('veiculos.create', ['from' => 'usados']) }}"
-                                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        <i class="fas fa-plus-circle"></i><span>Cadastrar Usado</span>
-                                    </a>
-                                </div>
-
                             </div>
-                        </div>
                         @endacessoAssistente
                     </x-slot>
                 </x-dropdown>
@@ -150,14 +148,17 @@
                             <i class="fa-solid fa-user-tie mr-2"></i> Meus Dados
                         </x-dropdown-link>
                         @acessoAdmin()
-                        <x-dropdown-link :href="route('user.index')">
-                            <i class="fa-solid fa-users mr-2"></i> Lista de Usuários
-                        </x-dropdown-link>
-                        <!-- Link para o GitHub -->
-                        <a href="https://github.com/givanildojteixeira/tcc" target="_blank"
-                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                            <i class="fa-brands fa-github mr-2"></i> Repositório Git
-                        </a>
+                            <x-dropdown-link :href="route('user.index')">
+                                <i class="fa-solid fa-users mr-2"></i> Lista de Usuários
+                            </x-dropdown-link>
+                            <!-- Link para o GitHub -->
+                            <a href="https://github.com/givanildojteixeira/tcc" target="_blank"
+                                class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                                <i class="fa-brands fa-github mr-2"></i> Repositório Git
+                            </a>
+                            <x-dropdown-link :href="route('atividades.index')">
+                                <i class="fa-solid fa-clock-rotate-left mr-2"></i> Histórico de Atividades
+                            </x-dropdown-link>
                         @endacessoAdmin
                         <hr class="border-gray-200 dark:border-gray-600 my-2">
 

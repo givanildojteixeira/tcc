@@ -6,36 +6,115 @@ use App\Models\Veiculo;
 use Illuminate\Http\Request;
 use App\Models\CondicaoPagamento;
 use App\Http\Controllers\Controller;
+use App\Models\Proposta;
 
 class PropostaController extends Controller
 {
-    //
-    public function index()
+    // 1. Iniciar proposta
+    public function iniciar(Request $request)
     {
-        return view('propostas.index');
+        $idVeiculoNovo = $request->input('id_veiculoNovo'); // Pega o dado certo
+    
+        session([
+            'proposta' => [
+                'id_veiculoNovo' => $idVeiculoNovo,
+                // 'cliente' => null,
+                // 'veiculos_usados' => [],
+                // 'negociacoes' => [],
+                // 'observacao_nota' => '',
+                // 'observacao_interna' => '',
+            ]
+        ]);
+    
+        return response()->json(['success' => true]);
+    }
+    
+
+
+    // 2. Mostrar tela de criação
+    public function create()
+    {
+        $proposta = session('proposta', []);
+
+        return view('propostas.create', compact('proposta'));
     }
 
-    public function create(Request $request)
+    // 3. Salvar cliente selecionado
+    public function selecionarCliente(Request $request)
     {
-        $veiculoNovo = null;
-        if ($request->has('veiculo_id')) {
-            $veiculoNovo = Veiculo::find($request->veiculo_id);
-        }
+        session(['proposta.cliente' => $request->cliente_id]);
 
-        $condicoes = CondicaoPagamento::orderBy('descricao')->get();
-
-        if ($request->filled('usado_chassi')) {
-            $veiculoUsado = Veiculo::create([
-                'marca' => $request->usado_marca,
-                'modelo' => $request->usado_modelo,
-                'chassi' => $request->usado_chassi,
-                'ano_fabricacao' => $request->usado_ano,
-                'novo_usado' => 'Usado',
-            ]);
-            // $proposta->id_veiculoUsado1 = $veiculoUsado->id;
-        }
-        
-
-        return view('propostas.create', compact('veiculoNovo', 'condicoes'));
+        return redirect()->back();
     }
+    public function adicionarCliente(Request $request)
+    {
+        $clienteId = $request->input('id_cliente');
+    
+        $proposta = session('proposta', []);
+    
+        $proposta['id_cliente'] = $clienteId;
+    
+        session(['proposta' => $proposta]);
+    
+        return response()->json(['success' => true]);
+    }
+    
+    // 4. Adicionar veículo usado
+    public function adicionarVeiculoUsado(Request $request)
+    {
+        session()->push('proposta.veiculos_usados', $request->veiculo_usado_id);
+
+        return redirect()->back();
+    }
+
+    // 5. Adicionar negociação
+    public function adicionarNegociacao(Request $request)
+    {
+        session()->push('proposta.negociacoes', [
+            'condicao' => $request->condicao,
+            'valor' => $request->valor,
+            'vencimento' => $request->vencimento,
+        ]);
+
+        return redirect()->back();
+    }
+
+    // 6. Finalizar proposta (Salvar no Banco)
+    public function store(Request $request)
+    {
+        $propostaSession = session('proposta');
+
+        $proposta = Proposta::create([
+            'id_cliente' => $propostaSession['cliente'],
+            'id_veiculoNovo' => $propostaSession['veiculo_novo'],
+            'observacao_nota' => $propostaSession['observacao_nota'] ?? '',
+            'observacao_interna' => $propostaSession['observacao_interna'] ?? '',
+            'data_proposta' => now(),
+            'status' => 'Aberta',
+            'id_usuario' => auth()->id(),
+        ]);
+
+        // Relacionar veículos usados
+        foreach ($propostaSession['veiculos_usados'] ?? [] as $veiculoUsadoId) {
+            $proposta->veiculosUsados()->attach($veiculoUsadoId);
+        }
+
+        // Relacionar negociações
+        foreach ($propostaSession['negociacoes'] ?? [] as $negociacao) {
+            $proposta->negociacoes()->create($negociacao);
+        }
+
+        session()->forget('proposta'); // Limpa a sessão
+
+        return redirect()->route('propostas.index')->with('success', 'Proposta criada com sucesso!');
+    }
+
+    //Cancelar a Proposta
+    public function cancelar()
+    {
+        session()->forget('proposta');
+
+        return redirect()->route('veiculos.novos.index')->with('info', 'Proposta cancelada com sucesso!');
+    }
+
 }

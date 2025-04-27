@@ -23,7 +23,11 @@
     })" class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
         <!-- Título -->
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-semibold text-blue-600">Cadastrar novo Veículo</h2>
+            @if (request('from') === 'novos')
+            <h2 class="text-2xl font-semibold text-blue-600">Cadastrar Veículo Novo</h2>
+            @else
+            <h2 class="text-2xl font-semibold text-blue-600">Cadastrar Veículo Usado</h2>
+            @endif
             <x-bt-ajuda />
         </div>
 
@@ -81,7 +85,7 @@
 
                         <!-- Descrição -->
                         <div class="basis-[40%] flex-grow min-w-[250px]">
-                            <label class="block text-gray-700 font-medium mb-1">Descrição do Veículo</label>
+                            <label class="block text-gray-700 font-medium mb-1">Nome Modelo do Veículo</label>
                             <input type="text" name="desc_veiculo" value="{{ old('desc_veiculo') }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
@@ -307,10 +311,29 @@
 
             <!-- Botões -->
             <div class="flex justify-between mt-8">
-                <a href="{{ request('from') === 'usados' ? route('veiculos.usados.index') : route('veiculos.novos.index') }}"
-                    class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </a>
+                @if (request('from') === 'novos')
+                    <a href="{{ route('veiculos.novos.index') }}"
+                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
+                        <i class="fas fa-arrow-left"></i> Ir para Veiculos Novos
+                    </a>
+                @else
+                    @if (request('origem') === 'propostas')
+                        @php
+                            $params = request()->all();
+                            $queryString = http_build_query($params);
+                        @endphp
+                        <a href="{{ route('propostas.create') . '?' . $queryString }}"
+                            class="inline-flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md shadow-md">
+                            <i class="fas fa-arrow-left"></i> Voltar para Propostas
+                        </a>
+                    @else
+                        <a href="{{route('veiculos.usados.index') }}"
+                            class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
+                            <i class="fas fa-arrow-left"></i> Ir para Veiculos Usados
+                        </a>
+                    @endif
+                @endif
+
 
                 @if (request('from') === 'novos')
                 <a href="{{ route('familia.index', ['from' => 'create', 'origem' => request('from')]) }}"

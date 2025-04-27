@@ -1,38 +1,49 @@
-<div x-data="clienteBusca">
+<div x-data="clienteBusca" x-init="carregarClienteSessao()">
     <!-- Campo de busca -->
-    <div class="flex gap-4 items-end mb-4">
-        <div class="flex flex-col flex-grow">
-            <label class="text-sm text-gray-600 font-medium">Buscar Cliente (Nome ou CPF)</label>
-            <input type="text" x-model="busca"
-                class="border border-gray-300 rounded-md p-2 focus:ring-green-400 focus:outline-none"
-                placeholder="Digite parte do nome ou CPF">
-        </div>
+    <form @submit.prevent="buscarClientes">
+        <div class="flex gap-4 items-end mb-4">
+            <div class="flex flex-col flex-grow">
+                <label class="text-sm text-gray-600 font-medium">Buscar Cliente (Nome ou CPF)</label>
+                <input type="text" x-model="busca"
+                    class="border border-gray-300 rounded-md p-2 focus:ring-green-400 focus:outline-none"
+                    placeholder="Digite parte do nome ou CPF">
+            </div>
 
-        <button type="button" @click="buscarClientes"
-            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-            Localizar Cliente
+            <button type="button" @click="buscarClientes"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                Localizar Cliente
+            </button>
+            <button type="button" @click="buscarClientes"
+            class="bg-yellow-400 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+            Cadastrar Cliente
         </button>
-    </div>
+        </div>
+    </form>
 
     <!-- Lista de clientes encontrados -->
     <template x-if="clientes.length > 0">
         <div class="border border-gray-300 rounded-md p-4 bg-gray-50 mb-4">
             <h3 class="text-green-700 font-semibold mb-2">Clientes Encontrados:</h3>
-            <ul class="space-y-1 text-sm text-gray-800">
-                <template x-for="cliente in clientes" :key="cliente.id">
-                    <li class="flex items-center justify-between border-b border-dashed pb-1">
-                        <div>
-                            <strong x-text="cliente.nome"></strong>
-                            <span class="ml-2 text-gray-500">(CPF: <span x-text="cliente.cpf_cnpj"></span>)</span>
-                        </div>
-                        <button @click="selecionarCliente(cliente)"
-                            class="text-sm text-blue-600 hover:underline">Selecionar</button>
-                    </li>
-                </template>
-            </ul>
+    
+            <!-- Scroll controlado somente na lista -->
+            <div class="max-h-[300px] overflow-y-auto pr-2">
+                <ul class="space-y-1 text-sm text-gray-800">
+                    <template x-for="cliente in clientes" :key="cliente.id">
+                        <li @click="selecionarCliente(cliente)"
+                            class="flex items-center justify-between border-b border-dashed pb-1 p-2 rounded cursor-pointer
+                                   hover:bg-gray-100 hover:shadow-md active:bg-gray-200 active:shadow-inner transition-all duration-150">
+                            <div>
+                                <strong x-text="cliente.nome"></strong>
+                                <span class="ml-2 text-gray-500">(CPF: <span x-text="cliente.cpf_cnpj"></span>)</span>
+                            </div>
+                            <span class="text-blue-600 hover:underline text-xs">Selecionar</span>
+                        </li>
+                    </template>
+                </ul>
+            </div>
         </div>
     </template>
-
+    
     <!-- Cliente selecionado -->
     <template x-if="clienteSelecionado">
         <div class="border border-green-400 bg-green-50 p-4 rounded-md shadow-sm">

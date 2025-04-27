@@ -6,9 +6,9 @@
             <label class="text-sm font-medium text-gray-700">Condição de Pagamento</label>
             <select x-model="nova.condicao" class="w-full border border-gray-300 rounded-md p-2">
                 <option value="">Selecione...</option>
-                @foreach ($condicoes as $cond)
-                    <option value="{{ $cond->id }}">{{ $cond->descricao }}</option>
-                @endforeach
+                {{-- @foreach ($condicoes as $cond) --}}
+                    {{-- <option value="{{ $cond->id }}">{{ $cond->descricao }}</option> --}}
+                {{-- @endforeach --}}
             </select>
         </div>
 

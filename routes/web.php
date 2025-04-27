@@ -145,15 +145,47 @@ Route::middleware('auth')->group(function () {
     Route::resource('opcionais', OpcionaisController::class);
 
     //Propostas
-    // Route::get('/propostas.index', [PropostasController::class, 'index'])->name('propostas.index');
+    Route::get('/propostas/testar-session', function () {return session('proposta'); });
+    Route::post('/propostas/iniciar', [PropostaController::class, 'iniciar'])->name('proposta.iniciar');
+    Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
+    // API de sessão de veículo novo
+    Route::get('/propostas/veiculo-session', function () {
+        $id = session('proposta.id_veiculoNovo');
 
+        if (!$id) {
+            return response()->json(null);
+        }
+
+        return Veiculo::find($id);
+    });
+
+    Route::post('/propostas/veiculo-session', function (\Illuminate\Http\Request $request) {
+        session()->put('proposta.id_veiculoNovo', $request->id_veiculoNovo);
+        return response()->json(['success' => true]);
+    });
+    Route::post('/propostas/adicionar-cliente', [PropostaController::class, 'adicionarCliente']);
+    Route::post('/propostas/adicionar-veiculo-usado', function (\Illuminate\Http\Request $request) {
+        $veiculosUsados = session('veiculos_usados', []);
+    
+        $veiculosUsados[] = $request->all(); // salva cada veículo adicionado
+        session(['veiculos_usados' => $veiculosUsados]);
+    
+        return response()->json(['success' => true]);
+    });
+    
 
     //Financeiro
     Route::get('/financeiro.index', [FinanceiroController::class, 'index'])->name('financeiro.index');
 
     //Financeiro
     Route::get('/relatorios.index', [RelatoriosController::class, 'index'])->name('relatorios.index');
+
+    //Atividades
+    Route::get('/atividades', function () {
+    return view('atividades');
+})->name('atividades.index');
+
 });
 
 require __DIR__ . '/auth.php';

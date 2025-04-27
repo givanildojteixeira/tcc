@@ -181,7 +181,7 @@ class VeiculoController extends Controller
     {
         $familias = Familia::all();
         $cores = Cor::orderBy('cor_desc')->get();
-    
+
         return view('veiculos.create', [
             'familias' => $familias,
             'cores' => $cores, // ✅ adiciona essa linha
@@ -200,13 +200,13 @@ class VeiculoController extends Controller
 
         // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'familia' => 'required|string|max:255',
+            'familia' => request('from') === 'usados' ? 'nullable|string|max:255' : 'required|string|max:255',
             'desc_veiculo' => 'required|string|max:255',
             'chassi' => 'required|string|max:50|unique:veiculos,chassi',
             'Ano_Mod' => 'nullable|string|max:20',
             'cor' => 'nullable|string|max:50',
             'motor' => 'nullable|string|max:10',
-            'transmissao' => 'required|string|in:Automática,Mecânica',
+            'transmissao' => request('from') === 'usados' ? 'nullable' : 'required|string|in:Automática,Mecânica',
             'portas' => 'nullable|integer',
             'combustivel' => 'nullable|string|max:50',
             'vlr_nota' => 'nullable|numeric',
@@ -214,7 +214,7 @@ class VeiculoController extends Controller
             'vlr_tabela' => 'nullable|numeric',
             'images.*' => 'nullable|image|mimes:jpg|max:2048',
             'descricao' => 'nullable|string|max:10000',
-            'local' => 'required|string|in:Matriz,Filial,Transito,Consignado',
+            'local' => 'required|string|in:matriz,filial,transito,consignado,avaliacao',
         ]);
 
         if ($validator->fails()) {
@@ -234,15 +234,20 @@ class VeiculoController extends Controller
         $veiculo->desc_veiculo = mb_strtoupper($veiculo->desc_veiculo, 'UTF-8');
 
         //espeficificos:
-        $veiculo->modelo_fab = $request->modelo_fab;
+        // $veiculo->modelo_fab = $request->modelo_fab;
         $veiculo->cod_opcional = $request->cod_opcional;
         $veiculo->novo_usado = ($request->from === 'novos') ? 'novo' : 'usado';
         $veiculo->marca = ($request->from === 'novos') ? 'GM' : $request->marca;
         $veiculo->dta_faturamento = date('Y-m-d');  //now()
         $veiculo->user_reserva = Auth::id(); // ou Auth::user()->id;
         $veiculo->desc_nota = ($request->from === 'novos') ? 'veiculo novo' : 'veiculo semi novo';
-
-
+        //para usados
+        if ($request->from === 'usados') {
+            $veiculo->marca = 'Seminovos';
+            $veiculo->familia = 'Seminovos';
+            $veiculo->modelo_fab = $request->desc_veiculo;
+            $veiculo->cod_opcional = 'X';
+        }
 
         $veiculo->save();
 
@@ -257,9 +262,26 @@ class VeiculoController extends Controller
             }
         }
 
-        // Redirecionamento inteligente
-        $rota = $request->from === 'usados' ? 'veiculos.usados.index' : 'veiculos.novos.index';
-        return redirect()->route($rota)->with('success', 'Veículo cadastrado com sucesso!');
+        if ($request->from === 'usados') {
+            if ($request->origem === 'propostas') {
+                //Se tiver vindo de propostas , grava o veiculo, acerta a url e devolve para proposta com o veiculo ou veiculos gravados
+                //TODO: se for de proposta entao Local deve ser : Avaliação
+                $novoVeiculoUsadoId = $veiculo->id;
+                $parametrosAtuais = request()->except('_token', '_method');
+                $proximoIndice = 1;
+                while (isset($parametrosAtuais["id_veic_usado_$proximoIndice"])) {
+                    $proximoIndice++;
+                }
+                $parametrosAtuais["id_veic_usado_{$proximoIndice}"] = $novoVeiculoUsadoId;
+                return redirect()->route('propostas.create', $parametrosAtuais);
+            } else {
+                return redirect()->route('veiculos.usados.index')->with('success', 'Veículo cadastrado com sucesso!');
+            }
+        } else {
+            return redirect()->route('veiculos.novos.index')->with('success', 'Veículo cadastrado com sucesso!');
+        }
+
+
     }
 
 

@@ -327,7 +327,7 @@
                                 </tbody>
                             </table>
                             <!-- ✅ Modal de Detalhes -->
-                            @include('components.modal.veiculo', ['tipo' => 'Novo'])
+                            @include('veiculos.modal.veiculo', ['tipo' => 'Novo'])
                         </div>
                     </div>
                 </div>

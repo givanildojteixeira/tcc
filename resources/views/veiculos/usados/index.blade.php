@@ -292,7 +292,7 @@
                                 </tbody>
                             </table>
                             <!-- ✅ Modal de Detalhes -->
-                            @include('components.modal.veiculo', ['tipo' => 'Usado'])
+                            @include('veiculos.modal.veiculo', ['tipo' => 'Usado'])
                         </div>
                     </div>
                 </div>

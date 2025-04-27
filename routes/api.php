@@ -14,10 +14,19 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/veiculos/buscar-chassi/{chassi}', function ($chassi) {
-    return Veiculo::where('chassi', 'like', '%' . $chassi . '%')
+// Route::get('/veiculos/buscar-chassi/{chassi}', function ($chassi) {
+//     return Veiculo::where('chassi', 'like', '%' . $chassi . '%')
+//         ->where('novo_usado', 'Novo')
+//         ->limit(500)
+//         ->get(); // agora retorna uma lista
+// });
+
+Route::get('/veiculos/buscar-chassi/{query}', function ($query) {
+    return Veiculo::where('chassi', 'like', '%' . $query . '%')
+        ->orWhere('desc_veiculo', 'like', "%{$query}%")
+        ->orWhere('cor', 'like', "%{$query}%")
         ->where('novo_usado', 'Novo')
-        ->limit(5)
+        ->limit(500)
         ->get(); // agora retorna uma lista
 });
 
@@ -34,4 +43,10 @@ Route::get('/veiculos-usados/buscar-chassi/{chassi}', function ($chassi) {
 });
 Route::get('/veiculos/{id}', function ($id) {
     return Veiculo::findOrFail($id);
+});
+
+
+//novas apis
+Route::get('/clientes/{id}', function ($id) {
+    return Cliente::findOrFail($id);
 });

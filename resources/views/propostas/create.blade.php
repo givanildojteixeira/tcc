@@ -55,8 +55,9 @@
 
         <!-- Conteúdo de cada aba -->
         <div x-show="aba === 'veiculo'" class="space-y-4">
-            @include('propostas.partials.aba-veiculo', ['veiculoNovo' => $veiculoNovo])
+            @include('propostas.partials.aba-veiculo')
         </div>
+
 
         <div x-show="aba === 'cliente'" class="space-y-4">
             @include('propostas.partials.aba-cliente')
@@ -67,7 +68,7 @@
         </div>
 
         <div x-show="aba === 'negociacao'" class="space-y-4">
-            @include('propostas.partials.aba-negociacao', ['condicoes' => $condicoes])
+            @include('propostas.partials.aba-negociacao')
         </div>
 
         <div x-show="aba === 'observacoes'" class="space-y-4">
@@ -92,6 +93,8 @@
 
 
     <script>
+        window.idClienteSessao = @json(session('proposta.id_cliente'));
+
         document.addEventListener('alpine:init', () => {
             Alpine.data('veiculoNovo', () => ({
                 chassiBusca: '',
@@ -110,6 +113,7 @@
                             this.veiculos = data;
                             if (data.length === 1) {
                                 this.veiculo = data[0];
+                                this.salvarVeiculoSession(data[0].id);
                             }
                         });
                 },
@@ -117,22 +121,28 @@
                 selecionarVeiculo(v) {
                     this.veiculo = v;
                     this.veiculos = [];
+                    this.salvarVeiculoSession(v.id); // ⬅️ Grava também na session!
                 },
 
-                carregarVeiculoPorId() {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const veiculoId = urlParams.get('veiculo_id');
-                    console.log('🔍 veiculo_id detectado:', veiculoId); // ← Aqui!
-
-                    if (veiculoId) {
-                        fetch(`/api/veiculos/${veiculoId}`)
-                            .then(res => res.json())
-                            .then(data => {
-                                console.log('✅ Veículo carregado:', data); // ← E aqui!
+                carregarVeiculoSession() {
+                    fetch(`/propostas/veiculo-session`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data) {
                                 this.veiculo = data;
-                            })
-                            .catch(err => console.error('❌ Erro ao carregar veículo:', err));
-                    }
+                            }
+                        });
+                },
+
+                salvarVeiculoSession(id) {
+                    fetch(`/propostas/veiculo-session`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ id_veiculoNovo: id })
+                    });
                 }
             }));
 
@@ -160,32 +170,108 @@
                 selecionarCliente(cliente) {
                     this.clienteSelecionado = cliente;
                     this.clientes = [];
+
+                    fetch('/propostas/adicionar-cliente', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ id_cliente: cliente.id })
+                    });
+                },
+
+                carregarClienteSessao() {
+                    if (window.idClienteSessao) {
+                        fetch(`/api/clientes/${window.idClienteSessao}`)
+                            .then(res => res.json())
+                            .then(cliente => {
+                                console.log('🔵 Cliente carregado da sessão:', cliente); // ← isso vai aparecer no console
+                                this.clienteSelecionado = cliente;
+                            })
+                            .catch(() => {
+                                console.warn('Cliente da sessão não encontrado.');
+                            });
+                    }
                 }
             }));
+
+
 
             Alpine.data('veiculoUsado', () => ({
-                modoCadastro: false,
-                chassiBusca: '',
-                veiculoEncontrado: null,
+            modoCadastro: false,
+            modalCadastroUsado: false,
+            chassiBusca: '',
+            veiculoEncontrado: null,
+            novoUsado: {
+                desc_veiculo: '',
+                chassi: '',
+                Ano_Mod: '',
+                cor: '',
+                motor: '',
+                portas: '',
+                combustivel: '',
+                vlr_nota: '',
+                local: '',
+                descricao: ''
+            },
 
-                buscarVeiculo() {
-                    if (this.chassiBusca.trim() === '') {
-                        alert('Digite o chassi!');
-                        return;
-                    }
-
-                    fetch(`/api/veiculos-usados/buscar-chassi/${this.chassiBusca}`)
-                        .then(res => {
-                            if (!res.ok) throw new Error("Não encontrado");
-                            return res.json();
-                        })
-                        .then(data => this.veiculoEncontrado = data)
-                        .catch(() => {
-                            alert('Veículo não encontrado!');
-                            this.veiculoEncontrado = null;
-                        });
+            buscarVeiculo() {
+                if (this.chassiBusca.trim() === '') {
+                    alert('Digite o chassi para buscar!');
+                    return;
                 }
-            }));
+
+                fetch(`/api/veiculos-usados/buscar-chassi/${this.chassiBusca}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        this.veiculoEncontrado = data;
+                    })
+                    .catch(() => {
+                        alert('Veículo não encontrado!');
+                        this.veiculoEncontrado = null;
+                    });
+            },
+
+            cadastrarVeiculoUsado() {
+                fetch('/propostas/adicionar-veiculo-usado', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(this.novoUsado)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('✅ Veículo usado adicionado à proposta!');
+                        this.modalCadastroUsado = false;
+                        this.resetarFormulario();
+                    } else {
+                        alert('⚠️ Erro ao adicionar o veículo usado.');
+                    }
+                })
+                .catch(() => alert('⚠️ Erro ao comunicar com o servidor.'));
+            },
+
+            resetarFormulario() {
+                this.novoUsado = {
+                    desc_veiculo: '',
+                    chassi: '',
+                    Ano_Mod: '',
+                    cor: '',
+                    motor: '',
+                    portas: '',
+                    combustivel: '',
+                    vlr_nota: '',
+                    local: '',
+                    descricao: ''
+                };
+            }
+        }));
+
+
+
 
             Alpine.data('negociacao', () => ({
                 nova: {
