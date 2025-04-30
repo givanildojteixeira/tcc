@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Familia;
 use App\Models\Veiculo;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -140,12 +141,18 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{condicao_pagamento}', [CondicaoPagamentoController::class, 'destroy'])->name('destroy');
     });
 
-
     //Opcionais
     Route::resource('opcionais', OpcionaisController::class);
 
+
+
+
+
+
+
     //Propostas
-    Route::get('/propostas/testar-session', function () {return session('proposta'); });
+    Route::get('/propostas/testar-session', function () {
+        return session('proposta'); });
     Route::post('/propostas/iniciar', [PropostaController::class, 'iniciar'])->name('proposta.iniciar');
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
@@ -160,20 +167,24 @@ Route::middleware('auth')->group(function () {
         return Veiculo::find($id);
     });
 
-    Route::post('/propostas/veiculo-session', function (\Illuminate\Http\Request $request) {
+
+    Route::post('/propostas/veiculo-session', function (Request $request) {
         session()->put('proposta.id_veiculoNovo', $request->id_veiculoNovo);
         return response()->json(['success' => true]);
     });
     Route::post('/propostas/adicionar-cliente', [PropostaController::class, 'adicionarCliente']);
-    Route::post('/propostas/adicionar-veiculo-usado', function (\Illuminate\Http\Request $request) {
-        $veiculosUsados = session('veiculos_usados', []);
-    
-        $veiculosUsados[] = $request->all(); // salva cada veículo adicionado
-        session(['veiculos_usados' => $veiculosUsados]);
-    
-        return response()->json(['success' => true]);
-    });
-    
+    //INSERE SESSAO VEICULO USADO
+    Route::post('/propostas/inserir-veiculo-usado', [PropostaController::class, 'inserirVeiculoUsado']);
+
+
+
+    ///  http://200.195.138.74:911/propostas/create?id_veic_usado=624
+
+
+
+
+
+
 
     //Financeiro
     Route::get('/financeiro.index', [FinanceiroController::class, 'index'])->name('financeiro.index');
@@ -183,8 +194,8 @@ Route::middleware('auth')->group(function () {
 
     //Atividades
     Route::get('/atividades', function () {
-    return view('atividades');
-})->name('atividades.index');
+        return view('atividades');
+    })->name('atividades.index');
 
 });
 

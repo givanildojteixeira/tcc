@@ -38,6 +38,9 @@
             @if (request('from'))
             <input type="hidden" name="from" value="{{ request('from') }}">
             @endif
+            @if (request('origem'))
+            <input type="hidden" name="origem" value="{{ request('origem') }}">
+            @endif
 
             {{-- Para validação de erros --}}
             {{--
@@ -81,11 +84,19 @@
                                 @endforeach
                             </select>
                         </div>
+                        @else
+                        <!-- Marca -->
+                        <div class="basis-[10%] flex-grow min-w-[100px]">
+                            <label class="block text-gray-700 font-medium mb-1">Marca</label>
+                            <input required type="text" name="marca" value="{{ old('marca') }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
+
                         @endif
 
                         <!-- Descrição -->
                         <div class="basis-[40%] flex-grow min-w-[250px]">
-                            <label class="block text-gray-700 font-medium mb-1">Nome Modelo do Veículo</label>
+                            <label class="block text-gray-700 font-medium mb-1">Modelo do Veículo</label>
                             <input type="text" name="desc_veiculo" value="{{ old('desc_veiculo') }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
@@ -104,6 +115,13 @@
                             <input type="text" name="modelo_fab" x-model="modelo_fab" value="{{ old('modelo_fab') }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
+                        @else
+                        <div class="basis-[10%] flex-grow min-w-[100px]">
+                            <label class="block text-gray-700 font-medium mb-1">Placa</label>
+                            <input required type="text" name="placa" x-model="placa" value="{{ old('placa') }}"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                        </div>
+
                         @endif
                     </div>
 
@@ -111,7 +129,7 @@
                         <!-- Ano/Modelo -->
                         <div class="flex-grow basis-[12%] min-w-[100px]">
                             <label class="block text-gray-700 font-medium mb-1">Ano/Modelo</label>
-                            <input type="text" name="Ano_Mod" value="{{ old('Ano_Mod') }}"
+                            <input required type="text" name="Ano_Mod" value="{{ old('Ano_Mod') }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
 
@@ -159,7 +177,6 @@
                             <label class="block text-gray-700 font-medium mb-1">Combustível</label>
                             <select name="combustivel"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                                <option value="">Selecione</option>
                                 @foreach (['Gasolina', 'Etanol', 'Diesel', 'Flex'] as $comb)
                                 <option value="{{ $comb }}" {{ old('combustivel')==$comb ? 'selected' : '' }}>{{ $comb
                                     }}
@@ -181,14 +198,19 @@
 
                     <!-- Valores -->
                     <div class="flex flex-row gap-4 mb-4">
+                        @if (request('from') === 'novos')
                         <x-input-moeda name="vlr_nota" label="Valor Custo" :value="old('vlr_nota')" />
                         <x-input-moeda name="vlr_bonus" label="Valor Bônus" :value="old('vlr_bonus')" />
                         <x-input-moeda name="vlr_tabela" label="Valor Tabela" :value="old('vlr_tabela')" />
+                        @else
+                        <x-input-moeda name="vlr_nota" label="Valor Compra" :value="old('vlr_nota')" />
+                        <x-input-moeda name="vlr_bonus" label="Valor Venda" :value="old('vlr_bonus')" />
+                        <x-input-moeda name="vlr_tabela" label="Valor Tabela FIPE" :value="old('vlr_tabela')" />
+                        @endif
                         <div class="mb-4">
-                            <label for="local" class="block text-sm font-medium text-gray-700">Local</label>
+                            <label for="local" class="block text-gray-700 font-medium mb-1">Local</label>
                             <select name="local" id="local" required
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
-                                <option value="">Selecione o local</option>
 
                                 @if ($from === 'novos')
                                 <option value="matriz" {{ old('local')=='matriz' ? 'selected' : '' }}>Matriz
@@ -312,26 +334,26 @@
             <!-- Botões -->
             <div class="flex justify-between mt-8">
                 @if (request('from') === 'novos')
-                    <a href="{{ route('veiculos.novos.index') }}"
-                        class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
-                        <i class="fas fa-arrow-left"></i> Ir para Veiculos Novos
-                    </a>
+                <a href="{{ route('veiculos.novos.index') }}"
+                    class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
+                    <i class="fas fa-arrow-left"></i> Ir para Veiculos Novos
+                </a>
                 @else
-                    @if (request('origem') === 'propostas')
-                        @php
-                            $params = request()->all();
-                            $queryString = http_build_query($params);
-                        @endphp
-                        <a href="{{ route('propostas.create') . '?' . $queryString }}"
-                            class="inline-flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md shadow-md">
-                            <i class="fas fa-arrow-left"></i> Voltar para Propostas
-                        </a>
-                    @else
-                        <a href="{{route('veiculos.usados.index') }}"
-                            class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
-                            <i class="fas fa-arrow-left"></i> Ir para Veiculos Usados
-                        </a>
-                    @endif
+                @if (request('origem') === 'propostas')
+                @php
+                $params = request()->all();
+                $queryString = http_build_query($params);
+                @endphp
+                <a href="{{ route('propostas.create') . '?' . $queryString }}"
+                    class="inline-flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md shadow-md">
+                    <i class="fas fa-arrow-left"></i> Voltar para Propostas
+                </a>
+                @else
+                <a href="{{route('veiculos.usados.index') }}"
+                    class="flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-2 rounded-md shadow-md transition">
+                    <i class="fas fa-arrow-left"></i> Ir para Veiculos Usados
+                </a>
+                @endif
                 @endif
 
 

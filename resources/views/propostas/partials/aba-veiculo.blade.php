@@ -19,7 +19,7 @@
     <template x-if="veiculos.length > 1">
         <div class="bg-gray-50 border border-gray-300 rounded-md p-4 shadow-sm max-h-[400px] overflow-y-auto">
             <h3 class="text-green-700 font-semibold mb-2">Selecione um veículo:</h3>
-    
+
             <ul class="space-y-2 text-sm text-gray-800">
                 <template x-for="v in veiculos" :key="v.id">
                     <li @click="selecionarVeiculo(v)"
@@ -40,13 +40,9 @@
             </ul>
         </div>
     </template>
-    
-    
-    
-    
 
     <!-- Dados do veículo -->
-    <template x-if="veiculo">
+    <template x-if="veiculo && veiculo.id">
         <div class="border border-green-400 bg-green-50 p-4 rounded-md shadow-sm">
             <h3 class="text-lg font-semibold text-green-700 mb-2">Veículo Selecionado:</h3>
             <ul class="text-sm text-gray-800 space-y-1">

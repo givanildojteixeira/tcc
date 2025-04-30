@@ -14,6 +14,7 @@ class Veiculo extends Model
         'marca',
         'familia',
         'desc_veiculo',
+        'placa',
         'modelo_fab',
         'cor',
         'cod_opcional',

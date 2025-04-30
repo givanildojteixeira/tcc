@@ -202,6 +202,8 @@ class VeiculoController extends Controller
         $validator = Validator::make($request->all(), [
             'familia' => request('from') === 'usados' ? 'nullable|string|max:255' : 'required|string|max:255',
             'desc_veiculo' => 'required|string|max:255',
+            'placa' => 'nullable|string|max:255',
+            'marca' => 'nullable|string|max:255',
             'chassi' => 'required|string|max:50|unique:veiculos,chassi',
             'Ano_Mod' => 'nullable|string|max:20',
             'cor' => 'nullable|string|max:50',
@@ -217,13 +219,14 @@ class VeiculoController extends Controller
             'local' => 'required|string|in:matriz,filial,transito,consignado,avaliacao',
         ]);
 
+        //Caso nao valide volta com o erros ou
         if ($validator->fails()) {
             // Retorna com todos os erros unidos por <br>
             return redirect()->back()
                 ->withInput()
                 ->with('error', $validator->errors()->all() ? implode('<br>', $validator->errors()->all()) : 'Erro de validação.');
         }
-
+        //validado
         $validated = $validator->validated();
 
         // Criação do veículo
@@ -232,10 +235,12 @@ class VeiculoController extends Controller
 
         // Forçar descrição em letras maiúsculas
         $veiculo->desc_veiculo = mb_strtoupper($veiculo->desc_veiculo, 'UTF-8');
+        $veiculo->marca = mb_strtoupper($veiculo->marca, 'UTF-8');
+        $veiculo->placa = mb_strtoupper($veiculo->placa, 'UTF-8');
 
         //espeficificos:
         // $veiculo->modelo_fab = $request->modelo_fab;
-        $veiculo->cod_opcional = $request->cod_opcional;
+        // $veiculo->cod_opcional = $request->cod_opcional;
         $veiculo->novo_usado = ($request->from === 'novos') ? 'novo' : 'usado';
         $veiculo->marca = ($request->from === 'novos') ? 'GM' : $request->marca;
         $veiculo->dta_faturamento = date('Y-m-d');  //now()
@@ -243,11 +248,15 @@ class VeiculoController extends Controller
         $veiculo->desc_nota = ($request->from === 'novos') ? 'veiculo novo' : 'veiculo semi novo';
         //para usados
         if ($request->from === 'usados') {
-            $veiculo->marca = 'Seminovos';
-            $veiculo->familia = 'Seminovos';
+            // $veiculo->marca = 'Seminovos';
+            $veiculo->familia = $veiculo->marca;
             $veiculo->modelo_fab = $request->desc_veiculo;
-            $veiculo->cod_opcional = 'X';
+            $veiculo->cod_opcional = ' ';
         }
+        if ($request->origem === 'propostas') {
+            $veiculo->local = 'avaliacao';
+        }
+
 
         $veiculo->save();
 
@@ -262,17 +271,33 @@ class VeiculoController extends Controller
             }
         }
 
+        // Atualiza ou cria opcionais
+        $descricao = str_replace("\n", '/', $request->descricao);
+        $descricao = trim($descricao) === '' ? 'Opcional não cadastrado' : $descricao;
+
+        if ($veiculo->novo_usado === 'Novo') {
+            Opcionais::updateOrCreate(
+                ['modelo_fab' => $veiculo->modelo_fab, 'cod_opcional' => $veiculo->cod_opcional],
+                ['descricao' => $descricao]
+            );
+        } else {
+            Opcionais::updateOrCreate(
+                ['chassi' => $veiculo->chassi],
+                [
+                    'descricao' => $descricao,
+                    'modelo_fab' => '',
+                    'cod_opcional' => '',
+                ]
+            );
+        }
+
+        // Devolve a URL
         if ($request->from === 'usados') {
             if ($request->origem === 'propostas') {
                 //Se tiver vindo de propostas , grava o veiculo, acerta a url e devolve para proposta com o veiculo ou veiculos gravados
-                //TODO: se for de proposta entao Local deve ser : Avaliação
-                $novoVeiculoUsadoId = $veiculo->id;
-                $parametrosAtuais = request()->except('_token', '_method');
-                $proximoIndice = 1;
-                while (isset($parametrosAtuais["id_veic_usado_$proximoIndice"])) {
-                    $proximoIndice++;
-                }
-                $parametrosAtuais["id_veic_usado_{$proximoIndice}"] = $novoVeiculoUsadoId;
+                $novoVeiculoUsadoId = $veiculo->id;                                     //pega a id
+                //$parametrosAtuais = request()->except('_token', '_method');       //pega os parametros atuais
+                $parametrosAtuais["id_veic_usado"] = $novoVeiculoUsadoId;               //grava paratro novo
                 return redirect()->route('propostas.create', $parametrosAtuais);
             } else {
                 return redirect()->route('veiculos.usados.index')->with('success', 'Veículo cadastrado com sucesso!');
@@ -280,8 +305,6 @@ class VeiculoController extends Controller
         } else {
             return redirect()->route('veiculos.novos.index')->with('success', 'Veículo cadastrado com sucesso!');
         }
-
-
     }
 
 

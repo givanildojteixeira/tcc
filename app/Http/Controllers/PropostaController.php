@@ -14,7 +14,7 @@ class PropostaController extends Controller
     public function iniciar(Request $request)
     {
         $idVeiculoNovo = $request->input('id_veiculoNovo'); // Pega o dado certo
-    
+
         session([
             'proposta' => [
                 'id_veiculoNovo' => $idVeiculoNovo,
@@ -25,10 +25,10 @@ class PropostaController extends Controller
                 // 'observacao_interna' => '',
             ]
         ]);
-    
+
         return response()->json(['success' => true]);
     }
-    
+
 
 
     // 2. Mostrar tela de criação
@@ -49,16 +49,16 @@ class PropostaController extends Controller
     public function adicionarCliente(Request $request)
     {
         $clienteId = $request->input('id_cliente');
-    
+
         $proposta = session('proposta', []);
-    
+
         $proposta['id_cliente'] = $clienteId;
-    
+
         session(['proposta' => $proposta]);
-    
+
         return response()->json(['success' => true]);
     }
-    
+
     // 4. Adicionar veículo usado
     public function adicionarVeiculoUsado(Request $request)
     {
@@ -66,6 +66,23 @@ class PropostaController extends Controller
 
         return redirect()->back();
     }
+    //TODO: 4. Adicionar veículo usado   -TESTE DE REDUNDANCIA
+    public function inserirVeiculoUsado(Request $request)
+    {
+        $id = $request->input('id_veiculo_usado');
+
+        $atuais = session('veiculos_usados', []);
+        if (!in_array($id, $atuais)) {
+            $atuais[] = $id;
+        }
+
+        session(['veiculos_usados' => $atuais]);
+
+        return response()->json(['success' => true]);
+    }
+
+
+
 
     // 5. Adicionar negociação
     public function adicionarNegociacao(Request $request)
