@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Veiculo;
+use App\Models\Proposta;
 use Illuminate\Http\Request;
 use App\Models\CondicaoPagamento;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\Proposta;
 
 class PropostaController extends Controller
 {
@@ -60,24 +61,15 @@ class PropostaController extends Controller
     }
 
     // 4. Adicionar veículo usado
-    public function adicionarVeiculoUsado(Request $request)
-    {
-        session()->push('proposta.veiculos_usados', $request->veiculo_usado_id);
-
-        return redirect()->back();
-    }
-    //TODO: 4. Adicionar veículo usado   -TESTE DE REDUNDANCIA
     public function inserirVeiculoUsado(Request $request)
     {
-        $id = $request->input('id_veiculo_usado');
+        $id_vusado = $request->input('id_veiculo_usado');
 
-        $atuais = session('veiculos_usados', []);
-        if (!in_array($id, $atuais)) {
-            $atuais[] = $id;
-        }
+        $proposta = session('proposta', []);
 
-        session(['veiculos_usados' => $atuais]);
+        $proposta['id_veiculo_usado'] = $id_vusado;
 
+        session(['proposta' => $proposta]);
         return response()->json(['success' => true]);
     }
 

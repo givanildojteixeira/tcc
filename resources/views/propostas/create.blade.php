@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div x-data="{ aba: 'veiculo' }" class="max-w-6xl mx-auto p-6 bg-white rounded shadow">
+    <div x-data="{ aba: '{{ session('aba', 'veiculo') }}' }" class="max-w-6xl mx-auto p-6 bg-white rounded shadow">
 
         <!-- Título com botão de ajuda -->
         <div class="flex justify-between items-center mb-4">
@@ -96,7 +96,7 @@
         window.idClienteSessao = @json(session('proposta.id_cliente'));
     
         document.addEventListener('alpine:init', () => {
-            
+
             Alpine.data('veiculoNovo', () => ({
                 chassiBusca: '',
                 veiculos: [],
@@ -226,8 +226,20 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify(this.novoUsado)
+                        body: JSON.stringify({id_veiculo_usado: data.id })
                     })
+
+
+                    // fetch('/propostas/adicionar-cliente', {
+                    //     method: 'POST',
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //         'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    //     },
+                    //     body: JSON.stringify({ id_cliente: cliente.id })
+                    // });
+
+
                     .then(response => {
                         if (response.ok) {
                             alert('✅ Veículo usado adicionado à proposta!');
@@ -243,13 +255,20 @@
                 carregarVeiculoViaURL() {
                     const url = new URL(window.location.href);
                     const veiculoId = url.searchParams.get("id_veic_usado");
-    
+
+                    console.log('1. URL detectada:', url.href);
+                    
                     if (veiculoId) {
+                        console.log('2. ID do veículo usado na URL:', veiculoId);
                         fetch(`/api/veiculos/${veiculoId}`)
-                            .then(res => res.json())
+                            .then(res => {
+                                console.log('3. Requisição para /api/veiculos/' + veiculoId, res);
+                                return res.json();
+                            })
                             .then(data => {
+                                console.log('4. Veículo carregado:', data);
                                 this.veiculoEncontrado = data;
-    
+
                                 fetch('/propostas/inserir-veiculo-usado', {
                                     method: 'POST',
                                     headers: {
@@ -260,15 +279,27 @@
                                         id_veiculo_usado: data.id
                                     })
                                 }).then(() => {
+                                    console.log('5. Veículo salvo na session.');
+
                                     const novaUrl = new URL(window.location.href);
                                     novaUrl.searchParams.delete("id_veic_usado");
                                     window.history.replaceState({}, document.title, novaUrl.pathname);
+                                    console.log('6. URL limpa:', novaUrl.pathname);
                                 });
+                            })
+                            .catch(error => {
+                                console.error('❌ Erro ao buscar veículo:', error);
                             });
-    
-                        document.querySelector('[x-data]').__x.$data.aba = 'usado';
+
+                            //Abre a aba de veiculo usado
+                            let root = document.querySelector('[x-data*="aba"]');
+                            if (root && root.__x && root.__x.$data) {
+                                root.__x.$data.aba = 'usado';
+                            }
+                            console.log('7. Aba "veículo usado" ativada');
                     }
                 }
+
             }));
     
             Alpine.data('negociacao', () => ({
@@ -307,6 +338,6 @@
             }));
         });
     </script>
-    
+
 
 </x-app-layout>
