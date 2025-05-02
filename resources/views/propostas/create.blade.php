@@ -214,6 +214,24 @@
                                 console.warn('Cliente da sessão não encontrado.');
                             });
                     }
+                },
+                removerCliente() {
+                    this.clienteSelecionado = null;
+                    this.clientes = [];
+    
+                    fetch('/propostas/remover-cliente', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    }).then(res => {
+                        if (!res.ok) {
+                            alert('Erro ao remover o cliente da sessão.');
+                        }
+                    }).catch(() => {
+                        alert('Erro ao comunicar com o servidor.');
+                    });
                 }
             }));
     

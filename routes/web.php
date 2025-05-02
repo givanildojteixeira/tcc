@@ -157,6 +157,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/propostas/remover-veiculo-novo', [PropostaController::class, 'removerVeiculoNovo']);
     //veiculo usado
     Route::post('/propostas/remover-veiculo-usado', [PropostaController::class, 'removerVeiculoUsado']);
+    Route::post('/propostas/remover-cliente', [PropostaController::class, 'removerCliente']);
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
     // API de sessão de veículo novo

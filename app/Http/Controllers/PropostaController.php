@@ -69,6 +69,14 @@ class PropostaController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function removerCliente(Request $request)
+    {
+        $proposta = session('proposta', []);
+        $proposta['id_cliente'] = null;
+        session(['proposta' => $proposta]);
+        return response()->json(['success' => true]);
+    }
+
     // 4. Adicionar veículo usado
     public function carregarVeiculoUsado(Request $request)
     {

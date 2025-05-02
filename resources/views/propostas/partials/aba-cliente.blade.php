@@ -46,8 +46,15 @@
     
     <!-- Cliente selecionado -->
     <template x-if="clienteSelecionado">
-        <div class="border border-green-400 bg-green-50 p-4 rounded-md shadow-sm">
-            <h3 class="text-green-800 font-bold mb-2">Cliente Selecionado</h3>
+        <div class="border border-green-400 bg-green-50 p-1 rounded-md shadow-sm">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold text-green-700">Cliente Selecionado:</h3>
+                <button type="button"
+                    @click="removerCliente"
+                    class="text-red-600 text-sm hover:underline hover:text-red-800">
+                    ❌ Remover
+                </button>
+            </div>
             <ul class="text-sm text-gray-800 space-y-1">
                 <li><strong>Nome:</strong> <span x-text="clienteSelecionado.nome"></span></li>
                 <li><strong>CPF/CNPJ:</strong> <span x-text="clienteSelecionado.cpf_cnpj"></span></li>
