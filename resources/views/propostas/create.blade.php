@@ -145,7 +145,27 @@
                         },
                         body: JSON.stringify({ id_veiculoNovo: id })
                     });
-                }
+                },
+
+                removerVeiculoNovo() {
+                    this.chassiBusca = '',
+                    this.veiculos = [],
+                    this.veiculo = null,
+
+                    fetch('/propostas/remover-veiculo-novo', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    }).then(res => {
+                        if (!res.ok) {
+                            alert('Erro ao remover o veículo da sessão.');
+                        }
+                    }).catch(() => {
+                        alert('Erro ao comunicar com o servidor.');
+                    });
+                },
             }));
     
             Alpine.data('clienteBusca', () => ({
@@ -218,23 +238,29 @@
                         alert('Erro na busca ou nenhum veículo encontrado.');
                         this.veiculoEncontrado = [];
                     });
-            },
+                },
 
-    
-                cadastrarVeiculoUsado() {
-                    fetch('/propostas/adicionar-veiculo-usado', {
+                selecionarVeiculo(v) {
+                    this.veiculo = v;
+                    this.veiculoEncontrado = []; // limpa a lista
+                    this.cadastrarVeiculoUsado(v.id);
+                },
+
+
+                cadastrarVeiculoUsado(id) {
+                    fetch('/propostas/inserir-veiculo-usado', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify({id_veiculo_usado: data.id })
+                        body: JSON.stringify({ id_veiculo_usado: id })
                     })
                     .then(response => {
                         if (response.ok) {
-                            alert('✅ Veículo usado adicionado à proposta!');
+                            // alert('✅ Veículo usado adicionado à proposta!');
                             this.modalCadastroUsado = false;
-                            this.resetarFormulario();
+                            // Se desejar limpar algo aqui, pode usar resetarFormulario()
                         } else {
                             alert('⚠️ Erro ao adicionar o veículo usado.');
                         }
@@ -246,47 +272,66 @@
                     const url = new URL(window.location.href);
                     const veiculoId = url.searchParams.get("id_veic_usado");
 
-                    console.log('1. URL detectada:', url.href);
-                    
+                    console.log('🔍 URL detectada:', url.href);
+
                     if (veiculoId) {
-                        console.log('2. ID do veículo usado na URL:', veiculoId);
-                        fetch(`/api/veiculos/${veiculoId}`)
-                            .then(res => {
-                                console.log('3. Requisição para /api/veiculos/' + veiculoId, res);
-                                return res.json();
+                        console.log('📦 ID do veículo usado na URL:', veiculoId);
+
+                        fetch('/propostas/inserir-veiculo-usado', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                id_veiculo_usado: veiculoId
                             })
-                            .then(data => {
-                                console.log('4. Veículo carregado:', data);
-                                this.veiculoEncontrado = data;
+                        })
+                        .then(() => fetch(`/api/veiculos/${veiculoId}`))
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log('🚗 Veículo da URL carregado:', data);
+                            this.veiculo = data;
+                            this.veiculoEncontrado = [data];
 
-                                fetch('/propostas/inserir-veiculo-usado', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                    },
-                                    body: JSON.stringify({
-                                        id_veiculo_usado: data.id
-                                    })
-                                }).then(() => {
-                                    console.log('5. Veículo salvo na session.');
+                            const novaUrl = new URL(window.location.href);
+                            novaUrl.searchParams.delete("id_veic_usado");
+                            window.history.replaceState({}, document.title, novaUrl.pathname);
+                            console.log('🧹 URL limpa:', novaUrl.pathname);
 
-                                    const novaUrl = new URL(window.location.href);
-                                    novaUrl.searchParams.delete("id_veic_usado");
-                                    window.history.replaceState({}, document.title, novaUrl.pathname);
-                                    console.log('6. URL limpa:', novaUrl.pathname);
-                                });
-                            })
-                            .catch(error => {
-                                console.error('❌ Erro ao buscar veículo:', error);
-                            });
-
-                            //Abre a aba de veiculo usado
                             let root = document.querySelector('[x-data*="aba"]');
                             if (root && root.__x && root.__x.$data) {
                                 root.__x.$data.aba = 'usado';
                             }
-                            console.log('7. Aba "veículo usado" ativada');
+                        })
+                        .catch(err => {
+                            console.error('❌ Erro ao processar veículo da URL:', err);
+                        });
+
+                    } else {
+                        // 🚚 Nenhum veículo na URL → Carrega da session
+                        fetch('/propostas/veiculos-usados-session')
+                            .then(res => res.json())
+                            .then(lista => {
+                                if (Array.isArray(lista) && lista.length > 0) {
+                                    this.veiculoEncontrado = lista;
+                                    console.log('📥 Veículos carregados da session:', lista);
+
+                                    // Opcional: carrega o primeiro como selecionado
+                                    this.veiculo = lista[0];
+
+                                    // Garantir que a aba seja usada
+                                    let root = document.querySelector('[x-data*="aba"]');
+                                    if (root && root.__x && root.__x.$data) {
+                                        root.__x.$data.aba = 'usado';
+                                    }
+                                } else {
+                                    console.log('🕳️ Nenhum veículo usado encontrado na session.');
+                                }
+                            })
+                            .catch(err => {
+                                console.error('⚠️ Erro ao carregar veículos da session:', err);
+                            });
                     }
                 }
 

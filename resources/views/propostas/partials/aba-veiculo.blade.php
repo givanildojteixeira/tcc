@@ -43,25 +43,28 @@
 
     <!-- Dados do veículo -->
     <template x-if="veiculo && veiculo.id">
-        <div class="border border-green-400 bg-green-50 p-4 rounded-md shadow-sm">
-            <h3 class="text-lg font-semibold text-green-700 mb-2">Veículo Selecionado:</h3>
-            <ul class="text-sm text-gray-800 space-y-1">
-                <li><strong>Marca:</strong> <span
-                        x-text="veiculo.marca + ' - ' + veiculo.desc_veiculo + ' - ' + veiculo.motor"></span></li>
-                <li><strong>Modelo:</strong> <span x-text="veiculo.modelo_fab"></span> <strong>Opcional:</strong> <span
-                        x-text="veiculo.cod_opcional"></span></li>
-                <li><strong>Chassi:</strong> <span x-text="veiculo.chassi"></span></li>
-                <li><strong>Valor Tabela:</strong> <span x-text="veiculo.vlr_tabela"></span></li>
-                <li><strong>Combustivel:</strong> <span x-text="veiculo.combustivel"></span></li>
-                <li><strong>Cor:</strong> <span x-text="veiculo.cor"></span></li>
-                <li><strong>Local:</strong> <span x-text="veiculo.local"></span></li>
-                <li><strong>Transmissao:</strong> <span x-text="veiculo.transmissao"></span></li>
-            </ul>
-
-            <!-- Input oculto para envio -->
+        <div class="border border-green-400 bg-green-50 p-1 rounded-md shadow-sm">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold text-green-700">Veículo Selecionado:</h3>
+                <button type="button"
+                    @click="removerVeiculoNovo"
+                    class="text-red-600 text-sm hover:underline hover:text-red-800">
+                    ❌ Remover
+                </button>
+            </div>
+            <div class="grid grid-cols-3 text-sm text-gray-800">
+                <div><strong>Marca:</strong> <span x-text="veiculo.marca + ' - ' + veiculo.desc_veiculo + ' - ' + veiculo.motor"></span></div>
+                <div><strong>Modelo:</strong> <span x-text="veiculo.modelo_fab"></span></div>
+                <div><strong>Opcional:</strong> <span x-text="veiculo.cod_opcional"></span></div>
+                <div><strong>Chassi:</strong> <span x-text="veiculo.chassi"></span></div>
+                <div><strong>Valor Tabela:</strong> <span x-text="veiculo.vlr_tabela"></span></div>
+                <div><strong>Combustível:</strong> <span x-text="veiculo.combustivel"></span></div>
+                <div><strong>Cor:</strong> <span x-text="veiculo.cor"></span></div>
+                <div><strong>Local:</strong> <span x-text="veiculo.local"></span></div>
+                <div><strong>Transmissão:</strong> <span x-text="veiculo.transmissao"></span></div>
+            </div>
+    
             <input type="hidden" name="id_veiculoNovo" :value="veiculo.id">
         </div>
-    </template>
-
-
+    </template>            
 </div>

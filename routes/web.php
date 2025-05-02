@@ -151,9 +151,12 @@ Route::middleware('auth')->group(function () {
 
 
     //Propostas
-    Route::get('/propostas/testar-session', function () {
-        return session('proposta'); });
+    //Veiculos Novos
+    Route::get('/propostas/testar-session', function () { return session('proposta'); });
     Route::post('/propostas/iniciar', [PropostaController::class, 'iniciar'])->name('proposta.iniciar');
+    Route::post('/propostas/remover-veiculo-novo', [PropostaController::class, 'removerVeiculoNovo']);
+    //veiculo usado
+    Route::post('/propostas/remover-veiculo-usado', [PropostaController::class, 'removerVeiculoUsado']);
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
     // API de sessão de veículo novo
@@ -175,7 +178,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/propostas/adicionar-cliente', [PropostaController::class, 'adicionarCliente']);
     //INSERE SESSAO VEICULO USADO
     Route::post('/propostas/inserir-veiculo-usado', [PropostaController::class, 'inserirVeiculoUsado']);
-
+    //busca veiculo usado na session
+    Route::get('/propostas/veiculos-usados-session', [PropostaController::class, 'carregarVeiculoUsado']);
+    
 
 
     ///  http://200.195.138.74:911/propostas/create?id_veic_usado=624

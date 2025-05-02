@@ -31,6 +31,15 @@ class PropostaController extends Controller
     }
 
 
+    public function removerVeiculoNovo(Request $request)
+    {
+        $proposta = session('proposta', []);
+        $proposta['id_veiculoNovo'] = null;
+        session(['proposta' => $proposta]);
+        return response()->json(['success' => true]);
+    }
+
+
 
     // 2. Mostrar tela de criação
     public function create()
@@ -61,6 +70,11 @@ class PropostaController extends Controller
     }
 
     // 4. Adicionar veículo usado
+    public function carregarVeiculoUsado(Request $request)
+    {
+        return response()->json(session('veiculos_usados', []));
+    }
+    
     public function inserirVeiculoUsado(Request $request)
     {
         $id_vusado = $request->input('id_veiculo_usado');
@@ -73,7 +87,18 @@ class PropostaController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function removerVeiculoUsado(Request $request)
+    {
+       //TODO: resolver totalemnte
+        $id = $request->input('id');
+        $veiculos = session('veiculos_usados', []);
 
+        // Remove o veículo da sessão
+        $veiculos = array_filter($veiculos, fn($vid) => $vid != $id);
+        session(['veiculos_usados' => array_values($veiculos)]);
+
+        return response()->json(['success' => true]);
+    }
 
 
     // 5. Adicionar negociação
