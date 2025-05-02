@@ -114,6 +114,7 @@
                             this.veiculos = data;
                             if (data.length === 1) {
                                 this.veiculo = data[0];
+                                // TODO: VERIFICAR RETIRAR LINHA ABAIXO
                                 this.salvarVeiculoSession(data[0].id);
                             }
                         });
@@ -202,22 +203,23 @@
                 chassiBusca: '',
                 veiculoEncontrado: null,
     
-                buscarVeiculo() {
-                    if (this.chassiBusca.trim() === '') {
-                        alert('Digite o chassi para buscar!');
-                        return;
-                    }
-    
-                    fetch(`/api/veiculos-usados/buscar-chassi/${this.chassiBusca}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            this.veiculoEncontrado = data;
-                        })
-                        .catch(() => {
-                            alert('Veículo não encontrado!');
-                            this.veiculoEncontrado = null;
-                        });
-                },
+                buscarVeiculoUsado() {
+                if (this.chassiBusca.trim() === '') {
+                    alert('Digite o chassi, placa ou modelo!');
+                    return;
+                }
+
+                fetch(`/api/veiculos-usados/buscar-chassi/${this.chassiBusca}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        this.veiculoEncontrado = Array.isArray(data) ? data : [data];
+                    })
+                    .catch(() => {
+                        alert('Erro na busca ou nenhum veículo encontrado.');
+                        this.veiculoEncontrado = [];
+                    });
+            },
+
     
                 cadastrarVeiculoUsado() {
                     fetch('/propostas/adicionar-veiculo-usado', {
@@ -228,18 +230,6 @@
                         },
                         body: JSON.stringify({id_veiculo_usado: data.id })
                     })
-
-
-                    // fetch('/propostas/adicionar-cliente', {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    //     },
-                    //     body: JSON.stringify({ id_cliente: cliente.id })
-                    // });
-
-
                     .then(response => {
                         if (response.ok) {
                             alert('✅ Veículo usado adicionado à proposta!');

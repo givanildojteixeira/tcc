@@ -14,20 +14,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-// Route::get('/veiculos/buscar-chassi/{chassi}', function ($chassi) {
-//     return Veiculo::where('chassi', 'like', '%' . $chassi . '%')
-//         ->where('novo_usado', 'Novo')
-//         ->limit(500)
-//         ->get(); // agora retorna uma lista
-// });
 
 Route::get('/veiculos/buscar-chassi/{query}', function ($query) {
-    return Veiculo::where('chassi', 'like', '%' . $query . '%')
-        ->orWhere('desc_veiculo', 'like', "%{$query}%")
-        ->orWhere('cor', 'like', "%{$query}%")
+    return Veiculo::where(function ($q) use ($query) {
+        $q->where('chassi', 'like', "%{$query}%")
+            ->orWhere('desc_veiculo', 'like', "%{$query}%")
+            ->orWhere('placa', 'like', "%{$query}%");
+    })
         ->where('novo_usado', 'Novo')
-        ->limit(500)
-        ->get(); // agora retorna uma lista
+        ->get();
 });
 
 Route::get('/clientes/buscar/{query}', function ($query) {
@@ -36,11 +31,22 @@ Route::get('/clientes/buscar/{query}', function ($query) {
         ->limit(10)
         ->get();
 });
-Route::get('/veiculos-usados/buscar-chassi/{chassi}', function ($chassi) {
-    return Veiculo::where('chassi', $chassi)
+
+Route::get('/veiculos-usados/buscar-chassi/{query}', function ($query) {
+    return Veiculo::where(function ($q) use ($query) {
+        $q->where('chassi', 'like', "%{$query}%")
+            ->orWhere('desc_veiculo', 'like', "%{$query}%")
+            ->orWhere('placa', 'like', "%{$query}%");
+    })
         ->where('novo_usado', 'Usado')
-        ->firstOrFail();
+        ->get();
 });
+
+
+
+
+
+
 Route::get('/veiculos/{id}', function ($id) {
     return Veiculo::findOrFail($id);
 });
