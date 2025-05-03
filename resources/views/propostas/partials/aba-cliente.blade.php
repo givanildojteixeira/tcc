@@ -56,12 +56,19 @@
                 </button>
             </div>
             <ul class="text-sm text-gray-800 space-y-1">
-                <li><strong>Nome:</strong> <span x-text="clienteSelecionado.nome"></span></li>
-                <li><strong>CPF/CNPJ:</strong> <span x-text="clienteSelecionado.cpf_cnpj"></span></li>
-                <li><strong>Email:</strong> <span x-text="clienteSelecionado.email ?? '-'"></span></li>
-                <li><strong>Telefone:</strong> <span x-text="clienteSelecionado.celular ?? '-'"></span></li>
+                <li><strong>Nome:</strong> <span x-text="clienteSelecionado.nome"></span>
+                    <strong>CPF/CNPJ:</strong> <span x-text="clienteSelecionado.cpf_cnpj"></span>
+                </li>
+                <li><strong>Email:</strong> <span x-text="clienteSelecionado.email ?? '-'"></span>
+                    <strong>Telefone:</strong> <span x-text="clienteSelecionado.celular ?? '-'"></span>
+                </li>
+                <li><strong>CEP:</strong> <span x-text="clienteSelecionado.cep"></span>
+                    <strong>Endereço:</strong> <span x-text="clienteSelecionado.endereco"></span>
+                    <strong>Bairro:</strong> <span x-text="clienteSelecionado.bairro"></span>
+                    <strong>Cidade:</strong> <span x-text="clienteSelecionado.cidade"></span>
+                    <strong>/</strong> <span x-text="clienteSelecionado.uf"></span>
+                </li>
             </ul>
-
             <input type="hidden" name="id_cliente" :value="clienteSelecionado.id">
         </div>
     </template>

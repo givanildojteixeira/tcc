@@ -146,14 +146,12 @@ Route::middleware('auth')->group(function () {
 
 
 
-
-
-
-
     //Propostas
     //Veiculos Novos
     Route::get('/propostas/testar-session', function () { return session('proposta'); });
     Route::post('/propostas/iniciar', [PropostaController::class, 'iniciar'])->name('proposta.iniciar');
+    Route::get('/propostas/inserir-veiculo-novo', [PropostaController::class, 'inserirVeiculoNovo']);
+    Route::post('/propostas/veiculo-session', [PropostaController::class, 'salvarVeiculoSession']);
     Route::post('/propostas/remover-veiculo-novo', [PropostaController::class, 'removerVeiculoNovo']);
     //veiculo usado
     Route::post('/propostas/remover-veiculo-usado', [PropostaController::class, 'removerVeiculoUsado']);
@@ -161,21 +159,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
     // API de sessão de veículo novo
-    Route::get('/propostas/veiculo-session', function () {
-        $id = session('proposta.id_veiculoNovo');
-
-        if (!$id) {
-            return response()->json(null);
-        }
-
-        return Veiculo::find($id);
-    });
 
 
-    Route::post('/propostas/veiculo-session', function (Request $request) {
-        session()->put('proposta.id_veiculoNovo', $request->id_veiculoNovo);
-        return response()->json(['success' => true]);
-    });
+
+
     Route::post('/propostas/adicionar-cliente', [PropostaController::class, 'adicionarCliente']);
     //INSERE SESSAO VEICULO USADO
     Route::post('/propostas/inserir-veiculo-usado', [PropostaController::class, 'inserirVeiculoUsado']);

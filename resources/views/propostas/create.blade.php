@@ -127,7 +127,7 @@
                 },
     
                 carregarVeiculoSession() {
-                    fetch(`/propostas/veiculo-session`)
+                    fetch(`/propostas/inserir-veiculo-novo`)
                         .then(res => res.json())
                         .then(data => {
                             if (data) {
@@ -264,7 +264,6 @@
                     this.cadastrarVeiculoUsado(v.id);
                 },
 
-
                 cadastrarVeiculoUsado(id) {
                     fetch('/propostas/inserir-veiculo-usado', {
                         method: 'POST',
@@ -327,29 +326,14 @@
                         });
 
                     } else {
-                        // 🚚 Nenhum veículo na URL → Carrega da session
-                        fetch('/propostas/veiculos-usados-session')
-                            .then(res => res.json())
-                            .then(lista => {
-                                if (Array.isArray(lista) && lista.length > 0) {
-                                    this.veiculoEncontrado = lista;
-                                    console.log('📥 Veículos carregados da session:', lista);
-
-                                    // Opcional: carrega o primeiro como selecionado
-                                    this.veiculo = lista[0];
-
-                                    // Garantir que a aba seja usada
-                                    let root = document.querySelector('[x-data*="aba"]');
-                                    if (root && root.__x && root.__x.$data) {
-                                        root.__x.$data.aba = 'usado';
-                                    }
-                                } else {
-                                    console.log('🕳️ Nenhum veículo usado encontrado na session.');
-                                }
-                            })
-                            .catch(err => {
-                                console.error('⚠️ Erro ao carregar veículos da session:', err);
-                            });
+                        
+                        fetch(`/propostas/veiculo-session`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data) {
+                                this.veiculo = data;
+                            }
+                        });
                     }
                 }
 

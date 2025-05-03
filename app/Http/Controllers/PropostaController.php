@@ -49,6 +49,24 @@ class PropostaController extends Controller
         return view('propostas.create', compact('proposta'));
     }
 
+    public function inserirVeiculoNovo()
+    {
+        $id = session('proposta.id_veiculoNovo');
+
+        if (!$id) {
+            return response()->json(null);
+        }
+
+        return Veiculo::find($id);
+    }
+
+    public function salvarVeiculoSession(Request $request)
+    {
+        session()->put('proposta.id_veiculoNovo', $request->id_veiculoNovo);
+        return response()->json(['success' => true]);
+    }
+
+
     // 3. Salvar cliente selecionado
     public function selecionarCliente(Request $request)
     {
@@ -59,13 +77,9 @@ class PropostaController extends Controller
     public function adicionarCliente(Request $request)
     {
         $clienteId = $request->input('id_cliente');
-
         $proposta = session('proposta', []);
-
         $proposta['id_cliente'] = $clienteId;
-
         session(['proposta' => $proposta]);
-
         return response()->json(['success' => true]);
     }
 
@@ -82,7 +96,7 @@ class PropostaController extends Controller
     {
         return response()->json(session('veiculos_usados', []));
     }
-    
+
     public function inserirVeiculoUsado(Request $request)
     {
         $id_vusado = $request->input('id_veiculo_usado');
@@ -97,7 +111,7 @@ class PropostaController extends Controller
 
     public function removerVeiculoUsado(Request $request)
     {
-       //TODO: resolver totalemnte
+        //TODO: resolver totalemnte
         $id = $request->input('id');
         $veiculos = session('veiculos_usados', []);
 
