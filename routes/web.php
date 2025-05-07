@@ -147,28 +147,27 @@ Route::middleware('auth')->group(function () {
 
 
     //Propostas
+    Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
+    Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
+    Route::get('/propostas/testar-session', function () {return session('proposta'); });
     //Veiculos Novos
-    Route::get('/propostas/testar-session', function () { return session('proposta'); });
-    Route::post('/propostas/iniciar', [PropostaController::class, 'iniciar'])->name('proposta.iniciar');
+    Route::post('/propostas/iniciar', [PropostaController::class, 'iniciar'])->name('proposta.iniciar');   //Inicia quando vem de Estoque de Novos
     Route::get('/propostas/inserir-veiculo-novo', [PropostaController::class, 'inserirVeiculoNovo']);
     Route::post('/propostas/veiculo-session', [PropostaController::class, 'salvarVeiculoSession']);
     Route::post('/propostas/remover-veiculo-novo', [PropostaController::class, 'removerVeiculoNovo']);
-    //veiculo usado
+    //cliente
     Route::post('/propostas/remover-veiculo-usado', [PropostaController::class, 'removerVeiculoUsado']);
     Route::post('/propostas/remover-cliente', [PropostaController::class, 'removerCliente']);
-    Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
-    Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
-    // API de sessão de veículo novo
-
-
-
-
     Route::post('/propostas/adicionar-cliente', [PropostaController::class, 'adicionarCliente']);
-    //INSERE SESSAO VEICULO USADO
-    Route::post('/propostas/inserir-veiculo-usado', [PropostaController::class, 'inserirVeiculoUsado']);
-    //busca veiculo usado na session
-    Route::get('/propostas/veiculos-usados-session', [PropostaController::class, 'carregarVeiculoUsado']);
-    
+    //Veículos Usados
+    Route::post('/propostas/inserir-veiculo-usado', [PropostaController::class, 'inserirVeiculoUsado']);   //insere sesion com id de VU
+    Route::get('/propostas/veiculos-usados-session', [PropostaController::class, 'carregarVeiculoUsado']); //busca veiculo usado na session
+    Route::get('/propostas/veiculos-usados-session-remova', [PropostaController::class, 'removerVeiculoUsado']);   //Remove veiculo usado na session
+    //Negociações
+    Route::post('/propostas/inserir-negociacao-session', [PropostaController::class, 'inserirVeiculoUsado']);   //insere negociacao com id 
+    Route::get('/propostas/busca-negociacao-session', [PropostaController::class, 'carregarVeiculoUsado']);  //busca negociacao na session
+    Route::get('/propostas/remove-negociacao-session', [PropostaController::class, 'removerVeiculoUsado']);   //Remove negociacao session
+
 
 
     ///  http://200.195.138.74:911/propostas/create?id_veic_usado=624

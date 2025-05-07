@@ -11,43 +11,42 @@ use App\Http\Controllers\Controller;
 
 class PropostaController extends Controller
 {
-    // 1. Iniciar proposta
+
+
+    //Aqui inicia a view de propostas
+    public function create()
+    {
+        $proposta = session('proposta', []);
+        $condicoes = CondicaoPagamento::orderBy('descricao')->get();
+
+        return view('propostas.create', compact('proposta', 'condicoes'));
+    }
+
+    //Aqui é feita a inclusao de um veiculo vindo do estoque de novos
     public function iniciar(Request $request)
     {
         $idVeiculoNovo = $request->input('id_veiculoNovo'); // Pega o dado certo
+        $veiculo = Veiculo::find($idVeiculoNovo);
 
-        session([
-            'proposta' => [
-                'id_veiculoNovo' => $idVeiculoNovo,
-                // 'cliente' => null,
-                // 'veiculos_usados' => [],
-                // 'negociacoes' => [],
-                // 'observacao_nota' => '',
-                // 'observacao_interna' => '',
-            ]
-        ]);
+        if (!$veiculo) {
+            return response()->json(['success' => false, 'message' => 'Veículo não encontrado'], 404);
+        }
 
+        session()->put('proposta.id_veiculoNovo', $veiculo->id);
+        session()->put('proposta.valor_veiculoNovo', $veiculo->vlr_tabela);
         return response()->json(['success' => true]);
     }
 
-
+    //Remove o veiculo novo na Session
     public function removerVeiculoNovo(Request $request)
     {
         $proposta = session('proposta', []);
         $proposta['id_veiculoNovo'] = null;
+        $proposta['valor_veiculoNovo'] = 0;
         session(['proposta' => $proposta]);
         return response()->json(['success' => true]);
     }
 
-
-
-    // 2. Mostrar tela de criação
-    public function create()
-    {
-        $proposta = session('proposta', []);
-
-        return view('propostas.create', compact('proposta'));
-    }
 
     public function inserirVeiculoNovo()
     {
@@ -60,12 +59,20 @@ class PropostaController extends Controller
         return Veiculo::find($id);
     }
 
+    //Salva o Veiculo novo na Session
     public function salvarVeiculoSession(Request $request)
     {
-        session()->put('proposta.id_veiculoNovo', $request->id_veiculoNovo);
+        $veiculo = Veiculo::find($request->id_veiculoNovo);
+
+        if (!$veiculo) {
+            return response()->json(['success' => false, 'message' => 'Veículo não encontrado'], 404);
+        }
+
+        session()->put('proposta.id_veiculoNovo', $veiculo->id);
+        session()->put('proposta.valor_veiculoNovo', $veiculo->vlr_tabela);
+
         return response()->json(['success' => true]);
     }
-
 
     // 3. Salvar cliente selecionado
     public function selecionarCliente(Request $request)
@@ -91,34 +98,44 @@ class PropostaController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // 4. Adicionar veículo usado
+    // Aqui carrega veiculos usados pela session
     public function carregarVeiculoUsado(Request $request)
     {
-        return response()->json(session('veiculos_usados', []));
+        $id = session('proposta.id_veiculo_usado');
+
+        if (!$id) {
+            return response()->json(null);
+        }
+
+        return Veiculo::find($id);
     }
 
+    //Aqui Insere uma session com a Id do veiculo usado
     public function inserirVeiculoUsado(Request $request)
     {
         $id_vusado = $request->input('id_veiculo_usado');
 
-        $proposta = session('proposta', []);
+        $veiculo = Veiculo::find($id_vusado);
 
-        $proposta['id_veiculo_usado'] = $id_vusado;
+        if (!$veiculo) {
+            return response()->json(['success' => false, 'message' => 'Veículo não encontrado'], 404);
+        }
 
-        session(['proposta' => $proposta]);
+        session()->put('proposta.id_veiculo_usado', $veiculo->id);
+        session()->put('proposta.valor_veiculoUsado', $veiculo->vlr_tabela);
+
+
         return response()->json(['success' => true]);
     }
-
+    //Aqui remove o veiculo usado da session
     public function removerVeiculoUsado(Request $request)
     {
-        //TODO: resolver totalemnte
-        $id = $request->input('id');
-        $veiculos = session('veiculos_usados', []);
+        $proposta = session('proposta', []);
 
-        // Remove o veículo da sessão
-        $veiculos = array_filter($veiculos, fn($vid) => $vid != $id);
-        session(['veiculos_usados' => array_values($veiculos)]);
+        $proposta['id_veiculo_usado'] = null;
+        $proposta['valor_veiculoUsado'] = 0;
 
+        session(['proposta' => $proposta]);
         return response()->json(['success' => true]);
     }
 

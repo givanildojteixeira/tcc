@@ -8,7 +8,7 @@
         </div>
 
         <!-- Abas -->
-        <div class="flex bg-gray-100 rounded-md overflow-hidden shadow-sm mb-6 font-bold text-sm">
+        <div class="flex bg-gray-100 rounded-md overflow-hidden shadow-sm mb-2 font-bold text-sm">
             <button @click="aba = 'veiculo'" :class="aba === 'veiculo'
                 ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
                 : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
@@ -94,6 +94,7 @@
 
     <script>
         window.idClienteSessao = @json(session('proposta.id_cliente'));
+        window.propostaSessao = @json(session('proposta'));
     
         document.addEventListener('alpine:init', () => {
 
@@ -326,8 +327,7 @@
                         });
 
                     } else {
-                        
-                        fetch(`/propostas/veiculo-session`)
+                        fetch(`/propostas/veiculos-usados-session`)
                         .then(res => res.json())
                         .then(data => {
                             if (data) {
@@ -335,6 +335,17 @@
                             }
                         });
                     }
+                  
+                },
+
+                removerVeiculoUsado(v) {
+                    fetch(`/propostas/veiculos-usados-session-remova`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data) {
+                                this.veiculo = data;
+                            }
+                        });
                 }
 
             }));
@@ -343,10 +354,37 @@
                 nova: {
                     condicao: '',
                     valor: '',
-                    vencimento: ''
+                    vencimento: new Date().toLocaleDateString('en-CA') // Formato YYYY-MM-DD
+
                 },
                 negociacoes: [],
-    
+                valorBaseProposta: 0,
+
+
+                carregaNegociacao() {
+                    const sessao = window.propostaSessao || {};
+
+                    if (sessao.valor_veiculoNovo) {
+                        this.valorBaseProposta = parseFloat(sessao.valor_veiculoNovo);
+                    }
+
+                    if (sessao.valor_veiculoUsado && parseFloat(sessao.valor_veiculoUsado) > 0) {
+                        // Verifica se já existe a condição "Usado(s)"
+                        const jaExiste = this.negociacoes.some(n => n.condicao_texto === 'Usado(s)');
+                        if (!jaExiste) {
+                            this.negociacoes.push({
+                            condicao: 14,  // index da condição de usado
+                            condicao_texto: 'Usado(s)',
+                            valor: parseFloat(sessao.valor_veiculoUsado),
+                            vencimento: new Date().toISOString().substr(0, 10),
+                            fixo: true // usado para esconder o botão de remoção
+                        });
+                        }
+                    }
+                },
+
+
+    // Botao Adicionar condição
                 adicionar() {
                     if (!this.nova.condicao || !this.nova.valor || !this.nova.vencimento) {
                         alert('Preencha todos os campos da negociação!');
@@ -362,16 +400,67 @@
                         vencimento: this.nova.vencimento
                     });
     
-                    this.nova = { condicao: '', valor: '', vencimento: '' };
+                    nova = { condicao: '', valor: '', vencimento: '' };
                 },
     
                 remover(index) {
                     this.negociacoes.splice(index, 1);
                 },
-    
+
+                negociacoes: [],
+                valorBaseProposta: 50000,
+
+                get valorTotalProposta() {
+                    // Some todos os "acréscimos" à proposta base
+                    const acrescimos = this.negociacoes
+                        .filter(n => n.condicao_texto === 'Acréscimo(+)' || n.condicao == 'ACRESCIMO')
+                        .reduce((acc, n) => acc + parseFloat(n.valor || 0), 0);
+                    return this.valorBaseProposta + acrescimos;
+                },
+
+                somaNegociacoes() {
+                    // Ignora "Acréscimo(+)"
+                    return this.negociacoes
+                        .filter(n => n.condicao_texto !== 'Acréscimo(+)' && n.condicao != 'ACRESCIMO')
+                        .reduce((acc, n) => acc + parseFloat(n.valor || 0), 0);
+                },
+
+                diferencaValor() {
+                    return this.valorTotalProposta - this.somaNegociacoes();
+                },
+
                 formatarValor(valor) {
-                    return 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
-                }
+                    return new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(valor);
+                },
+
+                temAcrescimo() {
+                    return this.negociacoes.some(n => n.condicao_texto === 'Acréscimo(+)' || n.condicao == 'ACRESCIMO');
+                },
+
+                formatarValor(valor) {
+                    return new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(valor);
+                },
+
+                formatarData(dataISO) {
+                    if (!dataISO) return '';
+                    const [ano, mes, dia] = dataISO.split('-');
+                    return `${dia}/${mes}/${ano}`;
+                },
+
+                dataHoje() {
+                    return new Date().toLocaleDateString('en-CA');
+                },
+
+
+
+
+
             }));
         });
     </script>
