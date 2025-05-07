@@ -389,9 +389,6 @@
                     }
                 },
 
-
-
-    // Botao Adicionar condição
                 adicionar() {
                     if (!this.nova.condicao || !this.nova.valor || !this.nova.vencimento) {
                         alert('Preencha todos os campos da negociação!');
@@ -477,12 +474,32 @@
                 dataHoje() {
                     return new Date().toLocaleDateString('en-CA');
                 },
-
-
-
-
-
             }));
+
+            Alpine.data('observacao', () => ({
+                nota: window.propostaSessao?.observacao_nota || '',
+                interna: window.propostaSessao?.observacao_interna || '',
+
+                carregaObservacao() {
+                    this.nota = window.propostaSessao?.observacao_nota || '';
+                    this.interna = window.propostaSessao?.observacao_interna || '';
+                },
+
+                salvar() {
+                    fetch('/propostas/observacoes-session', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            observacao_nota: this.nota,
+                            observacao_interna: this.interna
+                        })
+                    });
+                }
+            }));
+
         });
     </script>
 

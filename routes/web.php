@@ -150,7 +150,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
     Route::get('/propostas/testar-session', function () {
-        return session('proposta'); });
+        return session('proposta');
+    });
     //Veiculos Novos
     Route::post('/propostas/iniciar', [PropostaController::class, 'iniciar'])->name('proposta.iniciar');   //Inicia quando vem de Estoque de Novos
     Route::get('/propostas/inserir-veiculo-novo', [PropostaController::class, 'inserirVeiculoNovo']);
@@ -166,6 +167,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/propostas/veiculos-usados-session-remova', [PropostaController::class, 'removerVeiculoUsado']);   //Remove veiculo usado na session
     //Negociações
     Route::post('/propostas/negociacoes-session', [PropostaController::class, 'salvarNegociacoesSession']);
+    //Observações
+    Route::post('/propostas/observacoes-session', [PropostaController::class, 'salvarObservacoesSession']);
 
 
 
