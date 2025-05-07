@@ -140,17 +140,24 @@ class PropostaController extends Controller
     }
 
 
-    // 5. Adicionar negociação
-    public function adicionarNegociacao(Request $request)
-    {
-        session()->push('proposta.negociacoes', [
-            'condicao' => $request->condicao,
-            'valor' => $request->valor,
-            'vencimento' => $request->vencimento,
-        ]);
+    // // 5. Adicionar negociação
+    // public function adicionarNegociacao(Request $request)
+    // {
+    //     session()->push('proposta.negociacoes', [
+    //         'condicao' => $request->condicao,
+    //         'valor' => $request->valor,
+    //         'vencimento' => $request->vencimento,
+    //     ]);
 
-        return redirect()->back();
+    //     return redirect()->back();
+    // }
+
+    public function salvarNegociacoesSession(Request $request)
+    {
+        session()->put('proposta.negociacoes', $request->negociacoes);
+        return response()->json(['success' => true]);
     }
+
 
     // 6. Finalizar proposta (Salvar no Banco)
     public function store(Request $request)

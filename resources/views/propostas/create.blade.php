@@ -95,6 +95,7 @@
     <script>
         window.idClienteSessao = @json(session('proposta.id_cliente'));
         window.propostaSessao = @json(session('proposta'));
+        window.negociacoesSalvas = @json(session('proposta.negociacoes', []));
     
         document.addEventListener('alpine:init', () => {
 
@@ -363,25 +364,31 @@
 
                 carregaNegociacao() {
                     const sessao = window.propostaSessao || {};
+                    const negociacoesSalvas = window.negociacoesSalvas || [];
 
+                    // Carrega negociações anteriores (sem duplicar "Usado(s)")
+                    this.negociacoes = negociacoesSalvas.filter(n => n.condicao_texto !== 'Usado(s)');
+
+                    // Valor da proposta
                     if (sessao.valor_veiculoNovo) {
                         this.valorBaseProposta = parseFloat(sessao.valor_veiculoNovo);
                     }
 
+                    // Adiciona "Usado(s)" se necessário
                     if (sessao.valor_veiculoUsado && parseFloat(sessao.valor_veiculoUsado) > 0) {
-                        // Verifica se já existe a condição "Usado(s)"
                         const jaExiste = this.negociacoes.some(n => n.condicao_texto === 'Usado(s)');
                         if (!jaExiste) {
                             this.negociacoes.push({
-                            condicao: 14,  // index da condição de usado
-                            condicao_texto: 'Usado(s)',
-                            valor: parseFloat(sessao.valor_veiculoUsado),
-                            vencimento: new Date().toISOString().substr(0, 10),
-                            fixo: true // usado para esconder o botão de remoção
-                        });
+                                condicao: 14,  // substitua se tiver ID real
+                                condicao_texto: 'Usado(s)',
+                                valor: parseFloat(sessao.valor_veiculoUsado),
+                                vencimento: new Date().toISOString().substr(0, 10),
+                                fixo: true
+                            });
                         }
                     }
                 },
+
 
 
     // Botao Adicionar condição
@@ -401,14 +408,28 @@
                     });
     
                     nova = { condicao: '', valor: '', vencimento: '' };
+                    this.salvarNegociacoes();
+
                 },
     
                 remover(index) {
                     this.negociacoes.splice(index, 1);
+                    this.salvarNegociacoes();
                 },
 
-                negociacoes: [],
-                valorBaseProposta: 50000,
+                salvarNegociacoes() {
+                    fetch('/propostas/negociacoes-session', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            negociacoes: this.negociacoes
+                        })
+                    });
+                },
+
 
                 get valorTotalProposta() {
                     // Some todos os "acréscimos" à proposta base

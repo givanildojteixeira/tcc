@@ -149,7 +149,8 @@ Route::middleware('auth')->group(function () {
     //Propostas
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
-    Route::get('/propostas/testar-session', function () {return session('proposta'); });
+    Route::get('/propostas/testar-session', function () {
+        return session('proposta'); });
     //Veiculos Novos
     Route::post('/propostas/iniciar', [PropostaController::class, 'iniciar'])->name('proposta.iniciar');   //Inicia quando vem de Estoque de Novos
     Route::get('/propostas/inserir-veiculo-novo', [PropostaController::class, 'inserirVeiculoNovo']);
@@ -164,9 +165,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/propostas/veiculos-usados-session', [PropostaController::class, 'carregarVeiculoUsado']); //busca veiculo usado na session
     Route::get('/propostas/veiculos-usados-session-remova', [PropostaController::class, 'removerVeiculoUsado']);   //Remove veiculo usado na session
     //Negociações
-    Route::post('/propostas/inserir-negociacao-session', [PropostaController::class, 'inserirVeiculoUsado']);   //insere negociacao com id 
-    Route::get('/propostas/busca-negociacao-session', [PropostaController::class, 'carregarVeiculoUsado']);  //busca negociacao na session
-    Route::get('/propostas/remove-negociacao-session', [PropostaController::class, 'removerVeiculoUsado']);   //Remove negociacao session
+    Route::post('/propostas/negociacoes-session', [PropostaController::class, 'salvarNegociacoesSession']);
+
 
 
 

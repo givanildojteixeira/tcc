@@ -1,50 +1,57 @@
 <div x-data="negociacao" x-init="carregaNegociacao()" class="space-y-4">
     <!-- Formulário de nova negociação -->
-    <!-- Linha de entrada e botão -->
-    <div class="flex flex-wrap items-end justify-center gap-4 w-full">
-        <!-- Condição de Pagamento -->
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700">Condição de Pagamento</label>
-            <select x-model="nova.condicao" class="w-48 border border-gray-300 rounded-md p-2">
-                <option value="">Selecione...</option>
-                @foreach ($condicoes as $cond)
-                <option value="{{ $cond->id }}">{{ $cond->descricao }}</option>
-                @endforeach
-            </select>
-        </div>
 
-        <!-- Valor -->
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700">Valor</label>
-            <input type="number" x-model="nova.valor" step="0.01" min="0" @keydown.enter="adicionar"
-                class="w-32 border border-gray-300 rounded-md p-2">
-        </div>
-
-        <!-- Vencimento -->
-        <div class="flex flex-col">
-            <label class="text-sm font-medium text-gray-700">Data de Vencimento</label>
-            <input type="date" x-model="nova.vencimento" class="w-48 border border-gray-300 rounded-md p-2">
-        </div>
-
-        <!-- Botão -->
-        <div class="flex items-end">
-            <button type="button" @click="adicionar"
-                class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
-                Adicionar Condição
-            </button>
-        </div>
-
-        <!-- Fieldset com totais -->
-        <fieldset class="border border-gray-300 rounded-md p-3 bg-gray-50 min-w-[240px]">
+    <div class="flex flex-wrap items-start gap-4 w-full">
+        <!-- Fieldset da Nova Negociação -->
+        <fieldset class="border border-gray-300 rounded-md p-3 bg-gray-50 flex-1 min-w-[500px]">
+            <legend class="text-gray-700 text-sm font-medium px-2">Nova Negociação</legend>
+    
+            <div class="flex flex-wrap items-end gap-4">
+                <!-- Condição de Pagamento -->
+                <div class="flex flex-col">
+                    <label class="text-sm font-medium text-gray-700">Condição de Pagamento</label>
+                    <select x-model="nova.condicao" class="w-48 border border-gray-300 rounded-md p-2">
+                        <option value="">Selecione...</option>
+                        @foreach ($condicoes as $cond)
+                            <option value="{{ $cond->id }}">{{ $cond->descricao }}</option>
+                        @endforeach
+                    </select>
+                </div>
+    
+                <!-- Valor -->
+                <div class="flex flex-col">
+                    <label class="text-sm font-medium text-gray-700">Valor</label>
+                    <input type="number" x-model="nova.valor" step="0.01" min="0" @keydown.enter="adicionar"
+                           class="w-32 border border-gray-300 rounded-md p-2">
+                </div>
+    
+                <!-- Vencimento -->
+                <div class="flex flex-col">
+                    <label class="text-sm font-medium text-gray-700">Data de Vencimento</label>
+                    <input type="date" x-model="nova.vencimento" class="w-48 border border-gray-300 rounded-md p-2">
+                </div>
+    
+                <!-- Botão -->
+                <div class="flex items-end">
+                    <button type="button" @click="adicionar"
+                            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                        Adicionar Condição
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    
+        <!-- Fieldset com Totais -->
+        <fieldset class="border border-gray-300 rounded-md p-3 bg-gray-50 min-w-[240px] self-end">
             <legend class="text-gray-700 text-sm font-medium px-2">Totais</legend>
-        
-            <!-- Valor da Proposta (com acréscimos) -->
+    
+            <!-- Valor da Proposta -->
             <div class="text-sm flex justify-between font-semibold"
                  :class="temAcrescimo() ? 'text-blue-600' : 'text-gray-800'">
                 <span>Valor da Proposta:</span>
                 <span x-text="formatarValor(valorTotalProposta)"></span>
             </div>
-        
+    
             <!-- Soma das Condições -->
             <div class="text-sm flex justify-between font-semibold"
                  :class="somaNegociacoes() > valorTotalProposta
@@ -55,7 +62,7 @@
                 <span>Soma das Condições:</span>
                 <span x-text="formatarValor(somaNegociacoes())"></span>
             </div>
-        
+    
             <!-- Diferença -->
             <div class="text-sm flex justify-between font-semibold"
                  :class="diferencaValor() > 0
@@ -67,8 +74,8 @@
                 <span x-text="formatarValor(Math.abs(diferencaValor()))"></span>
             </div>
         </fieldset>
-
     </div>
+    
 
     <!-- Lista de negociações adicionadas -->
     <template x-if="negociacoes.length > 0">
