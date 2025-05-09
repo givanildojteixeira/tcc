@@ -5,17 +5,17 @@
         <div class="flex items-center justify-between gap-4 px-4 py-4 bg-white shadow rounded-md p-4 border">
             <div class="flex items-center gap-4 ">
                 @if (request('from') && request('origem'))
-                @php
-                $voltarPara =
-                request('from') === 'create'
-                ? route('veiculos.create', ['from' => request('origem')])
-                : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
-                @endphp
-                <a href="{{ $voltarPara }}"
-                    class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
-                    <i class="fas fa-arrow-left"></i>
-                    Voltar para edição do veículo
-                </a>
+                    @php
+                        $voltarPara =
+                            request('from') === 'create'
+                                ? route('veiculos.create', ['from' => request('origem')])
+                                : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
+                    @endphp
+                    <a href="{{ $voltarPara }}"
+                        class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
+                        <i class="fas fa-arrow-left"></i>
+                        Voltar para edição do veículo
+                    </a>
                 @endif
 
                 <h2 class="text-2xl font-semibold text-green-700 whitespace-nowrap">
@@ -34,10 +34,10 @@
                     </button>
 
                     @if (request('busca'))
-                    <a href="{{ route('familia.index') }}"
-                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-2">
-                        <i class="fas fa-broom"></i> Limpar
-                    </a>
+                        <a href="{{ route('familia.index') }}"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-2">
+                            <i class="fas fa-broom"></i> Limpar
+                        </a>
                     @endif
                 </form>
 
@@ -50,20 +50,20 @@
         </div>
 
         @if (request('from'))
-        @php
-        $veiculo = \App\Models\Veiculo::find(request('from'));
-        $familia = $veiculo ? \App\Models\Familia::where('descricao', $veiculo->familia)->first() : null;
-        @endphp
-        @if ($familia)
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            @php
+                $veiculo = \App\Models\Veiculo::find(request('from'));
+                $familia = $veiculo ? \App\Models\Familia::where('descricao', $veiculo->familia)->first() : null;
+            @endphp
+            @if ($familia)
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
                         preencherFormulario("{{ $familia->id }}", "{{ $familia->descricao }}", "{{ $familia->site ?? '' }}");
                     });
-        </script>
-        @endif
+                </script>
+            @endif
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
                     const form = document.getElementById('formFamilia');
 
                     form.addEventListener('submit', function(e) {
@@ -101,7 +101,7 @@
                         }
                     });
                 });
-        </script>
+            </script>
         @endif
 
         {{-- Bloco Alterar / Cadastrar Familia --}}
@@ -126,7 +126,7 @@
                     <!-- Site -->
                     <div class="basis-[55%] flex-grow min-w-[180px]">
                         <label class="block text-gray-700 font-medium ">Site de Apoio:</label>
-                        <input type="text" name="site"
+                        <input type="text" name="site" required
                             class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                     </div>
 
@@ -134,11 +134,13 @@
                     <input type="hidden" name="id" x-model="idSelecionado">
 
                     <!-- Botão dinâmico -->
-                    <button type="submit" id="botaoFamilia" :class="idSelecionado
+                    <button type="submit" id="botaoFamilia"
+                        :class="idSelecionado
                             ?
                             'flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600' :
                             'flex items-center gap-1 bg-green-600 hover:bg-green-700' +
-                            ' text-white px-3 py-1.5 text-sm rounded-md shadow'" class="transition">
+                            ' text-white px-3 py-1.5 text-sm rounded-md shadow'"
+                        class="transition">
                         <i :class="idSelecionado ? 'fas fa-pen' : 'fas fa-plus-circle'"></i>
                         <span x-text="idSelecionado ? 'Alterar' : 'Cadastrar'"></span>
                     </button>
@@ -217,7 +219,7 @@
                             </form>
 
 
-                            {{-- @if(isset($familia))
+                            {{-- @if (isset($familia))
                             @php
                             $nomeFamilia = Str::slug($familia->descricao, '-');
                             $caminho = public_path('upload/familia');
@@ -236,7 +238,8 @@
                                 <h4 class="text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-file-alt mr-1"></i> Arquivos Enviados
                                 </h4>
-                                <p class="text-gray-500 text-sm italic">Selecione uma família para visualizar os anexos.
+                                <p class="text-gray-500 text-sm italic">Selecione uma família para visualizar os
+                                    anexos.
                                 </p>
                             </div>
 
@@ -256,6 +259,7 @@
 
                         <input type="hidden" name="familia_id" id="input_familia_id">
 
+
                         <fieldset id="Cores"
                             class="flex flex-col border border-blue-200 rounded-md p-3 mb-4 bg-blue-100 h-full w-full"
                             style="flex: 0.5; max-height: calc(100vh - 330px);">
@@ -267,11 +271,11 @@
                             <div class="flex-1 overflow-y-auto mt-2 pr-1">
                                 <div class="grid grid-cols-1 gap-2 text-sm">
                                     @foreach ($cores as $cor)
-                                    <label class="inline-flex items-center gap-2">
-                                        <input type="checkbox" class="form-checkbox text-green-600" name="cores[]"
-                                            value="{{ $cor->id }}">
-                                        {{ $cor->cor_desc }}
-                                    </label>
+                                        <label class="inline-flex items-center gap-2">
+                                            <input type="checkbox" class="form-checkbox text-green-600"
+                                                name="cores[]" value="{{ $cor->id }}">
+                                            {{ $cor->cor_desc }}
+                                        </label>
                                     @endforeach
                                 </div>
                             </div>
@@ -309,50 +313,51 @@
                     </thead>
                     <tbody>
                         @foreach ($familias as $familia)
-                        <tr class="hover:bg-gray-50 cursor-pointer"
-                            onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')">
+                            <tr class="hover:bg-gray-50 cursor-pointer"
+                                onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')">
 
-                            <td class="px-4 py-2 border">{{ $familia->id }}</td>
-                            <td class="px-4 py-2 border">{{ $familia->descricao }}</td>
-                            <td class="px-4 py-2 border">
-                                @php
-                                $nomeArquivo = str_replace(' ', '_', $familia->descricao) . '.jpg';
-                                @endphp
-                                @if (file_exists(public_path('images/familia/' . $nomeArquivo)))
-                                <img src="{{ asset('images/familia/' . $nomeArquivo) }}" alt="Imagem"
-                                    class="h-12 rounded">
-                                @else
-                                <span class="text-gray-400 italic">Sem imagem</span>
-                                @endif
+                                <td class="px-4 py-2 border">{{ $familia->id }}</td>
+                                <td class="px-4 py-2 border">{{ $familia->descricao }}</td>
+                                <td class="px-4 py-2 border">
+                                    @php
+                                        $nomeArquivo = str_replace(' ', '_', $familia->descricao) . '.jpg';
+                                    @endphp
+                                    @if (file_exists(public_path('images/familia/' . $nomeArquivo)))
+                                        <img src="{{ asset('images/familia/' . $nomeArquivo) }}" alt="Imagem"
+                                            class="h-12 rounded">
+                                    @else
+                                        <span class="text-gray-400 italic">Sem imagem</span>
+                                    @endif
 
-                            </td>
-                            <td class="px-4 py-2 border text-center">
-                                <!-- Form de exclusão -->
-                                <form action="{{ route('familia.destroy', $familia->id) }}" method="POST"
-                                    onsubmit="return confirm('Tem certeza que deseja excluir esta família?')"
-                                    class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800 mr-3" title="Excluir">
-                                        <i class="fas fa-trash-alt"></i>
+                                </td>
+                                <td class="px-4 py-2 border text-center">
+                                    <!-- Form de exclusão -->
+                                    <form action="{{ route('familia.destroy', $familia->id) }}" method="POST"
+                                        onsubmit="return confirm('Tem certeza que deseja excluir esta família?')"
+                                        class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-800 mr-3"
+                                            title="Excluir">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+
+                                    <!-- Botão Editar (abre modal ou navega) -->
+                                    <button
+                                        onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')"
+                                        class="text-blue-600 hover:text-blue-800" title="Editar">
+                                        <i class="fas fa-edit"></i>
                                     </button>
-                                </form>
 
-                                <!-- Botão Editar (abre modal ou navega) -->
-                                <button
-                                    onclick="preencherFormulario('{{ $familia->id }}', '{{ $familia->descricao }}', '{{ $familia->site }}')"
-                                    class="text-blue-600 hover:text-blue-800" title="Editar">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         @endforeach
                         @if ($familias->isEmpty())
-                        <tr>
-                            <td colspan="4" class="text-center text-gray-500 py-4">Nenhuma família cadastrada.
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="4" class="text-center text-gray-500 py-4">Nenhuma família cadastrada.
+                                </td>
+                            </tr>
                         @endif
                     </tbody>
                 </table>
@@ -450,15 +455,16 @@
             const inputs = {
                 descricao: descricao,
                 site: site,
-                id: id,
-                familia_id: id
+                id: id
             };
 
             Object.entries(inputs).forEach(([name, value]) => {
-                const input = form.querySelector(`input[name="${name}"]`) || document.getElementById(
-                    `input_${name}`);
+                const input = form.querySelector(`input[name="${name}"]`);
                 if (input) input.value = value;
             });
+
+            // Define o valor nos campos com id="input_familia_id"
+            document.querySelectorAll('#input_familia_id').forEach(el => el.value = id);
 
             // Atualiza botão
             const botao = document.getElementById('botaoFamilia');
@@ -471,7 +477,7 @@
             // Limpa os checkboxes antes
             const checkboxes = form.querySelectorAll('input[name="cores[]"]');
             checkboxes.forEach(cb => cb.checked = false);
-            
+
             // 🔄 Marca checkboxes de cores via AJAX
             fetch(`/familia/${id}/cores`)
                 .then(res => res.json())

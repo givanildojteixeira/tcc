@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('id_veiculoUsado1')->nullable()->constrained('veiculos')->onDelete('set null');
             $table->foreignId('id_veiculoUsado2')->nullable()->constrained('veiculos')->onDelete('set null');
             $table->foreignId('id_veiculoUsado3')->nullable()->constrained('veiculos')->onDelete('set null');
-            $table->foreignId('id_negociacao')->nullable()->constrained('negociacoes')->onDelete('set null');
+            $table->unsignedBigInteger('id_negociacao')->nullable();
             $table->foreignId('id_usuario')->constrained('users')->onDelete('cascade'); // usuário que criou
 
             // Aprovadores

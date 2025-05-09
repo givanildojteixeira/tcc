@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "bmewburn.vscode-intelephense-client",
+    "onecentlin.laravel-blade",
+    "amiralizadeh9480.laravel-extra-intellisense",
+    "ryannaddy.laravel-artisan",
+    "codingyu.laravel-goto-view",
+    "mehedidracula.php-namespace-resolver",
+    "onecentlin.laravel5-snippets",
+    "mikestead.dotenv",
+    "vscode-icons-team.vscode-icons",
+    "esbenp.prettier-vscode"
+  ]
+}
