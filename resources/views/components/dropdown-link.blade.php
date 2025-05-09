@@ -1,9 +1,14 @@
-@props(['disabled' => false, 'title' => null])
+@props(['disabled' => false, 'title' => null, 'align' => 'left'])
 
 @php
-    $baseClasses = 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 text-left w-full';
+    $baseClasses = 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 w-full';
     $extraClasses = $disabled ? 'pointer-events-none' : '';
-    $classes = $baseClasses . ' ' . $extraClasses;
+    $alignmentClasses = match ($align) {
+        'center' => 'text-center',
+        'right' => 'text-right',
+        default => 'text-left',
+    };
+    $classes = $baseClasses . ' ' . $extraClasses . ' ' . $alignmentClasses;
     $finalTitle = $disabled ? ($title ?? 'Acesso restrito') : ($title ?? null);
 @endphp
 

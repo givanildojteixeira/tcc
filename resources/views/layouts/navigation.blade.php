@@ -151,12 +151,10 @@
                             <x-dropdown-link :href="route('user.index')">
                                 <i class="fa-solid fa-users mr-2"></i> Lista de Usuários
                             </x-dropdown-link>
-                            <!-- Link para o GitHub -->
-                            <a href="https://github.com/givanildojteixeira/tcc" target="_blank"
-                                class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                            <x-dropdown-link href="https://github.com/givanildojteixeira/tcc"  target="_blank">
                                 <i class="fa-brands fa-github mr-2"></i> Repositório Git
-                            </a>
-                            <x-dropdown-link :href="route('atividades.index')">
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('atividades.index')" target="_blank" >
                                 <i class="fa-solid fa-clock-rotate-left mr-2"></i> Histórico de Atividades
                             </x-dropdown-link>
                         @endacessoAdmin

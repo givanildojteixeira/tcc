@@ -1,15 +1,11 @@
-@props(['veiculo', 'campo', 'label'])
-
-@php
-    $checked = $veiculo->{$campo} ? 'checked' : '';
-@endphp
+@props(['label', 'xModel', 'veiculoId'])
 
 <div class="flex items-center gap-3">
     <label class="relative inline-flex items-center cursor-pointer">
         <input type="checkbox"
-               {{ $checked }}
-               onchange="alterarStatusVeiculo({{ $veiculo->id }}, '{{ $campo }}', this.checked)"
-               class="sr-only peer">
+               x-model="{{ $xModel }}"
+               @change="'{{ $xModel }}', $event.target.checked)"
+               {{ $attributes->merge(['class' => 'sr-only peer']) }}>
 
         <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-all duration-300"></div>
         <div
