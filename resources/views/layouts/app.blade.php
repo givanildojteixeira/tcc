@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
@@ -85,7 +85,7 @@ $messages = [
 
 
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased h-screen overflow-hidden">
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.navigation')
 
@@ -100,7 +100,7 @@ $messages = [
         @endif
 
         <!-- Page Content -->
-        <main>
+        <main class="h-[calc(100vh-4rem)] overflow-y-auto">
             {{ $slot }}
         </main>
     </div>

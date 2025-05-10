@@ -11,14 +11,14 @@
 
                 <!-- Campo de busca -->
                 <div class="flex flex-col flex-grow min-w-[220px]">
-                    <input type="text" x-model="chassiBusca"
+                    <input type="text" x-model="chassiBusca" @keydown.enter="buscarVeiculoUsado"
                         class="border border-gray-300 rounded-md p-2 focus:ring-green-400 focus:outline-none"
                         placeholder="Digite parte do chassi, placa ou modelo">
                 </div>
 
                 <!-- Botões -->
                 <div class="flex gap-2">
-                    <button type="button" @click="buscarVeiculoUsado"
+                    <button type="button" @click="buscarVeiculoUsado" 
                         class="w-36 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                         🔍 Localizar
                     </button>

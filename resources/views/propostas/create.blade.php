@@ -1,89 +1,64 @@
 <x-app-layout>
-    <div x-data="{ aba: '{{ session('aba', 'veiculo') }}' }" class="max-w-6xl mx-auto p-6 bg-white rounded shadow">
+    <div x-data="{ 
+        aba: sessionStorage.getItem('abaAtiva') || '{{ session('aba', 'veiculo') }}',
+        init() {
+            this.$watch('aba', val => sessionStorage.setItem('abaAtiva', val));
+        }
+    }" class="max-w-6xl mx-auto bg-white rounded shadow flex flex-col h-full max-h-[calc(100vh-100px)]">
 
-        <!-- Título com botão de ajuda -->
-        <div class="flex justify-between items-center mb-4">
+        <!-- Título -->
+        <div class="flex justify-between items-center p-1 shrink-0">
             <h2 class="text-2xl font-bold text-green-700">Proposta de Venda</h2>
             <x-bt-ajuda />
         </div>
 
         <!-- Abas -->
-        <div class="flex bg-gray-100 rounded-md overflow-hidden shadow-sm mb-2 font-bold text-sm">
-            <button @click="aba = 'veiculo'" :class="aba === 'veiculo'
-                ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-                : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
-                class="flex-1 px-4 py-2 transition-all duration-200">
-                <i class="fas fa-car mr-1"></i> 1. Veículo Novo
-            </button>
-
-            <button @click="aba = 'cliente'" :class="aba === 'cliente'
-                ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-                : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
-                class="flex-1 px-4 py-2 transition-all duration-200">
-                <i class="fas fa-user mr-1"></i> 2. Cliente
-            </button>
-
-            <button @click="aba = 'usado'" :class="aba === 'usado'
-                ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-                : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
-                class="flex-1 px-4 py-2 transition-all duration-200">
-                <i class="fas fa-car-side mr-1"></i> 3. Veículo Usado
-            </button>
-
-            <button @click="aba = 'negociacao'" :class="aba === 'negociacao'
-                ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-                : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
-                class="flex-1 px-4 py-2 transition-all duration-200">
-                <i class="fas fa-handshake mr-1"></i> 4. Negociação
-            </button>
-
-            <button @click="aba = 'observacoes'" :class="aba === 'observacoes'
-                ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-                : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
-                class="flex-1 px-4 py-2 transition-all duration-200">
-                <i class="fas fa-sticky-note mr-1"></i> 5. Observações
-            </button>
-
-            <button @click="aba = 'resumo'" :class="aba === 'resumo'
-                ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
-                : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
-                class="flex-1 px-4 py-2 transition-all duration-200">
-                <i class="fas fa-clipboard-check mr-1"></i> 6. Resumo
-            </button>
+        <div class="flex bg-gray-100 rounded-md shadow-sm mb-2 font-bold text-sm shrink-0 px-6">
+            @foreach ([
+                'veiculo' => '1. Veículo Novo|fas fa-car',
+                'cliente' => '2. Cliente|fas fa-user',
+                'usado' => '3. Veículo Usado|fas fa-car-side',
+                'negociacao' => '4. Negociação|fas fa-handshake',
+                'observacoes' => '5. Observações|fas fa-sticky-note',
+                'resumo' => '6. Resumo|fas fa-clipboard-check'
+            ] as $key => $labelIcon)
+                @php [$label, $icon] = explode('|', $labelIcon); @endphp
+                <button @click="aba = '{{ $key }}'" 
+                    :class="aba === '{{ $key }}'
+                        ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
+                        : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
+                    class="flex-1 px-4 py-2 transition-all duration-200">
+                    <i class="{{ $icon }} mr-1"></i> {{ $label }}
+                </button>
+            @endforeach
         </div>
 
-
-        <!-- Conteúdo de cada aba -->
-        <div x-show="aba === 'veiculo'" class="space-y-4">
-            @include('propostas.partials.aba-veiculo')
-        </div>
-
-
-        <div x-show="aba === 'cliente'" class="space-y-4">
-            @include('propostas.partials.aba-cliente')
-        </div>
-
-        <div x-show="aba === 'usado'" class="space-y-4">
-            @include('propostas.partials.aba-usado')
-        </div>
-
-        <div x-show="aba === 'negociacao'" class="space-y-4">
-            @include('propostas.partials.aba-negociacao')
-        </div>
-
-        <div x-show="aba === 'observacoes'" class="space-y-4">
-            @include('propostas.partials.aba-observacoes')
-        </div>
-
-        <div x-show="aba === 'resumo'" class="space-y-4">
-            @include('propostas.partials.aba-resumo')
+        <!-- Área com scroll interno -->
+        <div class="flex-1 px-6 pb-6">
+            <div x-show="aba === 'veiculo'" class="space-y-4">
+                @include('propostas.partials.aba-veiculo')
+            </div>
+            <div x-show="aba === 'cliente'" class="space-y-4">
+                @include('propostas.partials.aba-cliente')
+            </div>
+            <div x-show="aba === 'usado'" class="space-y-4">
+                @include('propostas.partials.aba-usado')
+            </div>
+            <div x-show="aba === 'negociacao'" class="space-y-4">
+                @include('propostas.partials.aba-negociacao')
+            </div>
+            <div x-show="aba === 'observacoes'" class="space-y-4">
+                @include('propostas.partials.aba-observacoes')
+            </div>
+            <div x-show="aba === 'resumo'" class="space-y-4">
+                @include('propostas.partials.aba-resumo')
+            </div>
         </div>
     </div>
+
     <!-- Rodapé -->
     <x-rodape>
         <div class="font-medium">Propostas</div>
-
-        <!-- Legenda de cores -->
         <div class="flex flex-wrap gap-1 items-center">
             Perfil do Usuario => <strong>{{ Auth::user()->level}}</strong>
         </div>
@@ -106,7 +81,7 @@
     
                 buscarVeiculo() {
                     if (this.chassiBusca.trim() === '') {
-                        alert('Informe o chassi para buscar!');
+                        alert('Informe o Chassi, Modelo ou Cor para buscar!');
                         return;
                     }
     
@@ -498,6 +473,90 @@
                         })
                     });
                 }
+            }));
+
+
+            Alpine.data('resumoProposta', () => ({
+                proposta: window.propostaSessao || {},
+                veiculo: {},
+                veiculoUsado: {},
+                valorProposta: 0,
+                valorDesconto: 0,
+                custoItem: 0,
+                valorBonus: 0,
+                valorUsado: 0,
+
+                carregaVeiculo() {
+                    if (this.proposta.id_veiculoNovo) {
+                        fetch(`/api/veiculos/${this.proposta.id_veiculoNovo}`)
+
+                            .then(res => res.json())
+                            .then(data => this.veiculo = data)
+                            .catch(() => this.veiculo = {});
+                    }
+                },
+
+                carregaVeiculoUsado() {
+                    if (this.proposta.id_veiculo_usado) {
+                        fetch(`/api/veiculos/${this.proposta.id_veiculo_usado}`)
+                            .then(res => res.json())
+                            .then(data => this.veiculoUsado = data)
+                            .catch(() => this.veiculoUsado = {});
+                    }
+                },
+
+                carregaCliente() {
+                    if (this.proposta.id_cliente) {
+                        fetch(`/api/clientes/${this.proposta.id_cliente}`)
+                            .then(res => res.json())
+                            .then(data => this.clienteSelecionado = data)
+                            .catch(() => this.clienteSelecionado = {});
+                    }
+                },
+
+                carregaResumoFinanceiro() {
+                    // Busca custo, bonus e desconto no banco via ID do veículo
+                    if (this.proposta.id_veiculoNovo) {
+                        fetch(`/api/veiculos/${this.proposta.id_veiculoNovo}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                this.valorProposta = parseFloat(data.vlr_tabela || 0);
+                                this.custoItem = parseFloat(data.vlr_nota || 0);  // <- garanta que esse campo existe
+                                this.valorBonus = parseFloat(data.vlr_bonus || 0);     // <- idem
+                                this.valorDesconto = parseFloat(data.vlr_desconto || 0); // <- se houver
+                            });
+                    }
+
+                    // Valor do(s) usado(s) da proposta
+                    this.valorUsado = parseFloat(this.proposta.valor_veiculoUsado || 0);
+                },
+
+                get lucroEstimado() {
+                    return this.valorProposta - this.valorDesconto - this.valorBonus - this.custoItem;
+                },
+
+
+                formatarValor(valor) {
+                    return new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(valor || 0);
+                },
+
+                formatarData(data) {
+                    if (!data) return '';
+                    return new Date(data).toLocaleDateString('pt-BR');
+                },
+
+                somaNegociacoes(lista) {
+                    return (lista || []).reduce((total, item) => {
+                        // Exclui condição "Acréscimo(+)" se desejar, senão remova o if
+                        if (item.condicao_texto !== 'Acréscimo(+)' && item.condicao != 'ACRESCIMO') {
+                            return total + parseFloat(item.valor || 0);
+                        }
+                        return total;
+                    }, 0);
+                },
             }));
 
         });

@@ -6,12 +6,12 @@
                 <label class="text-sm text-gray-600 font-medium">Buscar por Chassi, Modelo ou Cor</label>
                 <input type="text" x-model="chassiBusca"
                     class="border border-gray-300 rounded-md p-2 focus:ring-green-400 focus:outline-none"
-                    placeholder="Digite o chassi do veículo novo">
+                    placeholder="Digite o chassi, modelo ou cor do veículo novo">
             </div>
 
             <button type="button" @click="buscarVeiculo"
                 class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                Localizar Veículo
+                🔍 Localizar Veículo
             </button>
         </div>
     </form>
