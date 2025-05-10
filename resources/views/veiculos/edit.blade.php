@@ -1,6 +1,4 @@
 <x-app-layout> {{-- ✅ Alterar informações do Veículo - EDIT - INDEX - VEICULOS - GENERICOS --}}
-    {{-- <div x-data="{ tabAtiva: 'info' }" class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6"> --}}
-
     <div x-data="{
         tabAtiva: '{{ old('tabAtiva') ??
             ($errors->has('cor')
@@ -232,7 +230,7 @@
                     </div>
 
                     {{-- Criada uma logica de programação que acerta o componente, de forma a não permitir que um veiculo nao diponivel para venda 
-                        esteja em promoção --}}
+                        esteja em promoção  Issue 20 --}}
 
                     <div x-data="{
                         ativo: {{ $veiculo->ativo ? 'true' : 'false' }},
