@@ -29,7 +29,7 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
 </head>
 
-<body class="font-sans antialiased h-screen overflow-hidden">
+<body class="font-sans antialiased overflow-hidden">
     <div class="flex flex-col h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.navigation')
 

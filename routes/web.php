@@ -148,6 +148,8 @@ Route::middleware('auth')->group(function () {
 
     //Propostas
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
+    Route::post('/propostas/salvar', [PropostaController::class, 'store'])->name('propostas.store');
+
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
     Route::get('/propostas/testar-session', function () {
         return session('proposta');

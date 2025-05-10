@@ -1,5 +1,6 @@
 <!-- Esta div será rolável -->
-<div class="h-full overflow-y-auto px-6 py-4 space-y-4" x-data="resumoProposta" x-init="
+<div class="h-full overflow-y-auto px-6 py-4 space-y-4"
+ x-data="resumoProposta" x-init="
     carregaVeiculo();
     carregaCliente();
     carregaResumoFinanceiro();
@@ -181,9 +182,15 @@
             🖨️ Imprimir Resumo
         </a>
         <!-- Botão Enviar Proposta -->
-        <button type="submit" class="bg-blue-700 text-white px-6 py-2 rounded-md hover:bg-blue-800 text-sm font-medium">
-            ✅ Enviar Proposta para Aprovação
-        </button>
+        <form method="POST" action="{{ route('propostas.store') }}">
+            @csrf
+            <!-- aqui vão seus dados da aba 'resumo' ou campos ocultos -->
+            
+            <button type="submit" class="bg-blue-700 text-white px-6 py-2 rounded-md hover:bg-blue-800 text-sm font-medium">
+                ✅ Enviar Proposta para Aprovação
+            </button>
+        </form>
+        
 
         <!-- Botão Cancelar Proposta -->
         <form method="POST" action="{{ route('proposta.cancelar') }}"

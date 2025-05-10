@@ -159,32 +159,35 @@ class PropostaController extends Controller
     // 6. Finalizar proposta (Salvar no Banco)
     public function store(Request $request)
     {
-        $propostaSession = session('proposta');
-
+        $sessao = session('proposta');
+    
         $proposta = Proposta::create([
-            'id_cliente' => $propostaSession['cliente'],
-            'id_veiculoNovo' => $propostaSession['veiculo_novo'],
-            'observacao_nota' => $propostaSession['observacao_nota'] ?? '',
-            'observacao_interna' => $propostaSession['observacao_interna'] ?? '',
-            'data_proposta' => now(),
-            'status' => 'Aberta',
+            'id_cliente' => $sessao['id_cliente'] ?? null,
+            'id_veiculoNovo' => $sessao['id_veiculoNovo'] ?? null,
+            'id_veiculoUsado1' => $sessao['id_veiculo_usado'] ?? null,
             'id_usuario' => auth()->id(),
+            'data_proposta' => now(),
+            'status' => 'Pendente',
+            'observacao_nota' => $sessao['observacao_nota'] ?? null,
+            'observacao_interna' => $sessao['observacao_interna'] ?? null,
         ]);
-
-        // Relacionar veículos usados
-        foreach ($propostaSession['veiculos_usados'] ?? [] as $veiculoUsadoId) {
-            $proposta->veiculosUsados()->attach($veiculoUsadoId);
+    
+        // salvar as negociações separadamente se desejar
+        $negociacoes = $sessao['negociacoes'] ?? [];
+        foreach ($negociacoes as $n) {
+            $proposta->negociacoes()->create([
+                'id_cond_pagamento' => $n['condicao'],
+                'valor' => $n['valor'],
+                'data_vencimento' => $n['vencimento']
+            ]);
         }
-
-        // Relacionar negociações
-        foreach ($propostaSession['negociacoes'] ?? [] as $negociacao) {
-            $proposta->negociacoes()->create($negociacao);
-        }
-
-        session()->forget('proposta'); // Limpa a sessão
-
-        return redirect()->route('propostas.index')->with('success', 'Proposta criada com sucesso!');
+    
+        // limpar sessão se desejar
+        session()->forget('proposta');
+    
+        return redirect()->route('propostas.create')->with('success', '✅ Proposta salva com sucesso!');
     }
+    
 
     //Cancelar a Proposta
     public function cancelar()

@@ -1,7 +1,7 @@
 <div x-data="negociacao" x-init="carregaNegociacao()" class="space-y-4">
     <!-- Formulário de nova negociação -->
 
-    <div class="flex flex-wrap items-start gap-4 w-full">
+    <div class="flex flex-wrap items-start gap-4 ">
         <!-- Fieldset da Nova Negociação -->
         <fieldset class="border border-gray-300 rounded-md p-3 bg-gray-50 flex-1 min-w-[500px]">
             <legend class="text-gray-700 text-sm font-medium px-2">Nova Negociação</legend>
@@ -79,7 +79,10 @@
 
     <!-- Lista de negociações adicionadas -->
     <template x-if="negociacoes.length > 0">
-        <fieldset class="mt-4 border border-gray-300 rounded-md px-4 pb-2 bg-gray-50 max-h-64 overflow-y-auto">
+        <fieldset class="mt-4 border border-gray-300 rounded-md px-4 pb-2 bg-gray-50  ">
+
+        {{-- <fieldset class="mt-4 border border-gray-300 rounded-md px-4 pb-2 bg-gray-50 max-h-64 overflow-y-auto"> --}}
+
             <legend class="text-green-700 font-semibold text-sm px-2 leading-tight">Negociações Adicionadas:</legend>
 
             <table class="w-full text-sm text-left border border-gray-300">

@@ -4,7 +4,8 @@
         init() {
             this.$watch('aba', val => sessionStorage.setItem('abaAtiva', val));
         }
-    }" class="flex flex-col h-[calc(100vh-130px)] overflow-hidden bg-white rounded shadow p-2">
+    }" class="flex flex-col overflow-hidden bg-white rounded shadow p-2">
+    {{-- }" class="flex flex-col h-[calc(100vh-130px)] overflow-hidden bg-white rounded shadow p-2"> --}}
     
 
         <!-- Título -->
@@ -35,7 +36,7 @@
         </div>
 
         <!-- Área com scroll interno -->
-        <div class="flex-1 px-6 pb-6">
+        <div class="flex-1 px-6 pb-6 flex-1 overflow-hidden">
             <div x-show="aba === 'veiculo'" class="space-y-4">
                 @include('propostas.partials.aba-veiculo')
             </div>
@@ -45,7 +46,7 @@
             <div x-show="aba === 'usado'" class="space-y-4">
                 @include('propostas.partials.aba-usado')
             </div>
-            <div x-show="aba === 'negociacao'" class="space-y-4">
+            <div x-show="aba === 'negociacao'" class="flex flex-col h-full px-6 pb-6 overflow-hidden">
                 @include('propostas.partials.aba-negociacao')
             </div>
             <div x-show="aba === 'observacoes'" class="space-y-4">

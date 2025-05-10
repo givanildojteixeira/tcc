@@ -63,6 +63,12 @@ class Proposta extends Model
         return $this->belongsTo(Negociacao::class, 'id_negociacao');
     }
 
+    public function negociacoes()
+{
+    return $this->hasMany(Negociacao::class, 'id_proposta');
+}
+
+
     // Usuário que criou a proposta
     public function usuario()
     {
