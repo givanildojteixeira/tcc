@@ -145,6 +145,7 @@
                 alert('Erro ao salvar configuração: ' + (err.message || 'Erro desconhecido'));
             });
         }
-    </script>
+        
+        </script>
 </body>
 </html>

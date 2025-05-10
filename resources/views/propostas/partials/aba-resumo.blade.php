@@ -176,7 +176,7 @@
             🔄 Atualizar Resumo
         </button>
 
-        <a href="{{ route('propostas.relatorioResumo') }}"
+        <a href="{{ route('propostas.relatorioResumo') }} " target="_blank"
             class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm">
             🖨️ Imprimir Resumo
         </a>

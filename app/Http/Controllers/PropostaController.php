@@ -213,12 +213,14 @@ class PropostaController extends Controller
 
         // Veículo usado (exemplo com 1, mas pode adaptar para mais)
         $veiculoUsado = null;
-        if (!empty($proposta['id_veiculoUsado'])) {
-            $veiculoUsado = Veiculo::find($proposta['id_veiculoUsado1']);
+        if (!empty($proposta['id_veiculo_usado'])) {
+            $veiculoUsado = Veiculo::find($proposta['id_veiculo_usado']);
         }
 
         // Negociações
-        $negociacoes = session('condicoes_pagamento', []); // ou $proposta['negociacoes'] dependendo da estrutura
+        $proposta = session('proposta', []);
+        $negociacoes = $proposta['negociacoes'] ?? [];
+
 
         return view('propostas.relatorio', compact(
             'cliente',
