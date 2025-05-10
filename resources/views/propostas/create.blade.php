@@ -4,7 +4,8 @@
         init() {
             this.$watch('aba', val => sessionStorage.setItem('abaAtiva', val));
         }
-    }" class="max-w-6xl mx-auto bg-white rounded shadow flex flex-col h-full max-h-[calc(100vh-100px)]">
+    }" class="flex flex-col h-[calc(100vh-130px)] overflow-hidden bg-white rounded shadow p-2">
+    
 
         <!-- Título -->
         <div class="flex justify-between items-center p-1 shrink-0">
@@ -55,6 +56,7 @@
             </div>
         </div>
     </div>
+    <br><br>
 
     <!-- Rodapé -->
     <x-rodape>

@@ -112,3 +112,13 @@ html, body {
     }
 
     [x-cloak] { display: none !important; }
+
+    #cabecalho-impressao {
+        display: none;
+    }
+    @media print {
+        #cabecalho-impressao {
+            display: block;
+            margin-bottom: 20px;
+        }
+    }

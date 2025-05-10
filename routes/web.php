@@ -169,6 +169,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/propostas/negociacoes-session', [PropostaController::class, 'salvarNegociacoesSession']);
     //Observações
     Route::post('/propostas/observacoes-session', [PropostaController::class, 'salvarObservacoesSession']);
+    //Resumo
+    Route::get('/propostas/relatorio-resumo', [PropostaController::class, 'relatorioResumo'])->name('propostas.relatorioResumo');
+
 
 
 

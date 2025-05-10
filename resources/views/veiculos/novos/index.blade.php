@@ -1,7 +1,7 @@
 <x-app-layout>
     <!-- VEICULOS NOVOS FILTRO PRINCIPAL-->
     <x-slot name="header">
-        <div class="flex gap-1">
+        <div class="flex gap-1 p-2">
             <!-- Carrossel de Veículos -->
             <div class="relative bg-white shadow-lg rounded-lg overflow-hidden w-2/3"
                 title="Clique sobre o veículo para filtrar todos os modelos de sua Família.">
@@ -178,7 +178,7 @@
 
     <div>
         <!-- Tabelas dos dados -->
-        <div class="w-full max-w-full">
+        <div class="w-full max-w-full p-2">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">

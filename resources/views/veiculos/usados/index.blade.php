@@ -1,7 +1,7 @@
 <x-app-layout>
     <!-- VEICULOS USADOS FILTRO PRINCIPAL-->
     <x-slot name="header">
-        <div class="flex gap-1">
+        <div class="flex gap-1 p-2">
             <!-- Card para Pesquisas Combinadas -->
             <div class="relative bg-white shadow-lg rounded-lg overflow-hidden w-2/3 p-1 px-1 py-1">
                 <div class="grid grid-cols-3 gap-1 px-1 py-1 items-center content-center h-full">
@@ -178,7 +178,7 @@
 
     <div>
         <!-- Tabela de dados -->
-        <div class="w-full max-w-full">
+        <div class="w-full max-w-full p-2">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">

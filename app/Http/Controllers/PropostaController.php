@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Veiculo;
 use App\Models\Proposta;
 use Illuminate\Http\Request;
@@ -192,5 +193,41 @@ class PropostaController extends Controller
 
         return redirect()->route('veiculos.novos.index')->with('info', 'Proposta cancelada com sucesso!');
     }
+
+    public function relatorioResumo()
+    {
+        // Recupera dados da sessão da proposta
+        $proposta = session('proposta', []);
+
+        // Cliente
+        $cliente = null;
+        if (!empty($proposta['id_cliente'])) {
+            $cliente = Cliente::find($proposta['id_cliente']);
+        }
+
+        // Veículo novo
+        $veiculo = null;
+        if (!empty($proposta['id_veiculoNovo'])) {
+            $veiculo = Veiculo::find($proposta['id_veiculoNovo']);
+        }
+
+        // Veículo usado (exemplo com 1, mas pode adaptar para mais)
+        $veiculoUsado = null;
+        if (!empty($proposta['id_veiculoUsado'])) {
+            $veiculoUsado = Veiculo::find($proposta['id_veiculoUsado1']);
+        }
+
+        // Negociações
+        $negociacoes = session('condicoes_pagamento', []); // ou $proposta['negociacoes'] dependendo da estrutura
+
+        return view('propostas.relatorio', compact(
+            'cliente',
+            'veiculo',
+            'veiculoUsado',
+            'proposta',
+            'negociacoes'
+        ));
+    }
+
 
 }
