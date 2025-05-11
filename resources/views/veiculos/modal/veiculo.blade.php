@@ -218,10 +218,10 @@
                             body: JSON.stringify({ id_veiculoNovo: veiculo.id })
                         }).then(response => {
                             if (response.ok) {
-                                window.location.href = '/propostas/create';
+                                window.location.href = '/propostas/create?aba=veiculo';
                             } else {
                                 alert('Erro ao iniciar proposta! Ja existe uma proposta en andamento');
-                                window.location.href = '/propostas/create';
+                                window.location.href = '/propostas/create?aba=veiculo';
                             }
                         });
                     } else {

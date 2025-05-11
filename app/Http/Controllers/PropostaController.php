@@ -13,26 +13,27 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
+
 class PropostaController extends Controller
 {
     //lista as propostas
     public function index(Request $request)
     {
         $busca = $request->input('busca');
-    
+
         $propostas = Proposta::with(['cliente', 'veiculoNovo', 'usuario', 'negociacoes'])
             ->when($busca, function ($query, $busca) {
                 $query->whereHas('cliente', function ($q) use ($busca) {
                     $q->where('nome', 'like', "%{$busca}%");
                 })
-                ->orWhere('status', 'like', "%{$busca}%")
-                ->orWhereHas('veiculoNovo', function ($q) use ($busca) {
-                    $q->where('modelo', 'like', "%{$busca}%");
-                });
+                    ->orWhere('status', 'like', "%{$busca}%")
+                    ->orWhereHas('veiculoNovo', function ($q) use ($busca) {
+                        $q->where('modelo', 'like', "%{$busca}%");
+                    });
             })
             ->orderByDesc('data_proposta')
             ->paginate(10);
-    
+
         return view('propostas.index', compact('propostas'));
     }
 
@@ -50,17 +51,84 @@ class PropostaController extends Controller
     //Aqui é feita a inclusao de um veiculo vindo do estoque de novos
     public function iniciar(Request $request)
     {
-        $idVeiculoNovo = $request->input('id_veiculoNovo'); // Pega o dado certo
+        // Limpa sessão antiga
+        Session::forget('proposta');
+
+        // Pega o dado certo
+        $idVeiculoNovo = $request->input('id_veiculoNovo');
         $veiculo = Veiculo::find($idVeiculoNovo);
 
+        //Se não existe
         if (!$veiculo) {
             return response()->json(['success' => false, 'message' => 'Veículo não encontrado'], 404);
         }
 
+        //Cria session com novos dados
         session()->put('proposta.id_veiculoNovo', $veiculo->id);
         session()->put('proposta.valor_veiculoNovo', $veiculo->vlr_tabela);
+
+        //Retorna
         return response()->json(['success' => true]);
     }
+    //Cria uma nova com session limpa
+    public function limparECreate(Request $request)
+    {
+        Session::forget('proposta');
+        return redirect()->route('propostas.create', ['aba' => $request->input('aba', 'veiculo')]);
+    }
+
+    //Monta a session e abre a proposta para edição
+    public function carregarParaEditar($id)
+    {
+        $this->montarSessaoDaProposta($id);
+
+        return redirect()->route('propostas.create', ['aba' => 'resumo']);
+    }
+
+    //Monta a session e abre a proposta para visualização
+    public function carregarParaVisualizar($id)
+    {
+        $this->montarSessaoDaProposta($id);
+
+        return redirect()->route('propostas.relatorioResumo');
+    }
+
+
+    //Monta a session com a id da proposta
+    private function montarSessaoDaProposta($id)
+    {
+        $proposta = Proposta::with(['negociacoes'])->findOrFail($id);
+
+        // Monta a estrutura da sessão
+        $sessao = [
+            'id' => $proposta->id,
+            'id_veiculoNovo' => $proposta->id_veiculoNovo,
+            'valor_veiculoNovo' => number_format(optional($proposta->veiculoNovo)->preco ?? 0, 2, '.', ''),
+            'id_cliente' => $proposta->id_cliente,
+            'id_veiculo_usado' => $proposta->id_veiculoUsado1, // adaptável para outros usados
+            'valor_veiculoUsado' => number_format(optional($proposta->veiculoUsado1)->preco ?? 0, 2, '.', ''),
+            'observacao_nota' => $proposta->observacao_nota,
+            'observacao_interna' => $proposta->observacao_interna,
+            'negociacoes' => [],
+        ];
+
+        // Preenche as negociações
+        foreach ($proposta->negociacoes as $n) {
+            $sessao['negociacoes'][] = [
+                'condicao' => $n->id_cond_pagamento,
+                'condicao_texto' => $n->descricao_pagamento,
+                'valor' => floatval($n->valor),
+                'vencimento' => $n->data_vencimento,
+                // 'fixo' => $n->descricao_pagamento === 'Usado(s)' // regra usada por você
+            ];
+        }
+
+        // Salva a sessão
+        Session::put('proposta', $sessao);
+    }
+
+
+
 
     //Remove o veiculo novo na Session
     public function removerVeiculoNovo(Request $request)
@@ -203,7 +271,7 @@ class PropostaController extends Controller
                 'observacao_nota' => $sessao['observacao_nota'] ?? null,
                 'observacao_interna' => $sessao['observacao_interna'] ?? null,
             ]);
-    
+
             // 2. Cria as negociações (se houver)
             foreach ($sessao['negociacoes'] ?? [] as $negociacao) {
                 Negociacao::create([
@@ -214,21 +282,21 @@ class PropostaController extends Controller
                     'data_vencimento' => $negociacao['vencimento'],
                 ]);
             }
-    
+
             DB::commit();
-    
+
             // Limpar a sessão depois de gravar
             Session::forget('proposta');
-    
+
             return redirect()->route('propostas.index')->with('success', '✅ Proposta salva com sucesso!');
-    
+
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors('Erro ao salvar proposta: ' . $e->getMessage());
         }
     }
 
-    
+
 
     //Cancelar a Proposta
     public function cancelar()

@@ -1,10 +1,35 @@
 <x-app-layout>
-    <div x-data="{ 
-        aba: sessionStorage.getItem('abaAtiva') || '{{ session('aba', 'veiculo') }}',
+    <div x-data="{
+        aba: 'veiculo', // valor inicial padrão
         init() {
+            // Tenta pegar da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const abaUrl = urlParams.get('aba');
+    
+            if (abaUrl) {
+                this.aba = abaUrl;
+                sessionStorage.setItem('abaAtiva', abaUrl);
+            } else if ('{{ session('aba') }}') {
+                this.aba = '{{ session('aba') }}';
+                sessionStorage.setItem('abaAtiva', '{{ session('aba') }}');
+            } else {
+                const abaSalva = sessionStorage.getItem('abaAtiva');
+                if (abaSalva) this.aba = abaSalva;
+            }
+    
+            // Observa mudanças e atualiza o storage
             this.$watch('aba', val => sessionStorage.setItem('abaAtiva', val));
         }
     }" class="flex flex-col overflow-hidden bg-white rounded shadow p-2">
+
+        {{-- Fonte | Prioridade | Exemplo de uso |
+        | ---------------- | ---------- | ---------------------------------------------------------- |
+        | URL (`?aba=...`) | 1º | `/propostas/create?aba=resumo` |
+        | `session('aba')` | 2º | `return redirect()->route(...)->with('aba', 'negociacao')` |
+        | `sessionStorage` | 3º | Usado se nenhum dos dois anteriores existir |
+        | `'veiculo'` | fallback | Valor padrão se nada for encontrado |
+        | ---------------- | ---------- | ---------------------------------------------------------- | --}}
+
 
         <!-- Título -->
         <div class="flex justify-between items-center p-1 shrink-0">
@@ -15,21 +40,20 @@
         <!-- Abas -->
         <div class="flex bg-gray-100 rounded-md shadow-sm mb-2 font-bold text-sm shrink-0 px-6">
             @foreach ([
-                'veiculo' => '1. Veículo Novo|fas fa-car',
-                'cliente' => '2. Cliente|fas fa-user',
-                'usado' => '3. Veículo Usado|fas fa-car-side',
-                'negociacao' => '4. Negociação|fas fa-handshake',
-                'observacoes' => '5. Observações|fas fa-sticky-note',
-                'resumo' => '6. Resumo|fas fa-clipboard-check'
+            'veiculo' => '1. Veículo Novo|fas fa-car',
+            'cliente' => '2. Cliente|fas fa-user',
+            'usado' => '3. Veículo Usado|fas fa-car-side',
+            'negociacao' => '4. Negociação|fas fa-handshake',
+            'observacoes' => '5. Observações|fas fa-sticky-note',
+            'resumo' => '6. Resumo|fas fa-clipboard-check'
             ] as $key => $labelIcon)
-                @php [$label, $icon] = explode('|', $labelIcon); @endphp
-                <button @click="aba = '{{ $key }}'" 
-                    :class="aba === '{{ $key }}'
+            @php [$label, $icon] = explode('|', $labelIcon); @endphp
+            <button @click="aba = '{{ $key }}'" :class="aba === '{{ $key }}'
                         ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
                         : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
-                    class="flex-1 px-4 py-2 transition-all duration-200">
-                    <i class="{{ $icon }} mr-1"></i> {{ $label }}
-                </button>
+                class="flex-1 px-4 py-2 transition-all duration-200">
+                <i class="{{ $icon }} mr-1"></i> {{ $label }}
+            </button>
             @endforeach
         </div>
 

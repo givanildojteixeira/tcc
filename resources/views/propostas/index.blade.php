@@ -37,10 +37,10 @@
 
             <!-- Botão Novo -->
             <div class="text-right">
-                <a href="{{ route('propostas.create') }}"
+                <a href="{{ route('propostas.limparECreate', ['aba' => 'veiculo']) }}"
                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
                     + Nova Proposta
-                </a>
+                 </a>
             </div>
         </div>
 
@@ -75,15 +75,17 @@
                                 <td class="px-4 py-2">{{ \Carbon\Carbon::parse($proposta->data_proposta)->format('d/m/Y') }}</td>
                                 <td class="px-4 py-2">
                                     <div class="flex gap-2">
-                                        <a href="{{ route('propostas.relatorioResumo', $proposta->id) }}"
-                                            class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm">
-                                            Detalhes
-                                        </a>
 
-                                        <a href="{{ route('propostas.create', $proposta->id) }}"
+                                        <a href="{{ route('propostas.visualizar', $proposta->id) }}"  target="_blank"
+                                            class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                                            Visualizar
+                                         </a>
+                                         
+                                         <a href="{{ route('propostas.editar', $proposta->id) }}"
                                             class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 text-sm">
                                             Editar
-                                        </a>
+                                         </a>
+                                         
 
                                     </div>
                                 </td>

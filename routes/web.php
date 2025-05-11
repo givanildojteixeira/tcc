@@ -147,6 +147,11 @@ Route::middleware('auth')->group(function () {
     //Propostas
     Route::get('/propostas', [PropostaController::class, 'index'])->name('propostas.index');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
+    Route::get('/propostas/nova', [PropostaController::class, 'limparECreate'])->name('propostas.limparECreate');
+    Route::get('/propostas/editar/{id}', [PropostaController::class, 'carregarParaEditar'])->name('propostas.editar');
+    Route::get('/propostas/visualizar/{id}', [PropostaController::class, 'carregarParaVisualizar'])->name('propostas.visualizar');
+
+
     Route::post('/propostas/salvar', [PropostaController::class, 'store'])->name('propostas.store');
 
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
