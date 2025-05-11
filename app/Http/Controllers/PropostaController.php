@@ -15,9 +15,30 @@ use Illuminate\Support\Facades\Session;
 
 class PropostaController extends Controller
 {
+    //lista as propostas
+    public function index(Request $request)
+    {
+        $busca = $request->input('busca');
+    
+        $propostas = Proposta::with(['cliente', 'veiculoNovo', 'usuario', 'negociacoes'])
+            ->when($busca, function ($query, $busca) {
+                $query->whereHas('cliente', function ($q) use ($busca) {
+                    $q->where('nome', 'like', "%{$busca}%");
+                })
+                ->orWhere('status', 'like', "%{$busca}%")
+                ->orWhereHas('veiculoNovo', function ($q) use ($busca) {
+                    $q->where('modelo', 'like', "%{$busca}%");
+                });
+            })
+            ->orderByDesc('data_proposta')
+            ->paginate(10);
+    
+        return view('propostas.index', compact('propostas'));
+    }
 
 
-    //Aqui inicia a view de propostas
+
+    //Aqui inicia a view de propostas para criação de uma nova
     public function create()
     {
         $proposta = session('proposta', []);
@@ -162,10 +183,6 @@ class PropostaController extends Controller
     // 6. Finalizar proposta (Salvar no Banco)
     public function store(Request $request)
     {
-        
-        // dd($request->all()); // Apenas para testar — interrompe aqui e mostra a estrutura
-        // dd($sessao);
-        
         $sessao = session('proposta');
 
         if (!$sessao) {
@@ -186,7 +203,6 @@ class PropostaController extends Controller
                 'observacao_nota' => $sessao['observacao_nota'] ?? null,
                 'observacao_interna' => $sessao['observacao_interna'] ?? null,
             ]);
-            // dd($proposta);
     
             // 2. Cria as negociações (se houver)
             foreach ($sessao['negociacoes'] ?? [] as $negociacao) {

@@ -64,9 +64,9 @@ class Proposta extends Model
     }
 
     public function negociacoes()
-{
-    return $this->hasMany(Negociacao::class, 'id_proposta');
-}
+    {
+        return $this->hasMany(Negociacao::class, 'id_proposta');
+    }
 
 
     // Usuário que criou a proposta

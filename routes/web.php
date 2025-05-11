@@ -144,9 +144,8 @@ Route::middleware('auth')->group(function () {
     //Opcionais
     Route::resource('opcionais', OpcionaisController::class);
 
-
-
     //Propostas
+    Route::get('/propostas', [PropostaController::class, 'index'])->name('propostas.index');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
     Route::post('/propostas/salvar', [PropostaController::class, 'store'])->name('propostas.store');
 

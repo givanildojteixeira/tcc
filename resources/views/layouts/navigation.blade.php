@@ -32,8 +32,8 @@
                         <i class="fas fa-car-crash mr-2"></i> Usados
                     </x-nav-link>
 
-                    {{-- Propostas --}}
-                    <x-nav-link :href="route('propostas.create')" :active="request()->routeIs('propostas.create')">
+                    {{-- Propostas    --}}
+                    <x-nav-link :href="route('propostas.index')" :active="request()->routeIs('propostas.index')">   
                         <i class="fas fa-file-signature mr-2"></i> Propostas
                     </x-nav-link>
 
