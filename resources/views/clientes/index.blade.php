@@ -1,6 +1,6 @@
 <x-app-layout>
     <div x-data="{
-        showModal: false,
+        showModalCliente: false,
         editModal: false,
         editData: {
             id: null,
@@ -56,7 +56,7 @@
 
             <!-- Botão Novo -->
             <div class="text-right">
-                <button @click="showModal = true"
+                <button @click="showModalCliente = true"
                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
                     + Novo Cliente
                 </button>
@@ -120,10 +120,10 @@
                 </div>
 
                 <!-- Modal Novo Cliente -->
-                <div x-show="showModal"
+                <div x-show="showModalCliente"
                     class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
                     style="display: none;">
-                    <div @click.away="showModal = false" class="bg-white p-6 rounded-lg w-full max-w-3xl shadow-lg">
+                    <div @click.away="showModalCliente = false" class="bg-white p-6 rounded-lg w-full max-w-3xl shadow-lg">
                         @include('clientes.partials.form-create')
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                     class="fixed inset-0 z-50 bg-black bg-opacity-50 flex  justify-center"
                     style="display: none;">
                     <div @click.away="editModal = false"
-                        class="bg-white p-6 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-lg items-start pt-[100px]">
+                        {{-- class="bg-white p-6 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-lg items-start"> --}}
                         @include('clientes.partials.form-edit')
                     </div>
                 </div>

@@ -13,10 +13,10 @@
                 class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                 Localizar Cliente
             </button>
-            <button type="button" @click="buscarClientes"
-            class="bg-yellow-400 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
-            Cadastrar Cliente
-        </button>
+            <button type="button" @click="showModalCliente = true"
+                class="bg-yellow-400 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+                Cadastrar Cliente
+            </button>
         </div>
     </form>
 
@@ -24,7 +24,7 @@
     <template x-if="clientes.length > 0">
         <div class="border border-gray-300 rounded-md p-4 bg-gray-50 mb-4">
             <h3 class="text-green-700 font-semibold mb-2">Clientes Encontrados:</h3>
-    
+
             <!-- Scroll controlado somente na lista -->
             <div class="max-h-[300px] overflow-y-auto pr-2">
                 <ul class="space-y-1 text-sm text-gray-800">
@@ -43,14 +43,13 @@
             </div>
         </div>
     </template>
-    
+
     <!-- Cliente selecionado -->
     <template x-if="clienteSelecionado">
         <div class="border border-green-400 bg-green-50 p-1 rounded-md shadow-sm">
             <div class="flex justify-between items-center mb-2">
                 <h3 class="text-lg font-semibold text-green-700">Cliente Selecionado:</h3>
-                <button type="button"
-                    @click="removerCliente"
+                <button type="button" @click="removerCliente"
                     class="text-red-600 text-sm hover:underline hover:text-red-800">
                     ❌ Remover
                 </button>
@@ -72,4 +71,12 @@
             <input type="hidden" name="id_cliente" :value="clienteSelecionado.id">
         </div>
     </template>
+    <!-- Modal de Cadastro de Cliente -->
+    <div x-show="showModalCliente" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
+        style="display: none;">
+        <div @click.away="showModalCliente = false" class="bg-white p-6 rounded-lg w-full max-w-3xl shadow-lg">
+            @include('clientes.partials.form-create')
+        </div>
+    </div>
+
 </div>

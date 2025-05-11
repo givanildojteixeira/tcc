@@ -27,6 +27,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/js/splide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+
 </head>
 
 <body class="font-sans antialiased overflow-hidden">
@@ -68,7 +69,10 @@
     @endif
 
     <!-- Scripts auxiliares -->
+    <script src="https://unpkg.com/imask"></script>     {{-- Mascaramento de campos --}}
     <script>
+
+
         // Atalho de carregamento
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('a:not([target="_blank"])');

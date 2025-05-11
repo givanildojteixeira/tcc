@@ -1,6 +1,7 @@
 <x-app-layout>
     <div x-data="{
         aba: 'veiculo', // valor inicial padrão
+        showModalCliente: false,
         init() {
             // Tenta pegar da URL
             const urlParams = new URLSearchParams(window.location.search);
@@ -506,6 +507,7 @@
                 veiculo: {},
                 veiculoUsado: {},
                 valorProposta: 0,
+                valorAcrescimo: 0,
                 valorDesconto: 0,
                 custoItem: 0,
                 valorBonus: 0,
@@ -540,21 +542,38 @@
                 },
 
                 carregaResumoFinanceiro() {
-                    // Busca custo, bonus e desconto no banco via ID do veículo
+                    // Valores padrão
+                    this.valorProposta = parseFloat(this.proposta.valor_veiculoNovo || 0);
+                    this.custoItem = 0;
+                    this.valorBonus = 0;
+                    this.valorDesconto = 0;
+                    this.valorAcrescimo = 0;
+
+                    // Se houver ID de veículo, busca valores fixos no banco
                     if (this.proposta.id_veiculoNovo) {
                         fetch(`/api/veiculos/${this.proposta.id_veiculoNovo}`)
                             .then(res => res.json())
                             .then(data => {
-                                this.valorProposta = parseFloat(data.vlr_tabela || 0);
-                                this.custoItem = parseFloat(data.vlr_nota || 0);  // <- garanta que esse campo existe
-                                this.valorBonus = parseFloat(data.vlr_bonus || 0);     // <- idem
-                                this.valorDesconto = parseFloat(data.vlr_desconto || 0); // <- se houver
+                                this.custoItem = parseFloat(data.vlr_nota || 0);
+                                this.valorBonus = parseFloat(data.vlr_bonus || 0);
                             });
                     }
 
-                    // Valor do(s) usado(s) da proposta
+                    // Soma de "Desconto(-)" e "Acréscimo(+)"
+                    if (this.proposta.negociacoes) {
+                        this.valorDesconto = this.proposta.negociacoes
+                            .filter(n => n.condicao_texto === 'Desconto(-)')
+                            .reduce((total, n) => total + parseFloat(n.valor || 0), 0);
+
+                        this.valorAcrescimo = this.proposta.negociacoes
+                            .filter(n => n.condicao_texto === 'Acréscimo(+)')
+                            .reduce((total, n) => total + parseFloat(n.valor || 0), 0);
+                    }
+
+                    // Soma valor do usado
                     this.valorUsado = parseFloat(this.proposta.valor_veiculoUsado || 0);
                 },
+
 
                 get lucroEstimado() {
                     return this.valorProposta - this.valorDesconto - this.valorBonus - this.custoItem;

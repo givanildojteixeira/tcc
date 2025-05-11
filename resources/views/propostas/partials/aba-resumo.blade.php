@@ -128,18 +128,13 @@
                 <legend class="text-green-700 font-semibold text-sm px-2 leading-tight">Resumo Financeiro</legend>
 
                 <div class="text-sm text-gray-800 space-y-1">
-                    <div class="flex justify-between"><span>Valor da Proposta:</span> <span
-                            x-text="formatarValor(valorProposta)"></span></div>
-                    <div class="flex justify-between"><span>Desconto:</span> <span
-                            x-text="formatarValor(valorDesconto)"></span></div>
-                    <div class="flex justify-between"><span>Custo do Item:</span> <span
-                            x-text="formatarValor(custoItem)"></span></div>
-                    <div class="flex justify-between"><span>Bônus:</span> <span
-                            x-text="formatarValor(valorBonus)"></span></div>
-                    <div class="flex justify-between"><span>Usado(s):</span> <span
-                            x-text="formatarValor(valorUsado)"></span></div>
-                    <div class="flex justify-between font-semibold text-green-700"><span>Lucro Estimado:</span>
-                        <span x-text="formatarValor(lucroEstimado)"></span>
+                    <div class="flex justify-between"><span>Valor da Veículo:</span> <span x-text="formatarValor(valorProposta)"></span></div>
+                    <div class="flex justify-between"><span>Acréscimo:</span> <span x-text="formatarValor(valorAcrescimo)"></span></div>
+                    <div class="flex justify-between"><span>Desconto:</span> <span x-text="formatarValor(valorDesconto)"></span></div>
+                    <div class="flex justify-between"><span>Custo do Item:</span> <span x-text="formatarValor(custoItem)"></span></div>
+                    <div class="flex justify-between"><span>Bônus:</span> <span x-text="formatarValor(valorBonus)"></span></div>
+                    <div class="flex justify-between"><span>Usado(s):</span> <span x-text="formatarValor(valorUsado)"></span></div>
+                    <div class="flex justify-between font-semibold text-green-700"><span>Lucro Bruto:</span>          <span x-text="formatarValor(lucroEstimado)"></span>
                     </div>
                 </div>
             </fieldset>
@@ -164,7 +159,6 @@
             </div>
         </fieldset>
     </div>
-
 
     <div class="flex justify-center items-center gap-4 mt-6">
         <!-- Botão Atualizar Resumo -->
