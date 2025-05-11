@@ -1,8 +1,14 @@
 <div id="area-impressao" class="px-6 print:px-0 print:max-h-full print:overflow-visible max-h-[85vh] overflow-y-auto">
-    <!-- Cabeçalho -->
-    <div class="text-center border-b pb-4 mb-4">
-        <h1 class="text-2xl font-bold">Resumo da Proposta de Venda</h1>
-        <p class="text-sm text-gray-500">Gerado em {{ now()->format('d/m/Y H:i') }}</p>
+
+    {{-- Cabeçalho com logo e título --}}
+    <div class="flex items-center justify-between mb-6 border-b pb-4">
+        <div class="flex items-center space-x-4">
+            <img src="/images/guara.png" alt="Logo" class="w-20 h-12">
+            <div>
+                <h1 class="text-2xl font-bold">Simulação da Proposta de Venda</h1>
+                <p class="text-sm text-gray-500">Gerado em {{ now()->format('d/m/Y H:i') }}</p>
+            </div>
+        </div>
     </div>
 
     <!-- Cliente -->
@@ -10,9 +16,12 @@
     <fieldset class="border border-green-400 bg-green-50 p-2 rounded-md shadow-sm mb-4">
         <legend class="text-gray-700 text-sm font-medium px-2">Cliente na proposta</legend>
         <ul class="text-sm text-gray-800">
-            <li><strong>Nome:</strong> {{ $cliente->nome }} <strong class="ml-2">CPF/CNPJ:</strong> {{ $cliente->cpf_cnpj }}</li>
-            <li><strong>Email:</strong> {{ $cliente->email ?? '-' }} <strong class="ml-2">Telefone:</strong> {{ $cliente->celular ?? '-' }}</li>
-            <li><strong>Endereço:</strong> {{ $cliente->endereco ?? '-' }}, {{ $cliente->bairro ?? '-' }}, {{ $cliente->cidade ?? '-' }}/{{ $cliente->uf ?? '-' }}</li>
+            <li><strong>Nome:</strong> {{ $cliente->nome }} <strong class="ml-2">CPF/CNPJ:</strong> {{
+                $cliente->cpf_cnpj }}</li>
+            <li><strong>Email:</strong> {{ $cliente->email ?? '-' }} <strong class="ml-2">Telefone:</strong> {{
+                $cliente->celular ?? '-' }}</li>
+            <li><strong>Endereço:</strong> {{ $cliente->endereco ?? '-' }}, {{ $cliente->bairro ?? '-' }}, {{
+                $cliente->cidade ?? '-' }}/{{ $cliente->uf ?? '-' }}</li>
         </ul>
     </fieldset>
     @endif
@@ -22,7 +31,8 @@
     <fieldset class="border border-green-400 bg-green-50 p-2 rounded-md shadow-sm mb-4">
         <legend class="text-gray-700 text-sm font-medium px-2">Veículo novo incluso na proposta</legend>
         <div class="grid grid-cols-3 text-sm text-gray-800">
-            <div><strong>Marca:</strong> {{ $veiculo->marca }} - {{ $veiculo->desc_veiculo }} - {{ $veiculo->motor }}</div>
+            <div><strong>Marca:</strong> {{ $veiculo->marca }} - {{ $veiculo->desc_veiculo }} - {{ $veiculo->motor }}
+            </div>
             <div><strong>Modelo:</strong> {{ $veiculo->modelo_fab }}</div>
             <div><strong>Opcional:</strong> {{ $veiculo->cod_opcional }}</div>
             <div><strong>Chassi:</strong> {{ $veiculo->chassi }}</div>
@@ -40,7 +50,8 @@
     <fieldset class="border border-green-400 bg-green-50 p-2 rounded-md shadow-sm mb-4">
         <legend class="text-gray-700 text-sm font-medium px-2">Veículo Usado</legend>
         <div class="grid grid-cols-3 text-sm text-gray-800">
-            <div><strong>Marca:</strong> {{ $veiculoUsado->marca }} - {{ $veiculoUsado->desc_veiculo }} - {{ $veiculoUsado->motor }}</div>
+            <div><strong>Marca:</strong> {{ $veiculoUsado->marca }} - {{ $veiculoUsado->desc_veiculo }} - {{
+                $veiculoUsado->motor }}</div>
             <div><strong>Modelo:</strong> {{ $veiculoUsado->modelo_fab }}</div>
             <div><strong>Cor:</strong> {{ $veiculoUsado->cor }}</div>
             <div><strong>Chassi:</strong> {{ $veiculoUsado->chassi }}</div>
@@ -71,7 +82,8 @@
                     <tr>
                         <td class="px-2 py-1 border">{{ $n['condicao_texto'] ?? $n['condicao'] }}</td>
                         <td class="px-2 py-1 border text-right">R$ {{ number_format($n['valor'], 2, ',', '.') }}</td>
-                        <td class="px-2 py-1 border text-center">{{ \Carbon\Carbon::parse($n['vencimento'])->format('d/m/Y') }}</td>
+                        <td class="px-2 py-1 border text-center">{{
+                            \Carbon\Carbon::parse($n['vencimento'])->format('d/m/Y') }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -116,10 +128,10 @@
                     <span>
                         R$
                         {{ number_format(
-                            ($veiculo->vlr_tabela ?? 0)
-                            - ($proposta['vlr_desconto'] ?? 0)
-                            - ($veiculo->vlr_bonus ?? 0)
-                            - ($veiculo->vlr_nota ?? 0), 2, ',', '.') }}
+                        ($veiculo->vlr_tabela ?? 0)
+                        - ($proposta['vlr_desconto'] ?? 0)
+                        - ($veiculo->vlr_bonus ?? 0)
+                        - ($veiculo->vlr_nota ?? 0), 2, ',', '.') }}
                     </span>
                 </div>
             </div>

@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\Veiculo;
 use App\Models\Proposta;
+use App\Models\Negociacao;
 use Illuminate\Http\Request;
 use App\Models\CondicaoPagamento;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class PropostaController extends Controller
 {
@@ -159,34 +162,56 @@ class PropostaController extends Controller
     // 6. Finalizar proposta (Salvar no Banco)
     public function store(Request $request)
     {
+        
+        // dd($request->all()); // Apenas para testar — interrompe aqui e mostra a estrutura
+        // dd($sessao);
+        
         $sessao = session('proposta');
-    
-        $proposta = Proposta::create([
-            'id_cliente' => $sessao['id_cliente'] ?? null,
-            'id_veiculoNovo' => $sessao['id_veiculoNovo'] ?? null,
-            'id_veiculoUsado1' => $sessao['id_veiculo_usado'] ?? null,
-            'id_usuario' => auth()->id(),
-            'data_proposta' => now(),
-            'status' => 'Pendente',
-            'observacao_nota' => $sessao['observacao_nota'] ?? null,
-            'observacao_interna' => $sessao['observacao_interna'] ?? null,
-        ]);
-    
-        // salvar as negociações separadamente se desejar
-        $negociacoes = $sessao['negociacoes'] ?? [];
-        foreach ($negociacoes as $n) {
-            $proposta->negociacoes()->create([
-                'id_cond_pagamento' => $n['condicao'],
-                'valor' => $n['valor'],
-                'data_vencimento' => $n['vencimento']
-            ]);
+
+        if (!$sessao) {
+            return back()->withErrors('Sessão de proposta não encontrada.');
         }
+
+        DB::beginTransaction();
+
+        try {
+            // 1. Cria a proposta
+            $proposta = Proposta::create([
+                'id_cliente' => $sessao['id_cliente'],
+                'id_veiculoNovo' => $sessao['id_veiculoNovo'] ?? null,
+                'id_veiculoUsado1' => $sessao['id_veiculo_usado'] ?? null,
+                'id_usuario' => auth()->id(),
+                'data_proposta' => now(),
+                'status' => 'pendente',
+                'observacao_nota' => $sessao['observacao_nota'] ?? null,
+                'observacao_interna' => $sessao['observacao_interna'] ?? null,
+            ]);
+            // dd($proposta);
     
-        // limpar sessão se desejar
-        session()->forget('proposta');
+            // 2. Cria as negociações (se houver)
+            foreach ($sessao['negociacoes'] ?? [] as $negociacao) {
+                Negociacao::create([
+                    'id_proposta' => $proposta->id,
+                    'id_cond_pagamento' => $negociacao['condicao'],
+                    'descricao_pagamento' => $negociacao['condicao_texto'],
+                    'valor' => $negociacao['valor'],
+                    'data_vencimento' => $negociacao['vencimento'],
+                ]);
+            }
     
-        return redirect()->route('propostas.create')->with('success', '✅ Proposta salva com sucesso!');
+            DB::commit();
+    
+            // Limpar a sessão depois de gravar
+            Session::forget('proposta');
+    
+            return redirect()->route('propostas.index')->with('success', '✅ Proposta salva com sucesso!');
+    
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors('Erro ao salvar proposta: ' . $e->getMessage());
+        }
     }
+
     
 
     //Cancelar a Proposta

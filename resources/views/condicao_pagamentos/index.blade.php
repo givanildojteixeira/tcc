@@ -67,6 +67,7 @@
             </div>
         </div>
         {{-- <div class="mt-4">{{ $condicoes->links() }}</div> --}}
+
     </div>
     <!-- Rodapé -->
     <x-rodape>

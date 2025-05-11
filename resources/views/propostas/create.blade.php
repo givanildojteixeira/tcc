@@ -5,8 +5,6 @@
             this.$watch('aba', val => sessionStorage.setItem('abaAtiva', val));
         }
     }" class="flex flex-col overflow-hidden bg-white rounded shadow p-2">
-    {{-- }" class="flex flex-col h-[calc(100vh-130px)] overflow-hidden bg-white rounded shadow p-2"> --}}
-    
 
         <!-- Título -->
         <div class="flex justify-between items-center p-1 shrink-0">
@@ -339,7 +337,7 @@
                 negociacoes: [],
                 valorBaseProposta: 0,
 
-
+                
                 carregaNegociacao() {
                     const sessao = window.propostaSessao || {};
                     const negociacoesSalvas = window.negociacoesSalvas || [];
@@ -563,6 +561,52 @@
             }));
 
         });
+
+        function exibirAlerta({ titulo = 'Atenção', texto = '', tipo = 'info', tempo = 4000 }) {
+            const cores = {
+                success: 'bg-green-100 text-green-800 border-green-300',
+                error:   'bg-red-100 text-red-800 border-red-300',
+                warning: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+                info:    'bg-blue-100 text-blue-800 border-blue-300',
+            };
+
+            const icones = {
+                success: '<svg class="w-5 h-5 text-green-600" ...>...</svg>',
+                error:   '<svg class="w-5 h-5 text-red-600" ...>...</svg>',
+                warning: '<svg class="w-5 h-5 text-yellow-600" ...>...</svg>',
+                info:    '<svg class="w-5 h-5 text-blue-600" ...>...</svg>',
+            };
+
+            const cor = cores[tipo] || cores.info;
+            const icone = icones[tipo] || icones.info;
+
+            const alerta = document.createElement('div');
+            alerta.className = `flex items-start border-l-4 p-4 rounded shadow-sm ${cor} mb-2`;
+            alerta.innerHTML = `
+                <div class="mr-3">${icone}</div>
+                <div>
+                    <h3 class="font-bold text-sm mb-1">${titulo}</h3>
+                    <p class="text-sm">${texto}</p>
+                </div>
+            `;
+
+            const containerId = 'alertas-dinamicos';
+            let container = document.getElementById(containerId);
+
+            if (!container) {
+                container = document.createElement('div');
+                container.id = containerId;
+                container.className = 'fixed top-4 right-4 w-80 z-50 space-y-2';
+                document.body.appendChild(container);
+            }
+
+            container.appendChild(alerta);
+
+            setTimeout(() => {
+                alerta.remove();
+            }, tempo);
+        }
+
     </script>
 
 

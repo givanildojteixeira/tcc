@@ -1,6 +1,5 @@
 <!-- Esta div será rolável -->
-<div class="h-full overflow-y-auto px-6 py-4 space-y-4"
- x-data="resumoProposta" x-init="
+<div class="h-full overflow-y-auto px-6 py-4 space-y-4" x-data="resumoProposta" x-init="
     carregaVeiculo();
     carregaCliente();
     carregaResumoFinanceiro();
@@ -169,7 +168,6 @@
 
     <div class="flex justify-center items-center gap-4 mt-6">
         <!-- Botão Atualizar Resumo -->
-        <!-- Botão Atualizar Resumo -->
         <button type="button" @click="
                     sessionStorage.setItem('abaAtiva', 'resumo');
                     location.reload();
@@ -181,16 +179,6 @@
             class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm">
             🖨️ Imprimir Resumo
         </a>
-        <!-- Botão Enviar Proposta -->
-        <form method="POST" action="{{ route('propostas.store') }}">
-            @csrf
-            <!-- aqui vão seus dados da aba 'resumo' ou campos ocultos -->
-            
-            <button type="submit" class="bg-blue-700 text-white px-6 py-2 rounded-md hover:bg-blue-800 text-sm font-medium">
-                ✅ Enviar Proposta para Aprovação
-            </button>
-        </form>
-        
 
         <!-- Botão Cancelar Proposta -->
         <form method="POST" action="{{ route('proposta.cancelar') }}"
@@ -201,7 +189,16 @@
                 ❌ Cancelar Proposta
             </button>
         </form>
+
+        <!-- Botão Enviar Proposta -->
+        <form method="POST" action="{{ route('propostas.store') }}">
+            @csrf
+            <!-- aqui vão seus dados da aba 'resumo' ou campos ocultos -->
+
+            <button type="submit"
+                class="bg-blue-700 text-white px-6 py-2 rounded-md hover:bg-blue-800 text-sm font-medium">
+                ✅ Enviar Proposta para Aprovação
+            </button>
+        </form>
     </div>
 </div>
-</div>
-<br>
