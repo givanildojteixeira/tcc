@@ -15,10 +15,10 @@
                             <option value="" {{ empty(session('marca_selecionado')) ? 'selected' : '' }}>Todos
                             </option>
                             @foreach ($marcas as $marca)
-                            <option value="{{ $marca->marca }}" {{ session('marca_selecionado')==$marca->marca ?
-                                'selected' : '' }}>
-                                {{ $marca->marca }}
-                            </option>
+                                <option value="{{ $marca->marca }}"
+                                    {{ session('marca_selecionado') == $marca->marca ? 'selected' : '' }}>
+                                    {{ $marca->marca }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -32,10 +32,10 @@
                             <option value="" {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                            <option value="{{ $veiculo->desc_veiculo }}" {{ session('modelo_selecionado')==$veiculo->
-                                desc_veiculo ? 'selected' : '' }}>
-                                {{ $veiculo->desc_veiculo }}
-                            </option>
+                                <option value="{{ $veiculo->desc_veiculo }}"
+                                    {{ session('modelo_selecionado') == $veiculo->desc_veiculo ? 'selected' : '' }}>
+                                    {{ $veiculo->desc_veiculo }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -48,17 +48,20 @@
                             onchange="atualizarFiltro('combustivel', this.value)">
                             <option value="" {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
-                            <option value="Gasolina" {{ session('combustivel_selecionado')=='Gasolina' ? 'selected' : ''
-                                }}>Gasolina
+                            <option value="Gasolina"
+                                {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : '' }}>Gasolina
                             </option>
-                            <option value="Alcool" {{ session('combustivel_selecionado')=='Alcool' ? 'selected' : '' }}>
+                            <option value="Alcool"
+                                {{ session('combustivel_selecionado') == 'Alcool' ? 'selected' : '' }}>
                                 Álcool</option>
-                            <option value="Flex" {{ session('combustivel_selecionado')=='Flex' ? 'selected' : '' }}>Flex
+                            <option value="Flex" {{ session('combustivel_selecionado') == 'Flex' ? 'selected' : '' }}>
+                                Flex
                             </option>
-                            <option value="Diesel" {{ session('combustivel_selecionado')=='Diesel' ? 'selected' : '' }}>
+                            <option value="Diesel"
+                                {{ session('combustivel_selecionado') == 'Diesel' ? 'selected' : '' }}>
                                 Diesel</option>
-                            <option value="Eletrico" {{ session('combustivel_selecionado')=='Eletrico' ? 'selected' : ''
-                                }}>Elétrico
+                            <option value="Eletrico"
+                                {{ session('combustivel_selecionado') == 'Eletrico' ? 'selected' : '' }}>Elétrico
                             </option>
                         </select>
                     </div>
@@ -72,10 +75,10 @@
                             <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($cores as $cor)
-                            <option value="{{ $cor->cor }}" {{ session('cor_selecionado')==$cor->cor ? 'selected' : ''
-                                }}>
-                                {{ $cor->cor }}
-                            </option>
+                                <option value="{{ $cor->cor }}"
+                                    {{ session('cor_selecionado') == $cor->cor ? 'selected' : '' }}>
+                                    {{ $cor->cor }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -90,10 +93,10 @@
                             <option value="" {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($anos as $ano)
-                            <option value="{{ $ano['Ano_Mod'] }}" {{ session('ano_selecionado')==$ano['Ano_Mod']
-                                ? 'selected' : '' }}>
-                                {{ $ano['Ano_Mod'] }}
-                            </option>
+                                <option value="{{ $ano['Ano_Mod'] }}"
+                                    {{ session('ano_selecionado') == $ano['Ano_Mod'] ? 'selected' : '' }}>
+                                    {{ $ano['Ano_Mod'] }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -107,11 +110,11 @@
                             onchange="atualizarFiltro('portas', this.value)">
                             <option value="" {{ empty(session('portas_selecionado')) ? 'selected' : '' }}>Todos
                             </option>
-                            <option value="2" {{ session('portas_selecionado')=='2' ? 'selected' : '' }}>2
+                            <option value="2" {{ session('portas_selecionado') == '2' ? 'selected' : '' }}>2
                             </option>
-                            <option value="4" {{ session('portas_selecionado')=='4' ? 'selected' : '' }}>4
+                            <option value="4" {{ session('portas_selecionado') == '4' ? 'selected' : '' }}>4
                             </option>
-                            <option value="5" {{ session('portas_selecionado')=='5' ? 'selected' : '' }}>5
+                            <option value="5" {{ session('portas_selecionado') == '5' ? 'selected' : '' }}>5
                             </option>
                             </option>
                         </select>
@@ -205,9 +208,9 @@
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         @acessoGerente
-                                        <th class="sortable p-1 px-1 py-1 text-right" data-column="custo">Custo <i
-                                                class="fas fa-sort text-gray-400 text-xs ml-1"></i>
-                                        </th>
+                                            <th class="sortable p-1 px-1 py-1 text-right" data-column="custo">Custo <i
+                                                    class="fas fa-sort text-gray-400 text-xs ml-1"></i>
+                                            </th>
                                         @endacessoGerente
                                         <th class="sortable p-1 px-1 py-1" data-column="faturado">Estoque<i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
@@ -217,30 +220,32 @@
                                 </thead>
                                 <tbody class="text-sm">
                                     @foreach ($veiculos as $veiculo)
-                                    @php
-                                    if ($veiculo->promocao) {
-                                    $rowColor = 'text-blue-600 font-bold';
-                                    } elseif (!$veiculo->ativo) {
-                                    $rowColor = 'text-gray-400';
-                                    } else {
-                                    if ($veiculo->local == 'Matriz') {
-                                    $rowColor = 'text-black';
-                                    } elseif ($veiculo->local == 'Filial') {
-                                    $rowColor = 'text-yellow-500';
-                                    } elseif ($veiculo->local == 'Consignado') {
-                                    $rowColor = 'text-green-500';
-                                    } else {
-                                    $rowColor = '';
-                                    }
-                                    }
-                                    $descricaoOpcional =
-                                    \App\Models\Opcionais::where('chassi', $veiculo->chassi)->value(
-                                    'descricao',
-                                    ) ?? 'Nenhum opcional cadastrado.';
-                                    @endphp
-                                    <tr id="veiculo-{{ $veiculo->id }}"
-                                        class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}" {{-- evento de clicar
-                                        Veículo Usado --}} @click="
+                                        @php
+                                            if ($veiculo->promocao) {
+                                                $rowColor = 'text-blue-600 font-bold';
+                                            } elseif (!$veiculo->ativo) {
+                                                $rowColor = 'text-gray-400';
+                                            } else {
+                                                if ($veiculo->local == 'Matriz') {
+                                                    $rowColor = 'text-black';
+                                                } elseif ($veiculo->local == 'Filial') {
+                                                    $rowColor = 'text-yellow-500';
+                                                } elseif ($veiculo->local == 'Consignado') {
+                                                    $rowColor = 'text-green-500';
+                                                } else {
+                                                    $rowColor = '';
+                                                }
+                                            }
+                                            $descricaoOpcional =
+                                                \App\Models\Opcionais::where('chassi', $veiculo->chassi)->value(
+                                                    'descricao',
+                                                ) ?? 'Nenhum opcional cadastrado.';
+                                        @endphp
+                                        <tr id="veiculo-{{ $veiculo->id }}"
+                                            class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
+                                            {{-- evento de clicar
+                                        Veículo Usado --}}
+                                            @click="
                                             open = true;
                                             veiculo = {
                                                 id: '{{ $veiculo->id }}',
@@ -261,33 +266,33 @@
                                                 faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}',
                                                 {{-- Essa linha leva a origem para o modal, assim ele saberá como voltar --}}
                                                 origem: 'usados' } ">
-                                        {{-- evento de clicar --}}
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->marca }}</td>
-                                        <td class="p-1 px-1 py-1">
-                                            @if ($veiculo->promocao)
-                                            <span class="ml-1 text-blue-600 font-bold"
-                                                title="Veículo em promoção">🔥</span>
-                                            @endif{{ $veiculo->desc_veiculo }}
-                                        </td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
-                                        <td class="p-1 px-1 py-1 text-center">{{ $veiculo->Ano_Mod }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
-                                        <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
-                                        <td class="p-1 px-1 py-1  text-center">{{ $veiculo->portas }}</td>
-                                        <td class="p-1 px-1 py-1 text-right">
-                                            {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
-                                        </td>
-                                        @acessoGerente
-                                        <td class="p-1 px-1 py-1 text-right">
-                                            {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
-                                        </td>
-                                        @endacessoGerente
-                                        <td class="p-1 px-1 py-1 text-center">
-                                            {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                            dias
-                                        </td>
-                                        <td class="hidden">{{ $veiculo->local }}</td>
-                                    </tr>
+                                            {{-- evento de clicar --}}
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->marca }}</td>
+                                            <td class="p-1 px-1 py-1">
+                                                @if ($veiculo->promocao)
+                                                    <span class="ml-1 text-blue-600 font-bold"
+                                                        title="Veículo em promoção">🔥</span>
+                                                @endif{{ $veiculo->desc_veiculo }}
+                                            </td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
+                                            <td class="p-1 px-1 py-1 text-center">{{ $veiculo->Ano_Mod }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->chassi }}</td>
+                                            <td class="p-1 px-1 py-1">{{ $veiculo->cor }}</td>
+                                            <td class="p-1 px-1 py-1  text-center">{{ $veiculo->portas }}</td>
+                                            <td class="p-1 px-1 py-1 text-right">
+                                                {{ number_format($veiculo->vlr_tabela, 0, ',', '.') }}
+                                            </td>
+                                            @acessoGerente
+                                                <td class="p-1 px-1 py-1 text-right">
+                                                    {{ number_format($veiculo->vlr_nota, 0, ',', '.') }}
+                                                </td>
+                                            @endacessoGerente
+                                            <td class="p-1 px-1 py-1 text-center">
+                                                {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
+                                                dias
+                                            </td>
+                                            <td class="hidden">{{ $veiculo->local }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -323,7 +328,8 @@
         </x-rodape>
 
         <!-- Modal de Ajuda -->
-        <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div id="modalAjuda"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
             <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
 
                 <!-- Ícone de Informação à esquerda -->
@@ -380,37 +386,42 @@
 
         <!-- Scripts -->
         <script>
-            // Atualiza Filtros e redireciona para a rota correta com os filtros aplicados
-            function atualizarFiltro(chave, valor) {
+            // Torna a função global para uso em atributos inline (onchange)
+            window.atualizarFiltro = function(chave, valor) {
                 let params = new URLSearchParams(window.location.search);
-
                 if (valor) {
-                    params.set(chave, valor); // Adiciona ou substitui o filtro
+                    params.set(chave, valor);
                 } else {
-                    params.delete(chave); // Remove o filtro se for vazio
+                    params.delete(chave);
                 }
-
                 window.location.href = "{{ route('veiculos.usados.index') }}?" + params.toString();
+            };
+
+            // Redireciona para limpar todos os filtros
+            function limparFiltros() {
+                window.location.href = "{{ route('veiculos.usados.limparFiltros') }}";
             }
 
-            // Aplica filtro por valor
+            function gerarRelatorio() {
+                const url = new URL(window.location.href);
+                url.searchParams.set('relatorio', '1');
+                window.location.href = url.toString();
+            }
+
             document.addEventListener("DOMContentLoaded", function() {
+                // Filtro por faixa de valor
                 const slider = document.getElementById('slider-preco');
+                const sliderStart = [
+                    {{ session('valor_min', 0) }},
+                    {{ session('valor_max', 1000000) }}
+                ];
 
                 noUiSlider.create(slider, {
-                    start: [{
-                        {
-                            session('valor_min', 0)
-                        }
-                    }, {
-                        {
-                            session('valor_max', 1000000)
-                        }
-                    }],
+                    start: sliderStart,
                     connect: true,
                     step: 1000,
                     range: {
-                        'min': 0000,
+                        'min': 0,
                         'max': 1000000
                     },
                     format: {
@@ -430,156 +441,84 @@
                 window.aplicarFiltroPreco = function() {
                     const valores = slider.noUiSlider.get();
                     const params = new URLSearchParams(window.location.search);
-
                     params.set('valor_min', valores[0]);
                     params.set('valor_max', valores[1]);
-
                     window.location.href = "{{ route('veiculos.usados.index') }}?" + params.toString();
                 };
-            });
 
+                // Ordenação da tabela
+                const headers = document.querySelectorAll('.sortable');
+                let sortDirection = 'asc';
 
-            // Redireciona para a página sem parâmetros de filtro
-            function limparFiltros() {
-                window.location.href = "{{ route('veiculos.usados.limparFiltros') }}";
-            }
+                headers.forEach(header => {
+                    const icon = header.querySelector('i');
+                    icon?.classList.add('fa-sort');
 
-            function gerarRelatorio() {
-                const url = new URL(window.location.href);
+                    header.addEventListener('click', () => {
+                        const column = header.getAttribute('data-column');
+                        sortTable(column, sortDirection);
+                        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
 
-                // Adiciona ou substitui o parâmetro 'relatorio'
-                url.searchParams.set('relatorio', '1');
+                        headers.forEach(h => h.querySelector('i')?.classList.remove('fa-sort-up',
+                            'fa-sort-down'));
+                        headers.forEach(h => h.querySelector('i')?.classList.add('fa-sort'));
 
-                // Redireciona para a nova URL
-                window.location.href = url.toString();
-            }
+                        const currentIcon = header.querySelector('i');
+                        currentIcon.classList.remove('fa-sort');
+                        currentIcon.classList.add(sortDirection === 'asc' ? 'fa-sort-up' :
+                            'fa-sort-down');
 
-
-
-            // Ordenação da tabela ao clicar no cabeçalho
-            document.addEventListener("DOMContentLoaded",
-                function() {
-                    const headers = document.querySelectorAll('.sortable');
-                    let sortDirection = 'asc'; // Direção inicial (ascendente)
-
-                    headers.forEach(header => {
-                        const icon = header.querySelector('i');
-                        if (icon) {
-                            // Inicializa o ícone de ordenação
-                            icon.classList.add('fa-sort');
-                        }
-
-                        header.addEventListener('click', function() {
-                            const column = header.getAttribute('data-column');
-                            sortTable(column, sortDirection);
-
-                            // Alterna a direção de ordenação
-                            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-
-                            // Remove os ícones de todas as colunas
-                            headers.forEach(h => {
-                                const icon = h.querySelector('i');
-                                if (icon) {
-                                    icon.classList.remove('fa-sort-up', 'fa-sort-down');
-                                    icon.classList.add('fa-sort'); // Reseta o ícone para o padrão
-                                }
-                            });
-
-                            // Atualiza o ícone da coluna ordenada
-                            const icon = header.querySelector('i');
-                            if (sortDirection === 'asc') {
-                                icon.classList.remove('fa-sort');
-                                icon.classList.add('fa-sort-up'); // Ícone de ordenação ascendente
-                            } else {
-                                icon.classList.remove('fa-sort');
-                                icon.classList.add('fa-sort-down'); // Ícone de ordenação descendente
-                            }
-
-                            // Realce a coluna que foi ordenada
-                            headers.forEach(h => h.classList.remove('sorted'));
-                            header.classList.add('sorted'); // Adiciona a classe para a coluna ordenada
-                        });
+                        headers.forEach(h => h.classList.remove('sorted'));
+                        header.classList.add('sorted');
                     });
-
-                    function sortTable(column, direction) {
-                        const rows = Array.from(document.querySelectorAll('tbody tr'));
-                        const index = Array.from(headers).findIndex(header => header.getAttribute('data-column') ===
-                            column);
-                        const isNumeric = column === 'pts' || column === 'tabela' || column === 'bonus' || column ===
-                            'custo' || column === 'faturado'; // Defina quais colunas são numéricas
-
-                        rows.sort((rowA, rowB) => {
-                            const cellA = rowA.cells[index].textContent.trim();
-                            const cellB = rowB.cells[index].textContent.trim();
-
-                            let a = isNumeric ? parseFloat(cellA.replace(/[^0-9.-]+/g, "")) : cellA.toLowerCase();
-                            let b = isNumeric ? parseFloat(cellB.replace(/[^0-9.-]+/g, "")) : cellB.toLowerCase();
-
-                            if (a < b) {
-                                return direction === 'asc' ? -1 : 1;
-                            }
-                            if (a > b) {
-                                return direction === 'asc' ? 1 : -1;
-                            }
-                            return 0;
-                        });
-
-                        // Reorganiza as linhas no corpo da tabela
-                        const tbody = document.querySelector('tbody');
-                        rows.forEach(row => tbody.appendChild(row));
-                    }
-
-                    // Variável para filtro da legenda (Local)
-                    let activeFilter = null;
-
-
-
-                    // Evento de clique nas legendas
-                    document.querySelectorAll('.filter').forEach(filter => {
-                        filter.addEventListener('click', function() {
-                            const filterValue = this.getAttribute('data-filter');
-
-                            // Se já estiver ativo, desativa o filtro
-                            activeFilter = (activeFilter === filterValue) ? null : filterValue;
-
-                            // Aplica o filtro e atualiza o contador
-                            applyFilter();
-                        });
-                    });
-
-                    // Função para aplicar o filtro e atualizar o contador
-                    function applyFilter() {
-                        const rows = Array.from(document.querySelectorAll('tbody tr'));
-                        let visibleCount = 0; // Contador de veículos visíveis
-
-                        // Se nenhum filtro estiver ativo, exiba todas as linhas
-                        if (!activeFilter) {
-                            rows.forEach(row => {
-                                row.style.display = '';
-                            });
-                            visibleCount = rows.length;
-                        } else {
-                            // Exiba apenas as linhas que correspondem ao filtro ativo
-                            rows.forEach(row => {
-                                const local = row.querySelector('td:nth-child(11)').textContent.trim();
-                                if (local === activeFilter) {
-                                    row.style.display = '';
-                                    visibleCount++;
-                                } else {
-                                    row.style.display = 'none';
-                                }
-                            });
-                        }
-
-                        // Atualizar o contador na interface
-                        const contador = document.getElementById('selectedVehiclesCount');
-                        contador.textContent = activeFilter ?
-                            `Filtro Aplicado [${activeFilter}] - Veículos listados: ${visibleCount}` :
-                            `Veículos Listados: ${visibleCount}`;
-                    }
-
-
-
                 });
+
+                function sortTable(column, direction) {
+                    const rows = Array.from(document.querySelectorAll('tbody tr'));
+                    const index = Array.from(headers).findIndex(header => header.getAttribute('data-column') ===
+                    column);
+                    const isNumeric = ['pts', 'tabela', 'bonus', 'custo', 'faturado'].includes(column);
+
+                    rows.sort((a, b) => {
+                        const cellA = a.cells[index].textContent.trim();
+                        const cellB = b.cells[index].textContent.trim();
+                        const valA = isNumeric ? parseFloat(cellA.replace(/[^\d.-]/g, '')) : cellA
+                    .toLowerCase();
+                        const valB = isNumeric ? parseFloat(cellB.replace(/[^\d.-]/g, '')) : cellB
+                    .toLowerCase();
+                        return direction === 'asc' ? (valA < valB ? -1 : 1) : (valA > valB ? -1 : 1);
+                    });
+
+                    const tbody = document.querySelector('tbody');
+                    rows.forEach(row => tbody.appendChild(row));
+                }
+
+                // Filtro por local
+                let activeFilter = null;
+                document.querySelectorAll('.filter').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const filtro = this.getAttribute('data-filter');
+                        activeFilter = activeFilter === filtro ? null : filtro;
+                        applyFilter();
+                    });
+                });
+
+                function applyFilter() {
+                    const rows = document.querySelectorAll('tbody tr');
+                    let count = 0;
+
+                    rows.forEach(row => {
+                        const local = row.querySelector('td:nth-child(11)').textContent.trim();
+                        const show = !activeFilter || local === activeFilter;
+                        row.style.display = show ? '' : 'none';
+                        if (show) count++;
+                    });
+
+                    document.getElementById('selectedVehiclesCount').textContent =
+                        activeFilter ? `Filtro Aplicado [${activeFilter}] - Veículos listados: ${count}` :
+                        `Veículos Listados: ${count}`;
+                }
+            });
         </script>
+
 </x-app-layout>

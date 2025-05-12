@@ -409,7 +409,6 @@
         </div>
     </div>
 
-    <!-- Scripts -->
 
     <!-- Scripts -->
     <script>
