@@ -147,8 +147,10 @@ Route::middleware('auth')->group(function () {
     //Propostas
     Route::get('/propostas', [PropostaController::class, 'index'])->name('propostas.index');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
+    Route::get('/propostas/aprova', [PropostaController::class, 'aprova'])->name('propostas.aprova');
     Route::get('/propostas/nova', [PropostaController::class, 'limparECreate'])->name('propostas.limparECreate');
     Route::get('/propostas/editar/{id}', [PropostaController::class, 'carregarParaEditar'])->name('propostas.editar');
+    Route::get('/propostas/aprovar/{id}', [PropostaController::class, 'carregarParaAprovar'])->name('propostas.aprovar');
     Route::get('/propostas/visualizar/{id}', [PropostaController::class, 'carregarParaVisualizar'])->name('propostas.visualizar');
 
 

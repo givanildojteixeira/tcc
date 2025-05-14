@@ -12,24 +12,31 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 
 class PropostaController extends Controller
 {
     //lista as propostas
+
     public function index(Request $request)
     {
         $busca = $request->input('busca');
+        $status = $request->input('status');
+        $usuario = Auth::user();
 
         $propostas = Proposta::with(['cliente', 'veiculoNovo', 'usuario', 'negociacoes'])
+            ->when($usuario->level === 'Vendedor', function ($query) use ($usuario) {
+                $query->where('id_usuario', $usuario->id);
+            })
+            ->when($status, function ($query, $status) {
+                $query->where('status', $status);
+            })
             ->when($busca, function ($query, $busca) {
-                $query->whereHas('cliente', function ($q) use ($busca) {
-                    $q->where('nome', 'like', "%{$busca}%");
-                })
-                    ->orWhere('status', 'like', "%{$busca}%")
-                    ->orWhereHas('veiculoNovo', function ($q) use ($busca) {
-                        $q->where('modelo', 'like', "%{$busca}%");
-                    });
+                $query->where(function ($q) use ($busca) {
+                    $q->whereHas('cliente', fn($sub) => $sub->where('nome', 'like', "%{$busca}%"))
+                        ->orWhereHas('veiculoNovo', fn($sub) => $sub->where('desc_veiculo', 'like', "%{$busca}%"));
+                });
             })
             ->orderByDesc('data_proposta')
             ->paginate(10);
@@ -48,6 +55,44 @@ class PropostaController extends Controller
         return view('propostas.create', compact('proposta', 'condicoes'));
     }
 
+        //Aqui inicia a view de propostas para aprovação
+    public function aprova()
+    {
+        // Recupera dados da sessão da proposta
+        $proposta = session('proposta', []);
+
+        // Cliente
+        $cliente = null;
+        if (!empty($proposta['id_cliente'])) {
+            $cliente = Cliente::find($proposta['id_cliente']);
+        }
+
+        // Veículo novo
+        $veiculo = null;
+        if (!empty($proposta['id_veiculoNovo'])) {
+            $veiculo = Veiculo::find($proposta['id_veiculoNovo']);
+        }
+
+        // Veículo usado (exemplo com 1, mas pode adaptar para mais)
+        $veiculoUsado = null;
+        if (!empty($proposta['id_veiculo_usado'])) {
+            $veiculoUsado = Veiculo::find($proposta['id_veiculo_usado']);
+        }
+
+        // Negociações
+        $proposta = session('proposta', []);
+        $negociacoes = $proposta['negociacoes'] ?? [];
+
+
+        return view('propostas.aprova', compact(
+            'cliente',
+            'veiculo',
+            'veiculoUsado',
+            'proposta',
+            'negociacoes'
+        ));
+
+    }
     //Aqui é feita a inclusao de um veiculo vindo do estoque de novos
     public function iniciar(Request $request)
     {
@@ -83,6 +128,13 @@ class PropostaController extends Controller
         $this->montarSessaoDaProposta($id);
 
         return redirect()->route('propostas.create', ['aba' => 'resumo']);
+    }
+    
+    //Monta a session e abre a proposta para Aprovação
+        public function carregarParaAprovar($id)
+    {
+        $this->montarSessaoDaProposta($id);
+        return redirect()->route('propostas.aprova');
     }
 
     //Monta a session e abre a proposta para visualização
