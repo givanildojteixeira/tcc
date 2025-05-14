@@ -30,7 +30,7 @@ class NovosController extends Controller
     {
         $campos = ['desc_veiculo', 'combustivel', 'transmissao', 'Ano_Mod'];
         $dados = [];
-    
+
         foreach ($campos as $campo) {
             $query = Veiculo::select($campo)
                 ->distinct()
@@ -38,30 +38,30 @@ class NovosController extends Controller
                     ['marca', 'GM'],
                     ['novo_usado', 'Novo']
                 ]);
-    
+
             if ($familia && $campo === 'desc_veiculo') {
                 $query->where('desc_veiculo', 'LIKE', "%{$familia}%");
             }
-    
+
             $dados[$campo] = $query->get();
         }
-    
+
         //  Carregar cores (Se tiver familia selecionada pega o relacionamento, caso contrario todas as cores do estoque)
         if ($familia) {
             $familiaModel = Familia::where('descricao', $familia)->first();
-        
+
             if ($familiaModel) {
                 $coresRelacionadas = $familiaModel->cores()->orderBy('cor_desc')->get();
-        
+
                 $cores = $coresRelacionadas->map(function ($cor) use ($familia) {
                     $temEstoque = Veiculo::where([
-                            ['novo_usado', 'Novo'],
-                            ['marca', 'GM'],
-                            ['familia', $familia],
-                            ['cor', $cor->cor_desc]
-                        ])->exists();
-        
-                    return (object)[
+                        ['novo_usado', 'Novo'],
+                        ['marca', 'GM'],
+                        ['familia', $familia],
+                        ['cor', $cor->cor_desc]
+                    ])->exists();
+
+                    return (object) [
                         'cor' => $cor->cor_desc,
                         'disponivel' => $temEstoque
                     ];
@@ -80,23 +80,23 @@ class NovosController extends Controller
                 ->orderBy('cor')
                 ->get()
                 ->map(function ($cor) {
-                    return (object)[
+                    return (object) [
                         'cor' => $cor->cor,
                         'disponivel' => true
                     ];
                 });
         }
-        
-    
+
+
         // Verificação de famílias válidas com imagem + veículo
         $mostrarTodas = Configuracao::where('chave', 'mostrar_todas_familias')->value('valor') === 'true';
         $familias = Familia::pluck('descricao')->toArray();
         $familiasValidas = [];
-    
+
         foreach ($familias as $nomeFamilia) {
             $nomeArquivo = str_replace(' ', '_', $nomeFamilia) . '.jpg';
             $imagemExiste = File::exists(public_path('images/familia/' . $nomeArquivo));
-    
+
             if (
                 $mostrarTodas ||
                 (
@@ -111,7 +111,7 @@ class NovosController extends Controller
                 ];
             }
         }
-    
+
         return [
             'veiculosUnicos' => $dados['desc_veiculo'],
             'cores' => $cores,
@@ -121,9 +121,9 @@ class NovosController extends Controller
             'familiasValidas' => $familiasValidas,
         ];
     }
-    
 
 
+    // Carrega a lista de veiculos para as tabelas 
     public function index(Request $request)
     {
         // Verifica se o filtro de 'familia' foi alterado
@@ -149,13 +149,20 @@ class NovosController extends Controller
         }
 
         // Se não houver alteração na família, mantém os filtros atuais na sessão
-        if ($request->has('familia'))      session(['familia_selecionado'     => $request->familia]);
-        if ($request->has('modelo'))       session(['modelo_selecionado'      => $request->modelo]);
-        if ($request->has('chassi'))       session(['chassi_selecionado'      => $request->chassi]);
-        if ($request->has('combustivel'))  session(['combustivel_selecionado' => $request->combustivel]);
-        if ($request->has('ano'))          session(['ano_selecionado'         => $request->ano]);
-        if ($request->has('transmissao'))  session(['transmissao_selecionado' => $request->transmissao]);
-        if ($request->has('cor'))          session(['cor_selecionado'         => $request->cor]);
+        if ($request->has('familia'))
+            session(['familia_selecionado' => $request->familia]);
+        if ($request->has('modelo'))
+            session(['modelo_selecionado' => $request->modelo]);
+        if ($request->has('chassi'))
+            session(['chassi_selecionado' => $request->chassi]);
+        if ($request->has('combustivel'))
+            session(['combustivel_selecionado' => $request->combustivel]);
+        if ($request->has('ano'))
+            session(['ano_selecionado' => $request->ano]);
+        if ($request->has('transmissao'))
+            session(['transmissao_selecionado' => $request->transmissao]);
+        if ($request->has('cor'))
+            session(['cor_selecionado' => $request->cor]);
 
         // Carrega os dados compartilhados
         $dados = $this->carregarDadosVeiculos($familia);
@@ -165,18 +172,30 @@ class NovosController extends Controller
             ->where('marca', 'GM');
 
         // Aplica os filtros baseados nos parâmetros da URL
-        if ($request->filled('familia'))       $query->where('familia', 'LIKE', '%' . $request->input('familia') . '%');
-        if ($request->filled('modelo'))        $query->where('desc_veiculo', $request->input('modelo'));
-        if ($request->filled('chassi'))        $query->where('chassi', 'LIKE', '%' . $request->input('chassi'));
-        if ($request->filled('cor'))           $query->where('cor', $request->input('cor'));
-        if ($request->filled('ano'))           $query->where('Ano_Mod', $request->input('ano'));
-        if ($request->filled('combustivel'))   $query->where('combustivel', $request->input('combustivel'));
-        if ($request->filled('transmissao'))   $query->where('transmissao', $request->input('transmissao'));
+        if ($request->filled('familia'))
+            $query->where('familia', 'LIKE', '%' . $request->input('familia') . '%');
+        if ($request->filled('modelo'))
+            $query->where('desc_veiculo', $request->input('modelo'));
+        if ($request->filled('chassi'))
+            $query->where('chassi', 'LIKE', '%' . $request->input('chassi'));
+        if ($request->filled('cor'))
+            $query->where('cor', $request->input('cor'));
+        if ($request->filled('ano'))
+            $query->where('Ano_Mod', $request->input('ano'));
+        if ($request->filled('combustivel'))
+            $query->where('combustivel', $request->input('combustivel'));
+        if ($request->filled('transmissao'))
+            $query->where('transmissao', $request->input('transmissao'));
 
         // Executa a consulta
-        $veiculos = $query->orderBy('desc_veiculo')
+        $veiculos = $query
+            ->when(request()->routeIs('veiculos.usados.index'), function ($q) {
+                $q->with('vendedor'); // carrega o relacionamento apenas se for rota de usados
+            })
+            ->orderBy('desc_veiculo')
             ->paginate($this->pg())
-            ->appends(request()->query());  // Mantém os parâmetros de filtro na URL
+            ->appends(request()->query());
+
 
         // Verifica se o usuário quer ver como relatório
         if ($request->filled('relatorio')) {

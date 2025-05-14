@@ -15,7 +15,7 @@ class VeiculoController extends Controller
 
     public function edit($id)
     {
-        $veiculo = Veiculo::findOrFail($id);
+        $veiculo = Veiculo::with('vendedor')->findOrFail($id);
         $familias = Familia::all(); // <- aqui você pega os dados do banco
 
         //relacionamento de familia <> cor
@@ -42,6 +42,8 @@ class VeiculoController extends Controller
     {
         $veiculo = Veiculo::findOrFail($id);
 
+        // dd($request);
+
         // Corrige os valores monetários ANTES da validação
         $request->merge([
             'vlr_tabela' => limparMoeda($request['vlr_tabela']),
@@ -54,6 +56,7 @@ class VeiculoController extends Controller
             'familia' => 'required|string|max:255',
             'desc_veiculo' => 'required|string|max:255',
             'chassi' => 'required|string|max:50|unique:veiculos,chassi,' . $id,
+            'placa' => 'nullable|string|max:8',
             'Ano_Mod' => 'nullable|string|max:20',
             'cor' => 'nullable|string|max:50',
             'motor' => 'nullable|string|max:10',
@@ -81,8 +84,9 @@ class VeiculoController extends Controller
 
         // Corrige campo de família em usados
         if ($veiculo->novo_usado === 'Usado') {
-            $dados['familia'] = 'Seminovos';
+            // $dados['familia'] = $request['marca'];
         }
+
 
         $veiculo->update($dados);
 
@@ -167,15 +171,6 @@ class VeiculoController extends Controller
         return response()->json(['success' => false, 'message' => 'Arquivo não encontrado.'], 404);
     }
 
-
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     public function create(Request $request)
     {

@@ -18,7 +18,11 @@
     <link href="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.css" rel="stylesheet">
 
     <!-- Scripts Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+<link rel="stylesheet" href="{{ asset('build/assets/app-CKLfAw3a.css') }}">
+<script type="module" src="{{ asset('build/assets/app-42Rp8jfk.js') }}"></script>
+
+
 
     <!-- Scripts de terceiros -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -35,9 +39,9 @@
         @include('layouts.navigation')
 
         @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow shrink-0">
-                <div>{{ $header }}</div>
-            </header>
+        <header class="bg-white dark:bg-gray-800 shadow shrink-0">
+            <div>{{ $header }}</div>
+        </header>
         @endif
 
         <!-- SLOT COM SCROLL INTERNO -->
@@ -45,34 +49,32 @@
             {{ $slot }}
         </main>
     </div>
-    
+
     <x-loading /> {{-- carregando..... --}}
 
     {{-- Alertas flutuantes --}}
     @if (session('success') || session('error') || session('warning') || session('info'))
-        @php
-            $type = session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info'));
-            $messages = [
-                'success' => ['bg' => 'bg-green-100', 'text' => 'text-green-800', 'icon' => 'fa-check-circle'],
-                'error' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'icon' => 'fa-times-circle'],
-                'warning' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'icon' => 'fa-exclamation-triangle'],
-                'info' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-800', 'icon' => 'fa-info-circle'],
-            ];
-        @endphp
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
-            class="fixed top-6 right-6 {{ $messages[$type]['bg'] }} {{ $messages[$type]['text'] }} px-4 py-3 rounded-md shadow-lg z-50 transition">
-            <div class="flex items-center gap-2">
-                <i class="fas {{ $messages[$type]['icon'] }}"></i>
-                <span>{{ session($type) }}</span>
-            </div>
+    @php
+    $type = session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info'));
+    $messages = [
+    'success' => ['bg' => 'bg-green-100', 'text' => 'text-green-800', 'icon' => 'fa-check-circle'],
+    'error' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'icon' => 'fa-times-circle'],
+    'warning' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'icon' => 'fa-exclamation-triangle'],
+    'info' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-800', 'icon' => 'fa-info-circle'],
+    ];
+    @endphp
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
+        class="fixed top-6 right-6 {{ $messages[$type]['bg'] }} {{ $messages[$type]['text'] }} px-4 py-3 rounded-md shadow-lg z-50 transition">
+        <div class="flex items-center gap-2">
+            <i class="fas {{ $messages[$type]['icon'] }}"></i>
+            <span>{{ session($type) }}</span>
         </div>
+    </div>
     @endif
 
     <!-- Scripts auxiliares -->
-    <script src="https://unpkg.com/imask"></script>     {{-- Mascaramento de campos --}}
+    <script src="https://unpkg.com/imask"></script> {{-- Mascaramento de campos --}}
     <script>
-
-
         // Atalho de carregamento
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('a:not([target="_blank"])');
@@ -150,6 +152,7 @@
             });
         }
         
-        </script>
+    </script>
 </body>
+
 </html>

@@ -32,4 +32,8 @@ class Veiculo extends Model
         'desc_nota',
         'site',
     ];
+    public function vendedor()
+    {
+        return $this->belongsTo(User::class, 'user_reserva');
+    }
 }

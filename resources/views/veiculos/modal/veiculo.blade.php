@@ -98,8 +98,7 @@
             <!-- Rodapé -->
             <div class="mt-2 pt-1 flex flex-wrap gap-2 justify-center">
                 <x-bt-padrao label="Voltar" color="gray" icon="arrow-left" title="Fechar ou voltar"
-                    @click=" open = false" />
-
+                        @click=" open = false; history.replaceState(null, '', window.location.pathname);" />
                 @acessoAssistente
                 <x-bt-padrao label="Editar" color="blue" icon="pen-to-square" title="Editar veículo"
                     @click=" window.location.href = `/veiculos/${veiculo.id}/edit?from=${veiculo.origem}`" />
