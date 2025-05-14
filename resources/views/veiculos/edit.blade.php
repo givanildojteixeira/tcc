@@ -176,12 +176,12 @@
                                     : '' }}>
                                     Flex
                                 </option>
-                                <option value="Flex" {{ old('combustivel', $veiculo->combustivel) == 'Elétrico' ?
+                                <option value="Elétrico" {{ old('combustivel', $veiculo->combustivel) == 'Elétrico' ?
                                     'selected'
                                     : '' }}>
                                     Elétrico
                                 </option>
-                                <option value="Flex" {{ old('combustivel', $veiculo->combustivel) == 'GNV' ? 'selected'
+                                <option value="GNV" {{ old('combustivel', $veiculo->combustivel) == 'GNV' ? 'selected'
                                     : '' }}>
                                     GNV
                                 </option>

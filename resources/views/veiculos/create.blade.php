@@ -89,7 +89,8 @@
                         <div class="basis-[10%] flex-grow min-w-[100px]">
                             <label class="block text-gray-700 font-medium mb-1">Marca</label>
                             <input required type="text" name="marca" value="{{ old('marca') }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none uppercase"
+                                oninput="this.value = this.value.toUpperCase()" required>
                         </div>
 
                         @endif
@@ -105,7 +106,8 @@
                         <div class="basis-[20%] flex-grow min-w-[180px]">
                             <label class="block text-gray-700 font-medium mb-1">Chassi</label>
                             <input type="text" name="chassi" value="{{ old('chassi') }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-noneuppercase"
+                                oninput="this.value = this.value.toUpperCase()" required >
                         </div>
 
                         @if (request('from') === 'novos')
@@ -178,7 +180,7 @@
                             <label class="block text-gray-700 font-medium mb-1">Combustível</label>
                             <select name="combustivel"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                                @foreach (['Gasolina', 'Etanol', 'Diesel', 'Flex'] as $comb)
+                                @foreach (['Gasolina', 'Etanol', 'Diesel', 'Flex', 'Elétrico', 'GNV'] as $comb)
                                 <option value="{{ $comb }}" {{ old('combustivel')==$comb ? 'selected' : '' }}>{{ $comb
                                     }}
                                 </option>
