@@ -120,8 +120,8 @@
                         @else
                         <div class="basis-[10%] flex-grow min-w-[100px]">
                             <label class="block text-gray-700 font-medium mb-1">Placa</label>
-                            <input required type="text" name="placa" x-model="placa" value="{{ old('placa') }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none uppercase"
+                            <input  id="mask-placa" required type="text" name="placa" x-model="placa" value="{{ old('placa') }}"
+                                class="placa w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none uppercase"
                                 oninput="this.value = this.value.toUpperCase()" required >
                         </div>
 

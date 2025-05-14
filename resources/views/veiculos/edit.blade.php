@@ -110,8 +110,8 @@
                         <!-- Placa -->
                         <div class="basis-[10%] flex-grow min-w-[100px]">
                             <label class="block text-gray-700 font-medium mb-1">Placa</label>
-                            <input type="text" name="placa" value="{{ old('placa', $veiculo->placa) }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none uppercase"
+                            <input id="mask-placa" type="text" name="placa" value="{{ old('placa', $veiculo->placa) }}"
+                                class="placa w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none uppercase"
                                 oninput="this.value = this.value.toUpperCase()" required>
                         </div>
                         @endif
