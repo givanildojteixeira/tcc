@@ -119,7 +119,8 @@
                         <div class="basis-[10%] flex-grow min-w-[100px]">
                             <label class="block text-gray-700 font-medium mb-1">Placa</label>
                             <input required type="text" name="placa" x-model="placa" value="{{ old('placa') }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none uppercase"
+                                oninput="this.value = this.value.toUpperCase()" required >
                         </div>
 
                         @endif
@@ -220,14 +221,20 @@
                                 <option value="transito" {{ old('local')=='transito' ? 'selected' : '' }}>
                                     Trânsito</option>
                                 @else
-                                <option value="matriz" {{ old('local')=='matriz' ? 'selected' : '' }}>Matriz
-                                </option>
-                                <option value="filial" {{ old('local')=='filial' ? 'selected' : '' }}>Filial
-                                </option>
-                                <option value="consignado" {{ old('local')=='consignado' ? 'selected' : '' }}>
-                                    Consignado</option>
+                                    @if (request('origem') === 'propostas')
+                                        <option selected disabled>Avaliação</option>
+                                    @else
+                                        <option value="matriz" {{ old('local')=='matriz' ? 'selected' : '' }}>Matriz</option>
+                                        <option value="filial" {{ old('local')=='filial' ? 'selected' : '' }}>Filial</option>
+                                        <option value="consignado" {{ old('local')=='consignado' ? 'selected' : '' }}>Consignado</option>
+                                    @endif
                                 @endif
+
                             </select>
+                            {{-- forçar o envio --}}
+                            @if (request('origem') === 'propostas')
+                                <input type="hidden" name="local" value="Avaliação">
+                            @endif
                         </div>
 
                     </div>

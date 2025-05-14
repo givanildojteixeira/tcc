@@ -26,7 +26,7 @@
                     <button type="button"
                         @click="window.location.href = '/veiculos/create?from=usados&origem=propostas'"
                         class="w-36 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
-                        ➕ Cadastrar Novo
+                        ➕ Cadastrar Usado
                     </button>
                 </div>
             </div>

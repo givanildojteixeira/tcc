@@ -10,19 +10,21 @@ use App\Models\Opcionais;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
+
+// VIEW PARA CRIAÇÃO DE VEICULO
 class VeiculoController extends Controller
 {
 
     public function edit($id)
     {
         $veiculo = Veiculo::with('vendedor')->findOrFail($id);
+        
         $familias = Familia::all(); // <- aqui você pega os dados do banco
 
         //relacionamento de familia <> cor
         $familia = Familia::where('descricao', $veiculo->familia)->first();
         $coresRelacionadas = $familia ? $familia->cores : collect();
 
-        // dd($veiculo->novo_usado);
 
         if ($veiculo->novo_usado === 'Novo') {
             $opcionalDescricao = Opcionais::where('modelo_fab', $veiculo->modelo_fab)
@@ -32,7 +34,6 @@ class VeiculoController extends Controller
             $opcionalDescricao = Opcionais::where('chassi', $veiculo->chassi)
                 ->value('descricao');
         }
-        // dd($opcionalDescricao);
 
         return view('veiculos.edit', compact('veiculo', 'familias', 'opcionalDescricao', 'coresRelacionadas'));
     }
@@ -68,7 +69,7 @@ class VeiculoController extends Controller
             'vlr_tabela' => 'nullable|numeric',
             'images.*' => 'nullable|image|mimes:jpg,jpeg|max:2048',
             'descricao' => 'nullable|string|max:10000',
-            'local' => 'required|string|in:Matriz,Filial,Transito,Consignado',
+            'local' => 'required|string|in:Matriz,Filial,Transito,Consignado,Avaliação',
         ]);
 
         if ($validator->fails()) {
@@ -211,7 +212,7 @@ class VeiculoController extends Controller
             'vlr_tabela' => 'nullable|numeric',
             'images.*' => 'nullable|image|mimes:jpg|max:2048',
             'descricao' => 'nullable|string|max:10000',
-            'local' => 'required|string|in:matriz,filial,transito,consignado,avaliacao',
+            'local' => 'required|string|in:matriz,filial,transito,consignado,Avaliação',
         ]);
 
         //Caso nao valide volta com o erros ou

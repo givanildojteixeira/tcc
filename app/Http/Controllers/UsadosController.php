@@ -77,7 +77,9 @@ class UsadosController extends Controller
         $dados = $this->carregarDadosVeiculos();
 
         // Inicia a query
-        $query = Veiculo::where('novo_usado', 'Usado');
+        $query = Veiculo::where('novo_usado', 'Usado')
+            ->where('local', '!=', 'Avaliação');
+
 
         // Aplica filtros se existirem
         if ($request->filled('marca'))         $query->where('marca', $request->input('marca'));
