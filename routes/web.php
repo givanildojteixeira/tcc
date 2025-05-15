@@ -145,21 +145,18 @@ Route::middleware('auth')->group(function () {
     Route::resource('opcionais', OpcionaisController::class);
 
     //Propostas
+    Route::get('/propostas/testar-session', function () {   return session('proposta');});
+    
     Route::get('/propostas', [PropostaController::class, 'index'])->name('propostas.index');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
-    Route::get('/propostas/aprova', [PropostaController::class, 'aprova'])->name('propostas.aprova');
     Route::get('/propostas/nova', [PropostaController::class, 'limparECreate'])->name('propostas.limparECreate');
     Route::get('/propostas/editar/{id}', [PropostaController::class, 'carregarParaEditar'])->name('propostas.editar');
     Route::get('/propostas/aprovar/{id}', [PropostaController::class, 'carregarParaAprovar'])->name('propostas.aprovar');
     Route::get('/propostas/visualizar/{id}', [PropostaController::class, 'carregarParaVisualizar'])->name('propostas.visualizar');
-
+    Route::post('/propostas/alterar/{id}/{chave}/{valor}', [PropostaController::class, 'alterarProposta'])->name('propostas.alterar');
 
     Route::post('/propostas/salvar', [PropostaController::class, 'store'])->name('propostas.store');
-
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
-    Route::get('/propostas/testar-session', function () {
-        return session('proposta');
-    });
     //Veiculos Novos
     Route::post('/propostas/iniciar', [PropostaController::class, 'iniciar'])->name('proposta.iniciar');   //Inicia quando vem de Estoque de Novos
     Route::get('/propostas/inserir-veiculo-novo', [PropostaController::class, 'inserirVeiculoNovo']);

@@ -55,44 +55,8 @@ class PropostaController extends Controller
         return view('propostas.create', compact('proposta', 'condicoes'));
     }
 
-        //Aqui inicia a view de propostas para aprovação
-    public function aprova()
-    {
-        // Recupera dados da sessão da proposta
-        $proposta = session('proposta', []);
+    //Aqui inicia a view de propostas para aprovação
 
-        // Cliente
-        $cliente = null;
-        if (!empty($proposta['id_cliente'])) {
-            $cliente = Cliente::find($proposta['id_cliente']);
-        }
-
-        // Veículo novo
-        $veiculo = null;
-        if (!empty($proposta['id_veiculoNovo'])) {
-            $veiculo = Veiculo::find($proposta['id_veiculoNovo']);
-        }
-
-        // Veículo usado (exemplo com 1, mas pode adaptar para mais)
-        $veiculoUsado = null;
-        if (!empty($proposta['id_veiculo_usado'])) {
-            $veiculoUsado = Veiculo::find($proposta['id_veiculo_usado']);
-        }
-
-        // Negociações
-        $proposta = session('proposta', []);
-        $negociacoes = $proposta['negociacoes'] ?? [];
-
-
-        return view('propostas.aprova', compact(
-            'cliente',
-            'veiculo',
-            'veiculoUsado',
-            'proposta',
-            'negociacoes'
-        ));
-
-    }
     //Aqui é feita a inclusao de um veiculo vindo do estoque de novos
     public function iniciar(Request $request)
     {
@@ -129,13 +93,63 @@ class PropostaController extends Controller
 
         return redirect()->route('propostas.create', ['aba' => 'resumo']);
     }
-    
+
     //Monta a session e abre a proposta para Aprovação
-        public function carregarParaAprovar($id)
+    public function carregarParaAprovar($id)
     {
         $this->montarSessaoDaProposta($id);
-        return redirect()->route('propostas.aprova');
+
+        // Recupera dados da sessão da proposta
+        $proposta = session('proposta', []);
+
+        // Cliente
+        $cliente = null;
+        if (!empty($proposta['id_cliente'])) {
+            $cliente = Cliente::find($proposta['id_cliente']);
+        }
+
+        // Veículo novo
+        $veiculo = null;
+        if (!empty($proposta['id_veiculoNovo'])) {
+            $veiculo = Veiculo::find($proposta['id_veiculoNovo']);
+        }
+
+        // Veículo usado (exemplo com 1, mas pode adaptar para mais)
+        $veiculoUsado = null;
+        if (!empty($proposta['id_veiculo_usado'])) {
+            $veiculoUsado = Veiculo::find($proposta['id_veiculo_usado']);
+        }
+
+        // Negociações
+        $proposta = session('proposta', []);
+        $negociacoes = $proposta['negociacoes'] ?? [];
+
+
+        return view('propostas.aprova', compact(
+            'cliente',
+            'veiculo',
+            'veiculoUsado',
+            'proposta',
+            'negociacoes'
+        ));
     }
+    //promove alterações na proposta, receendo a id , a chave e o valor da alteração e testando os campos possiveis de alteração
+    public function alterarProposta($id, $chave, $valor)
+    {
+        $proposta = Proposta::findOrFail($id);
+
+        // Verifica se o campo é permitido para alteração
+        $camposPermitidos = ['status', 'observacao_nota', 'observacao_interna', 'promocao', 'ativo'];
+        if (!in_array($chave, $camposPermitidos)) {
+            return response()->json(['success' => false, 'message' => 'Campo não permitido.'], 403);
+        }
+
+        $proposta->{$chave} = $valor;
+        $proposta->save();
+
+        return response()->json(['success' => true]);
+    }
+
 
     //Monta a session e abre a proposta para visualização
     public function carregarParaVisualizar($id)
