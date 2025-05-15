@@ -151,21 +151,23 @@
             <x-bt-padrao label="❌ Rejeitar" color="red" icon="" title="Devolve a proposta ao ao vendedor"
                 @click="alterarCampoProposta({{ $proposta['id'] }}, 'status', 'rejeitada')" />
 
-            
-            @acessoGerente()
-            <x-bt-padrao label="✅ Aprovação Gerencial" color="green" icon="" title="Aprovação Gerencial da proposta"
-                @click="alterarCampoProposta({{ $proposta['id'] }}, 'status', 'Aprovada')" />
-            @endacessoGerente
 
-            @acessoAssistente()
+            @php
+            $nivel = strtolower(Auth::user()->level);
+            @endphp
+
+            @if ($nivel === 'assistente')
             <x-bt-padrao label="✅ Aprovação Financeira" color="green" icon="" title="Aprovação Financeira da proposta"
                 @click="alterarCampoProposta({{ $proposta['id'] }}, 'status', 'Aprovada')" />
-            @endacessoAssistente
-
-            @acessoDiretor()
-            <x-bt-padrao label="✅ Enviar para Faturamento" color="green" icon="" title="Envia a proposta para Faturamento"
+            @elseif ($nivel === 'gerente')
+            <x-bt-padrao label="✅ Aprovação Gerencial" color="green" icon="" title="Aprovação Gerencial da proposta"
+                @click="alterarCampoProposta({{ $proposta['id'] }}, 'status', 'Aprovada')" />
+            @elseif ($nivel === 'diretor' || $nivel === 'admin')
+            <x-bt-padrao label="✅ Enviar para Faturamento" color="green" icon=""
+                title="Envia a proposta para Faturamento"
                 @click="alterarCampoProposta({{ $proposta['id'] }}, 'status', 'Faturada')" />
-            @endacessoDiretor
+            @endif
+
 
         </div>
 
