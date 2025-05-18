@@ -154,6 +154,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/propostas/aprovar/{id}', [PropostaController::class, 'carregarParaAprovar'])->name('propostas.aprovar');
     Route::get('/propostas/visualizar/{id}', [PropostaController::class, 'carregarParaVisualizar'])->name('propostas.visualizar');
     Route::post('/propostas/alterar/{id}/{chave}/{valor}', [PropostaController::class, 'alterarProposta'])->name('propostas.alterar');
+    Route::post('/propostas/faturar/{id}', [PropostaController::class, 'faturar'])->name('propostas.faturar');
 
     Route::post('/propostas/salvar', [PropostaController::class, 'store'])->name('propostas.store');
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');

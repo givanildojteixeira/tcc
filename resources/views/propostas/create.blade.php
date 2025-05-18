@@ -3,13 +3,16 @@
         aba: 'veiculo', // valor inicial padrão
         showModalCliente: false,
         init() {
-            // Tenta pegar da URL
             const urlParams = new URLSearchParams(window.location.search);
             const abaUrl = urlParams.get('aba');
-    
+
             if (abaUrl) {
                 this.aba = abaUrl;
                 sessionStorage.setItem('abaAtiva', abaUrl);
+
+                // 🔄 Remove o ?aba=... da URL
+                const novaUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState({}, document.title, novaUrl);
             } else if ('{{ session('aba') }}') {
                 this.aba = '{{ session('aba') }}';
                 sessionStorage.setItem('abaAtiva', '{{ session('aba') }}');
@@ -17,11 +20,13 @@
                 const abaSalva = sessionStorage.getItem('abaAtiva');
                 if (abaSalva) this.aba = abaSalva;
             }
-    
-            // Observa mudanças e atualiza o storage
             this.$watch('aba', val => sessionStorage.setItem('abaAtiva', val));
         }
-    }" class="flex flex-col overflow-hidden bg-white rounded shadow p-2">
+       
+    }" 
+    {{-- cloak serve para atrazar a carga da pagina até sua reinderização total, a outra perna esta no css global --}}
+    x-cloak
+    class="flex flex-col overflow-hidden bg-white rounded shadow p-2">
 
         {{-- Fonte | Prioridade | Exemplo de uso |
         | ---------------- | ---------- | ---------------------------------------------------------- |
@@ -39,6 +44,7 @@
         </div>
 
         <!-- Abas -->
+        {{-- Alterado para que quando for abas como negociação e Resumo, a pagina seja reinderizada e depois abra a aba corretamente --}}
         <div class="flex bg-gray-100 rounded-md shadow-sm mb-2 font-bold text-sm shrink-0 px-6">
             @foreach ([
             'veiculo' => '1. Veículo Novo|fas fa-car',
@@ -49,7 +55,14 @@
             'resumo' => '6. Resumo|fas fa-clipboard-check'
             ] as $key => $labelIcon)
             @php [$label, $icon] = explode('|', $labelIcon); @endphp
-            <button @click="aba = '{{ $key }}'" :class="aba === '{{ $key }}'
+            <button @click="
+                    if (['negociacao', 'resumo'].includes('{{ $key }}')) {
+                        sessionStorage.setItem('abaAtiva', '{{ $key }}');
+                        window.location.href = window.location.pathname + '?aba={{ $key }}';
+                    } else {
+                        aba = '{{ $key }}';
+                    }
+                " :class="aba === '{{ $key }}'
                         ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner'
                         : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 transition-all duration-200">
@@ -295,7 +308,7 @@
                     console.log('🔍 URL detectada:', url.href);
 
                     if (veiculoId) {
-                        console.log('📦 ID do veículo usado na URL:', veiculoId);
+                        // console.log('📦 ID do veículo usado na URL:', veiculoId);
 
                         fetch('/propostas/inserir-veiculo-usado', {
                             method: 'POST',
@@ -327,7 +340,6 @@
                         .catch(err => {
                             console.error('❌ Erro ao processar veículo da URL:', err);
                         });
-
                     } else {
                         fetch(`/propostas/veiculos-usados-session`)
                         .then(res => res.json())

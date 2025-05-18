@@ -37,7 +37,8 @@
                     <h3 class="text-green-700 font-semibold mb-2">Selecione um veículo:</h3>
                     <ul class="space-y-2 text-sm text-gray-800">
                         <template x-for="vu in veiculoEncontrado" :key="vu.id">
-                            <li @click="selecionarVeiculo(vu)"
+                            <li @click="selecionarVeiculo(vu);"
+                            {{-- <li @click="selecionarVeiculo(vu); setTimeout(() => location.reload(), 50);" --}}
                                 class="flex justify-between items-center border-b pb-1 p-2 rounded cursor-pointer
                                        hover:bg-gray-100 hover:shadow-md active:bg-gray-200 active:shadow-inner transition-all duration-150">
                                 <div>

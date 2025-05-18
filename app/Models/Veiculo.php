@@ -31,6 +31,7 @@ class Veiculo extends Model
         'user_reserva',
         'desc_nota',
         'site',
+        'status',
     ];
     public function vendedor()
     {

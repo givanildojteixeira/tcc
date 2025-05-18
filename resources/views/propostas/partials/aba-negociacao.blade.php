@@ -38,8 +38,9 @@
                         class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
                         Adicionar Condição
                     </button>
-                    <button type="button" @click="sessionStorage.setItem('abaAtiva', 'negociacao'); location.reload();"
-                        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 ">
+                    <button type="button"
+                        @click="window.location.href = '{{ route('propostas.create', ['aba' => 'negociacao']) }}'"
+                        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
                         Inserir Avaliação Usado
                     </button>
                 </div>
@@ -59,20 +60,20 @@
 
             <!-- Soma das Condições -->
             <div class="text-sm flex justify-between font-semibold" :class="somaNegociacoes() > valorTotalProposta
-                            ? 'text-red-600'
-                            : (somaNegociacoes() == valorTotalProposta
-                                ? 'text-green-600'
-                                : 'text-gray-800')">
+        ? 'text-red-600'
+        : (somaNegociacoes() == valorTotalProposta
+            ? 'text-green-600'
+            : 'text-gray-800')">
                 <span>Soma das Condições:</span>
                 <span x-text="formatarValor(somaNegociacoes())"></span>
             </div>
 
             <!-- Diferença -->
             <div class="text-sm flex justify-between font-semibold" :class="diferencaValor() > 0
-                            ? 'text-red-600'
-                            : (diferencaValor() < 0
-                                ? 'text-blue-600'
-                                : 'text-green-600')">
+        ? 'text-red-600'
+        : (diferencaValor() < 0
+            ? 'text-blue-600'
+            : 'text-green-600')">
                 <span>Diferença:</span>
                 <span x-text="formatarValor(Math.abs(diferencaValor()))"></span>
             </div>
@@ -101,7 +102,7 @@
                     </thead>
                     <tbody>
                         <template x-for="(neg, index) in negociacoes" :key="index">
-                            <tr :class="neg.fixo ? 'bg-blue-50' : ''">
+                            <tr :class="neg . fixo ? 'bg-blue-50' : ''">
                                 <td class="px-2 py-1 border" x-text="neg.condicao_texto"></td>
                                 <td class="px-2 py-1 border text-right" x-text="formatarValor(neg.valor)"></td>
                                 <td class="px-2 py-1 border text-center" x-text="formatarData(neg.vencimento)"></td>
@@ -123,11 +124,11 @@
 
 
     <!-- Campos ocultos para submissão -->
-    <template x-for="(neg, index) in negociacoes" :key="'form-'+index">
+    <template x-for="(neg, index) in negociacoes" :key="'form-' + index">
         <div>
-            <input type="hidden" :name="'negociacoes['+index+'][id_cond_pagamento]'" :value="neg.condicao">
-            <input type="hidden" :name="'negociacoes['+index+'][valor]'" :value="neg.valor">
-            <input type="hidden" :name="'negociacoes['+index+'][data_vencimento]'" :value="neg.vencimento">
+            <input type="hidden" :name="'negociacoes[' + index + '][id_cond_pagamento]'" :value="neg . condicao">
+            <input type="hidden" :name="'negociacoes[' + index + '][valor]'" :value="neg . valor">
+            <input type="hidden" :name="'negociacoes[' + index + '][data_vencimento]'" :value="neg . vencimento">
         </div>
     </template>
 </div>

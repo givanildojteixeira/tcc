@@ -179,6 +179,7 @@
             Alpine.data('proposta', () => ({
                 showModalAprovar: false,
                 conteudoAprovar: '',
+                showModalObservacao: false,
 
                 abrirModalAprovar(id) {
                     fetch(`/propostas/aprovar/${id}`)
@@ -214,7 +215,37 @@
                         console.error(err);
                         alert('Erro na requisição.');
                     });
+                },
+                
+                faturarProposta(id) {
+                    fetch(`/propostas/faturar/${id}`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .content
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                this.showModalAprovar = false;
+                                alert('Proposta faturada e veículo marcado como vendido.');
+                                window.location.reload();
+                            } else {
+                                alert('Erro ao faturar proposta.');
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Erro na requisição.');
+                        });
                 }
+
+
+
+
+
+
             }));
         });
 

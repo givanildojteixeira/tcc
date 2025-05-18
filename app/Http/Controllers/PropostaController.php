@@ -149,7 +149,28 @@ class PropostaController extends Controller
 
         return response()->json(['success' => true]);
     }
+    // Enviar para faturamento
+    public function faturar($id)
+    {
+        $proposta = Proposta::with('veiculoNovo')->findOrFail($id);
 
+        // Atualiza status da proposta
+        $proposta->status = 'Faturada';
+        $proposta->save();
+
+        // Atualiza status do veículo novo para vendido
+        if ($proposta->veiculoNovo) {
+            $proposta->veiculoNovo->status = 'vendido';
+            $proposta->veiculoNovo->save();
+        }
+        // Atualiza veiculos usado para disponivel para venda, se existir
+        if ($proposta->veiculoUsado1) {
+            $proposta->veiculoUsado1->local = 'matriz';
+            $proposta->veiculoUsado1->save();
+        }
+
+        return response()->json(['success' => true]);
+    }
 
     //Monta a session e abre a proposta para visualização
     public function carregarParaVisualizar($id)
@@ -355,7 +376,6 @@ class PropostaController extends Controller
             Session::forget('proposta');
 
             return redirect()->route('propostas.index')->with('success', '✅ Proposta salva com sucesso!');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors('Erro ao salvar proposta: ' . $e->getMessage());
@@ -408,6 +428,4 @@ class PropostaController extends Controller
             'negociacoes'
         ));
     }
-
-
 }
