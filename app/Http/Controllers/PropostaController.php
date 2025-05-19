@@ -149,7 +149,7 @@ class PropostaController extends Controller
 
 
 
-    //promove alterações na proposta, receendo a id , a chave e o valor da alteração e testando os campos possiveis de alteração
+    //promove alterações na proposta, recebendo a id , a chave e o valor da alteração e testando os campos possiveis de alteração
     public function alterarProposta($id, $chave, $valor)
     {
         $proposta = Proposta::findOrFail($id);
@@ -161,6 +161,31 @@ class PropostaController extends Controller
         }
 
         $proposta->{$chave} = $valor;
+
+        //Verifica se for aprovação coloca o aprovador
+        if ($chave === 'status' && strtolower($valor) === 'aprovada') {
+            // Captura o nível do usuário logado
+            $user = auth()->user();
+            $nivel = strtolower($user->level);
+
+            // Atualiza campo de aprovação com base no nível
+            switch ($nivel) {
+                case 'gerente':
+                    $proposta->id_user_aprovacao_gerencial = $user->id;
+                    break;
+                case 'assistente':
+                    $proposta->id_user_aprovacao_financeira = $user->id;
+                    break;
+                case 'diretor':
+                    $proposta->id_user_aprovacao_diretoria = $user->id;
+                    break;
+                case 'banco':
+                    $proposta->id_user_aprovacao_banco = $user->id;
+                    break;
+                // Você pode expandir com outros níveis se necessário
+            }
+        }
+
         $proposta->save();
 
         return response()->json(['success' => true]);

@@ -126,14 +126,14 @@
                         <span>
                             R$
                             {{ number_format(
-    ($veiculo->vlr_tabela ?? 0) -
-    ($proposta['vlr_desconto'] ?? 0) -
-    ($veiculo->vlr_bonus ?? 0) -
-    ($veiculo->vlr_nota ?? 0),
-    2,
-    ',',
-    '.',
-) }}
+                                ($veiculo->vlr_tabela ?? 0) -
+                                ($proposta['vlr_desconto'] ?? 0) -
+                                ($veiculo->vlr_bonus ?? 0) -
+                                ($veiculo->vlr_nota ?? 0),
+                                2,
+                                ',',
+                                '.',
+                            ) }}
                         </span>
                     </div>
                 </div>
@@ -141,8 +141,6 @@
         </div>
 
     </div>
-
-
 
     <!-- Grupo de Botões Centralizados -->
     <div class="flex justify-center gap-4 mt-6 flex-wrap">
@@ -214,40 +212,55 @@
         </div>
     </div>
 
-    <!-- Modal de Aprovações -->
-    <div x-show="showModalAprovadores" style="display: none;"
-        class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-[9999]">
-        <div
-            class="bg-white rounded-md shadow-xl p-6 w-full max-w-2xl overflow-y-auto max-h-[85vh] relative border border-blue-400">
-            <button @click="showModalAprovadores = false"
+<!-- Modal: Histórico de Aprovadores -->
+<div x-show="showModalAprovadores" x-cloak
+     class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[10000]">
+    <div class="bg-white border-2 border-green-600 rounded-lg shadow-2xl p-6 w-full max-w-xl relative animate-fade-in">
+        <!-- Botão Fechar -->
+        <button @click="showModalAprovadores = false"
                 class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
-                &times;
+            &times;
+        </button>
+
+        <!-- Conteúdo -->
+        <fieldset class="border border-green-400 bg-green-50 p-4 rounded-md shadow-sm">
+            <legend class="text-green-700 text-sm font-semibold px-2">
+                <i class="fas fa-users mr-1"></i> Histórico de Aprovação da Proposta
+            </legend>
+
+            <ul class="text-sm text-gray-800 space-y-3 mt-2" x-show="aprovadores">
+                <li class="flex items-center gap-2">
+                    <i class="fas fa-user-tie text-green-600"></i>
+                    <span><strong>Gerencial:</strong></span>
+                    <span x-text="aprovadores.gerencial || '❌ Não aprovada'"></span>
+                </li>
+                <li class="flex items-center gap-2">
+                    <i class="fas fa-calculator text-yellow-600"></i>
+                    <span><strong>Financeira:</strong></span>
+                    <span x-text="aprovadores.financeira || '❌ Não aprovada'"></span>
+                </li>
+                <li class="flex items-center gap-2">
+                    <i class="fas fa-university text-blue-600"></i>
+                    <span><strong>Banco:</strong></span>
+                    <span x-text="aprovadores.banco || '❌ Não aprovada'"></span>
+                </li>
+                <li class="flex items-center gap-2">
+                    <i class="fas fa-user-shield text-purple-700"></i>
+                    <span><strong>Diretoria:</strong></span>
+                    <span x-text="aprovadores.diretoria || '❌ Não aprovada'"></span>
+                </li>
+            </ul>
+        </fieldset>
+
+        <!-- Botão Fechar centralizado -->
+        <div class="flex justify-center mt-6">
+            <button @click="showModalAprovadores = false"
+                class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md shadow">
+                Fechar
             </button>
-
-            <fieldset class="border border-green-400 bg-green-50 p-4 rounded-md shadow-sm">
-                <legend class="text-green-700 text-sm font-semibold px-2">👥 Histórico de Aprovação da Proposta</legend>
-
-                <ul class="text-sm text-gray-800 space-y-2 mt-2" x-show="aprovadores">
-                    <li><strong>Aprovação Gerencial:</strong> <span
-                            x-text="aprovadores.gerencial || '❌ Não aprovada'"></span></li>
-                    <li><strong>Aprovação Financeira:</strong> <span
-                            x-text="aprovadores.financeira || '❌ Não aprovada'"></span></li>
-                    <li><strong>Aprovação Banco:</strong> <span x-text="aprovadores.banco || '❌ Não aprovada'"></span>
-                    </li>
-                    <li><strong>Aprovação Diretoria:</strong> <span
-                            x-text="aprovadores.diretoria || '❌ Não aprovada'"></span></li>
-                </ul>
-            </fieldset>
-
-
-            <!-- Botão Fechar -->
-            <div class="flex justify-center mt-6">
-                <button @click="showModalAprovadores = false"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-sm shadow">
-                    Fechar
-                </button>
-            </div>
         </div>
     </div>
+</div>
+
 
 </div>
