@@ -145,8 +145,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('opcionais', OpcionaisController::class);
 
     //Propostas
-    Route::get('/propostas/testar-session', function () {   return session('proposta');});
-    
+    Route::get('/propostas/testar-session', function () {
+        return session('proposta'); });
+
     Route::get('/propostas', [PropostaController::class, 'index'])->name('propostas.index');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
     Route::get('/propostas/nova', [PropostaController::class, 'limparECreate'])->name('propostas.limparECreate');
@@ -155,7 +156,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/propostas/visualizar/{id}', [PropostaController::class, 'carregarParaVisualizar'])->name('propostas.visualizar');
     Route::post('/propostas/alterar/{id}/{chave}/{valor}', [PropostaController::class, 'alterarProposta'])->name('propostas.alterar');
     Route::post('/propostas/faturar/{id}', [PropostaController::class, 'faturar'])->name('propostas.faturar');
-
+    Route::get('/propostas/{id}/aprovadores', [PropostaController::class, 'getAprovadores'])->name('propostas.aprovadores');
     Route::post('/propostas/salvar', [PropostaController::class, 'store'])->name('propostas.store');
     Route::post('/propostas/cancelar', [PropostaController::class, 'cancelar'])->name('proposta.cancelar');
     //Veiculos Novos

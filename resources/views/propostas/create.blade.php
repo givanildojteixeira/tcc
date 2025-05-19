@@ -417,7 +417,7 @@
                         vencimento: this.nova.vencimento
                     });
     
-                    nova = { condicao: '', valor: '', vencimento: '' };
+                    this.nova = { condicao: '', valor: '', vencimento: new Date().toLocaleDateString('en-CA')};
                     this.salvarNegociacoes();
 
                 },

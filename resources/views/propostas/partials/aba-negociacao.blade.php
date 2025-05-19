@@ -12,7 +12,7 @@
                 <div class="flex flex-col">
                     <label class="text-sm font-medium text-gray-700">Condição de Pagamento</label>
                     <select x-model="nova.condicao" class="w-48 border border-gray-300 rounded-md p-2">
-                        <option value="">Selecione...</option>
+                        <option disabled value="">Selecione...</option>
                         @foreach ($condicoes as $cond)
                         <option value="{{ $cond->id }}">{{ $cond->descricao }}</option>
                         @endforeach
@@ -22,9 +22,15 @@
                 <!-- Valor -->
                 <div class="flex flex-col">
                     <label class="text-sm font-medium text-gray-700">Valor</label>
-                    <input type="number" x-model="nova.valor" step="0.01" min="0" @keydown.enter="adicionar"
+                    <input id="valorParcela"  type="number" x-model="nova.valor" step="0.01" min="0" @keydown.enter="adicionar"
                         class="w-36 border border-gray-300 rounded-md p-2">
                 </div>
+                <button id="ColocaDiferenca" type="button"
+                    @click="nova.valor = Math.abs(diferencaValor()).toFixed(2)"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    title="Clique aqui para inserir no campo o valor da diferença.">
+                    $
+                </button>
 
                 <!-- Vencimento -->
                 <div class="flex flex-col">
@@ -36,12 +42,12 @@
                 <div class="flex items-end gap-2">
                     <button type="button" @click="adicionar"
                         class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
-                        Adicionar Condição
+                        ➕Adicionar Condição
                     </button>
                     <button type="button"
                         @click="window.location.href = '{{ route('propostas.create', ['aba' => 'negociacao']) }}'"
                         class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
-                        Inserir Avaliação Usado
+                        🔄 Atualizar
                     </button>
                 </div>
             </div>
@@ -69,7 +75,7 @@
             </div>
 
             <!-- Diferença -->
-            <div class="text-sm flex justify-between font-semibold" :class="diferencaValor() > 0
+            <div id="valorDiferenca"  class="text-sm flex justify-between font-semibold" :class="diferencaValor() > 0
         ? 'text-red-600'
         : (diferencaValor() < 0
             ? 'text-blue-600'

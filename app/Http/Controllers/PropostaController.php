@@ -13,7 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
 
 class PropostaController extends Controller
 {
@@ -133,6 +133,22 @@ class PropostaController extends Controller
             'negociacoes'
         ));
     }
+    //Busca de aprovadores via api
+    public function getAprovadores($id)
+    {
+
+        $proposta = Proposta::findOrFail($id);
+
+        return response()->json([
+            'gerencial' => optional(User::find($proposta->id_user_aprovacao_gerencial))->name,
+            'financeira' => optional(User::find($proposta->id_user_aprovacao_financeira))->name,
+            'banco' => optional(User::find($proposta->id_user_aprovacao_banco))->name,
+            'diretoria' => optional(User::find($proposta->id_user_aprovacao_diretoria))->name,
+        ]);
+    }
+
+
+
     //promove alterações na proposta, receendo a id , a chave e o valor da alteração e testando os campos possiveis de alteração
     public function alterarProposta($id, $chave, $valor)
     {
@@ -372,13 +388,23 @@ class PropostaController extends Controller
 
             DB::commit();
 
+
             // Limpar a sessão depois de gravar
             Session::forget('proposta');
 
             return redirect()->route('propostas.index')->with('success', '✅ Proposta salva com sucesso!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors('Erro ao salvar proposta: ' . $e->getMessage());
+
+            // Captura a mensagem técnica (opcional para log)
+            $erroOriginal = $e->getMessage();
+
+            // Gera uma mensagem mais amigável
+            $mensagemAmigavel = str_contains($erroOriginal, 'id_cliente')
+                ? 'O cliente não foi informado corretamente. Verifique os dados antes de enviar.'
+                : 'Ocorreu um erro ao salvar a proposta. Por favor, revise os dados e tente novamente.';
+
+            return back()->with('error', $mensagemAmigavel);
         }
     }
 

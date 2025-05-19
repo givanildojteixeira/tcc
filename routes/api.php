@@ -43,10 +43,6 @@ Route::get('/veiculos-usados/buscar-chassi/{query}', function ($query) {
 });
 
 
-
-
-
-
 Route::get('/veiculos/{id}', function ($id) {
     return Veiculo::findOrFail($id);
 });
