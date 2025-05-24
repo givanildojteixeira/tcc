@@ -153,6 +153,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/propostas/nova', [PropostaController::class, 'limparECreate'])->name('propostas.limparECreate');
     Route::get('/propostas/editar/{id}', [PropostaController::class, 'carregarParaEditar'])->name('propostas.editar');
     Route::get('/propostas/aprovar/{id}', [PropostaController::class, 'carregarParaAprovar'])->name('propostas.aprovar');
+    Route::post('/propostas/aprovarGerencialmente/{id}', [PropostaController::class, 'aprovarGerencialmente'])->name('propostas.aprovarGerencialmente');
     Route::get('/propostas/visualizar/{id}', [PropostaController::class, 'carregarParaVisualizar'])->name('propostas.visualizar');
     Route::post('/propostas/alterar/{id}/{chave}/{valor}', [PropostaController::class, 'alterarProposta'])->name('propostas.alterar');
     Route::post('/propostas/faturar/{id}', [PropostaController::class, 'faturar'])->name('propostas.faturar');

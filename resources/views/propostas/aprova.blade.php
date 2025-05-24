@@ -166,7 +166,7 @@
                 @click="alterarCampoProposta({{ $proposta['id'] }}, 'status', 'Aprovada')" />
         @elseif ($nivel === 'gerente')
             <x-bt-padrao label="✅ Aprovação Gerencial" color="green" icon="" title="Aprovação Gerencial da proposta"
-                @click="alterarCampoProposta({{ $proposta['id'] }}, 'status', 'Aprovada')" />
+                @click="aprovarGerencialmente({{ $proposta['id'] }})" />
         @elseif ($nivel === 'diretor' || $nivel === 'admin')
             <x-bt-padrao label="✅ Enviar para Faturamento" color="green" icon="" title="Envia a proposta para Faturamento"
                 @click="faturarProposta({{ $proposta['id'] }})" />

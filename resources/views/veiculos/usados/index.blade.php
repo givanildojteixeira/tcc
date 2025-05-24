@@ -308,6 +308,7 @@
                                             {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
                                             dias
                                         </td>
+                                        <td>{{ $veiculo->status }}</td>
                                         <td class="hidden">{{ $veiculo->local }}</td>
                                     </tr>
                                     @endforeach

@@ -204,14 +204,41 @@ class PropostaController extends Controller
             $proposta->veiculoNovo->status = 'vendido';
             $proposta->veiculoNovo->save();
         }
-        // Atualiza veiculos usado para disponivel para venda, se existir
+        // Atualiza status do veículo usado, se existir 
         if ($proposta->veiculoUsado1) {
-            $proposta->veiculoUsado1->local = 'matriz';
+            $proposta->veiculoUsado1->status = 'estoque';
+            // $proposta->veiculoUsado1->local = 'matriz';
             $proposta->veiculoUsado1->save();
         }
 
         return response()->json(['success' => true]);
     }
+
+    // Aprovar Gerencialmente
+    public function aprovarGerencialmente($id)
+    {
+        $proposta = Proposta::with('veiculoNovo')->findOrFail($id);
+
+        // Atualiza status da proposta
+        $proposta->status = 'Aprovada';
+        $proposta->save();
+
+        // Atualiza status do veículo novo 
+        if ($proposta->veiculoNovo) {
+            $proposta->veiculoNovo->status = 'negociacao';
+            $proposta->veiculoNovo->save();
+        }
+        // Atualiza status do veículo usado, se existir 
+        if ($proposta->veiculoUsado1) {
+            $proposta->veiculoUsado1->status = 'negociacao';
+            // $proposta->veiculoUsado1->local = 'matriz';
+            $proposta->veiculoUsado1->save();
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+
 
     //Monta a session e abre a proposta para visualização
     public function carregarParaVisualizar($id)

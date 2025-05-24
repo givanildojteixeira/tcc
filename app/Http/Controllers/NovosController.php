@@ -169,7 +169,8 @@ class NovosController extends Controller
 
         // Inicia a query
         $query = Veiculo::where('novo_usado', 'Novo')
-            ->where('marca', 'GM');
+            ->where('marca', 'GM')
+            ->where('status', '!=', 'vendido');
 
         // Aplica os filtros baseados nos parâmetros da URL
         if ($request->filled('familia'))

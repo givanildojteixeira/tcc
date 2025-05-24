@@ -260,6 +260,30 @@
                             console.error(err);
                             alert('Erro na requisição.');
                         });
+                },
+
+                aprovarGerencialmente(id) {
+                    fetch(`/propostas/aprovarGerencialmente/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        }
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                this.showModalAprovar = false;
+                                alert('Proposta aprovada pelo gerente.');
+                                window.location.reload();
+                            } else {
+                                alert('Erro ao aprovar proposta.');
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Erro na requisição de aprovação grencial.');
+                        });
                 }
 
 

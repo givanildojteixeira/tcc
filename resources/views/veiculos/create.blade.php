@@ -234,7 +234,8 @@
                         </div>
                     </div>
                     @if (request('origem') === 'propostas')
-                        <input type="hidden" name="status" value="Avaliação"> * Veiculos usados incluídos por proposta, permanecem com status de avaliação, até provação gerencial.
+                        <input type="hidden" name="status" value="Avaliacao"> 
+                        * Veiculos usados incluídos por proposta, permanecem com status de avaliação, até provação gerencial.
                     @endif
                 </div>
             </div>

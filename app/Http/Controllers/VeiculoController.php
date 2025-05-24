@@ -250,7 +250,7 @@ class VeiculoController extends Controller
             $veiculo->cod_opcional = ' ';
         }
         if ($request->origem === 'propostas') {
-            $veiculo->local = 'avaliacao';
+            $veiculo->status = 'avaliacao';
         }
 
 

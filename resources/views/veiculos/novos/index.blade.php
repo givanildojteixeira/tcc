@@ -232,27 +232,38 @@
                                         <th class="sortable p-2" data-column="faturado">Faturado <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
-                                        <th class="hidden">Local</th> <!-- Coluna oculta -->
+                                        <th class="hidden">Local</th> <!-- Coluna oculta para filtros -->
+                                        <th class="hidden">Status</th> <!-- Coluna oculta para filtros -->
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
                                     @foreach ($veiculos as $veiculo)
                                         @php
+                                            // Cores de fundo baseadas em status/promoção
                                             if ($veiculo->promocao) {
-                                                $rowColor = 'text-blue-600 font-bold';
+                                                $bgColor = 'bg-blue-500 font-bold';
                                             } elseif (!$veiculo->ativo) {
-                                                $rowColor = 'text-gray-400';
+                                                $bgColor = 'bg-gray-500';
+                                            } elseif ($veiculo->status == 'negociacao') {
+                                                $bgColor = 'bg-red-500';
                                             } else {
-                                                if ($veiculo->local == 'Matriz') {
-                                                    $rowColor = 'text-black';
-                                                } elseif ($veiculo->local == 'Filial') {
-                                                    $rowColor = 'text-yellow-500';
-                                                } elseif ($veiculo->local == 'Transito') {
-                                                    $rowColor = 'text-green-500';
-                                                } else {
-                                                    $rowColor = '';
-                                                }
+                                                $bgColor = 'bg-white'; // padrão
                                             }
+
+                                            // Cores de texto baseadas no local
+                                            if ($veiculo->local == 'Matriz') {
+                                                $textColor = 'text-black';
+                                            } elseif ($veiculo->local == 'Filial') {
+                                                $textColor = 'text-yellow-500';
+                                            } elseif ($veiculo->local == 'Transito') {
+                                                $textColor = 'text-green-500';
+                                            } else {
+                                                $textColor = '';
+                                            }
+
+                                            // Combina tudo, para que nao ocorra sobreposição de código
+                                            $rowColor = "$bgColor $textColor";
+                                          
 
                                             // Descrição
                                             $descricaoOpcional =
@@ -265,8 +276,7 @@
                                                     'site',
                                                 ) ?? '';
                                         @endphp
-                                        <tr id="veiculo-{{ $veiculo->id }}"
-                                            class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
+                                        <tr id="veiculo-{{ $veiculo->id }}"  class="hover:font-bold hover:bg-gray-100 cursor-pointer {{ $rowColor }}"
                                             @click="
                                                 open = true;
                                                 veiculo = {
@@ -322,6 +332,8 @@
                                                 dias
                                             </td>
                                             <td class="hidden">{{ $veiculo->local }}</td>
+                                            <td class="hidden">{{ $veiculo->status }}</td>
+                                            
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -349,10 +361,18 @@
 
         <!-- Legenda de cores -->
         <div class="flex flex-wrap gap-1 items-center">
-            <span class="font-medium">Legenda Alocação =&gt;</span>
+            <span class="font-medium">Legenda Cores:</span>
+            <span class="font-medium">Status =&gt; [</span>
+            {{-- Coluna 14 --}}
+            <span class="filter font-semibold text-red-500 cursor-pointer" data-filter="negociacao">Negociação</span> |
+            <span class="filter font-semibold text-gray-500 cursor-pointer" data-filter="indisponivel">Indisponível</span> |
+            <span class="filter font-semibold text-blue-500 cursor-pointer" data-filter="promocao">Promoção</span> |
+            <span class="font-medium">] Localização =&gt; [</span>
+            {{-- Coluna 13 --}}
             <span class="filter font-semibold text-black cursor-pointer" data-filter="Matriz">Matriz</span> |
             <span class="filter font-semibold text-yellow-500 cursor-pointer" data-filter="Filial">Filial</span> |
             <span class="filter font-semibold text-green-500 cursor-pointer" data-filter="Transito">Trânsito</span>
+            <span class="font-medium">] </span>
         </div>
     </x-rodape>
 
@@ -563,22 +583,39 @@
                 visibleCount = rows.length;
             } else {
                 // Exiba apenas as linhas que correspondem ao filtro ativo
-                rows.forEach(row => {
-                    const local = row.querySelector('td:nth-child(13)').textContent.trim();
-                    if (local === activeFilter) {
-                        row.style.display = '';
-                        visibleCount++;
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
+                if (activeFilter === 'Matriz'|| activeFilter === 'Filial' || activeFilter === 'Transito') {
+                    rows.forEach(row => {
+                        const local = row.querySelector('td:nth-child(13)').textContent.trim();
+                        console.log('🔍 activeFilter:', activeFilter, '| linha status:', local);
+
+                        if (local === activeFilter) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });  
+                    
+                } else {
+                    rows.forEach(row => {
+                        const status = row.querySelector('td:nth-child(14)').textContent.trim();
+                        console.log('🔍 activeFilter:', activeFilter, '| linha status:', status);
+                        if (status === activeFilter) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });  
+                }
+
             }
 
             // Atualizar o contador na interface
             const contador = document.getElementById('selectedVehiclesCount');
             contador.textContent = activeFilter ?
-                `Filtro Aplicado [${activeFilter}] - Veículos listados: ${visibleCount}` :
-                `Veículos Listados: ${visibleCount}`;
+                `Filtro [${activeFilter}] - Veículos : ${visibleCount}` :
+                `Veículos : ${visibleCount}`;
         }
 
         // Evento de clique nas legendas
