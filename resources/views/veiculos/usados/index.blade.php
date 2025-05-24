@@ -15,10 +15,10 @@
                             <option value="" {{ empty(session('marca_selecionado')) ? 'selected' : '' }}>Todos
                             </option>
                             @foreach ($marcas as $marca)
-                            <option value="{{ $marca->marca }}" {{ session('marca_selecionado')==$marca->marca ?
+                                                    <option value="{{ $marca->marca }}" {{ session('marca_selecionado') == $marca->marca ?
                                 'selected' : '' }}>
-                                {{ $marca->marca }}
-                            </option>
+                                                        {{ $marca->marca }}
+                                                    </option>
                             @endforeach
                         </select>
                     </div>
@@ -32,10 +32,10 @@
                             <option value="" {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                            <option value="{{ $veiculo->desc_veiculo }}" {{ session('modelo_selecionado')==$veiculo->
+                                                    <option value="{{ $veiculo->desc_veiculo }}" {{ session('modelo_selecionado') == $veiculo->
                                 desc_veiculo ? 'selected' : '' }}>
-                                {{ $veiculo->desc_veiculo }}
-                            </option>
+                                                        {{ $veiculo->desc_veiculo }}
+                                                    </option>
                             @endforeach
                         </select>
                     </div>
@@ -48,17 +48,17 @@
                             onchange="atualizarFiltro('combustivel', this.value)">
                             <option value="" {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
-                            <option value="Gasolina" {{ session('combustivel_selecionado')=='Gasolina' ? 'selected' : ''
+                            <option value="Gasolina" {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : ''
                                 }}>Gasolina
                             </option>
-                            <option value="Alcool" {{ session('combustivel_selecionado')=='Alcool' ? 'selected' : '' }}>
+                            <option value="Alcool" {{ session('combustivel_selecionado') == 'Alcool' ? 'selected' : '' }}>
                                 Álcool</option>
-                            <option value="Flex" {{ session('combustivel_selecionado')=='Flex' ? 'selected' : '' }}>
+                            <option value="Flex" {{ session('combustivel_selecionado') == 'Flex' ? 'selected' : '' }}>
                                 Flex
                             </option>
-                            <option value="Diesel" {{ session('combustivel_selecionado')=='Diesel' ? 'selected' : '' }}>
+                            <option value="Diesel" {{ session('combustivel_selecionado') == 'Diesel' ? 'selected' : '' }}>
                                 Diesel</option>
-                            <option value="Eletrico" {{ session('combustivel_selecionado')=='Eletrico' ? 'selected' : ''
+                            <option value="Eletrico" {{ session('combustivel_selecionado') == 'Eletrico' ? 'selected' : ''
                                 }}>Elétrico
                             </option>
                         </select>
@@ -73,10 +73,10 @@
                             <option value="" {{ empty(session('cor_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($cores as $cor)
-                            <option value="{{ $cor->cor }}" {{ session('cor_selecionado')==$cor->cor ? 'selected' : ''
-                                }}>
-                                {{ $cor->cor }}
-                            </option>
+                                <option value="{{ $cor->cor }}" {{ session('cor_selecionado') == $cor->cor ? 'selected' : ''
+                                                        }}>
+                                    {{ $cor->cor }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -91,10 +91,10 @@
                             <option value="" {{ empty(session('ano_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($anos as $ano)
-                            <option value="{{ $ano['Ano_Mod'] }}" {{ session('ano_selecionado')==$ano['Ano_Mod']
+                                                    <option value="{{ $ano['Ano_Mod'] }}" {{ session('ano_selecionado') == $ano['Ano_Mod']
                                 ? 'selected' : '' }}>
-                                {{ $ano['Ano_Mod'] }}
-                            </option>
+                                                        {{ $ano['Ano_Mod'] }}
+                                                    </option>
                             @endforeach
                         </select>
                     </div>
@@ -108,11 +108,11 @@
                             onchange="atualizarFiltro('portas', this.value)">
                             <option value="" {{ empty(session('portas_selecionado')) ? 'selected' : '' }}>Todos
                             </option>
-                            <option value="2" {{ session('portas_selecionado')=='2' ? 'selected' : '' }}>2
+                            <option value="2" {{ session('portas_selecionado') == '2' ? 'selected' : '' }}>2
                             </option>
-                            <option value="4" {{ session('portas_selecionado')=='4' ? 'selected' : '' }}>4
+                            <option value="4" {{ session('portas_selecionado') == '4' ? 'selected' : '' }}>4
                             </option>
-                            <option value="5" {{ session('portas_selecionado')=='5' ? 'selected' : '' }}>5
+                            <option value="5" {{ session('portas_selecionado') == '5' ? 'selected' : '' }}>5
                             </option>
                             </option>
                         </select>
@@ -184,7 +184,7 @@
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
                         <div x-data="{ open: false, veiculo: {} }" x-init=" @if (request('openModal') && request('veiculo_id')) $nextTick(() => {
-                                document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); }); @endif">
+                        document.getElementById('veiculo-{{ request('veiculo_id') }}')?.click(); }); @endif">
                             <table class="w-full table-auto">
                                 <thead class="bg-gray-100 text-left sticky top-0 z-10">
                                     <tr>
@@ -228,25 +228,40 @@
                                 <tbody class="text-sm">
                                     @foreach ($veiculos as $veiculo)
                                     @php
-                                    if ($veiculo->promocao) {
-                                    $rowColor = 'text-blue-600 font-bold';
-                                    } elseif (!$veiculo->ativo) {
-                                    $rowColor = 'text-gray-400';
-                                    } else {
-                                    if ($veiculo->local == 'Matriz') {
-                                    $rowColor = 'text-black';
-                                    } elseif ($veiculo->local == 'Filial') {
-                                    $rowColor = 'text-yellow-500';
-                                    } elseif ($veiculo->local == 'Consignado') {
-                                    $rowColor = 'text-green-500';
-                                    } else {
-                                    $rowColor = '';
-                                    }
-                                    }
-                                    $descricaoOpcional =
-                                    \App\Models\Opcionais::where('chassi', $veiculo->chassi)->value(
-                                    'descricao',
-                                    ) ?? 'Nenhum opcional cadastrado.';
+
+                                        // Cores de fundo baseadas em status/promoção
+                                        if ($veiculo->promocao) {
+                                            $bgColor = 'bg-blue-500 font-bold';
+                                        } elseif (!$veiculo->ativo) {
+                                            $bgColor = 'bg-gray-500';
+                                        } elseif ($veiculo->status == 'negociacao') {
+                                            $bgColor = 'bg-red-500';
+                                        } elseif ($veiculo->status == 'entrada') {
+                                            $bgColor = 'bg-gray-500';
+                                        } else {
+                                            $bgColor = 'bg-white'; // padrão
+                                        }
+
+                                        // Cores de texto baseadas no local
+                                        if ($veiculo->local == 'Matriz') {
+                                            $textColor = 'text-black';
+                                        } elseif ($veiculo->local == 'Filial') {
+                                            $textColor = 'text-yellow-500';
+                                        } elseif ($veiculo->local == 'Consignado') {
+                                            $textColor = 'text-green-500';
+                                        } else {
+                                            $textColor = '';
+                                        }
+
+                                        // Combina tudo, para que nao ocorra sobreposição de código
+                                        $rowColor = "$bgColor $textColor";
+
+
+
+                                        $descricaoOpcional =
+                                            \App\Models\Opcionais::where('chassi', $veiculo->chassi)->value(
+                                                'descricao',
+                                            ) ?? 'Nenhum opcional cadastrado.';
                                     @endphp
                                     <tr id="veiculo-{{ $veiculo->id }}"
                                         class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}" {{-- evento de clicar
@@ -271,14 +286,15 @@
                                                 vlr_nota: '{{ number_format($veiculo->vlr_nota, 0, ',', '.') }}',
                                                 faturado: '{{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}',
                                                 {{-- Essa linha leva a origem para o modal, assim ele saberá como voltar --}}
-                                                origem: 'usados' } "
-                                        {{-- @dblclick="window.location.href = '{{ route('veiculos.edit', ['id' => $veiculo->id]) }}?from=usados'"> --}}
+                                                origem: 'usados' } " {{--
+                                        @dblclick="window.location.href = '{{ route('veiculos.edit', ['id' => $veiculo->id]) }}?from=usados'">
+                                        --}}
                                         >
                                         <td class="p-1 px-1 py-1">{{ $veiculo->marca }}</td>
                                         <td class="p-1 px-1 py-1">
                                             @if ($veiculo->promocao)
-                                            <span class="ml-1 text-blue-600 font-bold"
-                                                title="Veículo em promoção">🔥</span>
+                                                <span class="ml-1 text-blue-600 font-bold"
+                                                    title="Veículo em promoção">🔥</span>
                                             @endif{{ $veiculo->desc_veiculo }}
                                         </td>
                                         <td class="p-1 px-1 py-1">{{ $veiculo->combustivel }}</td>
@@ -308,8 +324,10 @@
                                             {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
                                             dias
                                         </td>
-                                        <td>{{ $veiculo->status }}</td>
                                         <td class="hidden">{{ $veiculo->local }}</td>
+                                        <td class="hidden">{{ $veiculo->status }}</td>
+                                        {{-- <td>{{ $veiculo->local }}</td> --}}
+                                        {{-- <td>{{ $veiculo->status }}</td> --}}
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -334,15 +352,28 @@
                 {{ $veiculos->links() }}
             </div>
             <!-- Legenda de cores -->
-            <div class="text-sm"> Legenda Alocação =>
-                <span class="filter text-black font-semibold" data-filter="Matriz"
-                    style="cursor: pointer;">Matriz</span>
-                |
-                <span class="filter text-yellow-500 font-semibold" data-filter="Filial"
-                    style="cursor: pointer;">Filial</span> |
-                <span class="filter text-green-500 font-semibold" data-filter="Consignado"
-                    style="cursor: pointer;">Consignado</span>
+
+            <div class="flex flex-wrap gap-1 items-center">
+                <span class="font-medium">Legenda Cores:</span>
+                <span class="font-medium">Status =&gt; [</span>
+                {{-- Coluna 14 --}}
+                <span class="filter font-semibold text-red-500 cursor-pointer"
+                    data-filter="negociacao">Negociação</span> |
+                <span class="filter font-semibold text-gray-500 cursor-pointer"
+                    data-filter="indisponivel">Entrada</span> |
+                <span class="filter font-semibold text-blue-500 cursor-pointer" data-filter="promocao">Promoção</span> |
+                <span class="font-medium">] Localização =&gt; [</span>
+                {{-- Coluna 13 --}}
+                <span class="filter font-semibold text-black cursor-pointer" data-filter="Matriz">Matriz</span> |
+                <span class="filter font-semibold text-yellow-500 cursor-pointer" data-filter="Filial">Filial</span> |
+                <span class="filter font-semibold text-green-500 cursor-pointer"
+                    data-filter="Consignado">Consignação</span>
+                <span class="font-medium">] </span>
             </div>
+
+
+
+
         </x-rodape>
 
         <!-- Modal de Ajuda -->
@@ -404,7 +435,7 @@
         <!-- Scripts -->
         <script>
             // Torna a função global para uso em atributos inline (onchange)
-            window.atualizarFiltro = function(chave, valor) {
+            window.atualizarFiltro = function (chave, valor) {
                 let params = new URLSearchParams(window.location.search);
                 if (valor) {
                     params.set(chave, valor);
@@ -425,7 +456,7 @@
                 window.location.href = url.toString();
             }
 
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 // Filtro por faixa de valor
                 const slider = document.getElementById('slider-preco');
                 const sliderStart = [
@@ -450,12 +481,12 @@
                 const minLabel = document.getElementById('minValorLabel');
                 const maxLabel = document.getElementById('maxValorLabel');
 
-                slider.noUiSlider.on('update', function(values) {
+                slider.noUiSlider.on('update', function (values) {
                     minLabel.innerText = `R$ ${parseInt(values[0]).toLocaleString('pt-BR')}`;
                     maxLabel.innerText = `R$ ${parseInt(values[1]).toLocaleString('pt-BR')}`;
                 });
 
-                window.aplicarFiltroPreco = function() {
+                window.aplicarFiltroPreco = function () {
                     const valores = slider.noUiSlider.get();
                     const params = new URLSearchParams(window.location.search);
                     params.set('valor_min', valores[0]);
@@ -513,7 +544,7 @@
                 // Filtro por local
                 let activeFilter = null;
                 document.querySelectorAll('.filter').forEach(el => {
-                    el.addEventListener('click', function() {
+                    el.addEventListener('click', function () {
                         const filtro = this.getAttribute('data-filter');
                         activeFilter = activeFilter === filtro ? null : filtro;
                         applyFilter();
@@ -524,16 +555,38 @@
                     const rows = document.querySelectorAll('tbody tr');
                     let count = 0;
 
-                    rows.forEach(row => {
-                        const local = row.querySelector('td:nth-child(11)').textContent.trim();
-                        const show = !activeFilter || local === activeFilter;
-                        row.style.display = show ? '' : 'none';
-                        if (show) count++;
-                    });
+
+
+                    // Exiba apenas as linhas que correspondem ao filtro ativo
+                    if (activeFilter === 'Matriz' || activeFilter === 'Filial' || activeFilter === 'Consignado') {
+                        rows.forEach(row => {
+                            const local = row.querySelector('td:nth-child(14)').textContent.trim();
+                            console.log(' activeFilter:', activeFilter, '| linha local:', local);
+
+                            if (local === activeFilter) {
+                                row.style.display = '';
+                                count++;
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+
+                    } else {
+                        rows.forEach(row => {
+                            const status = row.querySelector('td:nth-child(15)').textContent.trim();
+                            console.log(' activeFilter:', activeFilter, '| linha status:', status);
+                            if (status === activeFilter) {
+                                row.style.display = '';
+                                count++;
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+                    }
 
                     document.getElementById('selectedVehiclesCount').textContent =
                         activeFilter ? `Filtro Aplicado [${activeFilter}] - Veículos listados: ${count}` :
-                        `Veículos Listados: ${count}`;
+                            `Veículos Listados: ${count}`;
                 }
             });
         </script>

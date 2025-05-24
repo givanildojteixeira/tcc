@@ -78,7 +78,7 @@ class UsadosController extends Controller
 
         // Inicia a query
         $query = Veiculo::where('novo_usado', 'Usado')
-            ->where('local', '!=', 'Avaliação');
+            ->where('status', '!=', 'avaliacao');
 
 
         // Aplica filtros se existirem

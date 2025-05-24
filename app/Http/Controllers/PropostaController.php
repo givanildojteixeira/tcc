@@ -230,7 +230,7 @@ class PropostaController extends Controller
         }
         // Atualiza status do veículo usado, se existir 
         if ($proposta->veiculoUsado1) {
-            $proposta->veiculoUsado1->status = 'negociacao';
+            $proposta->veiculoUsado1->status = 'entrada';
             // $proposta->veiculoUsado1->local = 'matriz';
             $proposta->veiculoUsado1->save();
         }
