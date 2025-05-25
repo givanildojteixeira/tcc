@@ -3,7 +3,7 @@
         tabAtiva: localStorage.getItem('aba_veiculo') || 'info',
         modelo_fab: '{{ old('modelo_fab') }}',
         cod_opcional: '{{ old('cod_opcional') }}',
-    
+
         setTab(tab) {
             this.tabAtiva = tab;
             localStorage.setItem('aba_veiculo', tab);
@@ -16,7 +16,7 @@
         const tab = tabAtiva;
         const primeiroCampo = $refs[tab + '_first'];
         if (primeiroCampo) primeiroCampo.focus();
-    
+
         @if(session('success'))
             localStorage.removeItem('aba_veiculo');
         @endif
@@ -120,10 +120,14 @@
                         @else
                             <div class="basis-[10%] flex-grow min-w-[100px]">
                                 <label class="block text-gray-700 font-medium mb-1">Placa</label>
-                                <input id="mask-placa" required type="text" name="placa" x-model="placa"
+
+                                <input
+                                    id="placa" type="text" name="placa" required
                                     value="{{ old('placa') }}"
-                                    class="placa w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none uppercase"
-                                    oninput="this.value = this.value.toUpperCase()" required>
+                                    class="uppercase w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                                    x-init="Inputmask('AAA-9*99').mask($el)"
+                                >
+
                             </div>
 
                         @endif
@@ -134,7 +138,9 @@
                         <div class="flex-grow basis-[12%] min-w-[100px]">
                             <label class="block text-gray-700 font-medium mb-1">Ano/Modelo</label>
                             <input required type="text" name="Ano_Mod" value="{{ old('Ano_Mod') }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                                x-init="Inputmask('9999/9999').mask($el)"
+                            >
                         </div>
 
 
@@ -234,7 +240,7 @@
                         </div>
                     </div>
                     @if (request('origem') === 'propostas')
-                        <input type="hidden" name="status" value="Avaliacao"> 
+                        <input type="hidden" name="status" value="Avaliacao">
                         * Veiculos usados incluídos por proposta, permanecem com status de avaliação, até provação gerencial.
                     @endif
                 </div>

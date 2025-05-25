@@ -108,11 +108,13 @@
                         </div>
                         @else
                         <!-- Placa -->
-                        <div class="basis-[10%] flex-grow min-w-[100px]">
+                        <div class="basis-[11%] flex-grow min-w-[110px]">
                             <label class="block text-gray-700 font-medium mb-1">Placa</label>
-                            <input id="mask-placa" type="text" name="placa" value="{{ old('placa', $veiculo->placa) }}"
+                            <input id="placa" type="text" name="placa" value="{{ old('placa', $veiculo->placa) }}"
                                 class="placa w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none uppercase"
-                                oninput="this.value = this.value.toUpperCase()" required>
+                                required
+                                x-init="Inputmask('AAA-9*99').mask($el)"
+                            >
                         </div>
                         @endif
                     </div>
@@ -123,7 +125,9 @@
                         <div class="flex-grow basis-[15%] min-w-[150px]">
                             <label class="block text-gray-700 font-medium mb-1">Ano/Modelo</label>
                             <input type="text" name="Ano_Mod" value="{{ old('Ano_Mod', $veiculo->Ano_Mod) }}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                                x-init="Inputmask('9999/9999').mask($el)"
+                            >
                         </div>
 
                         <!-- Cor -->

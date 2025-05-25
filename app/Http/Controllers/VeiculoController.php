@@ -18,7 +18,7 @@ class VeiculoController extends Controller
     public function edit($id)
     {
         $veiculo = Veiculo::with('vendedor')->findOrFail($id);
-        
+
         $familias = Familia::all(); // <- aqui você pega os dados do banco
 
         //relacionamento de familia <> cor
@@ -82,6 +82,7 @@ class VeiculoController extends Controller
 
         // Força maiúsculas
         $dados['desc_veiculo'] = mb_strtoupper($dados['desc_veiculo'], 'UTF-8');
+        $dados['placa'] = mb_strtoupper($dados['placa'], 'UTF-8');
 
         // Corrige campo de família em usados
         if ($veiculo->novo_usado === 'Usado') {
