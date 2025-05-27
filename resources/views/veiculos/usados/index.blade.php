@@ -231,15 +231,15 @@
 
                                         // Cores de fundo baseadas em status/promoção
                                         if ($veiculo->promocao) {
-                                            $bgColor = 'bg-blue-500 font-bold';
+                                            $bgColor = 'bg-blue-500 group hover:bg-blue-600 font-bold';
                                         } elseif (!$veiculo->ativo) {
-                                            $bgColor = 'bg-gray-500';
+                                            $bgColor = 'bg-gray-500 group hover:bg-gray-600';
                                         } elseif ($veiculo->status == 'negociacao') {
-                                            $bgColor = 'bg-red-500';
+                                            $bgColor = 'bg-red-500 group hover:bg-red-600';
                                         } elseif ($veiculo->status == 'entrada') {
-                                            $bgColor = 'bg-gray-500';
+                                            $bgColor = 'bg-gray-500 group hover:bg-gray-600';
                                         } else {
-                                            $bgColor = 'bg-white'; // padrão
+                                            $bgColor = 'bg-white group hover:bg-gray-100'; 
                                         }
 
                                         // Cores de texto baseadas no local
@@ -264,9 +264,8 @@
                                             ) ?? 'Nenhum opcional cadastrado.';
                                     @endphp
                                     <tr id="veiculo-{{ $veiculo->id }}"
-                                        class="hover:bg-gray-100 cursor-pointer {{ $rowColor }}" {{-- evento de clicar
-                                        tabela Veículo Usado --}} @click="
-                                            open = true;
+                                         class="cursor-pointer {{ $bgColor }} {{ $textColor }}"
+                                        @click=" open = true;
                                             veiculo = {
                                                 id: '{{ $veiculo->id }}',
                                                 desc_veiculo: '{{ $veiculo->desc_veiculo }}',

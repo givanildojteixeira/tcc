@@ -11,6 +11,7 @@ export default {
 
     // 👇 ADICIONE AQUI
     safelist: [
+            'bg-blue-200', 'hover:bg-blue-300',
         'bg-blue-600', 'hover:bg-blue-700',
         'bg-green-600', 'hover:bg-green-700',
         'bg-red-600', 'hover:bg-red-700',
