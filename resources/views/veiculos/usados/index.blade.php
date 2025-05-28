@@ -8,17 +8,17 @@
 
                     <!-- ComboBox Marca -->
                     <div class="flex items-center gap-1 px-1 py-1">
-                        <span class="text-xs font-semibold text-gray-600">Marca:</span>
+                        <span class="font-semibold text-gray-600"><strong>Família:</strong></span>
                         <select id="marcaVeiculo"
                             class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
                             onchange="atualizarFiltro('marca', this.value)">
                             <option value="" {{ empty(session('marca_selecionado')) ? 'selected' : '' }}>Todos
                             </option>
                             @foreach ($marcas as $marca)
-                                                    <option value="{{ $marca->marca }}" {{ session('marca_selecionado') == $marca->marca ?
-                                'selected' : '' }}>
-                                                        {{ $marca->marca }}
-                                                    </option>
+                                <option value="{{ $marca->marca }}" {{ session('marca_selecionado') == $marca->marca ?
+                                    'selected' : '' }}>
+                                    {{ $marca->marca }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -32,10 +32,10 @@
                             <option value="" {{ empty(session('modelo_selecionado')) ? 'selected' : '' }}>
                                 Todos</option>
                             @foreach ($veiculosUnicos as $veiculo)
-                                                    <option value="{{ $veiculo->desc_veiculo }}" {{ session('modelo_selecionado') == $veiculo->
-                                desc_veiculo ? 'selected' : '' }}>
-                                                        {{ $veiculo->desc_veiculo }}
-                                                    </option>
+                                <option value="{{ $veiculo->desc_veiculo }}" {{ session('modelo_selecionado') == $veiculo->
+                                    desc_veiculo ? 'selected' : '' }}>
+                                    {{ $veiculo->desc_veiculo }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -43,25 +43,20 @@
                     <!-- Combustível -->
                     <div class="flex items-center gap-1">
                         <span class="text-xs font-semibold text-gray-600">Combustível:</span>
-                        <select id="combustivel"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            onchange="atualizarFiltro('combustivel', this.value)">
-                            <option value="" {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>
-                                Todos</option>
-                            <option value="Gasolina" {{ session('combustivel_selecionado') == 'Gasolina' ? 'selected' : ''
-                                }}>Gasolina
-                            </option>
-                            <option value="Alcool" {{ session('combustivel_selecionado') == 'Alcool' ? 'selected' : '' }}>
-                                Álcool</option>
-                            <option value="Flex" {{ session('combustivel_selecionado') == 'Flex' ? 'selected' : '' }}>
-                                Flex
-                            </option>
-                            <option value="Diesel" {{ session('combustivel_selecionado') == 'Diesel' ? 'selected' : '' }}>
-                                Diesel</option>
-                            <option value="Eletrico" {{ session('combustivel_selecionado') == 'Eletrico' ? 'selected' : ''
-                                }}>Elétrico
-                            </option>
-                        </select>
+<select id="combustivel"
+    class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+    onchange="atualizarFiltro('combustivel', this.value)">
+    <option value="" {{ empty(session('combustivel_selecionado')) ? 'selected' : '' }}>
+        Todos
+    </option>
+    @foreach ($combustiveis as $combustivel)
+        <option value="{{ $combustivel->combustivel }}"
+            {{ session('combustivel_selecionado') == $combustivel->combustivel ? 'selected' : '' }}>
+            {{ $combustivel->combustivel }}
+        </option>
+    @endforeach
+</select>
+
                     </div>
 
                     <!-- Cores Veículos -->
@@ -74,7 +69,7 @@
                                 Todos</option>
                             @foreach ($cores as $cor)
                                 <option value="{{ $cor->cor }}" {{ session('cor_selecionado') == $cor->cor ? 'selected' : ''
-                                                        }}>
+                                                                                }}>
                                     {{ $cor->cor }}
                                 </option>
                             @endforeach
@@ -101,22 +96,21 @@
 
 
                     <!-- Portas -->
-                    <div class="flex items-center gap-1">
-                        <span class="text-xs font-semibold text-gray-600">Portas:</span>
-                        <select id="portas"
-                            class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            onchange="atualizarFiltro('portas', this.value)">
-                            <option value="" {{ empty(session('portas_selecionado')) ? 'selected' : '' }}>Todos
-                            </option>
-                            <option value="2" {{ session('portas_selecionado') == '2' ? 'selected' : '' }}>2
-                            </option>
-                            <option value="4" {{ session('portas_selecionado') == '4' ? 'selected' : '' }}>4
-                            </option>
-                            <option value="5" {{ session('portas_selecionado') == '5' ? 'selected' : '' }}>5
-                            </option>
-                            </option>
-                        </select>
-                    </div>
+<div class="flex items-center gap-1">
+    <span class="text-xs font-semibold text-gray-600">Portas:</span>
+    <select id="portas"
+        class="w-full px-2 py-1 text-xs border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-400"
+        onchange="atualizarFiltro('portas', this.value)">
+        <option value="" {{ empty(session('portas_selecionado')) ? 'selected' : '' }}>Todos</option>
+        @foreach ($portas as $qtd)
+            <option value="{{ $qtd->portas }}"
+                {{ session('portas_selecionado') == $qtd->portas ? 'selected' : '' }}>
+                {{ $qtd->portas }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
                 </div>
             </div>
 
@@ -239,7 +233,7 @@
                                         } elseif ($veiculo->status == 'entrada') {
                                             $bgColor = 'bg-gray-500 group hover:bg-gray-600';
                                         } else {
-                                            $bgColor = 'bg-white group hover:bg-gray-100'; 
+                                            $bgColor = 'bg-white group hover:bg-gray-100';
                                         }
 
                                         // Cores de texto baseadas no local
@@ -264,8 +258,7 @@
                                             ) ?? 'Nenhum opcional cadastrado.';
                                     @endphp
                                     <tr id="veiculo-{{ $veiculo->id }}"
-                                         class="cursor-pointer {{ $bgColor }} {{ $textColor }}"
-                                        @click=" open = true;
+                                        class="cursor-pointer {{ $bgColor }} {{ $textColor }}" @click=" open = true;
                                             veiculo = {
                                                 id: '{{ $veiculo->id }}',
                                                 desc_veiculo: '{{ $veiculo->desc_veiculo }}',

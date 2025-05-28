@@ -25,26 +25,58 @@ class UsadosController extends Controller
 
     // Método privado que carrega os dados gerais, desconsiderando qualquer filtro
     // com objetivo de alimentar as combos da view
-    private function carregarDadosVeiculos()
-    {
-        $campos = ['desc_veiculo', 'cor', 'marca', 'Ano_Mod'];
-        $dados = [];
 
-        foreach ($campos as $campo) {
-            $dados[$campo] = Veiculo::select($campo)
-                ->distinct()
-                ->where('novo_usado', 'Usado')
-                ->orderBy($campo)
-                ->get();
+    private function carregarDadosVeiculos(Request $request)
+{
+    $campos = ['desc_veiculo', 'cor', 'Ano_Mod', 'combustivel', 'portas'];
+    $dados = [];
+
+    // Marca: sempre todas
+    $dados['marca'] = Veiculo::select('marca')
+        ->distinct()
+        ->where('novo_usado', 'Usado')
+        ->orderBy('marca')
+        ->get();
+
+    foreach ($campos as $campo) {
+        $query = Veiculo::select($campo)
+            ->distinct()
+            ->where('novo_usado', 'Usado');
+
+        if ($request->filled('marca')) {
+            $query->where('marca', $request->marca);
+        }
+        if ($request->filled('cor')) {
+            $query->where('cor', $request->cor);
+        }
+        if ($request->filled('ano')) {
+            $query->where('Ano_Mod', $request->ano);
+        }
+        if ($request->filled('modelo')) {
+            $query->where('desc_veiculo', $request->modelo);
+        }
+        if ($request->filled('portas')) {
+            $query->where('portas', $request->portas);
+        }
+        if ($request->filled('combustivel') && $campo !== 'combustivel') {
+            $query->where('combustivel', $request->combustivel);
         }
 
-        return [
-            'veiculosUnicos' => $dados['desc_veiculo'],
-            'cores' => $dados['cor'],
-            'marcas' => $dados['marca'],
-            'anos' => $dados['Ano_Mod'],
-        ];
+        $dados[$campo] = $query->orderBy($campo)->get();
     }
+
+    return [
+        'veiculosUnicos' => $dados['desc_veiculo'],
+        'cores' => $dados['cor'],
+        'marcas' => $dados['marca'],
+        'anos' => $dados['Ano_Mod'],
+        'combustiveis' => $dados['combustivel'],
+        'portas' => $dados['portas'],
+    ];
+}
+
+
+
 
     public function index(Request $request)
     {
@@ -74,7 +106,7 @@ class UsadosController extends Controller
         session(['valor_min' => $valorMin, 'valor_max' => $valorMax]);
 
         // Carrega os dados compartilhados
-        $dados = $this->carregarDadosVeiculos();
+        $dados = $this->carregarDadosVeiculos($request);
 
         // Inicia a query
         $query = Veiculo::where('novo_usado', 'Usado')
