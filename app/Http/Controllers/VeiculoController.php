@@ -82,13 +82,12 @@ class VeiculoController extends Controller
 
         // Força maiúsculas
         $dados['desc_veiculo'] = mb_strtoupper($dados['desc_veiculo'], 'UTF-8');
-        $dados['placa'] = mb_strtoupper($dados['placa'], 'UTF-8');
-
-        // Corrige campo de família em usados
+        
+        // Somente parea veiculos usados
         if ($veiculo->novo_usado === 'Usado') {
+            $dados['placa'] = mb_strtoupper($dados['placa'], 'UTF-8');
             // $dados['familia'] = $request['marca'];
         }
-
 
         $veiculo->update($dados);
 

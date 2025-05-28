@@ -39,7 +39,7 @@ class NovosController extends Controller
                     ['novo_usado', 'Novo']
                 ]);
 
-            if ($familia && $campo === 'desc_veiculo') {
+            if ($familia) {
                 $query->where('desc_veiculo', 'LIKE', "%{$familia}%");
             }
 
@@ -190,9 +190,9 @@ class NovosController extends Controller
 
         // Executa a consulta
         $veiculos = $query
-            ->when(request()->routeIs('veiculos.usados.index'), function ($q) {
-                $q->with('vendedor'); // carrega o relacionamento apenas se for rota de usados
-            })
+            // ->when(request()->routeIs('veiculos.usados.index'), function ($q) {
+            //     $q->with('vendedor'); // carrega o relacionamento apenas se for rota de usados
+            // })
             ->orderBy('desc_veiculo')
             ->paginate($this->pg())
             ->appends(request()->query());
