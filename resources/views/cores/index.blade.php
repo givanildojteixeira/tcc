@@ -2,11 +2,13 @@
     <div x-data="{
         showModal: false,
         editModal: false,
+        carregado: false,
         editData: {
             id: null,
             cor_desc: ''
         }
-    }" class="py-1 px-1 max-w-4xl mx-auto">
+    }" x-init="$nextTick(() => carregado = true)">
+     <div x-show="carregado" x-cloak class="py-1 px-1 max-w-4xl mx-auto">
 
         <!-- Cabeçalho -->
         <div class="flex items-center justify-between mb-6">
@@ -47,18 +49,18 @@
                     <table class="w-full table-fixed">
                         <thead class="bg-gray-300 text-left sticky top-0 z-30 border-t border-gray-900 shadow-sm">
                             <tr>
-                                <th class="px-4 py-2 border-b">Código</th>
-                                <th class="px-4 py-2 border-b">Descrição</th>
-                                <th class="px-4 py-2 border-b text-right">Ações</th>
+                                <th class="px-4 py-2 border-b text-center">Código</th>
+                                <th class="px-4 py-2 border-b text-center">Descrição</th>
+                                <th class="px-4 py-2 border-b text-center ">Ações</th>
                             </tr>
                         </thead>
                         <tbody class="text-sm">
                             @forelse ($cores as $cor)
                                 <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-2 border-b">{{ $cor->id }}</td>
-                                    <td class="px-4 py-2 border-b">{{ $cor->cor_desc }}</td>
-                                    <td class="px-4 py-2 border-b text-right">
-                                        <div class="flex justify-end gap-2">
+                                    <td class="px-4 py-2 border-b text-center">{{ $cor->id }}</td>
+                                    <td class="px-4 py-2 border-b text-center">{{ $cor->cor_desc }}</td>
+                                    <td class="px-4 py-2 border-b text-center">
+                                        <div class="flex justify-center gap-2">
                                             <button @click="editModal = true; editData = {
                                                         id: {{ $cor->id }},
                                                         cor_desc: '{{ addslashes($cor->cor_desc) }}'
@@ -67,14 +69,17 @@
                                                 Editar
                                             </button>
 
-                                            <form action="{{ route('cores.destroy', $cor->id) }}" method="POST"
-                                                onsubmit="return confirm('Deseja excluir esta cor?')">
-                                                @csrf @method('DELETE')
-                                                <button
-                                                    class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
-                                                    Excluir
-                                                </button>
-                                            </form>
+                                            <x-modal-excluir 
+                                                :id="$cor->id" 
+                                                :action="route('cores.destroy',$cor->id)" 
+                                                :registro="'Modelo: ' . $cor->cor_desc">
+                                                <x-slot:trigger>
+                                                    <button @click="show = true"
+                                                        class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
+                                                        Excluir
+                                                    </button>
+                                                </x-slot:trigger>
+                                            </x-modal-excluir>
                                         </div>
                                     </td>
                                 </tr>

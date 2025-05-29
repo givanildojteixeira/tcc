@@ -4,6 +4,7 @@
         editModal: false,
         openDescricaoId: null,
         excluirModal: false,
+        carregado: false,
         idExcluir: null,
         editData: {
             id: null,
@@ -15,7 +16,8 @@
             this.idExcluir = id;
             this.excluirModal = true;
         }
-    }" class="py-1 px-1 max-w-4xl mx-auto">
+    }" x-init="$nextTick(() => carregado = true)"> 
+    <div x-show="carregado" x-cloak class="py-1 px-1 max-w-4xl mx-auto">
 
         <!-- Cabeçalho -->
         <div class="flex items-center justify-between mb-6">
@@ -56,72 +58,79 @@
                 <table class="w-full table-fixed">
                     <thead class="bg-gray-300 text-left sticky top-0 z-30 border-t border-gray-900 shadow-sm">
                         <tr>
-                            <th class="px-4 py-2 border-b">Modelo/Fab</th>
-                            <th class="px-4 py-2 border-b">Código</th>
-                            <th class="px-4 py-2 border-b">Descrição</th>
-                            <th class="px-4 py-2 border-b text-right">Ações</th>
+                            <th class="w-1/4 px-4 py-2 border-b text-center">Modelo/Fab</th>
+                            <th class="w-1/4 px-4 py-2 border-b text-center">Código</th>
+                            <th class="w-1/2 px-4 py-2 border-b text-center">Descrição</th>
+                            <th class="w-1/4 px-4 py-2 border-b text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
                         @forelse ($opcionais as $opcional)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 border-b">{{ $opcional->modelo_fab }}</td>
-                                <td class="px-4 py-2 border-b">{{ $opcional->cod_opcional }}</td>
-                                <td class="px-4 py-2 border-b">
-                                    <div class="flex items-center justify-between gap-2">
-                                        <div class="truncate max-w-[200px]">
-                                            {{ Str::limit($opcional->descricao, 120, '...') }}
-                                        </div>
-                                        <button @click="openDescricaoId = {{ $opcional->id }}"
-                                            class="text-blue-600 hover:text-blue-800 hover:underline text-sm whitespace-nowrap">
-                                            <i class="fa-solid fa-eye mr-1"></i> Ver mais
-                                        </button>
-                                    </div>
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-4 py-2 border-b text-center">{{ $opcional->modelo_fab }}</td>
+                                                <td class="px-4 py-2 border-b text-center">{{ $opcional->cod_opcional }}</td>
+                                                <td class="px-4 py-2 border-b text-center">
+                                                    <div class="flex justify-center gap-2">
+                                                        <div class="truncate max-w-[200px]">
+                                                            {{ Str::limit($opcional->descricao, 120, '...') }}
+                                                        </div>
+                                                        <button @click="openDescricaoId = {{ $opcional->id }}"
+                                                            class="text-blue-600 hover:text-blue-800 hover:underline text-sm whitespace-nowrap">
+                                                            <i class="fa-solid fa-eye mr-1"></i> Ver mais
+                                                        </button>
+                                                    </div>
 
-                                    <!-- Modal de Descrição -->
-                                    <div x-show="openDescricaoId === {{ $opcional->id }}"
-                                        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
-                                        style="display: none;">
-                                        <div @click.away="openDescricaoId = null"
-                                            class="bg-white p-6 rounded-lg max-w-xl w-full shadow-lg">
-                                            <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                                                Descrição Completa — Modelo: {{ $opcional->modelo_fab }} | Código:
-                                                {{ $opcional->cod_opcional }}
-                                            </h3>
-                                            <ul
-                                                class="text-gray-700 list-disc pl-5 space-y-1 max-h-64 overflow-y-auto pr-2">
-                                                @foreach (explode('/', $opcional->descricao) as $item)
-                                                    <li>{{ trim($item) }}</li>
-                                                @endforeach
-                                            </ul>
-                                            <div class="mt-6 text-right">
-                                                <button @click="openDescricaoId = null"
-                                                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                                                    Fechar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-4 py-2 border-b text-right">
-                                    <div class="flex justify-end gap-2">
-                                        <button @click="editModal = true; editData = {
-                                                            id: {{ $opcional->id }},
-                                                            modelo_fab: '{{ addslashes($opcional->modelo_fab) }}',
-                                                            cod_opcional: '{{ addslashes($opcional->cod_opcional) }}',
-                                                            descricao: `{{ addslashes($opcional->descricao) }}`
-                                                        }"
-                                            class="px-3 py-1 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 text-sm">
-                                            Editar
-                                        </button>
-
-                                        <button type="button" @click="confirmarExclusao({{ $opcional->id }})"
-                                            class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
-                                            Excluir
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                                                    <!-- Modal de Descrição -->
+                                                    <div x-show="openDescricaoId === {{ $opcional->id }}"
+                                                        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+                                                        style="display: none;">
+                                                        <div @click.away="openDescricaoId = null"
+                                                            class="bg-white p-6 rounded-lg max-w-xl w-full shadow-lg">
+                                                            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                                                                Descrição Completa — Modelo: {{ $opcional->modelo_fab }} | Código:
+                                                                {{ $opcional->cod_opcional }}
+                                                            </h3>
+                                                            <ul
+                                                                class="text-gray-700 list-disc pl-5 space-y-1 max-h-64 overflow-y-auto pr-2">
+                                                                @foreach (explode('/', $opcional->descricao) as $item)
+                                                                    <li>{{ trim($item) }}</li>
+                                                                @endforeach
+                                                            </ul>
+                                                            <div class="mt-6 text-right">
+                                                                <button @click="openDescricaoId = null"
+                                                                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                                                    Fechar
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-4 py-2 border-b text-center">
+                                                    <div class="flex justify-center gap-2">
+                                                        <button
+                                                            @click="editModal = true; editData = {
+                                                                                                                                                    id: {{ $opcional->id }},
+                                                                                                                                                    modelo_fab: '{{ addslashes($opcional->modelo_fab) }}',
+                                                                                                                                                    cod_opcional: '{{ addslashes($opcional->cod_opcional) }}',
+                                                                                                                                                    descricao: `{{ addslashes($opcional->descricao) }}`
+                                                                                                                                                }"
+                                                            class="px-3 py-1 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 text-sm">
+                                                            Editar
+                                                        </button>
+                                                        <x-modal-excluir :id="$opcional->id" :action="route(
+                                'opcionais.destroy',
+                                $opcional->id
+                            )" :registro="'Modelo: ' . $opcional->modelo_fab . ' | Código: ' . $opcional->cod_opcional">
+                                                            <x-slot:trigger>
+                                                                <button @click="show = true"
+                                                                    class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
+                                                                    Excluir
+                                                                </button>
+                                                            </x-slot:trigger>
+                                                        </x-modal-excluir>
+                                                    </div>
+                                                </td>
+                                            </tr>
                         @empty
                             <tr>
                                 <td colspan="4" class="px-4 py-2 text-center text-gray-500">Nenhum opcional encontrado.</td>
@@ -160,7 +169,8 @@
 
         <!-- Modal de Ajuda -->
         <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6 animate-shake border-t-4 border-blue-400">
+            <div
+                class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6 animate-shake border-t-4 border-blue-400">
                 <!-- Ícone  -->
                 <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow">
                     <i class="fas fa-info-circle text-blue-500 text-4xl"></i>
@@ -198,38 +208,5 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal de Exclusão com ícone e efeito -->
-        <div x-show="excluirModal" x-transition.opacity
-            class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none;">
-
-            <form method="POST" :action="'/opcionais/' + idExcluir" @click.away="excluirModal = false"
-                class="bg-white p-6 rounded-lg sshadow-xl max-w-3xl w-full animate-shake border-t-4 border-red-500 relative">
-                @csrf
-                @method('DELETE')
-
-                <!-- Ícone de atenção -->
-                <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow">
-                    <i class="fas fa-exclamation-triangle text-red-500 text-4xl"></i>
-                </div>
-
-                <h2 class="text-lg font-semibold text-gray-800 mt-6 text-center">Confirmação de Exclusão</h2>
-                <p class="text-sm text-gray-600 text-center mb-6">
-                    Tem certeza de que deseja excluir este opcional?<br>
-                    <span class="text-red-600 font-medium">Essa ação não poderá ser desfeita.</span>
-                </p>
-
-                <div class="flex justify-end gap-2">
-                    <button type="button" @click="excluirModal = false"
-                        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
-                        Sim, excluir
-                    </button>
-                </div>
-            </form>
-        </div>
-
     </div>
 </x-app-layout>
