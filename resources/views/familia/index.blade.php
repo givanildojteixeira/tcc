@@ -8,8 +8,8 @@
                     @php
                         $voltarPara =
                             request('from') === 'create'
-                                ? route('veiculos.create', ['from' => request('origem')])
-                                : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
+                            ? route('veiculos.create', ['from' => request('origem')])
+                            : url('/veiculos/' . request('from') . '/edit?from=' . request('origem'));
                     @endphp
                     <a href="{{ $voltarPara }}"
                         class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-sm transition">
@@ -56,17 +56,17 @@
             @endphp
             @if ($familia)
                 <script>
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         preencherFormulario("{{ $familia->id }}", "{{ $familia->descricao }}", "{{ $familia->site ?? '' }}");
                     });
                 </script>
             @endif
 
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
+                document.addEventListener('DOMContentLoaded', function () {
                     const form = document.getElementById('formFamilia');
 
-                    form.addEventListener('submit', function(e) {
+                    form.addEventListener('submit', function (e) {
                         const methodField = form.querySelector('input[name="_method"]');
                         const isAlterar = methodField && methodField.value === 'PUT';
 
@@ -77,19 +77,19 @@
                             const formData = new FormData(form);
 
                             fetch(actionUrl, {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
-                                        'Accept': 'application/json',
-                                    },
-                                    body: formData
-                                })
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
+                                    'Accept': 'application/json',
+                                },
+                                body: formData
+                            })
                                 .then(response => {
                                     if (response.ok) {
                                         window.location.href =
                                             "{{ request('from') === 'create'
-                                                ? route('veiculos.create', ['from' => request('origem')])
-                                                : url('/veiculos/' . request('from') . '/edit?from=' . request('origem')) }}";
+            ? route('veiculos.create', ['from' => request('origem')])
+            : url('/veiculos/' . request('from') . '/edit?from=' . request('origem')) }}";
                                     } else {
                                         return response.json().then(err => {
                                             alert("Erro ao alterar: " + (err.message ||
@@ -134,13 +134,11 @@
                     <input type="hidden" name="id" x-model="idSelecionado">
 
                     <!-- Botão dinâmico -->
-                    <button type="submit" id="botaoFamilia"
-                        :class="idSelecionado
-                            ?
-                            'flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600' :
-                            'flex items-center gap-1 bg-green-600 hover:bg-green-700' +
-                            ' text-white px-3 py-1.5 text-sm rounded-md shadow'"
-                        class="transition">
+                    <button type="submit" id="botaoFamilia" :class="idSelecionado
+        ?
+        'flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600' :
+        'flex items-center gap-1 bg-green-600 hover:bg-green-700' +
+        ' text-white px-3 py-1.5 text-sm rounded-md shadow'" class="transition">
                         <i :class="idSelecionado ? 'fas fa-pen' : 'fas fa-plus-circle'"></i>
                         <span x-text="idSelecionado ? 'Alterar' : 'Cadastrar'"></span>
                     </button>
@@ -272,8 +270,8 @@
                                 <div class="grid grid-cols-1 gap-2 text-sm">
                                     @foreach ($cores as $cor)
                                         <label class="inline-flex items-center gap-2">
-                                            <input type="checkbox" class="form-checkbox text-green-600"
-                                                name="cores[]" value="{{ $cor->id }}">
+                                            <input type="checkbox" class="form-checkbox text-green-600" name="cores[]"
+                                                value="{{ $cor->id }}">
                                             {{ $cor->cor_desc }}
                                         </label>
                                     @endforeach
@@ -337,8 +335,7 @@
                                         class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-800 mr-3"
-                                            title="Excluir">
+                                        <button type="submit" class="text-red-600 hover:text-red-800 mr-3" title="Excluir">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>
@@ -374,11 +371,11 @@
     </x-rodape>
     <!-- Modal de Ajuda -->
     <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
-
-            <!-- Ícone de Informação à esquerda -->
-            <div class="flex items-start">
-                <i class="fas fa-info-circle text-blue-500 text-6xl"></i>
+        <div
+            class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6 animate-shake border-t-4 border-blue-400">
+            <!-- Ícone  -->
+            <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow">
+                <i class="fas fa-info-circle text-blue-500 text-4xl"></i>
             </div>
 
             <!-- Conteúdo do Modal -->

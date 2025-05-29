@@ -60,9 +60,9 @@
                                     <td class="px-4 py-2 border-b text-right">
                                         <div class="flex justify-end gap-2">
                                             <button @click="editModal = true; editData = {
-                                                    id: {{ $cor->id }},
-                                                    cor_desc: '{{ addslashes($cor->cor_desc) }}'
-                                                }"
+                                                        id: {{ $cor->id }},
+                                                        cor_desc: '{{ addslashes($cor->cor_desc) }}'
+                                                    }"
                                                 class="px-3 py-1 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 text-sm">
                                                 Editar
                                             </button>
@@ -104,11 +104,11 @@
     </div>
     <!-- Modal de Ajuda -->
     <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
-
-            <!-- Ícone -->
-            <div class="flex items-start">
-                <i class="fas fa-info-circle text-blue-500 text-6xl"></i>
+        <div
+            class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6 animate-shake border-t-4 border-blue-400">
+            <!-- Ícone  -->
+            <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow">
+                <i class="fas fa-info-circle text-blue-500 text-4xl"></i>
             </div>
 
             <!-- Conteúdo -->

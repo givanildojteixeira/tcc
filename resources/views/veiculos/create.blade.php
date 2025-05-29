@@ -159,7 +159,7 @@
                                         <option value="">Selecione uma cor</option>
                                         @foreach ($cores as $cor)
                                             <option value="{{ $cor->cor_desc }}" {{ old('cor') === $cor->cor_desc ? 'selected' : ''
-                                                                    }}>
+                                                                            }}>
                                                 {{ $cor->cor_desc }}
                                             </option>
                                         @endforeach
@@ -189,7 +189,7 @@
                                     class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                                     @foreach (['Gasolina', 'Etanol', 'Diesel', 'Flex', 'Elétrico', 'GNV'] as $comb)
                                         <option value="{{ $comb }}" {{ old('combustivel') == $comb ? 'selected' : '' }}>{{ $comb
-                                                    }}
+                                                        }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -405,11 +405,11 @@
 
         <!-- Modal de Ajuda -->
         <div id="modalAjuda" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6">
-
-                <!-- Ícone -->
-                <div class="flex items-start">
-                    <i class="fas fa-info-circle text-blue-500 text-6xl"></i>
+            <div
+                class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative flex gap-6 animate-shake border-t-4 border-blue-400">
+                <!-- Ícone  -->
+                <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow">
+                    <i class="fas fa-info-circle text-blue-500 text-4xl"></i>
                 </div>
 
                 <!-- Conteúdo -->
