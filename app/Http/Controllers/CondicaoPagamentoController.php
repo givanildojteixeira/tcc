@@ -16,7 +16,7 @@ class CondicaoPagamentoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'descricao' => 'required|string|max:100|unique:condicao_pagamentos,descricao',
+            'descricao' => 'required|string|max:100|unique:condicao_pagamentos,descricao,'
         ]);
 
         CondicaoPagamento::create($request->only('descricao'));
@@ -24,16 +24,23 @@ class CondicaoPagamentoController extends Controller
         return redirect()->back()->with('success', 'Condição de pagamento cadastrada com sucesso!');
     }
 
-    public function update(Request $request, CondicaoPagamento $condicao_pagamento)
+
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'descricao' => 'required|string|max:100|unique:condicao_pagamentos,descricao,' . $condicao_pagamento->id,
+            'descricao' => 'required|string|max:100',
         ]);
 
-        $condicao_pagamento->update($request->only('descricao'));
+        $condicao = CondicaoPagamento::findOrFail($id);
 
-        return redirect()->back()->with('success', 'Condição de pagamento atualizada com sucesso!');
+        $condicao->descricao = $request->input('descricao');
+        $condicao->financeira = $request->boolean('financeira'); // ← Aqui o cast correto
+
+        $condicao->save();
+
+        return back()->with('success', 'Condição de pagamento atualizada.');
     }
+
 
     public function destroy(CondicaoPagamento $condicao_pagamento)
     {

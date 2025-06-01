@@ -27,4 +27,11 @@ class Negociacao extends Model
     {
         return $this->belongsTo(CondicaoPagamento::class, 'id_cond_pagamento');
     }
+
+    public function veiculo()
+    {
+        return $this->belongsTo(Veiculo::class);
+    }
+
+
 }

@@ -11,9 +11,12 @@ class CondicaoPagamento extends Model
         protected $table = 'condicao_pagamentos';
 
     protected $fillable = ['descricao'];
+    protected $casts = ['financeira' => 'boolean',];
 
     public function negociacoes()
     {
         return $this->hasMany(Negociacao::class, 'id_cond_pagamento');
     }
+
+
 }

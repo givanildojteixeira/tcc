@@ -137,7 +137,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('condicoes-pagamento')->name('condicao_pagamento.')->group(function () {
         Route::get('/', [CondicaoPagamentoController::class, 'index'])->name('index');
         Route::post('/', [CondicaoPagamentoController::class, 'store'])->name('store');
-        Route::put('/{condicao_pagamento}', [CondicaoPagamentoController::class, 'update'])->name('update');
+        Route::put('/{id}', [CondicaoPagamentoController::class, 'update'])->name('update');
         Route::delete('/{condicao_pagamento}', [CondicaoPagamentoController::class, 'destroy'])->name('destroy');
     });
 
@@ -146,14 +146,15 @@ Route::middleware('auth')->group(function () {
 
     //Propostas
     Route::get('/propostas/testar-session', function () {
-        return session('proposta'); });
+        return session('proposta');
+    });
 
     Route::get('/propostas', [PropostaController::class, 'index'])->name('propostas.index');
     Route::get('/propostas/create', [PropostaController::class, 'create'])->name('propostas.create');
     Route::get('/propostas/nova', [PropostaController::class, 'limparECreate'])->name('propostas.limparECreate');
     Route::get('/propostas/editar/{id}', [PropostaController::class, 'carregarParaEditar'])->name('propostas.editar');
     Route::get('/propostas/aprovar/{id}', [PropostaController::class, 'carregarParaAprovar'])->name('propostas.aprovar');
-    Route::delete('/propostas/{id}', [App\Http\Controllers\PropostaController::class, 'destroy']) ->name('propostas.destroy');
+    Route::delete('/propostas/{id}', [App\Http\Controllers\PropostaController::class, 'destroy'])->name('propostas.destroy');
     Route::post('/propostas/aprovarGerencialmente/{id}', [PropostaController::class, 'aprovarGerencialmente'])->name('propostas.aprovarGerencialmente');
     Route::get('/propostas/visualizar/{id}', [PropostaController::class, 'carregarParaVisualizar'])->name('propostas.visualizar');
     Route::post('/propostas/alterar/{id}/{chave}/{valor}', [PropostaController::class, 'alterarProposta'])->name('propostas.alterar');
@@ -192,6 +193,7 @@ Route::middleware('auth')->group(function () {
     //Financeiro
     Route::get('/financeiro/pagar', [FinanceiroController::class, 'index'])->name('financeiro.index');
     Route::get('/financeiro/receber', [FinanceiroController::class, 'receber'])->name('financeiro.receber');
+    Route::post('/financeiro/receber/{negociacao}', [FinanceiroController::class, 'marcarRecebido'])->name('financeiro.receber.marcar');
     Route::post('/financeiro/pagar/{veiculo}', [FinanceiroController::class, 'pagar'])->name('financeiro.pagar');
 
 

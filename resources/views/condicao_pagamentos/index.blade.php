@@ -28,32 +28,35 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg relative">
                 <div class="text-gray-900 dark:text-gray-100">
                     <div class="text-gray-900" id="tabela-wrapper">
-                        <table class="w-full table-fixed">
+                        <table class="min-w-full bg-white border text-sm">
                             <thead class="bg-gray-300 text-left sticky top-0 z-30 border-t border-gray-900 shadow-sm">
-                                <tr >
-                                    <th class=" w-1/4 px-4 py-2 border-b text-center">ID</th>
-                                    <th class=" w-1/4 px-4 py-2 border-b text-center">Descrição</th>
-                                    <th class="px-4 py-2 border-b text-center">Ações</th>
+                                <tr>
+                                    <th class="w-[80px] px-2 py-2 border-b text-center">ID</th>
+                                    <th class="w-[240px] px-2 py-2 border-b text-center">Descrição</th>
+                                    <th class="w-[400px] px-2 py-2 border-b text-center">Ações</th>
+                                    <th class="w-[400px] px-2 py-2 border-b text-center">Contas a Receber</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($condicoes as $condicao)
                                     <tr class="text-sm">
-                                        <td class="px-4 py-2 border-b text-center">{{ $condicao->id }}</td>
-                                        <td class="px-4 py-2 border-b">{{ $condicao->descricao }}</td>
-                                        <td class="px-4 py-2 border-b text-right">
+                                        <td class="px-4 py-2 border-b text-center truncate">{{ $condicao->id }}</td>
+                                        <td class="px-4 py-2 border-b truncate">{{ $condicao->descricao }}</td>
+                                        <td class="px-4 py-2 border-b text-right truncate">
                                             <div class="flex items-center gap-2">
                                                 <form method="POST"
                                                     action="{{ route('condicao_pagamento.update', $condicao) }}"
                                                     class="inline-block ml-2">
                                                     @csrf @method('PUT')
-                                                    <input type="text" name="descricao"
-                                                        value="{{ $condicao->descricao }}"
+                                                    <input type="text" name="descricao" value="{{ $condicao->descricao }}"
                                                         class="border rounded px-2 py-1 text-sm" required>
                                                     <button
-                                                        class="ml-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Salvar</button>
+                                                        class="ml-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Salvar
+                                                    </button>
                                                 </form>
-                                                <x-modal-excluir :id="$condicao->id" :action="route('condicao_pagamento.destroy', $condicao)" :registro="'Condição de Pagamento: ' . $condicao->descricao">
+                                                <x-modal-excluir :id="$condicao->id"
+                                                    :action="route('condicao_pagamento.destroy', $condicao)"
+                                                    :registro="'Condição de Pagamento: ' . $condicao->descricao">
                                                     <x-slot:trigger>
                                                         <button @click="show = true"
                                                             class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
@@ -63,6 +66,39 @@
                                                 </x-modal-excluir>
                                             </div>
                                         </td>
+
+                                        {{-- Checkbox para marcar se deve aparecer no financeiro --}}
+                                        <td class="px-4 py-2 border-b truncate text-center">
+                                            <form method="POST"
+                                                action="{{ route('condicao_pagamento.update', ['id' => $condicao->id]) }}"
+                                                x-data class="inline">
+                                                @csrf
+                                                @method('PUT')
+
+                                                <input type="hidden" name="descricao" value="{{ $condicao->descricao }}">
+                                                <input type="hidden" name="financeira" value="0">
+
+                                                <label class="relative inline-flex items-center cursor-pointer text-center">
+                                                    <input type="checkbox" name="financeira" value="1" class="sr-only peer"
+                                                        {{ $condicao->financeira ? 'checked' : '' }}
+                                                        @change="$el.form.submit()">
+
+                                                    <!-- Trilha -->
+                                                    <div
+                                                        class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-all duration-300">
+                                                    </div>
+
+                                                    <!-- Bolinha -->
+                                                    <div
+                                                        class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-5 transition-transform duration-300">
+                                                    </div>
+                                                </label>
+                                            </form>
+
+
+
+
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -71,7 +107,10 @@
                 </div>
             </div>
         </div>
-
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
     <!-- Rodapé -->
     <x-rodape>

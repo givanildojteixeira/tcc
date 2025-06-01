@@ -21,7 +21,8 @@
 
             <!-- Campo de busca -->
             <form method="GET" action="{{ route('financeiro.index') }}" class="flex items-center gap-2 flex-nowrap">
-                <input type="text" name="search" placeholder="Buscar proposta, cliente ou chassi" title="Buscar proposta, cliente ou chassi"   value="{{ $search }}"
+                <input type="text" name="search" placeholder="Buscar proposta, cliente ou chassi"
+                    title="Buscar proposta, cliente ou chassi" value="{{ $search }}"
                     class="px-3 py-2 border rounded w-48 text-sm">
 
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm">
@@ -36,73 +37,67 @@
                 @endif
             </form>
         </div>
-
-
-
         <table class="min-w-full bg-white border text-sm">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="w-1/6 px-3 py-2 text-center">Tipo</th>
-                    <th class="w-1/6 px-3 py-2 text-center">Proposta</th>
-                    <th class="w-1/2 px-3 py-2 text-center">Cliente</th>
-                    <th class="w-1/4 px-3 py-2 text-center">Veículo</th>
-                    <th class="w-1/5 px-3 py-2 text-center">Chassi</th>
-                    <th class="w-1/4 px-3 py-2 text-center">Motivo</th>
-                    <th class="w-1/5 px-3 py-2 text-center">Faturamento</th>
-                    <th class="w-1/5 px-3 py-2 text-center">Vencimento</th>
-                    <th class="w-1/4 px-3 py-2 text-center">Valor</th>
-                    <th class="w-1/4 px-3 py-2 text-center">Ação</th>
+                    <th class="px-3 py-2">Tipo</th>
+                    <th class="px-3 py-2">Proposta</th>
+                    <th class="px-3 py-2">Cliente</th>
+                    <th class="px-3 py-2">Veículo</th>
+                    <th class="px-3 py-2">Chassi</th>
+                    <th class="px-3 py-2">Motivo</th>
+                    <th class="px-3 py-2">Faturamento</th>
+                    <th class="px-3 py-2">Vencimento</th>
+                    <th class="px-3 py-2">Valor</th>
+                    <th class="px-3 py-2">Ação</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($propostas as $proposta)
+                @forelse($negociacoes as $n)
                     <tr class="border-t">
-                        <td class="px-3 py-2 font-bold text-center">
-                            @if ($proposta->veiculo->pago)
-                                <span class="text-green-600">Pago</span>
+                        <td class="px-3 py-2 font-bold">
+                            @if ($n->pago)
+                                <span class="text-green-600">Recebido</span>
                             @else
-                                <span class="text-red-600">Pagar</span>
+                                <span class="text-red-600">Receber</span>
                             @endif
                         </td>
-                        <td class="px-3 py-2 text-center">{{ $proposta->id }}</td>
-                        <td class="px-3 py-2">{{ $proposta->cliente->nome ?? '-' }}</td>
-                        <td class="px-3 py-2">{{ $proposta->veiculo->desc_veiculo ?? '-' }}</td>
-                        <td class="px-3 py-2 text-right">{{ $proposta->veiculo->chassi ?? '-' }}</td>
-                        <td class="px-3 py-2">Venda Veículo</td>
+                        <td class="px-3 py-2">{{ $n->proposta->id ?? '-' }}</td>
+                        <td class="px-3 py-2">{{ $n->proposta->cliente->nome ?? '-' }}</td>
+                        <td class="px-3 py-2">{{ $n->veiculo->desc_veiculo ?? '-' }}</td>
+                        <td class="px-3 py-2">{{ $n->veiculo->chassi ?? '-' }}</td>
+                        <td class="px-3 py-2">{{ $n->descricao_pagamento }}</td>
+                        <td class="px-3 py-2">{{ $n->data_faturamento ?? '-' }}</td>
+                        <td class="px-3 py-2">{{ $n->data_vencimento ?? '-' }}</td>
+                        <td class="px-3 py-2 text-right">R$ {{ number_format($n->valor, 2, ',', '.') }}</td>
                         <td class="px-3 py-2 text-center">
-                            {{ $proposta->veiculo->dta_faturamento ? \Carbon\Carbon::parse($proposta->veiculo->dta_faturamento)->addDays(10)->format('d/m/Y') : '-' }}
-                        </td>
-                        <td class="px-3 py-2 text-center">
-                            {{ $proposta->veiculo->dta_vencimento ? \Carbon\Carbon::parse($proposta->veiculo->dta_vencimento)->addDays(10)->format('d/m/Y') : '-' }}
-                        </td>
-                        <td class="px-3 py-2 text-right">
-                            {{ number_format($proposta->veiculo->vlr_nota, 2, ',', '.') }}
-                        </td>
-                        <td class="px-3 py-2 text-center">
-                            @if (!$proposta->veiculo->pago)
-                                <x-modal-question :acao="route('financeiro.pagar', $proposta->veiculo->id)" metodo="POST"
-                                    titulo="Confirmar Pagamento"
-                                    mensagem="Deseja marcar este veículo como <strong>pago</strong>?" cor="blue">
-
+                            @if (!$n->pago)
+                                <x-modal-question :acao="route('financeiro.receber.marcar', $n->id)" metodo="POST"
+                                    titulo="Confirmar Recebimento"
+                                    mensagem="Deseja marcar este valor como <strong>recebido</strong>?" cor="green">
                                     <x-slot name="trigger">
                                         <button @click="show = true"
-                                            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                                            Pagar
+                                            class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+                                            Receber
                                         </button>
                                     </x-slot>
                                 </x-modal-question>
                             @else
-                                <span class="text-blue-700 font-semibold">✓</span>
+                                <span class="text-green-600 font-semibold">✓</span>
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="text-center py-4 text-gray-500">Nenhuma proposta encontrada.</td>
+                        <td colspan="10" class="text-center text-gray-500 py-4">Nenhum registro encontrado.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
+
+
+
+
     </div>
 
     {{-- @else
