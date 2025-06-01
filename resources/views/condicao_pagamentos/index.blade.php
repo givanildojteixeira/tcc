@@ -30,33 +30,38 @@
                     <div class="text-gray-900" id="tabela-wrapper">
                         <table class="w-full table-fixed">
                             <thead class="bg-gray-300 text-left sticky top-0 z-30 border-t border-gray-900 shadow-sm">
-                                <tr class="hover:bg-gray-300">
-                                    <th class="px-4 py-2 border-b">ID</th>
-                                    <th class="px-4 py-2 border-b">Descrição</th>
-                                    <th class="px-4 py-2 border-b text-right">Ações</th>
+                                <tr >
+                                    <th class=" w-1/4 px-4 py-2 border-b text-center">ID</th>
+                                    <th class=" w-1/4 px-4 py-2 border-b text-center">Descrição</th>
+                                    <th class="px-4 py-2 border-b text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($condicoes as $condicao)
                                     <tr class="text-sm">
-                                        <td class="px-4 py-2 border-b">{{ $condicao->id }}</td>
+                                        <td class="px-4 py-2 border-b text-center">{{ $condicao->id }}</td>
                                         <td class="px-4 py-2 border-b">{{ $condicao->descricao }}</td>
                                         <td class="px-4 py-2 border-b text-right">
-                                            <form method="POST"
-                                                action="{{ route('condicao_pagamento.destroy', $condicao) }}"
-                                                onsubmit="return confirm('Tem certeza que deseja excluir?')"
-                                                class="inline-block">
-                                                @csrf @method('DELETE')
-                                                <button class="text-red-600 hover:underline">Excluir</button>
-                                            </form>
-                                            <form method="POST" action="{{ route('condicao_pagamento.update', $condicao) }}"
-                                                class="inline-block ml-2">
-                                                @csrf @method('PUT')
-                                                <input type="text" name="descricao" value="{{ $condicao->descricao }}"
-                                                    class="border rounded px-2 py-1 text-sm" required>
-                                                <button
-                                                    class="ml-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Salvar</button>
-                                            </form>
+                                            <div class="flex items-center gap-2">
+                                                <form method="POST"
+                                                    action="{{ route('condicao_pagamento.update', $condicao) }}"
+                                                    class="inline-block ml-2">
+                                                    @csrf @method('PUT')
+                                                    <input type="text" name="descricao"
+                                                        value="{{ $condicao->descricao }}"
+                                                        class="border rounded px-2 py-1 text-sm" required>
+                                                    <button
+                                                        class="ml-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Salvar</button>
+                                                </form>
+                                                <x-modal-excluir :id="$condicao->id" :action="route('condicao_pagamento.destroy', $condicao)" :registro="'Condição de Pagamento: ' . $condicao->descricao">
+                                                    <x-slot:trigger>
+                                                        <button @click="show = true"
+                                                            class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
+                                                            Excluir
+                                                        </button>
+                                                    </x-slot:trigger>
+                                                </x-modal-excluir>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -66,7 +71,6 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="mt-4">{{ $condicoes->links() }}</div> --}}
 
     </div>
     <!-- Rodapé -->

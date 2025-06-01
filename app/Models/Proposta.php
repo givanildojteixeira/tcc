@@ -67,6 +67,10 @@ class Proposta extends Model
     {
         return $this->hasMany(Negociacao::class, 'id_proposta');
     }
+    public function veiculo()
+    {
+        return $this->belongsTo(Veiculo::class, 'id_veiculoNovo');
+    }
 
 
     // Usuário que criou a proposta

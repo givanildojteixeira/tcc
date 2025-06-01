@@ -202,6 +202,7 @@ class PropostaController extends Controller
         // Atualiza status do veículo novo para vendido
         if ($proposta->veiculoNovo) {
             $proposta->veiculoNovo->status = 'vendido';
+            $proposta->veiculoNovo->dta_vencimento = now()->addDays(10)->toDateString();
             $proposta->veiculoNovo->save();
         }
         // Atualiza status do veículo usado, se existir 
@@ -506,4 +507,22 @@ class PropostaController extends Controller
             'negociacoes'
         ));
     }
+
+    public function destroy($id)
+    {
+        $proposta = Proposta::findOrFail($id);
+
+        // Verifique se é permitido excluir 
+        if ($proposta->status === 'Faturada') {
+            return redirect()->back()->with('error', 'Não é possível excluir uma proposta já faturada.');
+        }
+        if ($proposta->status === 'Aprovada') {
+            return redirect()->back()->with('error', 'Não é possível excluir uma proposta já Aprovada.');
+        }
+
+        $proposta->delete();
+
+        return redirect()->route('propostas.index')->with('success', 'Proposta excluída com sucesso.');
+    }
+
 }

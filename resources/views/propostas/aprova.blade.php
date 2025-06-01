@@ -126,14 +126,14 @@
                         <span>
                             R$
                             {{ number_format(
-                                ($veiculo->vlr_tabela ?? 0) -
-                                ($proposta['vlr_desconto'] ?? 0) -
-                                ($veiculo->vlr_bonus ?? 0) -
-                                ($veiculo->vlr_nota ?? 0),
-                                2,
-                                ',',
-                                '.',
-                            ) }}
+    ($veiculo->vlr_tabela ?? 0) -
+    ($proposta['vlr_desconto'] ?? 0) -
+    ($veiculo->vlr_bonus ?? 0) -
+    ($veiculo->vlr_nota ?? 0),
+    2,
+    ',',
+    '.',
+) }}
                         </span>
                     </div>
                 </div>
@@ -153,8 +153,11 @@
             @click="carregarAprovadores({{ $proposta['id'] }})" />
 
 
-        <x-bt-padrao label="❌ Rejeitar" color="red" icon="" title="Devolve a proposta ao ao vendedor"
+        <x-bt-padrao label="❌ Rejeitar" color="red" icon="" title="Devolve a proposta ao vendedor"
             @click="alterarCampoProposta({{ $proposta['id'] }}, 'status', 'rejeitada')" />
+
+
+
 
         {{-- Aprovações --}}
         @php
@@ -212,55 +215,54 @@
         </div>
     </div>
 
-<!-- Modal: Histórico de Aprovadores -->
-<div x-show="showModalAprovadores" x-cloak
-     class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[10000]">
-    <div class="bg-white border-2 border-green-600 rounded-lg shadow-2xl p-6 w-full max-w-xl relative animate-fade-in">
-        <!-- Botão Fechar -->
-        <button @click="showModalAprovadores = false"
-                class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
-            &times;
-        </button>
-
-        <!-- Conteúdo -->
-        <fieldset class="border border-green-400 bg-green-50 p-4 rounded-md shadow-sm">
-            <legend class="text-green-700 text-sm font-semibold px-2">
-                <i class="fas fa-users mr-1"></i> Histórico de Aprovação da Proposta
-            </legend>
-
-            <ul class="text-sm text-gray-800 space-y-3 mt-2" x-show="aprovadores">
-                <li class="flex items-center gap-2">
-                    <i class="fas fa-user-tie text-green-600"></i>
-                    <span><strong>Gerencial:</strong></span>
-                    <span x-text="aprovadores.gerencial || '❌ Não aprovada'"></span>
-                </li>
-                <li class="flex items-center gap-2">
-                    <i class="fas fa-calculator text-yellow-600"></i>
-                    <span><strong>Financeira:</strong></span>
-                    <span x-text="aprovadores.financeira || '❌ Não aprovada'"></span>
-                </li>
-                <li class="flex items-center gap-2">
-                    <i class="fas fa-university text-blue-600"></i>
-                    <span><strong>Banco:</strong></span>
-                    <span x-text="aprovadores.banco || '❌ Não aprovada'"></span>
-                </li>
-                <li class="flex items-center gap-2">
-                    <i class="fas fa-user-shield text-purple-700"></i>
-                    <span><strong>Diretoria:</strong></span>
-                    <span x-text="aprovadores.diretoria || '❌ Não aprovada'"></span>
-                </li>
-            </ul>
-        </fieldset>
-
-        <!-- Botão Fechar centralizado -->
-        <div class="flex justify-center mt-6">
+    <!-- Modal: Histórico de Aprovadores -->
+    <div x-show="showModalAprovadores" x-cloak
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[10000]">
+        <div
+            class="bg-white border-2 border-green-600 rounded-lg shadow-2xl p-6 w-full max-w-xl relative animate-fade-in">
+            <!-- Botão Fechar -->
             <button @click="showModalAprovadores = false"
-                class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md shadow">
-                Fechar
+                class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
+                &times;
             </button>
+
+            <!-- Conteúdo -->
+            <fieldset class="border border-green-400 bg-green-50 p-4 rounded-md shadow-sm">
+                <legend class="text-green-700 text-sm font-semibold px-2">
+                    <i class="fas fa-users mr-1"></i> Histórico de Aprovação da Proposta
+                </legend>
+
+                <ul class="text-sm text-gray-800 space-y-3 mt-2" x-show="aprovadores">
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-user-tie text-green-600"></i>
+                        <span><strong>Gerencial:</strong></span>
+                        <span x-text="aprovadores.gerencial || '❌ Não aprovada'"></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-calculator text-yellow-600"></i>
+                        <span><strong>Financeira:</strong></span>
+                        <span x-text="aprovadores.financeira || '❌ Não aprovada'"></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-university text-blue-600"></i>
+                        <span><strong>Banco:</strong></span>
+                        <span x-text="aprovadores.banco || '❌ Não aprovada'"></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-user-shield text-purple-700"></i>
+                        <span><strong>Diretoria:</strong></span>
+                        <span x-text="aprovadores.diretoria || '❌ Não aprovada'"></span>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <!-- Botão Fechar centralizado -->
+            <div class="flex justify-center mt-6">
+                <button @click="showModalAprovadores = false"
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md shadow">
+                    Fechar
+                </button>
+            </div>
         </div>
     </div>
-</div>
-
-
 </div>

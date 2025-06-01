@@ -64,21 +64,21 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg relative">
                 <table class="w-full table-fixed">
                     <thead class="bg-gray-300 text-left sticky top-0 z-30 border-t border-gray-900 shadow-sm">
-                        <tr>
-                            <th class="px-4 py-3">Proposta</th>
-                            <th class="px-4 py-3">Cliente</th>
-                            <th class="px-4 py-3">Veículo</th>
-                            <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3">Valor</th>
-                            <th class="px-4 py-3">Vendedor</th>
-                            <th class="px-4 py-3">Data</th>
-                            <th class="px-4 py-3">Ações</th>
+                        <tr class="text-center">
+                            <th class="w-1/4 px-4 py-3 text-center">Proposta</th>
+                            <th class="w-1/2 px-4 py-3 text-center">Cliente</th>
+                            <th class="w-1/2 px-4 py-3 text-center">Veículo</th>
+                            <th class="w-1/3 px-4 py-3 text-center">Status</th>
+                            <th class="w-1/3 px-4 py-3 text-center">Valor</th>
+                            <th class="w-1/2 px-4 py-3 text-center">Vendedor</th>
+                            <th class="w-1/4 px-4 py-3 text-center">Data</th>
+                            <th class="w-1/2 px-4 py-3 text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm text-gray-700">
                         @foreach ($propostas as $proposta)
                         <tr class="hover:bg-gray-100 border-t">
-                            <td class="px-4 py-2">{{ $proposta->id }}</td>
+                            <td class="px-4 py-2 text-center">{{ $proposta->id }}</td>
                             <td class="px-4 py-2">{{ $proposta->cliente->nome ?? '-' }}</td>
                             <td class="px-4 py-2">{{ $proposta->veiculoNovo->desc_veiculo ?? '-' }}</td>
 
@@ -117,18 +117,18 @@
 
 
 
-                            <td class="px-4 py-2">
+                            <td class="px-4 py-2 text-center">
                                 <span
                                     class="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded {{ $config['class'] }}">
                                     <i class="{{ $config['icon'] }}"></i>
                                     {{ ucfirst($proposta->status) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-2 text-green-700 font-medium">
+                            <td class="px-4 py-2 text-green-700 font-medium text-right">
                                 R$ {{ number_format($proposta->negociacoes->sum('valor'), 2, ',', '.') }}
                             </td>
                             <td class="px-4 py-2">{{ $proposta->usuario->name ?? '-' }}</td>
-                            <td class="px-4 py-2">{{ \Carbon\Carbon::parse($proposta->data_proposta)->format('d/m/Y') }}
+                            <td class="px-4 py-2 text-center">{{ \Carbon\Carbon::parse($proposta->data_proposta)->format('d/m/Y') }}
                             </td>
                             <td class="px-4 py-2">
                                 <div class="flex gap-2">
@@ -151,6 +151,19 @@
                                     @endacessoAssistente
 
 
+                                    @acessoDiretor()
+                                    <x-modal-excluir :id="$proposta->id" :action="route('propostas.destroy', $proposta->id)" :registro="'Proposta #' . $proposta->id">
+                                        <x-slot:trigger>
+                                            <button @click="show = true"
+                                                class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm flex items-center justify-center">  
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </x-slot:trigger>
+                                    </x-modal-excluir>
+                                    @endacessoDiretor
+
+
+
                                 </div>
                             </td>
                         </tr>
@@ -164,6 +177,10 @@
                         @endif
                     </tbody>
                 </table>
+                <br>
+                <br>
+                <br>
+
 
                 <x-rodape>
                     <div class="font-medium">Total de propostas: {{ $propostas->total() }}</div>
@@ -182,6 +199,7 @@
                 showModalAprovar: false,
                 showModalObservacao: false,
                 showModalAprovadores: false,
+                showModalExcluir: false,
                 aprovadores: {
                     gerencial: '',
                     financeira: '',

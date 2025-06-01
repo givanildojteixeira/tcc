@@ -32,6 +32,9 @@ class Veiculo extends Model
         'desc_nota',
         'site',
         'status',
+        'dta_vencimento',
+        'pago',
+
     ];
     public function vendedor()
     {

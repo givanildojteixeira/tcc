@@ -153,6 +153,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/propostas/nova', [PropostaController::class, 'limparECreate'])->name('propostas.limparECreate');
     Route::get('/propostas/editar/{id}', [PropostaController::class, 'carregarParaEditar'])->name('propostas.editar');
     Route::get('/propostas/aprovar/{id}', [PropostaController::class, 'carregarParaAprovar'])->name('propostas.aprovar');
+    Route::delete('/propostas/{id}', [App\Http\Controllers\PropostaController::class, 'destroy']) ->name('propostas.destroy');
     Route::post('/propostas/aprovarGerencialmente/{id}', [PropostaController::class, 'aprovarGerencialmente'])->name('propostas.aprovarGerencialmente');
     Route::get('/propostas/visualizar/{id}', [PropostaController::class, 'carregarParaVisualizar'])->name('propostas.visualizar');
     Route::post('/propostas/alterar/{id}/{chave}/{valor}', [PropostaController::class, 'alterarProposta'])->name('propostas.alterar');
@@ -188,12 +189,10 @@ Route::middleware('auth')->group(function () {
 
 
 
-
-
-
-
     //Financeiro
-    Route::get('/financeiro.index', [FinanceiroController::class, 'index'])->name('financeiro.index');
+    // Route::get('/financeiro.index', [FinanceiroController::class, 'index'])->name('financeiro.index');
+    Route::get('/financeiro', [FinanceiroController::class, 'index'])->name('financeiro.index');
+
 
     //Financeiro
     Route::get('/relatorios.index', [RelatoriosController::class, 'index'])->name('relatorios.index');
