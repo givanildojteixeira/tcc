@@ -190,8 +190,10 @@ Route::middleware('auth')->group(function () {
 
 
     //Financeiro
-    // Route::get('/financeiro.index', [FinanceiroController::class, 'index'])->name('financeiro.index');
-    Route::get('/financeiro', [FinanceiroController::class, 'index'])->name('financeiro.index');
+    Route::get('/financeiro/pagar', [FinanceiroController::class, 'index'])->name('financeiro.index');
+    Route::get('/financeiro/receber', [FinanceiroController::class, 'receber'])->name('financeiro.receber');
+    Route::post('/financeiro/pagar/{veiculo}', [FinanceiroController::class, 'pagar'])->name('financeiro.pagar');
+
 
 
     //Financeiro

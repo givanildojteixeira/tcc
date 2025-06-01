@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Veiculo;
 use App\Models\Proposta;
+use Illuminate\Http\Request;
 
 class FinanceiroController extends Controller
 {
@@ -11,14 +12,18 @@ class FinanceiroController extends Controller
     {
         $search = $request->input('search');
 
-        $propostas = Proposta::with('veiculo')
+        $propostas = Proposta::with(['veiculo', 'cliente']) // carrega os relacionamentos
             ->whereHas('veiculo', fn($query) => $query->where('status', 'Vendido'))
             ->when(
                 $search,
                 fn($q) =>
                 $q->where(function ($sub) use ($search) {
                     $sub->where('id', 'like', "%$search%")
-                        ->orWhere('nome_cliente', 'like', "%$search%")
+                        ->orWhereHas(
+                            'cliente',
+                            fn($c) =>
+                            $c->where('nome', 'like', "%$search%")
+                        )
                         ->orWhereHas(
                             'veiculo',
                             fn($v) =>
@@ -31,4 +36,16 @@ class FinanceiroController extends Controller
 
         return view('financeiro.index', compact('propostas', 'search'));
     }
+
+    public function pagar($veiculoId)
+    {
+        $veiculo = Veiculo::findOrFail($veiculoId);
+
+        $veiculo->pago = 1;
+        $veiculo->save();
+
+        return back()->with('success', 'Pagamento confirmado com sucesso.');
+    }
+
+
 }

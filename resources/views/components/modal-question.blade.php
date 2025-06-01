@@ -18,8 +18,7 @@
         x-transition:enter-end="opacity-100"
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0"
-        @submit.prevent="$refs.submitBtn.click()">
+        x-transition:leave-end="opacity-0">
 
         @csrf
         @method($metodo)
