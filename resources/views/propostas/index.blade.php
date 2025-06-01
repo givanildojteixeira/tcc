@@ -14,7 +14,7 @@
             </div>
         </div>
         <!-- Cabeçalho e filtros -->
-        <div class="grid grid-cols-12 items-center gap-4 px-4 py-4 bg-white shadow rounded-md border">
+        <div class="grid grid-cols-6 items-center gap-4 px-4 py-4 bg-white shadow rounded-md border">
             <!-- Título -->
             <form method="GET" action="{{ route('propostas.index') }}"
                 class="col-span-8 flex flex-wrap gap-2 items-center">
@@ -23,7 +23,7 @@
                 </h2>
 
                 <!-- Filtros -->
-                <select name="status" class="border px-3 py-2 rounded-md w-48 shrink-0">
+                <select name="status" onchange="this.form.submit()" class="border px-3 py-2 rounded-md w-48 shrink-0">
                     <option value="">Status (todos)</option>
                     <option value="pendente" {{ request('status') == 'pendente' ? 'selected' : '' }}>Pendente</option>
                     <option value="aprovada" {{ request('status') == 'aprovada' ? 'selected' : '' }}>Aprovada</option>
@@ -33,7 +33,7 @@
                 </select>
 
                 <input type="text" name="busca" value="{{ request('busca') }}"
-                    placeholder="Buscar por cliente ou veículo"
+                    placeholder="Buscar por cliente, veículo, Numero ou vendedor"
                     class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[180px]" />
 
                 <button type="submit"
@@ -82,7 +82,6 @@
                             <td class="px-4 py-2">{{ $proposta->cliente->nome ?? '-' }}</td>
                             <td class="px-4 py-2">{{ $proposta->veiculoNovo->desc_veiculo ?? '-' }}</td>
 
-
                             @php
                                 $status = strtolower($proposta->status);
                                 $statusConfig = [
@@ -114,9 +113,6 @@
                                 ];
                             @endphp
 
-
-
-
                             <td class="px-4 py-2 text-center">
                                 <span
                                     class="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded {{ $config['class'] }}">
@@ -128,7 +124,8 @@
                                 R$ {{ number_format($proposta->negociacoes->sum('valor'), 2, ',', '.') }}
                             </td>
                             <td class="px-4 py-2">{{ $proposta->usuario->name ?? '-' }}</td>
-                            <td class="px-4 py-2 text-center">{{ \Carbon\Carbon::parse($proposta->data_proposta)->format('d/m/Y') }}
+                            <td class="px-4 py-2 text-center">
+                                {{ \Carbon\Carbon::parse($proposta->data_proposta)->format('d/m/Y') }}
                             </td>
                             <td class="px-4 py-2">
                                 <div class="flex gap-2">
@@ -138,31 +135,71 @@
                                         <i class="fas fa-eye text-sm"></i>
                                     </a>
 
-                                    <a href="{{ route('propostas.editar', $proposta->id) }}" title="Editar"
-                                        class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-700 text-sm flex items-center justify-center">
-                                        <i class="fas fa-edit text-sm"></i>
-                                    </a>
+                                    @if ($proposta->status === 'Faturada')
+                                        <x-modal-info titulo="Proposta faturada não pode ser editada"
+                                            mensagem="Esta proposta já foi faturada e não pode mais ser editada."
+                                            icone="fas fa-ban" cor="yellow">
+                                            <x-slot:trigger>
+                                                <button @click="show = true"
+                                                    class="px-3 py-1 bg-yellow-400 text-white rounded text-sm cursor-not-allowed opacity-70 flex items-center justify-center">
+                                                    <i class="fas fa-lock text-sm"></i>
+                                                </button>
+                                            </x-slot:trigger>
+                                        </x-modal-info>
+                                    @else
+                                        <a href="{{ route('propostas.editar', $proposta->id) }}" title="Editar"
+                                            class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-700 text-sm flex items-center justify-center">
+                                            <i class="fas fa-edit text-sm"></i>
+                                        </a>
+                                    @endif
 
                                     @acessoAssistente()
-                                    <a href="#" title="Aprovar" @click.prevent="abrirModalAprovar({{ $proposta->id }})"
-                                        class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm flex items-center justify-center">
-                                        <i class="fas fa-check-circle"></i>
-                                    </a>
+                                    @if ($proposta->status === 'Faturada')
+                                        <x-modal-info titulo="Proposta faturada."
+                                            mensagem="Esta proposta já foi faturada."
+                                            icone="fas fa-ban" cor="green">
+                                            <x-slot:trigger>
+                                                <button @click="show = true"
+                                                    class="px-3 py-1 bg-green-600 text-white rounded text-sm cursor-not-allowed opacity-70 flex items-center justify-center">
+                                                    <i class="fas fa-lock text-sm"></i>
+                                                </button>
+                                            </x-slot:trigger>
+                                        </x-modal-info>
+                                    @else
+                                        <a href="#" title="Aprovar" @click.prevent="abrirModalAprovar({{ $proposta->id }})"
+                                            class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm flex items-center justify-center">
+                                            <i class="fas fa-check-circle"></i>
+                                        </a>
+                                    @endif
+
                                     @endacessoAssistente
 
 
                                     @acessoDiretor()
-                                    <x-modal-excluir :id="$proposta->id" :action="route('propostas.destroy', $proposta->id)" :registro="'Proposta #' . $proposta->id">
-                                        <x-slot:trigger>
-                                            <button @click="show = true"
-                                                class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm flex items-center justify-center">  
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </x-slot:trigger>
-                                    </x-modal-excluir>
+
+                                    @if ($proposta->status === 'Faturada')
+                                        <x-modal-info titulo="Proposta faturada não pode ser excluída."
+                                            mensagem="Esta proposta já foi faturada e não pode mais ser excluída."
+                                            icone="fas fa-ban" cor="red">
+                                            <x-slot:trigger>
+                                                <button @click="show = true"
+                                                    class="px-3 py-1 bg-red-600 text-white rounded text-sm cursor-not-allowed opacity-70 flex items-center justify-center">
+                                                    <i class="fas fa-lock text-sm"></i>
+                                                </button>
+                                            </x-slot:trigger>
+                                        </x-modal-info>
+                                    @else
+                                        <x-modal-excluir :id="$proposta->id" :action="route('propostas.destroy', $proposta->id)" :registro="'Proposta #' . $proposta->id">
+                                            <x-slot:trigger>
+                                                <button @click="show = true"
+                                                    class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm flex items-center justify-center"
+                                                    title="Excluir">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </x-slot:trigger>
+                                        </x-modal-excluir>
+                                    @endif
                                     @endacessoDiretor
-
-
 
                                 </div>
                             </td>
@@ -192,6 +229,8 @@
             </div>
         </div>
     </div>
+
+
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('proposta', () => ({
@@ -200,6 +239,7 @@
                 showModalObservacao: false,
                 showModalAprovadores: false,
                 showModalExcluir: false,
+                showModalFaturar: false,
                 aprovadores: {
                     gerencial: '',
                     financeira: '',
@@ -268,7 +308,7 @@
                         .then(data => {
                             if (data.success) {
                                 this.showModalAprovar = false;
-                                alert('Proposta faturada e veículo marcado como vendido.');
+                                // alert('Proposta faturada e veículo marcado como vendido.');
                                 window.location.reload();
                             } else {
                                 alert('Erro ao faturar proposta.');
@@ -303,11 +343,6 @@
                             alert('Erro na requisição de aprovação grencial.');
                         });
                 }
-
-
-
-
-
 
             }));
         });

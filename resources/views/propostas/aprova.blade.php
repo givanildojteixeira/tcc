@@ -171,8 +171,10 @@
             <x-bt-padrao label="✅ Aprovação Gerencial" color="green" icon="" title="Aprovação Gerencial da proposta"
                 @click="aprovarGerencialmente({{ $proposta['id'] }})" />
         @elseif ($nivel === 'diretor' || $nivel === 'admin')
-            <x-bt-padrao label="✅ Enviar para Faturamento" color="green" icon="" title="Envia a proposta para Faturamento"
-                @click="faturarProposta({{ $proposta['id'] }})" />
+
+            <x-bt-padrao label="✅ Enviar para Faturamento" color="green" icon="" title="Envia a proposta para Faturamento."
+                @click="showModalFaturar = true" />
+
         @endif
         {{-- Aprovações --}}
 
@@ -263,6 +265,33 @@
                     Fechar
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de confirmação para faturar -->
+<div x-show="showModalFaturar" class="fixed inset-0 bg-black bg-opacity-50 z-[10001] flex items-center justify-center"
+    style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+
+    <div class="bg-white p-6 rounded-lg shadow-xl w-1/3 border-t-4 border-green-500 animate-shake relative">
+        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow">
+            <i class="fas fa-question-circle text-green-500 text-4xl"></i>
+        </div>
+
+        <h2 class="text-lg font-semibold text-gray-800 mt-6 text-center">Enviar para Faturamento?</h2>
+        <p class="text-sm text-gray-600 text-center mb-6">
+            Essa ação enviará a proposta para o setor de faturamento e marcará o veículo como vendido.
+        </p>
+
+        <div class="flex justify-center gap-4">
+            <button @click="showModalFaturar = false"
+                class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">Cancelar</button>
+
+            <button @click="faturarProposta({{ $proposta['id'] }})"
+                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm">Sim, Faturar</button>
         </div>
     </div>
 </div>

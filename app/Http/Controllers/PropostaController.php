@@ -26,16 +26,21 @@ class PropostaController extends Controller
         $usuario = Auth::user();
 
         $propostas = Proposta::with(['cliente', 'veiculoNovo', 'usuario', 'negociacoes'])
+            // mostre somente as poropostas do vendedor, ou de todos se tiver alçada maior que vendedor    
             ->when($usuario->level === 'Vendedor', function ($query) use ($usuario) {
                 $query->where('id_usuario', $usuario->id);
             })
+            // pesquisa com base no Status
             ->when($status, function ($query, $status) {
                 $query->where('status', $status);
             })
+            //pesquisa com base no texto
             ->when($busca, function ($query, $busca) {
                 $query->where(function ($q) use ($busca) {
-                    $q->whereHas('cliente', fn($sub) => $sub->where('nome', 'like', "%{$busca}%"))
-                        ->orWhereHas('veiculoNovo', fn($sub) => $sub->where('desc_veiculo', 'like', "%{$busca}%"));
+                    $q->where('id', $busca) // busca por número da proposta
+                        ->orWhereHas('cliente', fn($sub) => $sub->where('nome', 'like', "%{$busca}%"))
+                        ->orWhereHas('veiculoNovo', fn($sub) => $sub->where('desc_veiculo', 'like', "%{$busca}%"))
+                        ->orWhereHas('usuario', fn($sub) => $sub->where('name', 'like', "%{$busca}%")); // busca por nome do vendedor
                 });
             })
             ->orderByDesc('data_proposta')
