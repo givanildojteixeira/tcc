@@ -201,11 +201,12 @@ Route::middleware('auth')->group(function () {
 
         // Veículos Usados
         Route::get('/usados/estoque', [RelatorioController::class, 'estoqueUsados'])->name('usados.estoque');
-        Route::get('/usados/lucro', [RelatorioController::class, 'lucroUsados'])->name('usados.lucro');
+        // Route::get('/usados/lucro', [RelatorioController::class, 'lucroUsados'])->name('usados.lucro');
 
         // Propostas
         Route::get('/propostas/aprovadas', [RelatorioController::class, 'propostasAprovadas'])->name('propostas.aprovadas');
         Route::get('/propostas/rejeitadas', [RelatorioController::class, 'propostasRejeitadas'])->name('propostas.rejeitadas');
+        Route::get('/propostas/faturadas', [RelatorioController::class, 'propostasFaturadas'])->name('propostas.faturadas');
 
         // Financeiro
         Route::get('/financeiro/pagar', [RelatorioController::class, 'contasPagar'])->name('financeiro.pagar');

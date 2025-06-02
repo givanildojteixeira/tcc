@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Veiculo;
+use App\Models\Proposta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RelatorioController extends Controller
 {
@@ -27,13 +29,13 @@ class RelatorioController extends Controller
             ->orderBy('desc_veiculo')
             ->get();
 
-
         return view('relatorios.base.vendas', compact('veiculos'));
     }
 
     public function estoqueUsados()
     {
-        return view('relatorios.usados.estoque');
+        $veiculos = Veiculo::where('novo_usado', 'usado')->get();
+        return view('relatorios.base.estoqueusados', compact('veiculos'));
     }
 
     public function lucroUsados()
@@ -43,18 +45,69 @@ class RelatorioController extends Controller
 
     public function propostasAprovadas()
     {
-        return view('relatorios.propostas.aprovadas');
+        $propostas = Proposta::with(['vendedor', 'veiculo', 'negociacoes'])
+            ->where('status', 'aprovada')
+            ->orderByDesc('id')
+            ->get();
+
+        return view('relatorios.base.aprovadas', compact('propostas'));
     }
 
     public function propostasRejeitadas()
     {
-        return view('relatorios.propostas.rejeitadas');
+        $propostas = Proposta::with(['vendedor', 'veiculo', 'negociacoes'])
+            ->where('status', 'rejeitada')
+            ->orderByDesc('id')
+            ->get();
+
+        return view('relatorios.base.rejeitadas', compact('propostas'));
     }
 
-    public function contasPagar()
+    public function propostasFaturadas()
     {
-        return view('relatorios.financeiro.pagar');
+        $propostas = Proposta::with(['vendedor', 'veiculo', 'negociacoes'])
+            ->where('status', 'faturada')
+            ->orderByDesc('id')
+            ->get();
+
+        return view('relatorios.base.faturadas', compact('propostas'));
     }
+
+    public function contasPagar(Request $request)
+    {
+    $dataInicio = $request->input('data_inicio');
+    $dataFim = $request->input('data_fim');
+
+    $sql = "
+        SELECT 
+            p.id ,
+            c.nome AS nome,
+            v.chassi,
+            v.desc_veiculo,
+            v.vlr_tabela,
+            v.pago,
+            p.dta_faturamento
+        FROM propostas p
+        JOIN veiculos v ON v.id = p.id_veiculoNovo
+        JOIN clientes c ON c.id = p.id_cliente
+        WHERE v.status = 'Vendido'
+    ";
+
+    $bindings = [];
+
+    if ($dataInicio && $dataFim) {
+        $sql .= " AND p.dta_faturamento BETWEEN ? AND ?";
+        $bindings[] = $dataInicio;
+        $bindings[] = $dataFim;
+    }
+
+    $sql .= " ORDER BY p.id DESC";
+
+    $propostas = DB::select($sql, $bindings);
+
+        return view('relatorios.base.pagar', compact('propostas', 'dataInicio', 'dataFim'));
+    }
+
 
     public function contasReceber()
     {
