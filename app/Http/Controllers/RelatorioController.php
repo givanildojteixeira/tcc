@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Veiculo;
 use Illuminate\Http\Request;
 
 class RelatorioController extends Controller
 {
-    public function estoqueNovos()
+     public function index()
     {
-        return view('relatorios.novos.estoque');
+        return view('relatorios.index');
     }
+public function estoqueNovos()
+{
+    $veiculos = Veiculo::where('novo_usado', 'Novo')->get();
+
+    return view('relatorios.novos.estoque', compact('veiculos'));
+}
+
 
     public function vendasNovos()
     {

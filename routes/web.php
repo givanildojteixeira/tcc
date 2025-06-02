@@ -191,13 +191,10 @@ Route::middleware('auth')->group(function () {
 
 
 
-    //Financeiro
-    Route::get('/relatorios.index', [RelatoriosController::class, 'index'])->name('relatorios.index');
-
-
-
-
+    //Relatórios
+    
     Route::prefix('relatorios')->name('relatorios.')->group(function () {
+        Route::get('/index', [RelatorioController::class, 'index'])->name('index');
         // Veículos Novos
         Route::get('/novos/estoque', [RelatorioController::class, 'estoqueNovos'])->name('novos.estoque');
         Route::get('/novos/vendas', [RelatorioController::class, 'vendasNovos'])->name('novos.vendas');
