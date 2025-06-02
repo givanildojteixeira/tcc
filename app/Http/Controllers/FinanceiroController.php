@@ -11,10 +11,15 @@ class FinanceiroController extends Controller
 {
     public function index(Request $request)
     {
+        // Carrega Variáveis para busca
         $search = $request->input('search');
+        $mostrarPagos = $request->has('mostrar_pagos');
 
-        $propostas = Proposta::with(['veiculo', 'cliente']) // carrega os relacionamentos
+        $propostas = Proposta::with(['cliente', 'veiculo']) // carrega os relacionamentos
             ->whereHas('veiculo', fn($query) => $query->where('status', 'Vendido'))
+            ->when(!$mostrarPagos, function ($query) {
+                $query->whereHas('veiculo', fn($q) => $q->where('pago', false));
+            })
             ->when(
                 $search,
                 fn($q) =>
@@ -33,7 +38,7 @@ class FinanceiroController extends Controller
                         );
                 })
             )
-            ->get();
+            ->paginate(6);
 
         return view('financeiro.index', compact('propostas', 'search'));
     }
@@ -50,37 +55,36 @@ class FinanceiroController extends Controller
 
     public function receber(Request $request)
     {
+        // Carregue as variáveis a partir do request
         $search = $request->input('search');
+        $searchProposta = $request->input('searchProposta');  // pesquisar somente propostas
+        $mostrarRecebidas = $request->has('mostrar_recebidas'); // checkbox marcada = mostrar tudo
 
-        $negociacoes = Negociacao::with(['proposta.cliente', 'veiculo'])
-            ->whereHas('condicaoPagamento', function ($query) {
-                $query->where('financeira', true);
-            })
-            ->when(
-                $search,
-                fn($q) =>
+        // Em negociações 
+        $negociacoes = Negociacao::with(['proposta.cliente', 'proposta.veiculo', 'condicaoPagamento']) // 🔧 aqui corrigido
+            // pesquise somente financeira = true em condicaoPagamento
+            ->whereHas('condicaoPagamento', fn($q) => $q->where('financeira', true))
+            // Atenção com o check box mostrar_recebidas, ignorando quando for pesquisa por Proposta (searchProposta)
+            ->when(!$mostrarRecebidas && !$searchProposta, fn($q) => $q->where('pago', false))
+            // então se for pesquisa  normal, pesquise por 'proposta.cliente', 'veiculo'
+            ->when($search, function ($q) use ($search) {
                 $q->where(function ($sub) use ($search) {
-                    $sub->whereHas(
-                        'proposta',
-                        fn($p) =>
-                        $p->where('id', 'like', "%$search%")
-                            ->orWhereHas(
-                                'cliente',
-                                fn($c) =>
-                                $c->where('nome', 'like', "%$search%")
-                            )
-                    )
-                        ->orWhereHas(
-                            'veiculo',
-                            fn($v) =>
+                    $sub->whereHas('proposta.cliente', fn($c) => $c->where('nome', 'like', "%$search%"))
+                        ->orWhereHas('proposta.veiculo', fn($v) =>
                             $v->where('chassi', 'like', "%$search%")
-                                ->orWhere('desc_veiculo', 'like', "%$search%")
-                        );
-                })
+                                ->orWhere('desc_veiculo', 'like', "%$search%"));
+                });
+            })
+            // ou, se for pesquisa por proposta pesquise exclusivamente propostas e mostre tudo
+            ->when(
+                $searchProposta,
+                fn($q) =>
+                $q->whereHas('proposta', fn($p) =>
+                    $p->where('id', 'like', "%$searchProposta%"))
             )
-            ->get();
+            ->paginate(6);
 
-        return view('financeiro.receber', compact('negociacoes', 'search'));
+        return view('financeiro.receber', compact('negociacoes', 'search', 'searchProposta', 'mostrarRecebidas'));
     }
 
 
