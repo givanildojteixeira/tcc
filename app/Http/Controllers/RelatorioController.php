@@ -7,21 +7,28 @@ use Illuminate\Http\Request;
 
 class RelatorioController extends Controller
 {
-     public function index()
+    public function index()
     {
         return view('relatorios.index');
     }
-public function estoqueNovos()
-{
-    $veiculos = Veiculo::where('novo_usado', 'Novo')->get();
+    public function estoqueNovos()
+    {
+        $veiculos = Veiculo::where('novo_usado', 'Novo')->get();
 
-    return view('relatorios.novos.estoque', compact('veiculos'));
-}
+        return view('relatorios.base.estoque', compact('veiculos'));
+    }
 
 
     public function vendasNovos()
     {
-        return view('relatorios.novos.vendas');
+        $veiculos = Veiculo::with(['proposta.vendedor'])
+            ->where('novo_usado', 'Novo')
+            ->where('status', 'vendido')
+            ->orderBy('desc_veiculo')
+            ->get();
+
+
+        return view('relatorios.base.vendas', compact('veiculos'));
     }
 
     public function estoqueUsados()
@@ -79,4 +86,3 @@ public function estoqueNovos()
         return view('relatorios.cadastros.condicoes');
     }
 }
-

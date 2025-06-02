@@ -23,9 +23,15 @@ class Veiculo extends Model
         'Ano_Mod',
         'motor',
         'portas',
-        'vlr_tabela', 10, 2,
-        'vlr_bonus', 10, 2,
-        'vlr_nota', 10, 2,
+        'vlr_tabela',
+        10,
+        2,
+        'vlr_bonus',
+        10,
+        2,
+        'vlr_nota',
+        10,
+        2,
         'local',
         'dta_faturamento',
         'user_reserva',
@@ -39,5 +45,9 @@ class Veiculo extends Model
     public function vendedor()
     {
         return $this->belongsTo(User::class, 'user_reserva');
+    }
+    public function proposta()
+    {
+        return $this->hasOne(Proposta::class, 'id_veiculoNovo', 'id');
     }
 }

@@ -60,7 +60,6 @@ class PropostaController extends Controller
         return view('propostas.create', compact('proposta', 'condicoes'));
     }
 
-    //Aqui inicia a view de propostas para aprovação
 
     //Aqui é feita a inclusao de um veiculo vindo do estoque de novos
     public function iniciar(Request $request)
@@ -187,7 +186,7 @@ class PropostaController extends Controller
                 case 'banco':
                     $proposta->id_user_aprovacao_banco = $user->id;
                     break;
-                // Você pode expandir com outros níveis se necessário
+                    // Você pode expandir com outros níveis se necessário
             }
         }
 
@@ -195,13 +194,20 @@ class PropostaController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+
+
+
     // Enviar para faturamento
     public function faturar($id)
     {
         $proposta = Proposta::with('veiculoNovo')->findOrFail($id);
+        $user = auth()->user();
 
         // Atualiza status da proposta
         $proposta->status = 'Faturada';
+        $proposta->dta_faturamento = now()->toDateString();
+        $proposta->id_user_aprovacao_diretoria = $user->id;
         $proposta->save();
 
         // Atualiza status do veículo novo para vendido
@@ -213,12 +219,13 @@ class PropostaController extends Controller
         // Atualiza status do veículo usado, se existir 
         if ($proposta->veiculoUsado1) {
             $proposta->veiculoUsado1->status = 'estoque';
-            // $proposta->veiculoUsado1->local = 'matriz';
             $proposta->veiculoUsado1->save();
         }
 
         return response()->json(['success' => true]);
     }
+
+
 
     // Aprovar Gerencialmente
     public function aprovarGerencialmente($id)
@@ -529,5 +536,4 @@ class PropostaController extends Controller
 
         return redirect()->route('propostas.index')->with('success', 'Proposta excluída com sucesso.');
     }
-
 }

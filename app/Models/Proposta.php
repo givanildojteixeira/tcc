@@ -78,6 +78,10 @@ class Proposta extends Model
     {
         return $this->belongsTo(User::class, 'id_usuario');
     }
+    public function vendedor()
+{
+    return $this->belongsTo(User::class, 'id_usuario');
+}
 
     // Usuários responsáveis por aprovações
     public function aprovadorGerencial()
