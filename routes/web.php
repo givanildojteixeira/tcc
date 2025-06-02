@@ -25,6 +25,7 @@ use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\CondicaoPagamentoController;
+use App\Http\Controllers\RelatorioController;
 
 
 /*
@@ -182,14 +183,6 @@ Route::middleware('auth')->group(function () {
     //Resumo
     Route::get('/propostas/relatorio-resumo', [PropostaController::class, 'relatorioResumo'])->name('propostas.relatorioResumo');
 
-
-
-
-
-    ///  http://200.195.138.74:911/propostas/create?id_veic_usado=624
-
-
-
     //Financeiro
     Route::get('/financeiro/pagar', [FinanceiroController::class, 'index'])->name('financeiro.index');
     Route::get('/financeiro/receber', [FinanceiroController::class, 'receber'])->name('financeiro.receber');
@@ -200,6 +193,34 @@ Route::middleware('auth')->group(function () {
 
     //Financeiro
     Route::get('/relatorios.index', [RelatoriosController::class, 'index'])->name('relatorios.index');
+
+
+
+
+    Route::prefix('relatorios')->name('relatorios.')->group(function () {
+        // Veículos Novos
+        Route::get('/novos/estoque', [RelatorioController::class, 'estoqueNovos'])->name('novos.estoque');
+        Route::get('/novos/vendas', [RelatorioController::class, 'vendasNovos'])->name('novos.vendas');
+
+        // Veículos Usados
+        Route::get('/usados/estoque', [RelatorioController::class, 'estoqueUsados'])->name('usados.estoque');
+        Route::get('/usados/lucro', [RelatorioController::class, 'lucroUsados'])->name('usados.lucro');
+
+        // Propostas
+        Route::get('/propostas/aprovadas', [RelatorioController::class, 'propostasAprovadas'])->name('propostas.aprovadas');
+        Route::get('/propostas/rejeitadas', [RelatorioController::class, 'propostasRejeitadas'])->name('propostas.rejeitadas');
+
+        // Financeiro
+        Route::get('/financeiro/pagar', [RelatorioController::class, 'contasPagar'])->name('financeiro.pagar');
+        Route::get('/financeiro/receber', [RelatorioController::class, 'contasReceber'])->name('financeiro.receber');
+
+        // Cadastros Auxiliares
+        Route::get('/cadastros/clientes', [RelatorioController::class, 'clientes'])->name('cadastros.clientes');
+        Route::get('/cadastros/familias', [RelatorioController::class, 'familias'])->name('cadastros.familias');
+        Route::get('/cadastros/opcionais', [RelatorioController::class, 'opcionais'])->name('cadastros.opcionais');
+        Route::get('/cadastros/cores', [RelatorioController::class, 'cores'])->name('cadastros.cores');
+        Route::get('/cadastros/condicoes', [RelatorioController::class, 'condicoesPagamento'])->name('cadastros.condicoes');
+    });
 
     //Atividades
     Route::get('/atividades', function () {
