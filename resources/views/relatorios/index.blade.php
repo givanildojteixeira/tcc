@@ -29,10 +29,8 @@
 
             <!-- Relatórios Financeiros -->
             <x-relatorio-card titulo="Financeiro" cor="red" icone="banknotes">
-                <x-relatorio-item icone="clipboard-document" texto="Contas a Pagar" rota="relatorios.financeiro.pagar"
-                    :usaDatas="true" />
-                <x-relatorio-item icone="clipboard-document" texto="Contas a Receber"
-                    rota="relatorios.financeiro.receber" :usaDatas="true" />
+                <x-relatorio-item icone="clipboard-document" texto="Contas a Pagar" rota="relatorios.financeiro.pagar" :usaDatas="true" />
+                <x-relatorio-item icone="clipboard-document" texto="Contas a Receber" rota="relatorios.financeiro.receber" :usaDatas="true" />
             </x-relatorio-card>
 
             <!-- Relatórios de Cadastros -->

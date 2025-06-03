@@ -12,7 +12,7 @@
             <div>#{{ $p->id }}</div>
             <div>{{ $p->nome ?? '-' }}</div>
             <div>{{ $p->chassi ?? '-' }}</div>
-            <div class="text-right">R$ {{ number_format($p->veiculo->vlr_tabela ?? 0, 2, ',', '.') }}</div>
+            <div class="text-right">R$ {{ number_format($p->vlr_tabela ?? 0, 2, ',', '.') }}</div>
             <div class="text-right">
                 @if ($p->pago)
                     <span class="text-green-600 font-semibold">Pago</span>
@@ -25,3 +25,5 @@
         <p class="text-gray-500 py-4">Nenhuma proposta encontrada no período informado.</p>
     @endforelse
 </div>
+
+

@@ -75,11 +75,10 @@ class RelatorioController extends Controller
 
     public function contasPagar(Request $request)
     {
-    $dataInicio = $request->input('data_inicio');
-    $dataFim = $request->input('data_fim');
+        $dataInicio = $request->input('data_inicio');
+        $dataFim = $request->input('data_fim');
 
-    $sql = "
-        SELECT 
+        $sql = "SELECT 
             p.id ,
             c.nome AS nome,
             v.chassi,
@@ -93,26 +92,60 @@ class RelatorioController extends Controller
         WHERE v.status = 'Vendido'
     ";
 
-    $bindings = [];
+        $bindings = [];
 
-    if ($dataInicio && $dataFim) {
-        $sql .= " AND p.dta_faturamento BETWEEN ? AND ?";
-        $bindings[] = $dataInicio;
-        $bindings[] = $dataFim;
-    }
+        if ($dataInicio && $dataFim) {
+            $sql .= " AND p.dta_faturamento BETWEEN ? AND ?";
+            $bindings[] = $dataInicio;
+            $bindings[] = $dataFim;
+        }
 
-    $sql .= " ORDER BY p.id DESC";
+        $sql .= " ORDER BY p.id DESC";
 
-    $propostas = DB::select($sql, $bindings);
+        $propostas = DB::select($sql, $bindings);
 
         return view('relatorios.base.pagar', compact('propostas', 'dataInicio', 'dataFim'));
     }
 
 
-    public function contasReceber()
+    public function contasReceber(Request $request)
     {
-        return view('relatorios.financeiro.receber');
+        $dataInicio = $request->input('data_inicio');
+        $dataFim = $request->input('data_fim');
+
+        $sql = "SELECT 
+            n.id AS id,
+            p.id AS proposta_id,
+            c.nome AS cliente_nome,
+            v.desc_veiculo,
+            v.chassi,
+            cp.descricao AS condicao_pagamento,
+            p.dta_faturamento,
+            n.valor,
+            n.pago,
+            n.data_vencimento
+        FROM negociacoes n
+        JOIN propostas p ON p.id = n.id_proposta
+        JOIN clientes c ON c.id = p.id_cliente
+        JOIN veiculos v ON v.id = p.id_veiculoNovo
+        JOIN condicao_pagamentos cp ON cp.id = n.id_cond_pagamento
+        WHERE cp.financeira = 1";
+
+        $bindings = [];
+
+        if ($dataInicio && $dataFim) {
+            $sql .= " AND n.data_vencimento BETWEEN ? AND ?";
+            $bindings[] = $dataInicio;
+            $bindings[] = $dataFim;
+        }
+
+        $sql .= " ORDER BY n.data_vencimento";
+
+        $negociacoes = DB::select($sql, $bindings);
+
+        return view('relatorios.base.receber', compact('negociacoes', 'dataInicio', 'dataFim'));
     }
+
 
     public function clientes()
     {
