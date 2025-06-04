@@ -121,7 +121,7 @@
                                 </span>
                             </td>
                             <td class="px-4 py-2 text-green-700 font-medium text-right">
-                                R$ {{ number_format($proposta->negociacoes->sum('valor'), 2, ',', '.') }}
+                                {{ number_format($proposta->negociacoes->sum('valor'), 2, ',', '.') }}
                             </td>
                             <td class="px-4 py-2">{{ $proposta->usuario->name ?? '-' }}</td>
                             <td class="px-4 py-2 text-center">

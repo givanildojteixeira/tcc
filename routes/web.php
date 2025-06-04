@@ -26,7 +26,7 @@ use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\CondicaoPagamentoController;
 use App\Http\Controllers\RelatorioController;
-
+use App\Models\Proposta;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +48,12 @@ Route::get('/dashboard', function () {
         'clientes' => Cliente::all(),
         'users' => User::all(),
         'veiculos' => Veiculo::all(),
+        'propostas' => Proposta::all(),
+        'propostasCanceladas' => Proposta::where('status', 'Cancelada')->count(),
+        'propostasAprovadas' => Proposta::where('status', 'Aprovada')->count(),
+        'propostasFaturadas' => Proposta::where('status', 'Faturada')->count(),
+        'propostasPendentes' => Proposta::where('status', 'pendente')->count(),
+        'propostasRejeitadas' => Proposta::where('status', 'rejeitada')->count(),
         'veiculosnovos' => Veiculo::where('novo_usado', 'Novo')->count(),
         'veiculosusados' => Veiculo::where('novo_usado', 'Usado')->count(),
     ]);

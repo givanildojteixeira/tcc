@@ -17,59 +17,59 @@
                         <canvas id="graficoBarra" style="max-width: 200px; max-height: 200px;"></canvas>
                     </div>
 
-                    <!-- Gráfico Linha -->
+                    {{-- <!-- Gráfico Linha -->
                     <div class="bg-white border-2 border-blue-200 rounded-lg shadow-lg p-6 flex flex-col items-center">
                         <h2 class="text-lg font-bold text-blue-500">Propostas ao Longo do Tempo</h2>
                         <canvas id="graficoLinha" style="max-width: 200px; max-height: 200px;"></canvas>
+                    </div> --}}
+
+
+                    <div
+                        class="bg-white border-2 border-indigo-200 rounded-lg shadow-lg p-6 flex flex-col items-center">
+                        <h2 class="text-lg font-bold text-indigo-600 mb-4">Propostas por Status</h2>
+                        <canvas id="graficoPropostas" class="w-full max-w-xl h-64"></canvas>
                     </div>
 
-                    <a href="{{ route('meus-clientes', Auth::user()->id) }}" class="block">
-                        <div class="bg-white border-2 border-blue-200 rounded-lg shadow-lg p-6 flex flex-col items-center hover:bg-blue-100 transition duration-200 cursor-pointer">
-                            <h2 class="text-lg font-bold text-blue-500">Nro de Clientes Cadastrados:</h2>
-                            <p class="mt-2 text-gray-600">{{ count($clientes) }}</p>
+                    <div class="bg-white border-2 border-blue-300 rounded-lg shadow-lg p-2">
+                        <h2 class="text-xl font-bold text-blue-600 mb-4 text-center">Resumo Geral do Sistema</h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+
+                            {{-- Clientes --}}
+                            <a href="{{ route('meus-clientes', Auth::user()->id) }}"
+                                class="flex flex-col items-center p-4 border border-blue-300 rounded-xl hover:bg-blue-50 transition shadow-md">
+                                👥
+                                <h3 class="text-blue-500 font-semibold text-sm mt-2">Clientes</h3>
+                                <p class="text-2xl font-bold text-gray-700 mt-1">{{ count($clientes) }}</p>
+                            </a>
+
+                            {{-- Usuários --}}
+                            <a href="{{ route('user.index') }}"
+                                class="flex flex-col items-center p-4 border border-green-300 rounded-xl hover:bg-green-50 transition shadow-md">
+                                🔒
+                                <h3 class="text-green-500 font-semibold text-sm mt-2">Usuários</h3>
+                                <p class="text-2xl font-bold text-gray-700 mt-1">{{ count($users) }}</p>
+                            </a>
+
+                            {{-- Veículos --}}
+                            <a href="{{ route('meus-clientes', Auth::user()->id) }}"
+                                class="flex flex-col items-center p-4 border border-yellow-300 rounded-xl hover:bg-yellow-50 transition shadow-md">
+                                🚗
+                                <h3 class="text-yellow-500 font-semibold text-sm mt-2">Veículos</h3>
+                                <p class="text-2xl font-bold text-gray-700 mt-1">{{ count($veiculos) }}</p>
+                            </a>
+
+                            {{-- Propostas --}}
+                            <a href="{{ route('meus-clientes', Auth::user()->id) }}"
+                                class="flex flex-col items-center p-4 border border-purple-300 rounded-xl hover:bg-purple-50 transition shadow-md">
+                                📄
+                                <h3 class="text-purple-500 font-semibold text-sm mt-2">Propostas</h3>
+                                <p class="text-2xl font-bold text-gray-700 mt-1">{{ count($propostas) }}</p>
+                            </a>
+
                         </div>
-                    </a>
+                    </div>
 
-                    <a href="{{ route('user.index') }}" class="block">
-                        <div class="bg-white border-2 border-green-200 rounded-lg shadow-lg p-6 flex flex-col items-center hover:bg-green-100 transition duration-200 cursor-pointer">
-                            <h2 class="text-lg font-bold text-green-500">Nro de Usuários Cadastrados:</h2>
-                            <p class="mt-2 text-gray-600">{{ count($users) }}</p>
-                        </div>
-                    </a>
-
-                    <a href="{{ route('meus-clientes', Auth::user()->id) }}" class="block">
-                        <div class="bg-white border-2 border-blue-200 rounded-lg shadow-lg p-6 flex flex-col items-center hover:bg-blue-100 transition duration-200 cursor-pointer">
-                            <h2 class="text-lg font-bold text-blue-500">Nro de Veículos Cadastrados:</h2>
-                            <p class="mt-2 text-gray-600">{{ count($veiculos) }}</p>
-                        </div>
-                    </a>
-
-
-                    {{-- repetção --}}
-
-                    <a href="{{ route('meus-clientes', Auth::user()->id) }}" class="block">
-                        <div class="bg-white border-2 border-blue-200 rounded-lg shadow-lg p-6 flex flex-col items-center hover:bg-blue-100 transition duration-200 cursor-pointer">
-                            <h2 class="text-lg font-bold text-blue-500">Nro de Clientes Cadastrados:</h2>
-                            <p class="mt-2 text-gray-600">{{ count($clientes) }}</p>
-                        </div>
-                    </a>
-
-                    <a href="{{ route('user.index') }}" class="block">
-                        <div class="bg-white border-2 border-green-200 rounded-lg shadow-lg p-6 flex flex-col items-center hover:bg-green-100 transition duration-200 cursor-pointer">
-                            <h2 class="text-lg font-bold text-green-500">Nro de Usuários Cadastrados:</h2>
-                            <p class="mt-2 text-gray-600">{{ count($users) }}</p>
-                        </div>
-                    </a>
-
-                    <a href="{{ route('meus-clientes', Auth::user()->id) }}" class="block">
-                        <div class="bg-white border-2 border-blue-200 rounded-lg shadow-lg p-6 flex flex-col items-center hover:bg-blue-100 transition duration-200 cursor-pointer">
-                            <h2 class="text-lg font-bold text-blue-500">Nro de Veículos Cadastrados:</h2>
-                            <p class="mt-2 text-gray-600">{{ count($veiculos) }}</p>
-                        </div>
-                    </a>
-                    
-
-                    {{-- re --}}
 
                 </div>
             </div>
@@ -200,6 +200,85 @@
                 },
                 plugins: [ChartDataLabels]
             });
+
+
+            const ctxPropostas = document.getElementById('graficoPropostas').getContext('2d');
+
+            const propostasChart = new Chart(ctxPropostas, {
+                type: 'bar',
+                data: {
+                    labels: ["Aprovadas", "Pendentes", "Faturadas", "Rejeitadas", "Canceladas"],
+                    datasets: [{
+                        label: 'Propostas',
+                        data: [
+                            {{ $propostasAprovadas }},
+                            {{ $propostasPendentes }},
+                            {{ $propostasFaturadas }},
+                            {{ $propostasRejeitadas }},
+                            {{ $propostasCanceladas }}
+                        ],
+                        backgroundColor: ["#4CAF50", "#FACC15", "#3B82F6", "#EF4444", "#9CA3AF"],
+                        borderColor: ["#388E3C", "#D97706", "#2563EB", "#B91C1C", "#6B7280"],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0,
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                display: true,
+                                color: '#e5e5e5',
+                                lineWidth: 1
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        datalabels: {
+                            color: 'white',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            formatter: (value) => `${value}`
+                        }
+                    },
+                    onClick: function(evt, elements) {
+                        if (elements.length > 0) {
+                            const status = ['Aprovada', 'pendente', 'Faturada', 'rejeitada',
+                                'Cancelada'
+                            ];
+                            const statusSelecionado = status[elements[0].index];
+                            const url = `/propostas?status=${statusSelecionado}`;
+                            window.location.href = url;
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+
+
+
+
 
             // Gráfico Linha (dados fictícios)
             var ctx3 = document.getElementById('graficoLinha').getContext('2d');
