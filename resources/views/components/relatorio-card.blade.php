@@ -1,11 +1,14 @@
-@props(['titulo', 'icone' => 'chart-bar', 'cor' => 'blue'])
+@props(['titulo', 'icone' => 'document', 'cor' => 'blue'])
 
-<div class="bg-white shadow-md border-l-4 border-{{ $cor }}-600 rounded p-4">
-    <div class="flex items-center gap-2 text-{{ $cor }}-600 mb-3">
-        <x-icon :name="$icone" class="w-6 h-6" />
-        <h2 class="text-lg font-semibold">{{ $titulo }}</h2>
+<div class="bg-white shadow-md rounded-md p-4 border-l-4 border-b-4 border-{{ $cor }}-500">
+    <!-- Título com ícone -->
+    <div class="flex items-center gap-2 text-{{ $cor }}-600 font-semibold mb-2">
+        <x-icon :name="$icone" class="w-5 h-5" />
+        <h2 class="text-lg">{{ $titulo }}</h2>
     </div>
-    <ul class="space-y-2">
+
+    <!-- Lista de itens -->
+    <ul class="space-y-1">
         {{ $slot }}
     </ul>
 </div>
