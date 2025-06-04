@@ -71,18 +71,18 @@
                         <table class="w-full table-fixed">
                             <thead class="bg-gray-300 text-left sticky top-0 z-30 border-t border-gray-900 shadow-sm">
                                 <tr class="hover:bg-gray-300">
-                                    <th class="px-4 py-3">Nome</th>
-                                    <th class="px-4 py-3">Tipo</th>
-                                    <th class="px-4 py-3">CPF/CNPJ</th>
-                                    <th class="px-4 py-3">Email</th>
-                                    <th class="px-4 py-3">Ações</th>
+                                    <th class="w-1/3 px-4 py-3 text-center">Nome</th>
+                                    <th class="w-1/6 px-4 py-3 text-center">Tipo</th>
+                                    <th class="w-1/5 px-4 py-3 text-center">CPF/CNPJ</th>
+                                    <th class="w-1/4 px-4 py-3 text-center">Email</th>
+                                    <th class="w-1/6 px-4 py-3 text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody class="text-sm text-gray-700">
                                 @foreach ($clientes as $cliente)
                                 <tr class="hover:bg-gray-100 border-t">
                                     <td class="px-4 py-2">{{ $cliente->nome }}</td>
-                                    <td class="px-4 py-2">{{ $cliente->tipo_pessoa }}</td>
+                                    <td class="px-4 py-2 text-center">{{ $cliente->tipo_Pessoa }}</td>
                                     <td class="px-4 py-2">{{ $cliente->cpf_cnpj }}</td>
                                     <td class="px-4 py-2">{{ $cliente->email }}</td>
                                     <td class="px-4 py-2">
@@ -118,7 +118,8 @@
                         </table>
                     </div>
                 </div>
-
+<br>
+<br>
                 <!-- Modal Novo Cliente -->
                 <div x-show="showModalCliente"
                     class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"

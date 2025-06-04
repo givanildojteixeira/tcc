@@ -1,6 +1,7 @@
 <div class="space-y-2">
     {{-- Cabeçalho --}}
-    <div class="grid grid-cols-5 font-semibold text-gray-600 border-b pb-1">
+    <div class="grid font-semibold text-gray-600 border-b pb-1"
+         style="grid-template-columns: 60px 180px 1fr 120px 140px;">
         <div>Nº</div>
         <div>Vendedor</div>
         <div>Veículo</div>
@@ -10,11 +11,12 @@
 
     {{-- Linhas --}}
     @forelse ($propostas as $p)
-        <div class="grid grid-cols-5  py-1 text-sm text-gray-800">
+        <div class="grid py-1 text-sm text-gray-800"
+             style="grid-template-columns: 60px 180px 1fr 120px 140px;">
             <div>#{{ $p->id }}</div>
             <div>{{ $p->vendedor->name ?? '-' }}</div>
             <div>{{ $p->veiculo->desc_veiculo ?? '-' }}</div>
-            <div class="text-right">R$ {{ number_format($p->valor_total, 2, ',', '.') }}</div>
+            <div class="text-right">R$ {{ number_format($p->veiculo->vlr_nota, 2, ',', '.') }}</div>
             <div class="text-right">
                 R$ {{ number_format($p->negociacoes->sum('valor'), 2, ',', '.') }}
             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Veiculo;
 use App\Models\Proposta;
 use Illuminate\Http\Request;
+use App\Models\CondicaoPagamento;
 use Illuminate\Support\Facades\DB;
 
 class RelatorioController extends Controller
@@ -149,26 +150,41 @@ class RelatorioController extends Controller
 
     public function clientes()
     {
-        return view('relatorios.cadastros.clientes');
+        $sql = " SELECT id, nome, cpf_cnpj, email, telefone  FROM clientes ORDER BY nome";
+        $clientes = DB::select($sql);
+
+        return view('relatorios.base.clientes', compact('clientes'));
     }
+
 
     public function familias()
     {
-        return view('relatorios.cadastros.familias');
+        $familias = DB::select("SELECT id, descricao, site FROM familias ORDER BY descricao");
+
+        return view('relatorios.base.familias', compact('familias'));
     }
 
     public function opcionais()
     {
-        return view('relatorios.cadastros.opcionais');
+        $opcionais = DB::select("
+        SELECT modelo_fab, cod_opcional, chassi, descricao
+        FROM opcionais
+        ORDER BY modelo_fab, cod_opcional
+    ");
+
+        return view('relatorios.base.opcionais', compact('opcionais'));
     }
 
     public function cores()
     {
-        return view('relatorios.cadastros.cores');
+        $cores = DB::select("SELECT id, cor_desc FROM cores ORDER BY cor_desc");
+
+        return view('relatorios.base.cores', compact('cores'));
     }
 
     public function condicoesPagamento()
     {
-        return view('relatorios.cadastros.condicoes');
+        $condicoes = CondicaoPagamento::orderBy('descricao')->get();
+        return view('relatorios.base.condicoes-pagamento', compact('condicoes'));
     }
 }
