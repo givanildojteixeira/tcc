@@ -5,6 +5,8 @@ use App\Models\User;
 use App\Models\Cliente;
 use App\Models\Familia;
 use App\Models\Veiculo;
+use App\Models\Negociacao;
+use App\Models\Proposta;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,17 +28,11 @@ use App\Http\Controllers\RelatoriosController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\CondicaoPagamentoController;
 use App\Http\Controllers\RelatorioController;
-use App\Models\Proposta;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 Route::get('/', function () {
@@ -56,6 +52,12 @@ Route::get('/dashboard', function () {
         'propostasRejeitadas' => Proposta::where('status', 'rejeitada')->count(),
         'veiculosnovos' => Veiculo::where('novo_usado', 'Novo')->count(),
         'veiculosusados' => Veiculo::where('novo_usado', 'Usado')->count(),
+        'valorPagar' => Veiculo::where('status', 'Vendido')->where('pago', 0)->sum('vlr_nota'),
+        'valorReceber' => Negociacao::where('pago', 0)
+            ->whereHas('proposta', function ($query) {
+                $query->where('status', 'Faturada');
+            })
+            ->sum('valor'),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -198,7 +200,7 @@ Route::middleware('auth')->group(function () {
 
 
     //Relatórios
-    
+
     Route::prefix('relatorios')->name('relatorios.')->group(function () {
         Route::get('/index', [RelatorioController::class, 'index'])->name('index');
         // Veículos Novos
@@ -230,7 +232,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/atividades', function () {
         return view('atividades');
     })->name('atividades.index');
-
 });
 
 require __DIR__ . '/auth.php';
