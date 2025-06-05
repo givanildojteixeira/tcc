@@ -36,7 +36,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
 
                             {{-- Clientes --}}
-                            <a href="{{ route('meus-clientes', Auth::user()->id) }}"
+                            <a href="{{ route('clientes.index', Auth::user()->id) }}"
                                 class="flex flex-col items-center p-4 border border-blue-300 rounded-xl hover:bg-blue-50 transition shadow-md">
                                 👥
                                 <h3 class="text-blue-500 font-semibold text-sm mt-2">Clientes</h3>
@@ -44,7 +44,7 @@
                             </a>
 
                             {{-- Usuários --}}
-                            <a href="{{ route('user.index') }}"
+                            <a href="{{ route('dashboard') }}"
                                 class="flex flex-col items-center p-4 border border-green-300 rounded-xl hover:bg-green-50 transition shadow-md">
                                 🔒
                                 <h3 class="text-green-500 font-semibold text-sm mt-2">Usuários</h3>
@@ -52,7 +52,7 @@
                             </a>
 
                             {{-- Veículos --}}
-                            <a href="{{ route('meus-clientes', Auth::user()->id) }}"
+                            <a href="{{ route('veiculos.novos.index', Auth::user()->id) }}"
                                 class="flex flex-col items-center p-4 border border-yellow-300 rounded-xl hover:bg-yellow-50 transition shadow-md">
                                 🚗
                                 <h3 class="text-yellow-500 font-semibold text-sm mt-2">Veículos</h3>
@@ -60,7 +60,7 @@
                             </a>
 
                             {{-- Propostas --}}
-                            <a href="{{ route('meus-clientes', Auth::user()->id) }}"
+                            <a href="{{ route('propostas.index', Auth::user()->id) }}"
                                 class="flex flex-col items-center p-4 border border-purple-300 rounded-xl hover:bg-purple-50 transition shadow-md">
                                 📄
                                 <h3 class="text-purple-500 font-semibold text-sm mt-2">Propostas</h3>

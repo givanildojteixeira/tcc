@@ -154,9 +154,19 @@
                             <x-dropdown-link href="https://github.com/givanildojteixeira/tcc"  target="_blank">
                                 <i class="fa-brands fa-github mr-2"></i> Repositório Git
                             </x-dropdown-link>
-                            <x-dropdown-link :href="route('atividades.index')" target="_blank" >
+                            <x-dropdown-link href="https://pt.overleaf.com/login"  target="_blank">
+                                📘 Overleaf
+                            </x-dropdown-link>
+                            <x-dropdown-link href="https://tcc.tsi.pro.br/documentos"  target="_blank">
+                                🚀 Site TCC UTFPR
+                            </x-dropdown-link>
+                            <x-dropdown-link :
+                            href="route('atividades.index')" target="_blank" >
                                 <i class="fa-solid fa-clock-rotate-left mr-2"></i> Histórico de Atividades
                             </x-dropdown-link>
+
+
+
                         @endacessoAdmin
                         <hr class="border-gray-200 dark:border-gray-600 my-2">
 

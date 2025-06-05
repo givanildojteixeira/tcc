@@ -20,7 +20,7 @@
         <!-- App CSS/JS -->
         {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-CKLfAw3a.css') }}"> --}}
         {{-- <script type="module" src="{{ asset('build/assets/app-42Rp8jfk.js') }}"></script> --}}
-        @vite(['resources/js/app.js']);
+        @vite(['resources/js/app.js'])
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 
