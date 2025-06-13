@@ -14,7 +14,7 @@
             <div>{{ $c->telefone }}</div>
         </div>
     @empty
-        <p class="text-center text-gray-500 py-4">Nenhum cliente encontrado.</p>
+        <p class="text-center text-gray-500 py-4">Nenhum cliente encontrado para emissao do relatório.</p>
     @endforelse
 </div>
 

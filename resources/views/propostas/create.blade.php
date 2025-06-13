@@ -199,7 +199,7 @@
                         .then(res => res.json())
                         .then(data => {
                             this.clientes = data;
-                            if (data.length === 0) alert('Nenhum cliente encontrado');
+                            if (data.length === 0) alert('Nenhum cliente encontrado x3');
                         })
                         .catch(() => alert('Erro na busca'));
                 },

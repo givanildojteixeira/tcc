@@ -9,24 +9,37 @@
         }
     }">
 
-        <!-- 🔝 Header -->
-    <div class="flex flex-col h-screen">
-        <div class="flex items-center justify-between gap-4 px-4 py-4 bg-white shadow rounded-md p-4 border">
-            <div class="flex items-center gap-4 ">
-                <!-- 🟩 Título -->
-                <h2 class="text-2xl font-semibold text-green-700">
-                    Gerenciamento de usuários
-                </h2>
+        <!--  Header -->
+        <div class="flex flex-col h-screen">
+            <div class="flex items-center justify-between gap-4 px-4 py-4 bg-white shadow rounded-md p-4 border">
+                <div class="flex items-center gap-4 ">
+                    <!-- Título -->
+                    <h2 class="text-2xl font-semibold text-green-700">
+                        Gerenciamento de usuários
+                    </h2>
                 </div>
 
-                <!-- 🔍 Filtro com botão buscar e limpar -->
-                <form method="GET" action="{{ route('user.index') }}" class="flex gap-2 w-full">
+                <!-- Filtro com botão buscar e limpar -->
+                <form method="GET" action="{{ route('user.index') }}"
+                    class="flex gap-2 w-full flex-wrap items-center">
                     <!-- Campo de texto -->
                     <input type="text" name="busca" value="{{ request('busca') }}"
                         placeholder="Buscar por nome ou email..."
                         class="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
 
-                    <!-- Botão Buscar (verde) -->
+                    <!-- Combo de Nível -->
+                    <select name="nivel" onchange="this.form.submit()"
+                        class="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-700">
+                        <option value="">Todos os níveis</option>
+                        <option value="user" {{ request('nivel') === 'user' ? 'selected' : '' }}> 👤 Novos </option>
+                        <option value="Vendedor" {{ request('nivel') === 'Vendedor' ? 'selected' : '' }}>🛒 Vendedor  </option>
+                        <option value="Assistente" {{ request('nivel') === 'Assistente' ? 'selected' : '' }}>✍️ Assistente</option>
+                        <option value="Gerente" {{ request('nivel') === 'Gerente' ? 'selected' : '' }}>👔 Gerente                        </option>
+                        <option value="Diretor" {{ request('nivel') === 'Diretor' ? 'selected' : '' }}>📂 Diretor                        </option>
+                        <option value="admin" {{ request('nivel') === 'admin' ? 'selected' : '' }}>🛡️ Administrador                        </option>
+                    </select>
+
+                    <!-- Botão Buscar -->
                     <button type="submit"
                         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition flex items-center gap-1">
                         <i class="fas fa-search"></i>
@@ -34,7 +47,7 @@
                     </button>
 
                     <!-- Botão Limpar -->
-                    @if (request('busca'))
+                    @if (request('busca') || request('nivel'))
                         <a href="{{ route('user.index') }}"
                             class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-1">
                             <i class="fas fa-broom"></i>
@@ -43,20 +56,17 @@
                     @endif
                 </form>
 
-
-                <!-- ➕ Botão Novo Usuário -->
+                <!-- Botão Novo Usuário -->
                 <div class="text-right">
                     <button @click="createModal = true"
                         class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
-                        <i class="fa-solid fa-user-plus"></i> Novo Usuário
+                        <i class="fa-solid fa-user-plus"></i> Usuário
                     </button>
                 </div>
 
-
-
             </div>
 
-            <!-- 🧾 Conteúdo com scroll interno -->
+            <!--  Conteúdo com scroll interno -->
             <div>
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -153,7 +163,7 @@
                 Perfil do Usuario => <strong>{{ Auth::user()->level }}</strong>
             </div>
         </x-rodape>
-        <!-- ✏️ Modal de Edição de Usuário -->
+        <!--  Modal de Edição de Usuário -->
         <div x-show="editModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
             style="display: none;">
             <div @click.away="editModal = false"
@@ -162,7 +172,7 @@
             </div>
         </div>
 
-        <!-- 🧩 Modal Compacto de Novo Usuário -->
+        <!--  Modal Compacto de Novo Usuário -->
         <div x-show="createModal"
             class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 "
             style="display: none;">

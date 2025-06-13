@@ -57,7 +57,9 @@
                 <div><strong>Modelo:</strong> <span x-text="veiculo.modelo_fab"></span></div>
                 <div><strong>Opcional:</strong> <span x-text="veiculo.cod_opcional"></span></div>
                 <div><strong>Chassi:</strong> <span x-text="veiculo.chassi"></span></div>
-                <div><strong>Valor Tabela:</strong> <span x-text="veiculo.vlr_tabela"></span></div>
+                <div><strong>Valor Tabela:</strong> 
+                    <span x-text="veiculo.vlr_tabela ? Number(veiculo.vlr_tabela).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'R$ 0,00'"></span>
+                </div>
                 <div><strong>Combustível:</strong> <span x-text="veiculo.combustivel"></span></div>
                 <div><strong>Cor:</strong> <span x-text="veiculo.cor"></span></div>
                 <div><strong>Local:</strong> <span x-text="veiculo.local"></span></div>

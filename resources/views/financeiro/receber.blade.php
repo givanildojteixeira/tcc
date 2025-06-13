@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto p-4">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
             <!-- Título -->
-            <h2 class="text-xl font-semibold text-blue-700 col-span-2 min-w-[160px]"> Financeiro </h2>
+            <h2 class="text-xl font-semibold text-blue-700 col-span-2 min-w-[160px]"> 💵 Financeiro </h2>
 
             <!-- Botões -->
             <div class="flex gap-2 whitespace-nowrap">

@@ -73,26 +73,26 @@
                     {{-- finaceiro --}}
                     {{-- Valor a Pagar --}}
                     <a href="{{ route('financeiro.index', Auth::user()->id) }}"
-                    class="border-2 border-blue-300 rounded-lg shadow-lg p-2 bg-red-50">
+                        class="border-2 border-blue-300 rounded-lg shadow-lg p-2 bg-red-50">
                         <div>
                             <h2 class="text-xl font-bold text-blue-600 mb-4 text-center">Valor à Pagar</h2>
                             <p class="text-2xl font-bold text-gray-800 mt-1 text-center">
-                               💳 R$ {{ number_format($valorPagar, 2, ',', '.') }}
+                                💳 R$ {{ number_format($valorPagar, 2, ',', '.') }}
                             </p>
                         </div>
-                        
+
                     </a>
 
                     {{-- Valor a Receber --}}
                     <a href="{{ route('financeiro.receber', Auth::user()->id) }}"
-                    class="border-2 border-blue-300 rounded-lg shadow-lg p-2 bg-green-50">
+                        class="border-2 border-blue-300 rounded-lg shadow-lg p-2 bg-green-50">
                         <div>
                             <h2 class="text-xl font-bold text-blue-600 mb-4 text-center">Valor à Receber</h2>
                             <p class="text-2xl font-bold text-gray-800 mt-1 text-center">
                                 💵 R$ {{ number_format($valorReceber, 2, ',', '.') }}
                             </p>
                         </div>
-                        
+
                     </a>
 
 
@@ -104,6 +104,10 @@
         <!-- Número de veículos listados -->
         <div class="font-medium" id="selectedVehiclesCount">
             Dashboard
+        </div>
+        <!-- Legenda de cores -->
+        <div class="flex flex-wrap gap-1 items-center">
+            Perfil do Usuario => <strong>{{ Auth::user()->level }}</strong>
         </div>
     </x-rodape>
     <script>

@@ -126,14 +126,14 @@
                         <span>
                             R$
                             {{ number_format(
-    ($veiculo->vlr_tabela ?? 0) -
-    ($proposta['vlr_desconto'] ?? 0) -
-    ($veiculo->vlr_bonus ?? 0) -
-    ($veiculo->vlr_nota ?? 0),
-    2,
-    ',',
-    '.',
-) }}
+                                ($veiculo->vlr_tabela ?? 0) -
+                                ($proposta['vlr_desconto'] ?? 0) -
+                                ($veiculo->vlr_bonus ?? 0) -
+                                ($veiculo->vlr_nota ?? 0),
+                                2,
+                                ',',
+                                '.',
+                            ) }}
                         </span>
                     </div>
                 </div>
@@ -155,9 +155,6 @@
 
         <x-bt-padrao label="❌ Rejeitar" color="red" icon="" title="Devolve a proposta ao vendedor"
             @click="alterarCampoProposta({{ $proposta['id'] }}, 'status', 'rejeitada')" />
-
-
-
 
         {{-- Aprovações --}}
         @php
@@ -184,7 +181,7 @@
     <div x-show="showModalObservacao" style="display: none;"
         class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-[9999]">
         <div
-            class="bg-white rounded-md shadow-xl p-6 w-full max-w-4xl overflow-y-auto max-h-[85vh] relative border border-blue-400">
+            class="bg-white rounded-md shadow-xl p-6 w-full max-w-4xl overflow-y-auto max-h-[85vh] border border-yellow-400 border-t-4 animate-shake relative">
             <button @click="showModalObservacao = false"
                 class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
                 &times;
@@ -221,7 +218,7 @@
     <div x-show="showModalAprovadores" x-cloak
         class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[10000]">
         <div
-            class="bg-white border-2 border-green-600 rounded-lg shadow-2xl p-6 w-full max-w-xl relative animate-fade-in">
+            class="bg-white border-2 border-green-600 rounded-lg shadow-2xl p-6 w-full max-w-xl border-t-4 animate-shake relative">
             <!-- Botão Fechar -->
             <button @click="showModalAprovadores = false"
                 class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
@@ -238,17 +235,17 @@
                     <li class="flex items-center gap-2">
                         <i class="fas fa-user-tie text-green-600"></i>
                         <span><strong>Gerencial:</strong></span>
-                        <span x-text="aprovadores.gerencial || '❌ Não aprovada'"></span>
+                        <span x-text="aprovadores.gerencial || '✔️ Aprovada'"></span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="fas fa-calculator text-yellow-600"></i>
                         <span><strong>Financeira:</strong></span>
-                        <span x-text="aprovadores.financeira || '❌ Não aprovada'"></span>
+                        <span x-text="aprovadores.gerencial || '✔️ Aprovada'"></span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="fas fa-university text-blue-600"></i>
                         <span><strong>Banco:</strong></span>
-                        <span x-text="aprovadores.banco || '❌ Não aprovada'"></span>
+                        <span x-text="aprovadores.gerencial || '✔️ Aprovada'"></span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="fas fa-user-shield text-purple-700"></i>

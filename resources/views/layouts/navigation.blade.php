@@ -4,7 +4,7 @@
         <div class="flex justify-between h-16 items-center">
             <!-- Logo -->
             <div class="flex items-center space-x-6">
-                <a href="{{ route('dashboard') }}">
+                <a href="{{ route('veiculos.novos.limparFiltros') }}">
                     <img src="/images/guara.png" alt="Logo" class="w-20 h-12">
                 </a>
 
@@ -144,25 +144,25 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
+                        <x-dropdown-link :href="route('profile.edit')" >
                             <i class="fa-solid fa-user-tie mr-2"></i> Meus Dados
                         </x-dropdown-link>
                         @acessoAdmin()
-                            <x-dropdown-link :href="route('user.index')">
+                            <x-dropdown-link :href="route('user.index')" class="border-t">
                                 <i class="fa-solid fa-users mr-2"></i> Lista de Usuários
                             </x-dropdown-link>
                             <x-dropdown-link href="https://github.com/givanildojteixeira/tcc"  target="_blank">
                                 <i class="fa-brands fa-github mr-2"></i> Repositório Git
                             </x-dropdown-link>
-                            <x-dropdown-link href="https://pt.overleaf.com/login"  target="_blank">
+                            <x-dropdown-link href="https://pt.overleaf.com/project/682e4dac5e7307f764d16543"  target="_blank">
                                 📘 Overleaf
                             </x-dropdown-link>
                             <x-dropdown-link href="https://tcc.tsi.pro.br/documentos"  target="_blank">
                                 🚀 Site TCC UTFPR
                             </x-dropdown-link>
                             <x-dropdown-link :
-                            href="route('atividades.index')" target="_blank" >
-                                <i class="fa-solid fa-clock-rotate-left mr-2"></i> Histórico de Atividades
+                            href="https://github.com/givanildojteixeira/tcc/issues?q=is%3Aissue%20state%3Aclosed" target="_blank" >
+                                <i class="fa-solid fa-clock-rotate-left mr-2"></i> Issues Git
                             </x-dropdown-link>
 
 

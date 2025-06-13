@@ -1,46 +1,46 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold text-gray-800 mb-6">📊 Relatórios do Sistema</h1>
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">📊 Relatórios do sistema</h1>
 
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <!-- Relatórios Veículos Novos -->
-            <x-relatorio-card titulo="Veículos Novos" cor="blue" icone="car">
-                <x-relatorio-item icone="clipboard-document" texto="Estoque Atual" rota="relatorios.novos.estoque" />
-                <x-relatorio-item icone="clipboard-document" texto="Vendas por Modelo no trimestre"
+            <x-relatorio-card titulo="Veículos novos" cor="blue" icone="car">
+                <x-relatorio-item icone="clipboard-document" texto="Estoque atual" rota="relatorios.novos.estoque" />
+                <x-relatorio-item icone="clipboard-document" texto="Vendas por modelo no trimestre"
                     rota="relatorios.novos.vendas" />
             </x-relatorio-card>
 
             <!-- Relatórios Veículos Usados -->
-            <x-relatorio-card titulo="Veículos Usados" cor="yellow" icone="truck">
-                <x-relatorio-item icone="clipboard-document" texto="Estoque Atual usados"
+            <x-relatorio-card titulo="Veículos usados" cor="yellow" icone="truck">
+                <x-relatorio-item icone="clipboard-document" texto="Estoque atual usados"
                     rota="relatorios.usados.estoque" />
                 {{-- <x-relatorio-item icone="clipboard-document" texto="Lucro por Veículo" rota="relatorios.usados.lucro" /> --}}
             </x-relatorio-card>
 
             <!-- Relatórios de Propostas -->
             <x-relatorio-card titulo="Propostas" cor="green" icone="document-text">
-                <x-relatorio-item icone="check-badge" texto="Propostas Aprovadas"
+                <x-relatorio-item icone="check-badge" texto="Propostas aprovadas"
                     rota="relatorios.propostas.aprovadas" />
-                <x-relatorio-item icone="x-circle" texto="Propostas Rejeitadas"
+                <x-relatorio-item icone="x-circle" texto="Propostas rejeitadas"
                     rota="relatorios.propostas.rejeitadas" />
-                <x-relatorio-item icone="clipboard-document" texto="Propostas Faturadas"
+                <x-relatorio-item icone="clipboard-document" texto="Propostas faturadas"
                     rota="relatorios.propostas.faturadas" />
             </x-relatorio-card>
 
             <!-- Relatórios Financeiros -->
             <x-relatorio-card titulo="Financeiro" cor="red" icone="banknotes">
-                <x-relatorio-item icone="clipboard-document" texto="Contas a Pagar" rota="relatorios.financeiro.pagar" :usaDatas="true" />
-                <x-relatorio-item icone="clipboard-document" texto="Contas a Receber" rota="relatorios.financeiro.receber" :usaDatas="true" />
+                <x-relatorio-item icone="clipboard-document" texto="Contas a pagar" rota="relatorios.financeiro.pagar" :usaDatas="true" />
+                <x-relatorio-item icone="clipboard-document" texto="Contas a receber" rota="relatorios.financeiro.receber" :usaDatas="true" />
             </x-relatorio-card>
 
             <!-- Relatórios de Cadastros -->
-            <x-relatorio-card titulo="Cadastros Auxiliares" cor="purple" icone="table-cells">
+            <x-relatorio-card titulo="Cadastros auxiliares" cor="purple" icone="table-cells">
                 <x-relatorio-item icone="users" texto="Clientes" rota="relatorios.cadastros.clientes" />
-                <x-relatorio-item icone="clipboard-document" texto="Famílias de Veículos"
+                <x-relatorio-item icone="clipboard-document" texto="Famílias de veículos"
                     rota="relatorios.cadastros.familias" />
                 <x-relatorio-item icone="clipboard-document" texto="Opcionais" rota="relatorios.cadastros.opcionais" />
                 <x-relatorio-item icone="clipboard-document" texto="Cores" rota="relatorios.cadastros.cores" />
-                <x-relatorio-item icone="clipboard-document" texto="Condições de Pagamento"
+                <x-relatorio-item icone="clipboard-document" texto="Condições de pagamento"
                     rota="relatorios.cadastros.condicoes" />
             </x-relatorio-card>
         </div>
@@ -63,7 +63,7 @@
             x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" style="display: none;">
-            <div class="relative bg-white w-full max-w-md p-6 rounded-lg shadow-xl border-l-4 border-blue-600 animate-fade"
+            <div class="relative bg-white w-full max-w-md p-6 rounded-lg shadow-xl border-l-4 border-blue-600 border-t-4 border-blue-600 animate-shake relative"
                 @click.away="show = false">
                 <!-- Ícone decorativo -->
                 <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow">
@@ -101,6 +101,20 @@
             </div>
         </div>
     </div>
+
+        <x-rodape>
+
+            <!-- Número de veículos listados -->
+            <div class="font-medium" id="selectedVehiclesCount">
+                Relatórios do Sistema
+            </div>
+            <!-- Legenda de cores -->
+            <div class="flex flex-wrap gap-1 items-center">
+                Perfil do Usuario => <strong>{{ Auth::user()->level }}</strong>
+            </div>
+
+        </x-rodape>
+
 
 
 </x-app-layout>

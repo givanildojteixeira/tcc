@@ -56,17 +56,18 @@
                         <option value="Física">Física</option>
                         <option value="Jurídica">Jurídica</option>
                 </x-select>
+                {{-- tipo de Pessoa --}}
+                <input type="hidden" name="tipo_pessoa" :value="tipoPessoa">
                 <div x-show="tipoPessoa === 'Física'" class="contents grid grid-cols-4 gap-2">
-                    <x-input label="CPF" name="cpf_cnpj" required id="cpfCnpjInput" mask="cpf"/>
-                    <input type="hidden" name="tipo_pessoa" :value="tipoPessoa">
+                    <x-input label="CPF" name="cpf_cnpj"  id="cpfCnpjInput" mask="cpf"/>
                     <div class="grid grid-cols-3 gap-2 h-full">
-                        <x-select label="Sexo" name="sexo" required>
+                        <x-select label="Sexo" name="sexo" >
                             <option value="">Não Informado</option>
                             <option value="M">Masculino</option>
                             <option value="F">Feminino</option>
                             <option value="Outro">Outro</option>
                         </x-select>
-                        <x-select label="Estado Civil" name="estado_civil" required>
+                        <x-select label="Estado Civil" name="estado_civil" >
                             <option value="">--</option>
                             <option value="Solteiro(a)">Solteiro</option>
                             <option value="Casado(a)">Casado</option>
@@ -74,15 +75,14 @@
                             <option value="Viúvo(a)">Viúvo</option>
                             <option value="União Estável">União Estável</option>
                         </x-select>
-                        <x-input label="Data de Nascimento" name="data_nascimento" type="date" required />
+                        <x-input label="Data de Nascimento" name="data_nascimento" type="date"  />
                     </div>
                 </div>
                 <div x-show="tipoPessoa === 'Jurídica'" class="contents">
                     <div class="grid grid-cols-2 gap-2 h-full">
-                        <x-input label="CNPJ" name="cpf_cnpj" required id="cpfCnpjInput" mask="cnpj" />
+                        <x-input label="CNPJ" name="cpf_cnpj" id="cpfCnpjInput" mask="cnpj" />
                         <x-input label="Nome Fantasia" name="nome_fantasia" />
                     </div>
-                    <input type="hidden" name="tipo_pessoa" :value="tipoPessoa">
                     <div class="grid grid-cols-3 gap-2 h-full">
                         <x-input label="Data de Fundação" name="data_fundacao" type="date" />
                         <x-input label="Inscrição Estadual" name="inscricao_estadual" />

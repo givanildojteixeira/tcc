@@ -188,7 +188,7 @@
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
                                         <th class="sortable p-1 px-1 py-1" data-column="combustivel">Comb <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
-                                        <th class="sortable p-1 px-1 py-1" data-column="ano/mod">Ano_Mod <i
+                                        <th class="sortable p-1 px-1 py-1" data-column="ano/mod">Ano/Modelo <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
                                         <th class="sortable p-1 px-1 py-1" data-column="chassi">Chassi <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
@@ -196,7 +196,7 @@
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i> </th>
                                         <th class="sortable p-1 px-1 py-1" data-column="cor">Cor <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
-                                        <th class="sortable p-1 px-1 py-1" data-column="pts">Pts<i
+                                        <th class="sortable p-1 px-1 py-1" data-column="pts">Portas<i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i></th>
                                         <th class="sortable p-1 px-1 py-1 text-right" data-column="tabela">Valor FIPE <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
@@ -410,6 +410,12 @@
                                 class="text-yellow-500 font-bold">Filial</span> ou <span
                                 class="text-green-500 font-bold">Consignação</span>
                             , clique sobre eles para refinar ainda mais sua busca.</li>
+                        <li><strong>Legenda de Status:</strong> Indica o status dos veículos: <span
+                            class="text-red-500 font-bold">Negociação</span>: veículo ainda nao vendido mas ja incluso em uma outra proposta aprovada, <span
+                            class="text-gray-500 font-bold">Entrada</span>: veículo usado prestes a entrar no estoque, mas ainda dependente de concretização
+                            de uma proposta de venda, ou <span
+                            class="text-blue-500 font-bold">Promoção</span>: veículo marcado devido a vantagem de negócio, ou benefício de venda
+                        , clique sobre eles para refinar ainda mais sua busca.</li>
                     </ul>
 
                     <div class="mt-6 text-right">
@@ -552,7 +558,6 @@
                     if (activeFilter === 'Matriz' || activeFilter === 'Filial' || activeFilter === 'Consignado') {
                         rows.forEach(row => {
                             const local = row.querySelector('td:nth-child(14)').textContent.trim();
-                            console.log(' activeFilter:', activeFilter, '| linha local:', local);
 
                             if (local === activeFilter) {
                                 row.style.display = '';

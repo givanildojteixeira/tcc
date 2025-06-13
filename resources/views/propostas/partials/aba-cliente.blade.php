@@ -74,7 +74,7 @@
     <!-- Modal de Cadastro de Cliente -->
     <div x-show="showModalCliente" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
         style="display: none;">
-        <div @click.away="showModalCliente = false" class="bg-white p-6 rounded-lg w-full max-w-3xl shadow-lg">
+        <div class="bg-white p-6 rounded-lg w-full max-w-3xl shadow-lg">
             @include('clientes.partials.form-create')
         </div>
     </div>

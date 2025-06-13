@@ -5,7 +5,7 @@
         <div class="flex items-center space-x-4">
             <img src="/images/guara.png" alt="Logo" class="w-20 h-12">
             <div>
-                <h1 class="text-2xl font-bold">Simulação da Proposta de Venda</h1>
+                <h1 class="text-2xl font-bold">Proposta de Venda Nro:  <strong> {{ $proposta['id'] ?? '-' }} </strong> </h1>
                 <p class="text-sm text-gray-500">Gerado em {{ now()->format('d/m/Y H:i') }}</p>
             </div>
         </div>

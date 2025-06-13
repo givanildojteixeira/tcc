@@ -26,6 +26,8 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
+        dd($request);
+        
         $validator = Validator::make($request->all(), [
             'nome' => 'required|string|max:255',
             'tipo_pessoa' => 'required|in:Física,Jurídica',
@@ -52,6 +54,8 @@ class ClienteController extends Controller
             'observacoes' => 'nullable|string',
             'ativo' => 'nullable|boolean',
         ]);
+
+        dd($validator);
 
         if ($validator->fails()) {
             return redirect()->back()

@@ -120,8 +120,8 @@ class PropostaController extends Controller
 
         // Veículo usado (exemplo com 1, mas pode adaptar para mais)
         $veiculoUsado = null;
-        if (!empty($proposta['id_veiculo_usado1'])) {
-            $veiculoUsado = Veiculo::find($proposta['id_veiculo_usado1']);
+        if (!empty($proposta['id_veiculo_usado'])) {
+            $veiculoUsado = Veiculo::find($proposta['id_veiculo_usado']);
         }
 
         // Negociações

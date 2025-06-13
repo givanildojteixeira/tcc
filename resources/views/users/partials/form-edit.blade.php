@@ -1,11 +1,11 @@
-<!-- 🧾 Cabeçalho -->
+<!--  Cabeçalho -->
 <div class="mb-6 space-y-1">
     <h3 class="text-2xl font-semibold text-blue-700">Editar Nível de Acesso</h3>
     <p>Nome do usuário: <strong x-text="editUser.name"></strong></p>
     <p>Nível atual: <strong x-text="editUser.level"></strong></p>
 </div>
 
-<!-- 📝 Formulário de nível + botão Salvar -->
+<!--  Formulário de nível + botão Salvar -->
 <form :action="`{{ url('/user-edit') }}/${editUser.id}`" method="POST" class="space-y-4">
     @csrf
     @method('PUT')
@@ -37,7 +37,7 @@
 <!--  Ações adicionais: Ativar/Desativar, Remover e Cancelar -->
 <div class="flex flex-wrap justify-center items-center gap-3 mt-6">
 
-    <!-- 🔁 Botão Ativar/Desativar -->
+    <!--  Botão Ativar/Desativar -->
     <form :action="`{{ url('/user-ativo') }}/${editUser.id}/${editUser.active ? 0 : 1}`" method="POST">
         @csrf
         @method('PATCH')
@@ -51,7 +51,7 @@
     </form>
     
 
-    <!-- 🗑️ Botão Remover -->
+    <!--  Botão Remover -->
     <form :action="`{{ url('/user') }}/${editUser.id}`" method="POST"
         onsubmit="return confirm('Tem certeza que deseja remover este usuário?');">
         @csrf
@@ -63,7 +63,7 @@
         </button>
     </form>
 
-    <!-- ❌ Botão Cancelar -->
+    <!--  Botão Cancelar -->
     <button type="button" @click="editModal = false"
         class="flex items-center gap-2 text-gray-700 border border-gray-300 hover:bg-gray-100 px-4 py-2 rounded-md transition">
         <i class="fa-solid fa-xmark"></i> Cancelar

@@ -196,10 +196,10 @@
                                         <th class="sortable p-2" data-column="combustivel">Comb <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
-                                        <th class="sortable p-2" data-column="combustivel">Transm. <i
+                                        <th class="sortable p-2" data-column="combustivel">Transmissão <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
-                                        <th class="sortable p-2" data-column="ano_mod">Ano_Mod <i
+                                        <th class="sortable p-2" data-column="ano_mod">Ano/Modelo <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         <th class="sortable p-2" data-column="chassi">Chassi <i
@@ -229,7 +229,7 @@
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         @endacessoDiretor
-                                        <th class="sortable p-2" data-column="faturado">Faturado <i
+                                        <th class="sortable p-2" data-column="faturado">Dias <i
                                                 class="fas fa-sort text-gray-400 text-xs ml-1"></i>
                                         </th>
                                         <th class="hidden">Local</th> <!-- Coluna oculta para filtros -->
@@ -329,7 +329,6 @@
                                             @endacessoDiretor
                                             <td class="p-1 px-1 py-1 text-center">
                                                 {{ \Carbon\Carbon::parse($veiculo->dta_faturamento)->diffInDays(now()) }}
-                                                dias
                                             </td>
                                             <td class="hidden">{{ $veiculo->local }}</td>
                                             <td class="hidden">{{ $veiculo->status }}</td>
@@ -416,6 +415,11 @@
                             class="text-black font-bold">Matriz</span>, <span
                             class="text-yellow-500 font-bold">Filial</span> ou <span
                             class="text-green-500 font-bold">Trânsito</span>
+                        , clique sobre eles para refinar ainda mais sua busca.</li>
+                    <li><strong>Legenda de Status:</strong> Indica o status dos veículos: <span
+                            class="text-red-500 font-bold">Negociação</span>: veículo ainda nao vendido mas ja incluso em uma outra proposta aprovada, <span
+                            class="text-gray-500 font-bold">Indisponível</span>: veículo não disponível para venda  ou <span
+                            class="text-blue-500 font-bold">Promoção</span>: veículo marcado devido a vantagem de negócio, ou benefício de venda
                         , clique sobre eles para refinar ainda mais sua busca.</li>
                 </ul>
 
@@ -586,7 +590,6 @@
                 if (activeFilter === 'Matriz'|| activeFilter === 'Filial' || activeFilter === 'Transito') {
                     rows.forEach(row => {
                         const local = row.querySelector('td:nth-child(13)').textContent.trim();
-                        console.log('🔍 activeFilter:', activeFilter, '| linha status:', local);
 
                         if (local === activeFilter) {
                             row.style.display = '';
@@ -599,7 +602,6 @@
                 } else {
                     rows.forEach(row => {
                         const status = row.querySelector('td:nth-child(14)').textContent.trim();
-                        console.log('🔍 activeFilter:', activeFilter, '| linha status:', status);
                         if (status === activeFilter) {
                             row.style.display = '';
                             visibleCount++;
