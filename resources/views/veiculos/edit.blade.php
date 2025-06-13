@@ -542,12 +542,12 @@
                         container.remove();
                         window.mostrarToast?.('Imagem excluída com sucesso!');
                     } else {
-                        alert('Erro ao excluir a imagem.');
+                        alertCustom('Erro ao excluir a imagem.');
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert('Erro ao excluir a imagem.');
+                    alertCustom('Erro ao excluir a imagem.');
                 });
         }
 
@@ -569,7 +569,7 @@
                     window.mostrarToast?.(`Campo "${data.campo}" atualizado com sucesso!`);
                 })
                 .catch(error => {
-                    alert('Erro ao atualizar o status do veículo.');
+                    alertCustom('Erro ao atualizar o status do veículo.');
                     console.error(error);
                 });
         }

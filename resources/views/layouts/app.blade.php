@@ -81,8 +81,43 @@
             </div>
         @endif
 
+        <!-- Modal Global de Alerta  Trabalha junto com   Alpine.store('alertaGlobal', ... {-->
+        <div x-data="{
+            showModalGlobal: false,
+            conteudoGlobal: '',
+            alertCustom(msg) {
+                this.conteudoGlobal = `<div class='text-sm text-gray-600 text-center mb-6'> ${msg}</div>`;
+                this.showModalGlobal = true;
+            }
+        }" x-init="$watch('showModalGlobal', value => value || (conteudoGlobal = ''));
+        window.alertCustom = msg => {
+            conteudoGlobal = `<div class='text-sm text-gray-600 text-center mb-6'> ${msg}</div>`;
+            showModalGlobal = true;
+        }" x-ref="modalGlobal">
+            <div x-show="showModalGlobal" @keydown.escape.window="showModalGlobal = false"
+                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+                style="display: none;">
+                <div
+                    class="bg-white rounded-md shadow-lg p-6 w-full max-w-lg border-t-4 border-yellow-500 relative animate-shake">
+                    <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white p-2 rounded-full shadow">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl"></i>
+
+                    </div>
+
+                    <h2 class="text-lg font-semibold text-gray-800 mt-6 text-center">Atenção!</h2>
+                    <div x-html="conteudoGlobal"></div>
+                    </p>
+                    <div class="flex justify-center gap-4">
+                        <button @click="showModalGlobal = false"
+                            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <script>
-             document.addEventListener('keydown', function(event) {
+            document.addEventListener('keydown', function(event) {
                 const tag = document.activeElement.tagName.toLowerCase();
                 const isEditable = ['textarea', 'input', 'select'].includes(tag);
 
@@ -101,6 +136,23 @@
                     }
                 }
             });
+
+            document.addEventListener('alpine:init', () => {
+                Alpine.store('alertaGlobal', {
+                    showModal: false,
+                    conteudo: '',
+                    mostrar(msg) {
+                        this.conteudo = `<div class='text-sm text-gray-600 text-center mb-6'> ${msg}</div>`;
+                        this.showModal = true;
+                    },
+                    fechar() {
+                        this.showModal = false;
+                        this.conteudo = '';
+                    }
+                });
+            });
+
+
             window.salvarConfiguracao = function(chave, valor) {
                 const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -123,7 +175,7 @@
                         if (data.success) window.mostrarToast?.('Configuração salva!');
                     })
                     .catch(err => {
-                        alert('Erro ao salvar configuração: ' + (err.message || 'Erro desconhecido'));
+                        alertCustom('Erro ao salvar configuração: ' + (err.message || 'Erro desconhecido'));
                     });
             }
         </script>

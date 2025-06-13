@@ -570,7 +570,6 @@
                     } else {
                         rows.forEach(row => {
                             const status = row.querySelector('td:nth-child(15)').textContent.trim();
-                            console.log(' activeFilter:', activeFilter, '| linha status:', status);
                             if (status === activeFilter) {
                                 row.style.display = '';
                                 count++;

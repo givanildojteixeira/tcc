@@ -260,7 +260,7 @@
                         })
                         .catch(err => {
                             console.error(err);
-                            alert('Erro ao carregar a proposta.');
+                            alertCustom('Erro ao carregar a proposta.');
                         });
                 },
 
@@ -273,7 +273,7 @@
                         })
                         .catch(err => {
                             console.error(err);
-                            alert('Erro ao carregar aprovadores.');
+                            alertCustom('Erro ao carregar aprovadores.');
                         });
                 },
 
@@ -289,15 +289,15 @@
                         .then(data => {
                             if (data.success) {
                                 this.showModalAprovar = false;
-                                alert(`Campo '${chave}' alterado para '${valor}' com sucesso.`);
+                                alertCustom(`Campo '${chave}' alterado para '${valor}' com sucesso.`);
                                 window.location.reload();
                             } else {
-                                alert(data.message || 'Erro ao alterar proposta.');
+                                alertCustom(data.message || 'Erro ao alterar proposta.');
                             }
                         })
                         .catch(err => {
                             console.error(err);
-                            alert('Erro na requisição.');
+                            alertCustom('Erro na requisição.');
                         });
                 },
 
@@ -316,12 +316,12 @@
                                 // alert('Proposta faturada e veículo marcado como vendido.');
                                 window.location.reload();
                             } else {
-                                alert('Erro ao faturar proposta.');
+                                alertCustom('Erro ao faturar proposta.');
                             }
                         })
                         .catch(err => {
                             console.error(err);
-                            alert('Erro na requisição.');
+                            alertCustom('Erro na requisição.');
                         });
                 },
 
@@ -337,15 +337,15 @@
                         .then(data => {
                             if (data.success) {
                                 this.showModalAprovar = false;
-                                alert('Proposta aprovada pelo gerente.');
+                                alertCustom('Proposta aprovada pelo gerente.');
                                 window.location.reload();
                             } else {
-                                alert('Erro ao aprovar proposta.');
+                                alertCustom('Erro ao aprovar proposta.');
                             }
                         })
                         .catch(err => {
                             console.error(err);
-                            alert('Erro na requisição de aprovação grencial.');
+                            alertCustom('Erro na requisição de aprovação grencial.');
                         });
                 }
 

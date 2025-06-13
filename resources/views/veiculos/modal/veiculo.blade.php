@@ -142,7 +142,7 @@
                     @endphp
 
                     <template x-if="abrirModalDoc">
-                        <div x-data="{ familia: familiaAtual }" x-init="console.log('✅ Família no modal:', familia)"
+                        <div x-data="{ familia: familiaAtual }" x-init=""
                             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60">
                             <div class="bg-white rounded-lg shadow-lg p-6 max-w-3xl w-full relative">
                                 <!-- Título -->
@@ -206,7 +206,6 @@
 
                 {{-- fim --}}
                 <x-bt-padrao color="green" icon="file-signature" label="Proposta" title="Abertura de Proposta" @click="
-                    {{-- console.log('🚀 veiculo:', veiculo); --}}
                     if (veiculo && veiculo.id) {
                         fetch('/propostas/iniciar', {
                             method: 'POST',
@@ -224,7 +223,7 @@
                             }
                         });
                     } else {
-                        alert('⚠️ Por favor, selecione um veículo antes de iniciar a proposta.');
+                        alertCustom(' Por favor, selecione um veículo antes de iniciar a proposta.');
                     }
                 " />
 

@@ -120,7 +120,7 @@
     
                 buscarVeiculo() {
                     if (this.chassiBusca.trim() === '') {
-                        alert('Informe o Chassi, Modelo ou Cor para buscar!');
+                        alertCustom('Informe o Chassi, Modelo ou Cor para buscar!');
                         return;
                     }
     
@@ -176,10 +176,10 @@
                         }
                     }).then(res => {
                         if (!res.ok) {
-                            alert('Erro ao remover o veículo da sessão.');
+                            alertCustom('Erro ao remover o veículo da sessão.');
                         }
                     }).catch(() => {
-                        alert('Erro ao comunicar com o servidor.');
+                        alertCustom('Erro ao comunicar com o servidor.');
                     });
                 },
             }));
@@ -191,7 +191,7 @@
     
                 buscarClientes() {
                     if (this.busca.trim() === '') {
-                        alert('Digite um nome ou CPF!');
+                        alertCustom('Digite um nome ou CPF!');
                         return;
                     }
     
@@ -199,9 +199,10 @@
                         .then(res => res.json())
                         .then(data => {
                             this.clientes = data;
-                            if (data.length === 0) alert('Nenhum cliente encontrado x3');
+                            // if (data.length === 0) alert('Nenhum cliente encontrado x3');
+                            if (data.length === 0)  alertCustom('Nenhum cliente encontrado');
                         })
-                        .catch(() => alert('Erro na busca'));
+                        .catch(() => alertCustom('Erro na busca'));
                 },
     
                 selecionarCliente(cliente) {
@@ -223,11 +224,10 @@
                         fetch(`/api/clientes/${window.idClienteSessao}`)
                             .then(res => res.json())
                             .then(cliente => {
-                                console.log('🔵 Cliente carregado da sessão:', cliente);
                                 this.clienteSelecionado = cliente;
                             })
                             .catch(() => {
-                                console.warn('Cliente da sessão não encontrado.');
+                                alertCustom('Cliente da sessão não encontrado.');
                             });
                     }
                 },
@@ -243,10 +243,10 @@
                         }
                     }).then(res => {
                         if (!res.ok) {
-                            alert('Erro ao remover o cliente da sessão.');
+                            alertCustom('Erro ao remover o cliente da sessão.');
                         }
                     }).catch(() => {
-                        alert('Erro ao comunicar com o servidor.');
+                        alertCustom('Erro ao comunicar com o servidor.');
                     });
                 }
             }));
@@ -259,7 +259,7 @@
     
                 buscarVeiculoUsado() {
                 if (this.chassiBusca.trim() === '') {
-                    alert('Digite o chassi, placa ou modelo!');
+                    alertCustom('Digite o chassi, placa ou modelo!');
                     return;
                 }
 
@@ -269,7 +269,7 @@
                         this.veiculoEncontrado = Array.isArray(data) ? data : [data];
                     })
                     .catch(() => {
-                        alert('Erro na busca ou nenhum veículo encontrado.');
+                        alertCustom('Erro na busca ou nenhum veículo encontrado.');
                         this.veiculoEncontrado = [];
                     });
                 },
@@ -291,11 +291,9 @@
                     })
                     .then(response => {
                         if (response.ok) {
-                            // alert('✅ Veículo usado adicionado à proposta!');
                             this.modalCadastroUsado = false;
-                            // Se desejar limpar algo aqui, pode usar resetarFormulario()
                         } else {
-                            alert('⚠️ Erro ao adicionar o veículo usado.');
+                            alertCustom('⚠️ Erro ao adicionar o veículo usado.');
                         }
                     })
                     .catch(() => alert('⚠️ Erro ao comunicar com o servidor.'));
@@ -305,10 +303,8 @@
                     const url = new URL(window.location.href);
                     const veiculoId = url.searchParams.get("id_veic_usado");
 
-                    console.log('🔍 URL detectada:', url.href);
 
                     if (veiculoId) {
-                        // console.log('📦 ID do veículo usado na URL:', veiculoId);
 
                         fetch('/propostas/inserir-veiculo-usado', {
                             method: 'POST',
@@ -323,14 +319,12 @@
                         .then(() => fetch(`/api/veiculos/${veiculoId}`))
                         .then(res => res.json())
                         .then(data => {
-                            console.log('🚗 Veículo da URL carregado:', data);
                             this.veiculo = data;
                             this.veiculoEncontrado = [data];
 
                             const novaUrl = new URL(window.location.href);
                             novaUrl.searchParams.delete("id_veic_usado");
                             window.history.replaceState({}, document.title, novaUrl.pathname);
-                            console.log('🧹 URL limpa:', novaUrl.pathname);
 
                             let root = document.querySelector('[x-data*="aba"]');
                             if (root && root.__x && root.__x.$data) {
@@ -404,7 +398,7 @@
 
                 adicionar() {
                     if (!this.nova.condicao || !this.nova.valor || !this.nova.vencimento) {
-                        alert('Preencha todos os campos da negociação!');
+                        alertCustom('Preencha todos os campos da negociação!');
                         return;
                     }
     
