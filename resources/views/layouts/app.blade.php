@@ -93,7 +93,13 @@
         window.alertCustom = msg => {
             conteudoGlobal = `<div class='text-sm text-gray-600 text-center mb-6'> ${msg}</div>`;
             showModalGlobal = true;
-        }" x-ref="modalGlobal">
+        }"
+            @keydown.window="
+    if (showModalGlobal && ( $event.key === 'Escape')) {
+        showModalGlobal = false;
+    }
+"
+            x-ref="modalGlobal">
             <div x-show="showModalGlobal" @keydown.escape.window="showModalGlobal = false"
                 class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
                 style="display: none;">

@@ -1,4 +1,6 @@
 <div x-data="clienteBusca" x-init="carregarClienteSessao()">
+    {{-- Marcação para ir para cadastro e voltar nessa aba --}}
+    <input type="hidden" name="voltar_para_proposta" value="1">
     <!-- Campo de busca -->
     <form @submit.prevent="buscarClientes">
         <div class="flex gap-4 items-end mb-4">

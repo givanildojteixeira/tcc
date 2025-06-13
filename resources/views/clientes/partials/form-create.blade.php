@@ -59,7 +59,8 @@
                 {{-- tipo de Pessoa --}}
                 <input type="hidden" name="tipo_pessoa" :value="tipoPessoa">
                 <div x-show="tipoPessoa === 'Física'" class="contents grid grid-cols-4 gap-2">
-                    <x-input label="CPF" name="cpf_cnpj"  id="cpfCnpjInput" mask="cpf"/>
+                    <x-input label="CPF" name="cpf"  id="cpfCnpjInput" mask="cpf"/>
+
                     <div class="grid grid-cols-3 gap-2 h-full">
                         <x-select label="Sexo" name="sexo" >
                             <option value="">Não Informado</option>
@@ -80,7 +81,7 @@
                 </div>
                 <div x-show="tipoPessoa === 'Jurídica'" class="contents">
                     <div class="grid grid-cols-2 gap-2 h-full">
-                        <x-input label="CNPJ" name="cpf_cnpj" id="cpfCnpjInput" mask="cnpj" />
+                        <x-input label="CNPJ" name="cnpj" id="cpfCnpjInput" mask="cnpj" />
                         <x-input label="Nome Fantasia" name="nome_fantasia" />
                     </div>
                     <div class="grid grid-cols-3 gap-2 h-full">
