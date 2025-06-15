@@ -123,7 +123,7 @@
                 </template>
 
                 <template x-if="veiculo.origem === 'usados'">
-                    <x-bt-padrao color="teal" icon="chart-line" label="Consulta Fipe" href="https://www.fipe.org.br"
+                    <x-bt-padrao color="teal" icon="chart-line" label="Consulta Fipe" href="https://veiculos.fipe.org.br/"
                         target="_blank" title="Consulta de Preço Padrão." />
                 </template>
 
