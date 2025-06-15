@@ -47,10 +47,10 @@
                     <i class="fas fa-search"></i> Buscar
                 </button>
                 @if (request('busca'))
-                <a href="{{ route('clientes.index') }}"
-                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-1">
-                    <i class="fas fa-broom"></i> Limpar
-                </a>
+                    <a href="{{ route('clientes.index') }}"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition flex items-center gap-1">
+                        <i class="fas fa-broom"></i> Limpar
+                    </a>
                 @endif
             </form>
 
@@ -80,61 +80,63 @@
                             </thead>
                             <tbody class="text-sm text-gray-700">
                                 @foreach ($clientes as $cliente)
-                                <tr class="hover:bg-gray-100 border-t">
-                                    <td class="px-4 py-2">{{ $cliente->nome }}</td>
-                                    <td class="px-4 py-2 text-center">{{ $cliente->tipo_Pessoa }}</td>
-                                    <td class="px-4 py-2">{{ $cliente->cpf_cnpj }}</td>
-                                    <td class="px-4 py-2">{{ $cliente->email }}</td>
-                                    <td class="px-4 py-2">
-                                        <div class="flex gap-2">
-                                            <!-- Botão editar -->
-                                            <button @click="editModal = true; editData = {{ json_encode($cliente) }}"
-                                                class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 text-sm">
-                                                Editar
-                                            </button>
-
-                                            <!-- Botão excluir -->
-                                            <form method="POST" action="{{ route('clientes.destroy', $cliente->id) }}"
-                                                onsubmit="return confirm('Deseja excluir este cliente?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
-                                                    Excluir
+                                    <tr class="hover:bg-gray-100 border-t">
+                                        <td class="px-4 py-2">{{ $cliente->nome }}</td>
+                                        <td class="px-4 py-2 text-center">{{ $cliente->tipo_Pessoa }}</td>
+                                        <td class="px-4 py-2">{{ $cliente->cpf_cnpj }}</td>
+                                        <td class="px-4 py-2">{{ $cliente->email }}</td>
+                                        <td class="px-4 py-2">
+                                            <div class="flex gap-2">
+                                                <!-- Botão editar -->
+                                                <button @click="editModal = true; editData = {{ json_encode($cliente) }}"
+                                                    class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 text-sm">
+                                                    Editar
                                                 </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
+
+                                                <!-- Botão excluir -->
+                                                <form id="form-excluir-{{ $cliente->id }}" method="POST"
+                                                    action="{{ route('clientes.destroy', $cliente->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button type="button"
+                                                        onclick="confirmarExclusao('form-excluir-{{ $cliente->id }}')"
+                                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
+                                                        Excluir
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforeach
 
                                 @if ($clientes->isEmpty())
-                                <tr>
-                                    <td colspan="5" class="px-4 py-4 text-center text-gray-500">Nenhum cliente
-                                        encontrado.</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="5" class="px-4 py-4 text-center text-gray-500">Nenhum cliente
+                                            encontrado.</td>
+                                    </tr>
                                 @endif
                             </tbody>
                         </table>
                     </div>
                 </div>
-<br>
-<br>
+                <br>
+                <br>
                 <!-- Modal Novo Cliente -->
                 <div x-show="showModalCliente"
                     class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
                     style="display: none;">
-                    <div @click.away="showModalCliente = false" class="bg-white p-6 rounded-lg w-full max-w-3xl shadow-lg">
+                    <div @click.away="showModalCliente = false"
+                        class="bg-white p-6 rounded-lg w-full max-w-3xl shadow-lg">
                         @include('clientes.partials.form-create')
                     </div>
                 </div>
 
                 <!-- Modal Editar Cliente -->
-                <div x-show="editModal"
-                    class="fixed inset-0 z-50 bg-black bg-opacity-50 flex  justify-center"
+                <div x-show="editModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex  justify-center"
                     style="display: none;">
-                    <div @click.away="editModal = false"
-                        {{-- class="bg-white p-6 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-lg items-start"> --}}
+                    <div @click.away="editModal = false" class="bg-white p-6 rounded-lg w-full max-w-3xl shadow-lg">
                         @include('clientes.partials.form-edit')
                     </div>
                 </div>
@@ -155,20 +157,29 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                    @if (session('abrirModalCreate'))
-                        setTimeout(() => { document.querySelector('[x-data]').__x.$data.showModal = true }, 100);
-                    @endif
-            
-                    @if (session('abrirModalEdit'))
-                        setTimeout(() => {
-                            let edit = {!! json_encode(session('editData')) !!};
-                            let app = document.querySelector('[x-data]').__x.$data;
-                            app.editData = edit;
-                            app.editModal = true;
-                        }, 100);
-                    @endif
-                });
-        </script>
+                @if (session('abrirModalCreate'))
+                    setTimeout(() => { document.querySelector('[x-data]').__x.$data.showModal = true }, 100);
+                @endif
 
+                @if (session('abrirModalEdit'))
+                    setTimeout(() => {
+                        let edit = {!! json_encode(session('editData')) !!};
+                        let app = document.querySelector('[x-data]').__x.$data;
+                        app.editData = edit;
+                        app.editModal = true;
+                    }, 100);
+                @endif
+                });
+            function confirmarExclusao(formId) {
+                window.dispatchEvent(new CustomEvent('open-confirmacao', {
+                    detail: {
+                        titulo: 'Confirmar Exclusão',
+                        mensagem: 'Tem certeza que deseja excluir este cliente? Esta ação não poderá ser desfeita.',
+                        onConfirm: () => document.getElementById(formId).submit(),
+                        onCancel: () => console.log('Exclusão cancelada.')
+                    }
+                }));
+            }
+        </script>
 
 </x-app-layout>
