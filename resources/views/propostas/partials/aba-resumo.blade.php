@@ -42,7 +42,7 @@
     <!-- Resumo  Veículo -->
     <fieldset class="border border-green-400 bg-green-50 p-2 rounded-md shadow-sm"
         x-show="Object.keys(veiculo).length > 0">
-        <legend class="text-gray-700 text-sm font-medium px-2">Veículo novo incluso na proposta</legend>
+        <legend class="text-gray-700 text-sm font-medium px-2">Veículo novo/usado incluso na proposta</legend>
         <div class="grid grid-cols-3 text-sm text-gray-800 ">
             <div><strong>Marca:</strong> <span
                     x-text="veiculo.marca + ' - ' + veiculo.desc_veiculo + ' - ' + veiculo.motor"></span></div>
@@ -57,28 +57,28 @@
         </div>
     </fieldset>
 
-    <!-- Veículo Usado -->
+    <!-- Tem Veículo Usado? -->
+    <template x-if="veiculoUsado && typeof veiculoUsado.id !== 'undefined'">
+        <fieldset class="border border-green-400 bg-green-50 p-2 rounded-md shadow-sm">
+            <legend class="text-gray-700 text-sm font-medium px-2">Veículo Usado</legend>
+            <div class="grid grid-cols-3 text-sm text-gray-800">
+                <div><strong>Marca:</strong> <span
+                        x-text="veiculoUsado.marca + ' - ' + veiculoUsado.desc_veiculo + ' - ' + veiculoUsado.motor"></span>
+                </div>
+                <div><strong>Modelo:</strong> <span x-text="veiculoUsado.modelo_fab"></span></div>
+                <div><strong>Cor:</strong> <span x-text="veiculoUsado.cor"></span></div>
+                <div><strong>Chassi:</strong> <span x-text="veiculoUsado.chassi"></span></div>
+                <div><strong>Valor Avaliação:</strong> <span x-text="formatarValor(veiculoUsado.vlr_tabela)"></span>
+                </div>
+                <div><strong>Combustível:</strong> <span x-text="veiculoUsado.combustivel"></span></div>
+                <div><strong>Ano:</strong> <span x-text="veiculoUsado.Ano_Mod"></span>
+                </div>
+                <div><strong>Placa:</strong> <span x-text="veiculoUsado.placa"></span></div>
+                <div><strong>KM:</strong> <span x-text="veiculoUsado.km"></span></div>
+            </div>
 
-    <fieldset x-if="veiculoUsado && veiculoUsado.id"
-        class="border border-green-400 bg-green-50 p-2 rounded-md shadow-sm">
-        <legend class="text-gray-700 text-sm font-medium px-2">Veículo Usado</legend>
-        <div class="grid grid-cols-3 text-sm text-gray-800">
-            <div><strong>Marca:</strong> <span
-                    x-text="veiculoUsado.marca + ' - ' + veiculoUsado.desc_veiculo + ' - ' + veiculoUsado.motor"></span>
-            </div>
-            <div><strong>Modelo:</strong> <span x-text="veiculoUsado.modelo_fab"></span></div>
-            <div><strong>Cor:</strong> <span x-text="veiculoUsado.cor"></span></div>
-            <div><strong>Chassi:</strong> <span x-text="veiculoUsado.chassi"></span></div>
-            <div><strong>Valor Avaliação:</strong> <span x-text="formatarValor(veiculoUsado.vlr_tabela)"></span>
-            </div>
-            <div><strong>Combustível:</strong> <span x-text="veiculoUsado.combustivel"></span></div>
-            <div><strong>Ano:</strong> <span x-text="veiculoUsado.Ano_Mod"></span>
-            </div>
-            <div><strong>Placa:</strong> <span x-text="veiculoUsado.placa"></span></div>
-            <div><strong>KM:</strong> <span x-text="veiculoUsado.km"></span></div>
-        </div>
-
-    </fieldset>
+        </fieldset>
+    </template>
 
 
 
@@ -128,13 +128,20 @@
                 <legend class="text-green-700 font-semibold text-sm px-2 leading-tight">Resumo Financeiro</legend>
 
                 <div class="text-sm text-gray-800 space-y-1">
-                    <div class="flex justify-between"><span>Valor da Veículo:</span> <span x-text="formatarValor(valorProposta)"></span></div>
-                    <div class="flex justify-between"><span>Acréscimo:</span> <span x-text="formatarValor(valorAcrescimo)"></span></div>
-                    <div class="flex justify-between"><span>Desconto:</span> <span x-text="formatarValor(valorDesconto)"></span></div>
-                    <div class="flex justify-between"><span>Custo do Item:</span> <span x-text="formatarValor(custoItem)"></span></div>
-                    <div class="flex justify-between"><span>Bônus:</span> <span x-text="formatarValor(valorBonus)"></span></div>
-                    <div class="flex justify-between"><span>Usado(s):</span> <span x-text="formatarValor(valorUsado)"></span></div>
-                    <div class="flex justify-between font-semibold text-green-700"><span>Lucro Bruto:</span>          <span x-text="formatarValor(lucroEstimado)"></span>
+                    <div class="flex justify-between"><span>Valor da Veículo:</span> <span
+                            x-text="formatarValor(valorProposta)"></span></div>
+                    <div class="flex justify-between"><span>Acréscimo:</span> <span
+                            x-text="formatarValor(valorAcrescimo)"></span></div>
+                    <div class="flex justify-between"><span>Desconto:</span> <span
+                            x-text="formatarValor(valorDesconto)"></span></div>
+                    <div class="flex justify-between"><span>Valor nota:</span> <span
+                            x-text="formatarValor(custoItem)"></span></div>
+                    <div class="flex justify-between"><span>Bônus:</span> <span
+                            x-text="formatarValor(valorBonus)"></span></div>
+                    <div class="flex justify-between"><span>Usado(s):</span> <span
+                            x-text="formatarValor(valorUsado)"></span></div>
+                    <div class="flex justify-between font-semibold text-green-700"><span>Lucro Bruto:</span> <span
+                            x-text="formatarValor(lucroEstimado)"></span>
                     </div>
                 </div>
             </fieldset>

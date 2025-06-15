@@ -47,7 +47,7 @@
         {{-- Alterado para que quando for abas como negociação e Resumo, a pagina seja reinderizada e depois abra a aba corretamente --}}
         <div class="flex bg-gray-100 rounded-md shadow-sm mb-2 font-bold text-sm shrink-0 px-6">
             @foreach ([
-            'veiculo' => '1. Veículo Novo|fas fa-car',
+            'veiculo' => '1. Veículo Novo/Usado|fas fa-car',
             'cliente' => '2. Cliente|fas fa-user',
             'usado' => '3. Veículo Usado|fas fa-car-side',
             'negociacao' => '4. Negociação|fas fa-handshake',
@@ -560,15 +560,20 @@
                         fetch(`/api/veiculos/${this.proposta.id_veiculoNovo}`)
                             .then(res => res.json())
                             .then(data => {
-                                this.custoItem = parseFloat(data.vlr_nota || 0);
-                                this.valorBonus = parseFloat(data.vlr_bonus || 0);
+                                if (data.novo_usado === 'Novo') {
+                                    this.custoItem = parseFloat(data.vlr_nota || 0);
+                                    this.valorBonus = parseFloat(data.vlr_bonus || 0);
+                                } else {
+                                    this.custoItem = parseFloat(data.vlr_nota || 0);    //valor da compra
+                                    this.valorBonus = 0;  // valor sugerido da venda
+                                }
                             });
                     }
 
                     // Soma de "Desconto(-)" e "Acréscimo(+)"
                     if (this.proposta.negociacoes) {
                         this.valorDesconto = this.proposta.negociacoes
-                            .filter(n => n.condicao_texto === 'Desconto(-)')
+                            .filter(n => ['Desconto(-)', 'Troco na Troca (-)'].includes(n.condicao_texto))
                             .reduce((total, n) => total + parseFloat(n.valor || 0), 0);
 
                         this.valorAcrescimo = this.proposta.negociacoes
@@ -582,7 +587,7 @@
 
 
                 get lucroEstimado() {
-                    return this.valorProposta - this.valorDesconto - this.valorBonus - this.custoItem;
+                    return (this.valorProposta + this.valorAcrescimo - this.valorDesconto) + this.valorBonus - this.custoItem + this.valorAcrescimo;
                 },
 
 

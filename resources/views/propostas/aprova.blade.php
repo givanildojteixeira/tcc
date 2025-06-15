@@ -25,7 +25,7 @@
 
         <!-- Veículo Novo -->
         <fieldset class="border border-green-400 bg-green-50 p-2 rounded-md shadow-sm mb-1">
-            <legend class="text-green-700 text-sm font-medium px-2">Veículo novo incluso na proposta</legend>
+            <legend class="text-green-700 text-sm font-medium px-2">Veículo novo/usado incluso na proposta</legend>
             <ul class="text-sm text-gray-800">
                 <li>
                     <strong>Veículo:</strong> {{ $veiculo->marca }} - {{ $veiculo->desc_veiculo }} -
@@ -84,12 +84,17 @@
                                 </tr>
                             @endforeach
                         </tbody>
+                        @php
+                            $total = collect($negociacoes)
+                                ->reject(fn($n) => in_array($n['condicao_texto'] ?? $n['condicao'], ['Desconto(-)', 'Troco na Troca (-)']))
+                                ->sum('valor');
+                        @endphp
+
                         <tfoot class="bg-gray-100">
                             <tr>
-                                <td class="px-2 py-1 border font-semibold text-right" colspan="1">Total:
-                                </td>
+                                <td class="px-2 py-1 border font-semibold text-right" colspan="1">Total:</td>
                                 <td class="px-2 py-1 border font-bold text-right text-green-700" colspan="2">
-                                    R$ {{ number_format(collect($negociacoes)->sum('valor'), 2, ',', '.') }}
+                                    R$ {{ number_format($total, 2, ',', '.') }}
                                 </td>
                             </tr>
                         </tfoot>
@@ -105,17 +110,30 @@
                         <span>Valor da Proposta:</span>
                         <span>R$ {{ number_format($veiculo->vlr_tabela ?? 0, 2, ',', '.') }}</span>
                     </div>
+
+                    @php
+                        $vlrDesconto = collect($negociacoes)
+                            ->filter(fn($n) => in_array($n['condicao_texto'] ?? $n['condicao'], ['Desconto(-)', 'Troco na Troca (-)']))
+                            ->sum('valor');
+                    @endphp
+
                     <div class="flex justify-between">
                         <span>Desconto:</span>
-                        <span>R$ {{ number_format($proposta['vlr_desconto'] ?? 0, 2, ',', '.') }}</span>
+                        <span>R$ {{ number_format($vlrDesconto, 2, ',', '.') }}</span>
                     </div>
+
+
                     <div class="flex justify-between">
-                        <span>Custo do Item:</span>
+                        <span>Valor Nota:</span>
                         <span>R$ {{ number_format($veiculo->vlr_nota ?? 0, 2, ',', '.') }}</span>
                     </div>
+                    @php
+                        $bonus = ($veiculo->novo_usado === 'Novo') ? ($veiculo->vlr_bonus ?? 0) : 0;
+                    @endphp
+
                     <div class="flex justify-between">
                         <span>Bônus:</span>
-                        <span>R$ {{ number_format($veiculo->vlr_bonus ?? 0, 2, ',', '.') }}</span>
+                        <span>R$ {{ number_format($bonus, 2, ',', '.') }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span>Usado(s):</span>
@@ -125,17 +143,29 @@
                         <span>Lucro Estimado:</span>
                         <span>
                             R$
-                            {{ number_format(
-                                ($veiculo->vlr_tabela ?? 0) -
-                                ($proposta['vlr_desconto'] ?? 0) -
-                                ($veiculo->vlr_bonus ?? 0) -
-                                ($veiculo->vlr_nota ?? 0),
-                                2,
-                                ',',
-                                '.',
-                            ) }}
+                            @if ($veiculo->novo_usado === 'Novo')
+                                    {{ number_format(
+                                    ($veiculo->vlr_tabela ?? 0)
+                                    - ($proposta['vlr_desconto'] ?? 0)
+                                    - ($veiculo->vlr_bonus ?? 0)
+                                    - ($veiculo->vlr_nota ?? 0),
+                                    2,
+                                    ',',
+                                    '.'
+                                ) }}
+                            @else
+                                    {{ number_format(
+                                    ($veiculo->vlr_tabela ?? 0)
+                                    + ($vlrDesconto ?? 0)
+                                    - ($veiculo->vlr_nota ?? 0),
+                                    2,
+                                    ',',
+                                    '.'
+                                ) }}
+                            @endif
                         </span>
                     </div>
+
                 </div>
             </fieldset>
         </div>

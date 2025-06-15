@@ -29,7 +29,7 @@
     <!-- Veículo Novo -->
     @if($veiculo)
     <fieldset class="border border-green-400 bg-green-50 p-2 rounded-md shadow-sm mb-4">
-        <legend class="text-gray-700 text-sm font-medium px-2">Veículo novo incluso na proposta</legend>
+        <legend class="text-gray-700 text-sm font-medium px-2">Veículo novo/usado incluso na proposta</legend>
         <div class="grid grid-cols-3 text-sm text-gray-800">
             <div><strong>Marca:</strong> {{ $veiculo->marca }} - {{ $veiculo->desc_veiculo }} - {{ $veiculo->motor }}
             </div>
@@ -112,7 +112,7 @@
                     <span>R$ {{ number_format($proposta['vlr_desconto'] ?? 0, 2, ',', '.') }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span>Custo do Item:</span>
+                    <span>Valor Nota:</span>
                     <span>R$ {{ number_format($veiculo->vlr_nota ?? 0, 2, ',', '.') }}</span>
                 </div>
                 <div class="flex justify-between">
