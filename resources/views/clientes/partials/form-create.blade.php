@@ -4,6 +4,11 @@
     <form method="POST" action="{{ route('clientes.store') }}">
         @csrf
 
+        {{-- analise a origem para voltar no mesmo lugar que foi chamado --}}
+        @if (isset($origem) && $origem === 'proposta')
+            <input type="hidden" name="from_proposta" value="1">
+        @endif
+
         <!-- Abas -->
         <div class="flex bg-gray-100 rounded-md overflow-hidden shadow-sm font-bold text-sm mb-4">
             <button type="button" @click="tabAtiva = 'dados'"
@@ -11,7 +16,7 @@
                 class="flex-1 px-4 py-2 transition-all duration-200">
                 <i class="fas fa-user"></i> Dados Pessoais / Empresa
             </button>
-                <button type="button" @click="tabAtiva = 'fisjus'"
+            <button type="button" @click="tabAtiva = 'fisjus'"
                 :class="tabAtiva === 'fisjus' ? 'bg-blue-100 text-blue-700 shadow-inner' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'"
                 class="flex-1 px-4 py-2 transition-all duration-200">
                 <i class="fas fa-user"></i> Tipo de Pessoa
@@ -42,9 +47,9 @@
                 </div>
                 <!-- Bloco isolado com 3 colunas -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                    <x-input label="Celular" name="celular" mask="celular"/>
-                    <x-input label="Telefone Residencial" name="telefone" mask="telefone"/>
-                    <x-input label="Telefone Comercial" name="telefone_comercial" mask="telefone"/>
+                    <x-input label="Celular" name="celular" mask="celular" />
+                    <x-input label="Telefone Residencial" name="telefone" mask="telefone" />
+                    <x-input label="Telefone Comercial" name="telefone_comercial" mask="telefone" />
                 </div>
             </div>
         </div>
@@ -52,23 +57,23 @@
             <!-- Tipo de Pessoa -->
             <div x-show="tabAtiva === 'fisjus'">
                 <x-select label="Tipo Pessoa" name="tipo_pessoa" required x-model="tipoPessoa">
-                        <option value="" disabled selected>Selecione</option>
-                        <option value="Física">Física</option>
-                        <option value="Jurídica">Jurídica</option>
+                    <option value="" disabled selected>Selecione</option>
+                    <option value="Física">Física</option>
+                    <option value="Jurídica">Jurídica</option>
                 </x-select>
                 {{-- tipo de Pessoa --}}
                 <input type="hidden" name="tipo_pessoa" :value="tipoPessoa">
                 <div x-show="tipoPessoa === 'Física'" class="contents grid grid-cols-4 gap-2">
-                    <x-input label="CPF" name="cpf"  id="cpfCnpjInput" mask="cpf"/>
+                    <x-input label="CPF" name="cpf" id="cpfCnpjInput" mask="cpf" />
 
                     <div class="grid grid-cols-3 gap-2 h-full">
-                        <x-select label="Sexo" name="sexo" >
+                        <x-select label="Sexo" name="sexo">
                             <option value="">Não Informado</option>
                             <option value="M">Masculino</option>
                             <option value="F">Feminino</option>
                             <option value="Outro">Outro</option>
                         </x-select>
-                        <x-select label="Estado Civil" name="estado_civil" >
+                        <x-select label="Estado Civil" name="estado_civil">
                             <option value="">--</option>
                             <option value="Solteiro(a)">Solteiro</option>
                             <option value="Casado(a)">Casado</option>
@@ -76,7 +81,7 @@
                             <option value="Viúvo(a)">Viúvo</option>
                             <option value="União Estável">União Estável</option>
                         </x-select>
-                        <x-input label="Data de Nascimento" name="data_nascimento" type="date"  />
+                        <x-input label="Data de Nascimento" name="data_nascimento" type="date" />
                     </div>
                 </div>
                 <div x-show="tipoPessoa === 'Jurídica'" class="contents">

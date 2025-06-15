@@ -84,12 +84,16 @@ class ClienteController extends Controller
         $dados['ativo'] = $request->has('ativo') ? 1 : 0;
         $dados['user_id'] = auth()->id();
 
-        Cliente::create($dados);
+        // Cliente::create($dados);
+        $cliente = Cliente::create($dados);
 
         // Se veio da proposta, salva na sessão e volta para ela
-        if ($request->filled('voltar_para_proposta')) {
-            session()->flash('cliente_id', $cliente->id); // usado para carregar automaticamente
-            session()->flash('aba', 'cliente'); // se quiser controlar qual aba abrir
+        if ($request->input('from_proposta') === '1') {
+            session()->flash('aba', 'cliente');   // volte e abra nessa aba
+            // session()->flash('id_cliente', $cliente->id); // e carregue o cliente
+            $proposta = session('proposta', []); // Pega o array atual
+            $proposta['id_cliente'] = $cliente->id; // Atualiza só o campo necessário
+            session(['proposta' => $proposta]); // Grava de volta o array atualizado
 
             return redirect()->route('propostas.create')->with('success', 'Cliente cadastrado com sucesso!');
         }

@@ -13,11 +13,11 @@
 
             <button type="button" @click="buscarClientes"
                 class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                Localizar Cliente
+                🔍 Localizar Cliente
             </button>
             <button type="button" @click="showModalCliente = true"
                 class="bg-yellow-400 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
-                Cadastrar Cliente
+                ➕ Cadastrar Cliente
             </button>
         </div>
     </form>
@@ -77,7 +77,7 @@
     <div x-show="showModalCliente" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
         style="display: none;">
         <div class="bg-white p-6 rounded-lg w-full max-w-3xl shadow-lg">
-            @include('clientes.partials.form-create')
+            @include('clientes.partials.form-create', ['origem' => 'proposta'])
         </div>
     </div>
 
