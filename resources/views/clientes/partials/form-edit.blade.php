@@ -1,5 +1,5 @@
-<div class="bg-white p-4 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-lg items-start">
-
+{{-- <div class="bg-white p-4 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-lg items-start"> --}}
+<div>
     <form method="POST" :action="`/clientes/${editData.id}`">
         @csrf
         @method('PUT')
