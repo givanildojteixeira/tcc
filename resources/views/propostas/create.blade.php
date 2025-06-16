@@ -444,9 +444,10 @@
                 },
 
                 somaNegociacoes() {
-                    // Ignora "Acréscimo(+)"
+                    // Ignora "(-) ou  (+)"
                     return this.negociacoes
-                        .filter(n => n.condicao_texto !== 'Acréscimo(+)' && n.condicao != 'ACRESCIMO')
+                        // .filter(n => n.condicao_texto !== 'Acréscimo(+)' && n.condicao != 'ACRESCIMO')
+                        .filter(n => !n.condicao_texto.includes('(+)') && !n.condicao_texto.includes('(-)'))
                         .reduce((acc, n) => acc + parseFloat(n.valor || 0), 0);
                 },
 

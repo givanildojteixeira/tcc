@@ -86,7 +86,7 @@
                         </tbody>
                         @php
                             $total = collect($negociacoes)
-                                ->reject(fn($n) => in_array($n['condicao_texto'] ?? $n['condicao'], ['Desconto(-)', 'Troco na Troca (-)']))
+                                ->reject(fn($n) => in_array($n['condicao_texto'] ?? $n['condicao'], ['Desconto(-)', 'Troco na Troca (-)', 'Acréscimo(+)']))
                                 ->sum('valor');
                         @endphp
 
@@ -115,17 +115,28 @@
                         $vlrDesconto = collect($negociacoes)
                             ->filter(fn($n) => in_array($n['condicao_texto'] ?? $n['condicao'], ['Desconto(-)', 'Troco na Troca (-)']))
                             ->sum('valor');
+                        $vlrAcrescimo = collect($negociacoes)
+                            ->filter(fn($n) => in_array($n['condicao_texto'] ?? $n['condicao'], ['Acréscimo(+)']))
+                            ->sum('valor');
+
                     @endphp
 
                     <div class="flex justify-between">
                         <span>Desconto:</span>
                         <span>R$ {{ number_format($vlrDesconto, 2, ',', '.') }}</span>
                     </div>
+                    <div class="flex justify-between">
+                        <span>Acréscimo:</span>
+                        <span>R$ {{ number_format($vlrAcrescimo, 2, ',', '.') }}</span>
+                    </div>
 
+                    @php
+                        $vlrNota = ($veiculo->novo_usado === 'Novo') ? ($veiculo->vlr_nota ?? 0) : ($veiculo->vlr_tabela + $vlrAcrescimo ?? 0 ) ;
+                    @endphp
 
                     <div class="flex justify-between">
                         <span>Valor Nota:</span>
-                        <span>R$ {{ number_format($veiculo->vlr_nota ?? 0, 2, ',', '.') }}</span>
+                        <span>R$ {{ number_format($vlrNota ?? 0, 2, ',', '.') }}</span>
                     </div>
                     @php
                         $bonus = ($veiculo->novo_usado === 'Novo') ? ($veiculo->vlr_bonus ?? 0) : 0;
@@ -157,7 +168,7 @@
                                     {{ number_format(
                                     ($veiculo->vlr_tabela ?? 0)
                                     + ($vlrDesconto ?? 0)
-                                    - ($veiculo->vlr_nota ?? 0),
+                                    - ($vlrNota ?? 0),
                                     2,
                                     ',',
                                     '.'

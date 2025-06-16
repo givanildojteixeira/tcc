@@ -92,7 +92,7 @@
                                                     class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 text-sm">
                                                     Editar
                                                 </button>
-
+                                                @acessoAdmin()
                                                 <!-- Botão excluir -->
                                                 <form id="form-excluir-{{ $cliente->id }}" method="POST"
                                                     action="{{ route('clientes.destroy', $cliente->id) }}">
@@ -105,6 +105,7 @@
                                                         Excluir
                                                     </button>
                                                 </form>
+                                                @endacessoAdmin
 
                                             </div>
                                         </td>

@@ -91,7 +91,7 @@
                                                     {{ $opcional->cod_opcional }}
                                                 </h3>
                                                 <ul
-                                                    class="text-gray-700 list-disc pl-5 space-y-1 max-h-64 overflow-y-auto pr-2">
+                                                    class="text-gray-700 list-disc pl-5 space-y-1 max-h-64 overflow-y-auto pr-2 text-left">
                                                     @foreach (explode('/', $opcional->descricao) as $item)
                                                         <li>{{ trim($item) }}</li>
                                                     @endforeach

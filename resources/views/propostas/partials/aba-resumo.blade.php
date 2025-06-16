@@ -135,13 +135,13 @@
                     <div class="flex justify-between"><span>Desconto:</span> <span
                             x-text="formatarValor(valorDesconto)"></span></div>
                     <div class="flex justify-between"><span>Valor nota:</span> <span
-                            x-text="formatarValor(custoItem)"></span></div>
+                            x-text="formatarValor(valorProposta - valorDesconto + valorAcrescimo )"></span></div>
                     <div class="flex justify-between"><span>Bônus:</span> <span
                             x-text="formatarValor(valorBonus)"></span></div>
                     <div class="flex justify-between"><span>Usado(s):</span> <span
                             x-text="formatarValor(valorUsado)"></span></div>
                     <div class="flex justify-between font-semibold text-green-700"><span>Lucro Bruto:</span> <span
-                            x-text="formatarValor(lucroEstimado)"></span>
+                            x-text="formatarValor((valorProposta - valorDesconto + valorAcrescimo)-valorProposta)"></span>
                     </div>
                 </div>
             </fieldset>

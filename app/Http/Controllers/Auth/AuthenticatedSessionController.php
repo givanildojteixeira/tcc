@@ -39,7 +39,8 @@ class AuthenticatedSessionController extends Controller
         // Redirecionamento com base no nível
         switch ($user->level) {
             case 'Assistente':
-                return redirect()->route('financeiro.index');
+                // return redirect()->route('financeiro.index');
+                return redirect()->route('veiculos.novos.index');
 
 
             case 'Vendedor':
