@@ -164,7 +164,10 @@
                             href="https://github.com/givanildojteixeira/tcc/issues?q=is%3Aissue%20state%3Aclosed" target="_blank" >
                                 <i class="fa-solid fa-clock-rotate-left mr-2"></i> Issues Git
                             </x-dropdown-link>
-
+                            <x-dropdown-link :
+                            href="https://youtu.be/mYt8gfFhZmg" target="_blank" >
+                                <i class="fa-solid fa-clock-rotate-left mr-2"></i> Conteúdo Youtube 
+                            </x-dropdown-link>
 
 
                         @endacessoAdmin
