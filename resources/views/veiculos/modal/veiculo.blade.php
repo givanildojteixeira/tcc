@@ -1,5 +1,5 @@
 <div x-data="galeriaVeiculo" x-init="$watch('veiculo.chassi', chassi => carregarImagens(chassi))">
-    <!-- ✅ MODAL VEICULO NOVOS E USADOS -->
+    <!-- MODAL VEICULO NOVOS E USADOS -->
     <div x-show="open" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         style="display: none;">
         <div class="bg-white p-2 rounded-lg shadow-lg w-full max-w-5xl relative">
@@ -137,7 +137,7 @@
                     $familiasDisponiveis = collect(\File::files($pasta))
                     ->map(fn($file) => $file->getFilename())
                     ->groupBy(function ($filename) {
-                    return explode('-', $filename)[0]; // parte antes do "-"
+                    return explode('-', $filename)[0]; 
                     });
                     @endphp
 
@@ -163,21 +163,12 @@
                                                 class="text-blue-600 hover:underline">
                                                 <i class="fas fa-file mr-1"></i> {{ $visivel }}
                                             </a>
-                                            {{-- <form method="POST"
-                                                action="{{ route('familia.excluirArquivoSimples') }}">
-                                                @csrf
-                                                <input type="hidden" name="arquivo_excluir" value="{{ $nomeArquivo }}">
-                                                <button type="submit" class="text-red-600 hover:text-red-800 text-sm">
-                                                    <i class="fas fa-trash-alt"></i> Excluir
-                                                </button>
-                                            </form> --}}
-                                        </li>
+                                           </li>
                                         @endforeach
                                     </ul>
                                 </template>
                                 @endforeach
 
-                                <!-- Fallback: nenhuma família encontrada -->
                                 <template
                                     x-if="!Object.keys({!! json_encode($familiasDisponiveis->keys()) !!}).includes(familia.toLowerCase())">
                                     <p class="text-gray-500 italic">Nenhum documento encontrado para esta família.
@@ -256,7 +247,7 @@
                     });
                 }
 
-                // fallback após 1s caso nenhuma imagem válida
+                // fallback após 1s caso nenhuma imagem valida
                 setTimeout(() => {
                     if (this.veiculo.origem === 'novos') {
                         this.imagens = [`/images/familia/${this.veiculo.familia}.jpg`];

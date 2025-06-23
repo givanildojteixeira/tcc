@@ -47,10 +47,6 @@
                     <input type="hidden" name="origem" value="{{ request('origem') }}">
                 @endif
 
-                {{-- Para validação de erros --}}
-                {{--
-                <x-validation-errors id="modalErrosCadastro" /> --}}
-
                 <!-- Abas -->
                 <div class="flex bg-gray-100 rounded-md overflow-hidden shadow-sm mb-6 font-bold">
                     <button type="button" @click="setTab('info')" :class="tabAtiva === 'info' ? 'bg-blue-100 text-blue-700 font-semibold shadow-inner' :
@@ -324,11 +320,6 @@
                                             <i class="fas fa-lock"></i>
                                         </span>
                                     </div>
-
-
-
-
-
 
                                 </div>
                                 <div class="w-full md:flex-1 mb-4">

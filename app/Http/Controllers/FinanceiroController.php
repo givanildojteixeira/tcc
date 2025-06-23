@@ -61,10 +61,10 @@ class FinanceiroController extends Controller
         $mostrarRecebidas = $request->has('mostrar_recebidas'); // checkbox marcada = mostrar tudo
 
         // Em negociações 
-        $negociacoes = Negociacao::with(['proposta.cliente', 'proposta.veiculo', 'condicaoPagamento']) // 🔧 aqui corrigido
+        $negociacoes = Negociacao::with(['proposta.cliente', 'proposta.veiculo', 'condicaoPagamento']) 
             // pesquise somente financeira = true em condicaoPagamento
             ->whereHas('condicaoPagamento', fn($q) => $q->where('financeira', true))
-            // Atenção com o check box mostrar_recebidas, ignorando quando for pesquisa por Proposta (searchProposta)
+            // Atenção com o check box mostrar_recebidas, ignorando quando for pesquisa por Proposta 
             ->when(!$mostrarRecebidas && !$searchProposta, fn($q) => $q->where('pago', false))
             // então se for pesquisa  normal, pesquise por 'proposta.cliente', 'veiculo'
             ->when($search, function ($q) use ($search) {

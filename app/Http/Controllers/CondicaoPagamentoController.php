@@ -34,7 +34,7 @@ class CondicaoPagamentoController extends Controller
         $condicao = CondicaoPagamento::findOrFail($id);
 
         $condicao->descricao = $request->input('descricao');
-        $condicao->financeira = $request->boolean('financeira'); // ← Aqui o cast correto
+        $condicao->financeira = $request->boolean('financeira'); 
 
         $condicao->save();
 

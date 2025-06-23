@@ -26,7 +26,6 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
-        // DEBUG (veja se cpf ou cnpj estão chegando corretamente)
         // dd($request->all());
 
         $validator = Validator::make($request->all(), [
@@ -69,10 +68,8 @@ class ClienteController extends Controller
 
         $dados = $validator->validated();
 
-        // MONTA CPF_CNPJ (usa o que estiver preenchido)
         $dados['cpf_cnpj'] = $request->input('cpf') ?: $request->input('cnpj');
 
-        // Validação extra: CPF_CNPJ precisa ser único na tabela clientes
         if (Cliente::where('cpf_cnpj', $dados['cpf_cnpj'])->exists()) {
             return redirect()->back()
                 ->withInput()
@@ -84,13 +81,11 @@ class ClienteController extends Controller
         $dados['ativo'] = $request->has('ativo') ? 1 : 0;
         $dados['user_id'] = auth()->id();
 
-        // Cliente::create($dados);
         $cliente = Cliente::create($dados);
 
         // Se veio da proposta, salva na sessão e volta para ela
         if ($request->input('from_proposta') === '1') {
             session()->flash('aba', 'cliente');   // volte e abra nessa aba
-            // session()->flash('id_cliente', $cliente->id); // e carregue o cliente
             $proposta = session('proposta', []); // Pega o array atual
             $proposta['id_cliente'] = $cliente->id; // Atualiza só o campo necessário
             session(['proposta' => $proposta]); // Grava de volta o array atualizado

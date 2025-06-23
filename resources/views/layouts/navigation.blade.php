@@ -206,7 +206,6 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 Dashboard
             </x-responsive-nav-link>
-            <!-- Repetir os demais links aqui se quiser -->
         </div>
 
         <!-- Mobile - Usuário -->

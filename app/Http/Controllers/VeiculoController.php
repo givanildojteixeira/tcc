@@ -19,7 +19,7 @@ class VeiculoController extends Controller
     {
         $veiculo = Veiculo::with('vendedor')->findOrFail($id);
 
-        $familias = Familia::all(); // <- aqui você pega os dados do banco
+        $familias = Familia::all(); // aqui pega os dados do banco
 
         //relacionamento de familia <> cor
         $familia = Familia::where('descricao', $veiculo->familia)->first();
@@ -91,7 +91,7 @@ class VeiculoController extends Controller
 
         $veiculo->update($dados);
 
-        // Upload de imagens (mantém como está)
+        // Upload de imagens 
         if ($request->hasFile('images')) {
             $arquivos = $request->file('images');
             $chassiBase = str_replace(' ', '_', $veiculo->chassi);
@@ -180,7 +180,7 @@ class VeiculoController extends Controller
 
         return view('veiculos.create', [
             'familias' => $familias,
-            'cores' => $cores, // ✅ adiciona essa linha
+            'cores' => $cores,
             'from' => $request->input('from') // 'novos' ou 'usados'
         ]);
     }
@@ -225,7 +225,7 @@ class VeiculoController extends Controller
         //validado
         $validated = $validator->validated();
 
-        // Criação do veículo
+        // Criação do veiculo
         $veiculo = new Veiculo();
         $veiculo->fill($validated);
 
@@ -256,7 +256,7 @@ class VeiculoController extends Controller
 
         $veiculo->save();
 
-        // ⬇️ Salvar imagens
+        //  Salvar imagens
         if ($request->hasFile('images')) {
             $chassiBase = str_replace(' ', '_', $veiculo->chassi);
             foreach ($request->file('images') as $index => $image) {
@@ -292,7 +292,6 @@ class VeiculoController extends Controller
             if ($request->origem === 'propostas') {
                 //Se tiver vindo de propostas , grava o veiculo, acerta a url e devolve para proposta com o veiculo ou veiculos gravados
                 $novoVeiculoUsadoId = $veiculo->id;                                     //pega a id
-                //$parametrosAtuais = request()->except('_token', '_method');       //pega os parametros atuais
                 $parametrosAtuais["id_veic_usado"] = $novoVeiculoUsadoId;               //grava paratro novo
                 return redirect()->route('propostas.create', $parametrosAtuais);
             } else {

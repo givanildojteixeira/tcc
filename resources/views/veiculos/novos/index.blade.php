@@ -337,7 +337,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <!-- ✅ Modal de Detalhes -->
+                            <!--  Modal de Detalhes -->
                             @include('veiculos.modal.veiculo', ['tipo' => 'Novo'])
                         </div>
                     </div>

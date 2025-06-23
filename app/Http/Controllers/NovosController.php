@@ -70,7 +70,7 @@ class NovosController extends Controller
                 $cores = collect();
             }
         } else {
-            // Quando não há família, cores disponíveis no estoque (todas válidas)
+            // Quando não tem família, cores disponíveis no estoque 
             $cores = Veiculo::select('cor')
                 ->distinct()
                 ->where([
@@ -88,7 +88,7 @@ class NovosController extends Controller
         }
 
 
-        // Verificação de famílias válidas com imagem + veículo
+        // Verificação de família validas com imagem + veículo
         $mostrarTodas = Configuracao::where('chave', 'mostrar_todas_familias')->value('valor') === 'true';
         $familias = Familia::pluck('descricao')->toArray();
         $familiasValidas = [];
@@ -131,7 +131,6 @@ class NovosController extends Controller
 
         // Se a família foi alterada, limpa os filtros e redireciona para a URL apenas com 'familia'
         if ($familia && session('familia_selecionado') !== $familia) {
-            // Limpa todos os filtros de sessão, exceto 'familia'
             session()->forget([
                 'modelo_selecionado',
                 'chassi_selecionado',
@@ -190,9 +189,6 @@ class NovosController extends Controller
 
         // Executa a consulta
         $veiculos = $query
-            // ->when(request()->routeIs('veiculos.usados.index'), function ($q) {
-            //     $q->with('vendedor'); // carrega o relacionamento apenas se for rota de usados
-            // })
             ->orderBy('desc_veiculo')
             ->paginate($this->pg())
             ->appends(request()->query());

@@ -1,6 +1,6 @@
-<x-app-layout> {{-- ✅ Gerenciar famílias de veículos - INDEX - FAMILIA --}}
+<x-app-layout> {{-- Gerenciar famílias de veículos - INDEX - FAMILIA --}}
 
-    <!-- 🔝 Header -->
+
     <div class="flex flex-col h-screen">
         <div class="flex items-center justify-between gap-4 px-4 py-4 bg-white shadow rounded-md p-4 border">
             <div class="flex items-center gap-4 ">
@@ -88,8 +88,8 @@
                                     if (response.ok) {
                                         window.location.href =
                                             "{{ request('from') === 'create'
-            ? route('veiculos.create', ['from' => request('origem')])
-            : url('/veiculos/' . request('from') . '/edit?from=' . request('origem')) }}";
+                                            ? route('veiculos.create', ['from' => request('origem')])
+                                            : url('/veiculos/' . request('from') . '/edit?from=' . request('origem')) }}";
                                     } else {
                                         return response.json().then(err => {
                                             alert("Erro ao alterar: " + (err.message ||
@@ -135,10 +135,10 @@
 
                     <!-- Botão dinâmico -->
                     <button type="submit" id="botaoFamilia" :class="idSelecionado
-        ?
-        'flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600' :
-        'flex items-center gap-1 bg-green-600 hover:bg-green-700' +
-        ' text-white px-3 py-1.5 text-sm rounded-md shadow'" class="transition">
+                        ?
+                        'flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600' :
+                        'flex items-center gap-1 bg-green-600 hover:bg-green-700' +
+                        ' text-white px-3 py-1.5 text-sm rounded-md shadow'" class="transition">
                         <i :class="idSelecionado ? 'fas fa-pen' : 'fas fa-plus-circle'"></i>
                         <span x-text="idSelecionado ? 'Alterar' : 'Cadastrar'"></span>
                     </button>
@@ -157,7 +157,7 @@
                             da Família</legend>
 
                         <div class="grid grid-cols-1 gap-3">
-                            <!-- 1️⃣ Imagem da Família -->
+                            <!--  Imagem da Família -->
                             <div class="flex items-center gap-3 w-full">
                                 <form action="{{ route('familia.upload', ['tipo' => 'imagem']) }}" method="POST"
                                     enctype="multipart/form-data" class="flex items-center gap-3 w-full">
@@ -172,7 +172,7 @@
                                 </form>
                             </div>
 
-                            <!-- 2️⃣ Arquivo MEV -->
+                            <!--  Arquivo MEV -->
                             <form action="{{ route('familia.upload', ['tipo' => 'mev']) }}" method="POST"
                                 enctype="multipart/form-data" class="flex items-center gap-3 w-full">
                                 @csrf
@@ -185,12 +185,12 @@
                                 </button>
                             </form>
 
-                            <!-- 3️⃣ Documentos -->
+                            <!--  Documentos -->
 
                         </div>
 
 
-                        <!-- 📂 Subgrupo opcional dentro do fieldset principal -->
+                        <!-- Subgrupo opcional dentro do fieldset principal -->
                         <fieldset
                             class="flex flex-col border border-dashed border-gray-400 rounded-md p-3 mt-1 bg-blue-50 h-full w-full"
                             style="flex: 0.5; max-height: calc(100vh - 500px);">
@@ -216,21 +216,7 @@
                                 </button>
                             </form>
 
-
-                            {{-- @if (isset($familia))
-                            @php
-                            $nomeFamilia = Str::slug($familia->descricao, '-');
-                            $caminho = public_path('upload/familia');
-                            $arquivosExtras = collect(File::files($caminho))->filter(function ($file) use ($nomeFamilia)
-                            {
-                            return str_starts_with($file->getFilename(), $nomeFamilia . '-');
-                            });
-                            @endphp
-                            @endif --}}
-
-
-
-                            <!-- 📄 Lista dinâmica de arquivos já enviados -->
+                            <!-- Lista dinâmica de arquivos já enviados -->
                             <div id="listaArquivosExtras"
                                 class="mt-1 bg-white border border-gray-200 rounded-md p-2 shadow-inner">
                                 <h4 class="text-sm font-semibold text-gray-700 mb-2">
@@ -240,15 +226,8 @@
                                     anexos.
                                 </p>
                             </div>
-
-
-
-
                         </fieldset>
-
-
                     </fieldset>
-
 
                     <form method="POST" action="{{ route('cor_familia.relacionar') }}">
                         @csrf
@@ -286,14 +265,8 @@
                                 </button>
                             </div>
                         </fieldset>
-
                     </form>
-
-
-
-
                 </div>
-
             </form>
 
             <!-- Lista  -->
@@ -460,7 +433,7 @@
                 if (input) input.value = value;
             });
 
-            // Define o valor nos campos com id="input_familia_id"
+            // Define o valor
             document.querySelectorAll('#input_familia_id').forEach(el => el.value = id);
 
             // Atualiza botão
@@ -475,7 +448,7 @@
             const checkboxes = form.querySelectorAll('input[name="cores[]"]');
             checkboxes.forEach(cb => cb.checked = false);
 
-            // 🔄 Marca checkboxes de cores via AJAX
+            // Marca checkboxes de cores via AJAX
             fetch(`/familia/${id}/cores`)
                 .then(res => res.json())
                 .then(corIds => {
@@ -494,7 +467,7 @@
                     console.error("Erro ao carregar cores:", error);
                 });
 
-            // 🔄 Carrega arquivos anexados dinamicamente
+            //Carrega arquivos anexados dinamicamente
             fetch(`/familia/${id}/arquivos`)
                 .then(res => res.json())
                 .then(arquivos => {
@@ -535,16 +508,6 @@
                     lista.appendChild(ul);
                 })
                 .catch(err => console.error('Erro ao carregar anexos:', err));
-
-
-
         }
     </script>
-
-
-
-
-
-
-
 </x-app-layout>

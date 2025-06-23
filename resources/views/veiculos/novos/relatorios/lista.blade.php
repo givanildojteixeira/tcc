@@ -87,7 +87,6 @@
         const janela = window.open('', '', 'height=800,width=1000');
         janela.document.write('<html><head><title>Relatório</title>');
 
-        // Se quiser manter o estilo Tailwind/Darkmode ou o seu CSS customizado:
         document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
             janela.document.write(link.outerHTML);
         });

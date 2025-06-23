@@ -3,7 +3,8 @@
     <div x-data="proposta()">
         <div x-show="showModalAprovar" @keydown.escape.window="showModalAprovar = false" style="display: none;"
             class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 ">
-            <div class="bg-white rounded-md shadow-lg p-6 w-full max-w-6xl overflow-y-auto max-h-[90vh] border-t-4 border-green-500 animate-shake relative">
+            <div
+                class="bg-white rounded-md shadow-lg p-6 w-full max-w-6xl overflow-y-auto max-h-[90vh] border-t-4 border-green-500 animate-shake relative">
                 <button @click="showModalAprovar = false"
                     class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
                     &times;
@@ -79,134 +80,132 @@
                     </thead>
                     <tbody class="text-sm text-gray-700">
                         @foreach ($propostas as $proposta)
-                            <tr class="hover:bg-gray-100 border-t h-14">
-                                <td class="px-4 py-2 text-center">{{ $proposta->id }}</td>
-                                <td class="px-4 py-2">{{ $proposta->cliente->nome ?? '-' }}</td>
-                                <td class="px-4 py-2">{{ $proposta->veiculoNovo->desc_veiculo ?? '-' }}</td>
+                        <tr class="hover:bg-gray-100 border-t h-14">
+                            <td class="px-4 py-2 text-center">{{ $proposta->id }}</td>
+                            <td class="px-4 py-2">{{ $proposta->cliente->nome ?? '-' }}</td>
+                            <td class="px-4 py-2">{{ $proposta->veiculoNovo->desc_veiculo ?? '-' }}</td>
 
-                                @php
-                                    $status = strtolower($proposta->status);
-                                    $statusConfig = [
-                                        'pendente' => [
-                                            'class' => 'bg-yellow-100 text-yellow-800',
-                                            'icon' => 'fas fa-clock',
-                                        ],
-                                        'aprovada' => [
-                                            'class' => 'bg-green-100 text-green-800',
-                                            'icon' => 'fas fa-check-circle',
-                                        ],
-                                        'faturada' => [
-                                            'class' => 'bg-blue-100 text-blue-800',
-                                            'icon' => 'fas fa-file-invoice-dollar',
-                                        ],
-                                        'rejeitada' => [
-                                            'class' => 'bg-red-100 text-red-800',
-                                            'icon' => 'fas fa-times-circle',
-                                        ],
-                                        'cancelada' => [
-                                            'class' => 'bg-gray-200 text-gray-700',
-                                            'icon' => 'fas fa-ban',
-                                        ],
-                                    ];
+                            @php
+                                $status = strtolower($proposta->status);
+                                $statusConfig = [
+                                    'pendente' => [
+                                        'class' => 'bg-yellow-100 text-yellow-800',
+                                        'icon' => 'fas fa-clock',
+                                    ],
+                                    'aprovada' => [
+                                        'class' => 'bg-green-100 text-green-800',
+                                        'icon' => 'fas fa-check-circle',
+                                    ],
+                                    'faturada' => [
+                                        'class' => 'bg-blue-100 text-blue-800',
+                                        'icon' => 'fas fa-file-invoice-dollar',
+                                    ],
+                                    'rejeitada' => [
+                                        'class' => 'bg-red-100 text-red-800',
+                                        'icon' => 'fas fa-times-circle',
+                                    ],
+                                    'cancelada' => [
+                                        'class' => 'bg-gray-200 text-gray-700',
+                                        'icon' => 'fas fa-ban',
+                                    ],
+                                ];
 
-                                    $config = $statusConfig[$status] ?? [
-                                        'class' => 'bg-gray-100 text-gray-800',
-                                        'icon' => 'fas fa-question-circle',
-                                    ];
-                                @endphp
+                                $config = $statusConfig[$status] ?? [
+                                    'class' => 'bg-gray-100 text-gray-800',
+                                    'icon' => 'fas fa-question-circle',
+                                ];
+                            @endphp
 
-                                <td class="px-4 py-2 text-center">
-                                    <span
-                                        class="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded {{ $config['class'] }}">
-                                        <i class="{{ $config['icon'] }}"></i>
-                                        {{ ucfirst($proposta->status) }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-2 text-green-700 font-medium text-right">
-                                    {{ number_format($proposta->negociacoes->sum('valor'), 2, ',', '.') }}
-                                </td>
-                                <td class="px-4 py-2">{{ $proposta->usuario->name ?? '-' }}</td>
-                                <td class="px-4 py-2 text-center">
-                                    {{ \Carbon\Carbon::parse($proposta->data_proposta)->format('d/m/Y') }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    <div class="flex gap-2">
-                                        {{-- Visualizar --}}
-                                        <a href="{{ route('propostas.visualizar', $proposta->id) }}" target="_blank"
-                                            title="Visualizar"
-                                            class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm flex items-center justify-start">
-                                            <i class="fas fa-eye w-4 h-4"></i>
+                            <td class="px-4 py-2 text-center">
+                                <span
+                                    class="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded {{ $config['class'] }}">
+                                    <i class="{{ $config['icon'] }}"></i>
+                                    {{ ucfirst($proposta->status) }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2 text-green-700 font-medium text-right">
+                                {{ number_format($proposta->negociacoes->sum('valor'), 2, ',', '.') }}
+                            </td>
+                            <td class="px-4 py-2">{{ $proposta->usuario->name ?? '-' }}</td>
+                            <td class="px-4 py-2 text-center">
+                                {{ \Carbon\Carbon::parse($proposta->data_proposta)->format('d/m/Y') }}
+                            </td>
+                            <td class="px-4 py-2">
+                                <div class="flex gap-2">
+                                    {{-- Visualizar --}}
+                                    <a href="{{ route('propostas.visualizar', $proposta->id) }}" target="_blank"
+                                        title="Visualizar"
+                                        class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm flex items-center justify-start">
+                                        <i class="fas fa-eye w-4 h-4"></i>
+                                    </a>
+
+                                    {{-- Faturada --}}
+                                    @if ($proposta->status === 'Faturada')
+                                        <x-modal-info titulo="Proposta faturada não pode ser editada"
+                                            mensagem="Esta proposta já foi faturada e não pode mais ser editada."
+                                            icone="fas fa-ban" cor="yellow">
+                                            <x-slot:trigger>
+                                                <button @click="show = true"
+                                                    class="px-3 py-1.5 bg-yellow-400 text-white rounded text-sm cursor-not-allowed opacity-70 flex items-center justify-start">
+                                                    <i class="fas fa-lock w-4 h-4"></i>
+                                                </button>
+                                            </x-slot:trigger>
+                                        </x-modal-info>
+                                    @else
+                                        <a href="{{ route('propostas.editar', $proposta->id) }}" title="Editar"
+                                            class="px-3 py-1.5 bg-yellow-400 text-white rounded hover:bg-yellow-700 text-sm flex items-center justify-start">
+                                            <i class="fas fa-edit w-4 h-4"></i>
                                         </a>
+                                    @endif
 
-                                        {{-- Editar ou Faturada --}}
-                                        @if ($proposta->status === 'Faturada')
-                                            <x-modal-info titulo="Proposta faturada não pode ser editada"
-                                                mensagem="Esta proposta já foi faturada e não pode mais ser editada."
-                                                icone="fas fa-ban" cor="yellow">
-                                                <x-slot:trigger>
-                                                    <button @click="show = true"
-                                                        class="px-3 py-1.5 bg-yellow-400 text-white rounded text-sm cursor-not-allowed opacity-70 flex items-center justify-start">
-                                                        <i class="fas fa-lock w-4 h-4"></i>
-                                                    </button>
-                                                </x-slot:trigger>
-                                            </x-modal-info>
-                                        @else
-                                            <a href="{{ route('propostas.editar', $proposta->id) }}" title="Editar"
-                                                class="px-3 py-1.5 bg-yellow-400 text-white rounded hover:bg-yellow-700 text-sm flex items-center justify-start">
-                                                <i class="fas fa-edit w-4 h-4"></i>
-                                            </a>
-                                        @endif
+                                    {{-- Aprovar --}}
+                                    @acessoAssistente()
+                                    @if ($proposta->status === 'Faturada')
+                                        <x-modal-info titulo="Proposta faturada." mensagem="Esta proposta já foi faturada."
+                                            icone="fas fa-ban" cor="green">
+                                            <x-slot:trigger>
+                                                <button @click="show = true"
+                                                    class="px-3 py-1.5 bg-green-600 text-white rounded text-sm cursor-not-allowed opacity-70 flex items-center justify-start">
+                                                    <i class="fas fa-lock w-4 h-4"></i>
+                                                </button>
+                                            </x-slot:trigger>
+                                        </x-modal-info>
+                                    @else
+                                        <a href="#" title="Aprovar" @click.prevent="abrirModalAprovar({{ $proposta->id }})"
+                                            class="px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 text-sm flex items-center justify-start">
+                                            <i class="fas fa-check-circle w-4 h-4"></i>
+                                        </a>
+                                    @endif
+                                    @endacessoAssistente
 
-                                        {{-- Aprovar --}}
-                                        @acessoAssistente()
-                                            @if ($proposta->status === 'Faturada')
-                                                <x-modal-info titulo="Proposta faturada."
-                                                    mensagem="Esta proposta já foi faturada." icone="fas fa-ban"
-                                                    cor="green">
-                                                    <x-slot:trigger>
-                                                        <button @click="show = true"
-                                                            class="px-3 py-1.5 bg-green-600 text-white rounded text-sm cursor-not-allowed opacity-70 flex items-center justify-start">
-                                                            <i class="fas fa-lock w-4 h-4"></i>
-                                                        </button>
-                                                    </x-slot:trigger>
-                                                </x-modal-info>
-                                            @else
-                                                <a href="#" title="Aprovar"
-                                                    @click.prevent="abrirModalAprovar({{ $proposta->id }})"
-                                                    class="px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 text-sm flex items-center justify-start">
-                                                    <i class="fas fa-check-circle w-4 h-4"></i>
-                                                </a>
-                                            @endif
-                                        @endacessoAssistente
-
-                                        {{-- Excluir --}}
-                                        @acessoDiretor()
-                                            @if ($proposta->status === 'Faturada')
-                                                <x-modal-info titulo="Proposta faturada não pode ser excluída."
-                                                    mensagem="Esta proposta já foi faturada e não pode mais ser excluída."
-                                                    icone="fas fa-ban" cor="red">
-                                                    <x-slot:trigger>
-                                                        <button @click="show = true"
-                                                            class="px-3 py-1.5 bg-red-600 text-white rounded text-sm cursor-not-allowed opacity-70 flex items-center justify-start">
-                                                            <i class="fas fa-lock w-4 h-4"></i>
-                                                        </button>
-                                                    </x-slot:trigger>
-                                                </x-modal-info>
-                                            @else
-                                                <x-modal-excluir :id="$proposta->id" :action="route('propostas.destroy', $proposta->id)" :registro="'Proposta #' . $proposta->id">
-                                                    <x-slot:trigger>
-                                                        <button @click="show = true"
-                                                            class="px-3 py-1.5 bg-red-600 text-white rounded hover:bg-red-700 text-sm flex items-center justify-start"
-                                                            title="Excluir">
-                                                            <i class="fas fa-trash-alt w-4 h-4"></i>
-                                                        </button>
-                                                    </x-slot:trigger>
-                                                </x-modal-excluir>
-                                            @endif
-                                        @endacessoDiretor
-                                    </div>
-                                </td>
-                            </tr>
+                                    {{-- Excluir --}}
+                                    @acessoDiretor()
+                                    @if ($proposta->status === 'Faturada')
+                                        <x-modal-info titulo="Proposta faturada não pode ser excluída."
+                                            mensagem="Esta proposta já foi faturada e não pode mais ser excluída."
+                                            icone="fas fa-ban" cor="red">
+                                            <x-slot:trigger>
+                                                <button @click="show = true"
+                                                    class="px-3 py-1.5 bg-red-600 text-white rounded text-sm cursor-not-allowed opacity-70 flex items-center justify-start">
+                                                    <i class="fas fa-lock w-4 h-4"></i>
+                                                </button>
+                                            </x-slot:trigger>
+                                        </x-modal-info>
+                                    @else
+                                        <x-modal-excluir :id="$proposta->id" :action="route('propostas.destroy', $proposta->id)" :registro="'Proposta #' . $proposta->id">
+                                            <x-slot:trigger>
+                                                <button @click="show = true"
+                                                    class="px-3 py-1.5 bg-red-600 text-white rounded hover:bg-red-700 text-sm flex items-center justify-start"
+                                                    title="Excluir">
+                                                    <i class="fas fa-trash-alt w-4 h-4"></i>
+                                                </button>
+                                            </x-slot:trigger>
+                                        </x-modal-excluir>
+                                    @endif
+                                    @endacessoDiretor
+                                </div>
+                            </td>
+                        </tr>
                         @endforeach
 
                         @if ($propostas->isEmpty())
@@ -279,12 +278,12 @@
 
                 alterarCampoProposta(id, chave, valor) {
                     fetch(`/propostas/alterar/${id}/${chave}/${valor}`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .content
-                            }
-                        })
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        }
+                    })
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {
@@ -303,17 +302,16 @@
 
                 faturarProposta(id) {
                     fetch(`/propostas/faturar/${id}`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .content
-                            }
-                        })
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        }
+                    })
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {
                                 this.showModalAprovar = false;
-                                // alert('Proposta faturada e veículo marcado como vendido.');
                                 window.location.reload();
                             } else {
                                 alertCustom('Erro ao faturar proposta.');
@@ -327,12 +325,12 @@
 
                 aprovarGerencialmente(id) {
                     fetch(`/propostas/aprovarGerencialmente/${id}`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .content
-                            }
-                        })
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        }
+                    })
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {

@@ -118,7 +118,7 @@ class PropostaController extends Controller
             $veiculo = Veiculo::find($proposta['id_veiculoNovo']);
         }
 
-        // Veículo usado (exemplo com 1, mas pode adaptar para mais)
+        // Veículo usado 
         $veiculoUsado = null;
         if (!empty($proposta['id_veiculo_usado'])) {
             $veiculoUsado = Veiculo::find($proposta['id_veiculo_usado']);
@@ -153,7 +153,7 @@ class PropostaController extends Controller
 
 
 
-    //promove alterações na proposta, recebendo a id , a chave e o valor da alteração e testando os campos possiveis de alteração
+    //promove alterações na proposta recebendo a id  a chave e o valor da alteração e testando os campos possiveis de alteração
     public function alterarProposta($id, $chave, $valor)
     {
         $proposta = Proposta::findOrFail($id);
@@ -186,7 +186,6 @@ class PropostaController extends Controller
                 case 'banco':
                     $proposta->id_user_aprovacao_banco = $user->id;
                     break;
-                    // Você pode expandir com outros níveis se necessário
             }
         }
 
@@ -287,7 +286,6 @@ class PropostaController extends Controller
                 'condicao_texto' => $n->descricao_pagamento,
                 'valor' => floatval($n->valor),
                 'vencimento' => $n->data_vencimento,
-                // 'fixo' => $n->descricao_pagamento === 'Usado(s)' // regra usada por você
             ];
         }
 
@@ -500,7 +498,7 @@ class PropostaController extends Controller
             $veiculo = Veiculo::find($proposta['id_veiculoNovo']);
         }
 
-        // Veículo usado (exemplo com 1, mas pode adaptar para mais)
+        // Veículo usado 
         $veiculoUsado = null;
         if (!empty($proposta['id_veiculo_usado'])) {
             $veiculoUsado = Veiculo::find($proposta['id_veiculo_usado']);

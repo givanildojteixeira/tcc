@@ -15,7 +15,7 @@ class CorController extends Controller
             $query->where('cor_desc', 'like', '%' . $request->busca . '%');
         }
     
-        $cores = $query->orderBy('cor_desc')->paginate(10); // ou qualquer número desejado
+        $cores = $query->orderBy('cor_desc')->paginate(10); 
     
         return view('cores.index', compact('cores'));
     }

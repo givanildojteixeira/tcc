@@ -109,11 +109,11 @@
                                         <div class="flex justify-center gap-2">
                                             <button
                                                 @click="editModal = true; editData = {
-                                                                                                                                                    id: {{ $opcional->id }},
-                                                                                                                                                    modelo_fab: '{{ addslashes($opcional->modelo_fab) }}',
-                                                                                                                                                    cod_opcional: '{{ addslashes($opcional->cod_opcional) }}',
-                                                                                                                                                    descricao: `{{ addslashes($opcional->descricao) }}`
-                                                                                                                                                }"
+                                                    id: {{ $opcional->id }},
+                                                    modelo_fab: '{{ addslashes($opcional->modelo_fab) }}',
+                                                    cod_opcional: '{{ addslashes($opcional->cod_opcional) }}',
+                                                    descricao: `{{ addslashes($opcional->descricao) }}`
+                                                }"
                                                 class="px-3 py-1 bg-yellow-400 text-white rounded-md hover:bg-yellow-500 text-sm">
                                                 Editar
                                             </button>
@@ -133,8 +133,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-4 py-2 text-center text-gray-500">Nenhum opcional
-                                        encontrado.</td>
+                                    <td colspan="4" class="px-4 py-2 text-center text-gray-500">Nenhum opcional encontrado.</td>
                                 </tr>
                             @endforelse
                         </tbody>

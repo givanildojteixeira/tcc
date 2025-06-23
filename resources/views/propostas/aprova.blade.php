@@ -131,7 +131,7 @@
                     </div>
 
                     @php
-                        $vlrNota = ($veiculo->novo_usado === 'Novo') ? ($veiculo->vlr_nota ?? 0) : ($veiculo->vlr_tabela + $vlrAcrescimo ?? 0 ) ;
+                        $vlrNota = ($veiculo->novo_usado === 'Novo') ? ($veiculo->vlr_nota ?? 0) : ($veiculo->vlr_tabela + $vlrAcrescimo ?? 0);
                     @endphp
 
                     <div class="flex justify-between">
@@ -155,7 +155,7 @@
                         <span>
                             R$
                             @if ($veiculo->novo_usado === 'Novo')
-                                    {{ number_format(
+                                                        {{ number_format(
                                     ($veiculo->vlr_tabela ?? 0)
                                     - ($proposta['vlr_desconto'] ?? 0)
                                     - ($veiculo->vlr_bonus ?? 0)
@@ -165,7 +165,7 @@
                                     '.'
                                 ) }}
                             @else
-                                    {{ number_format(
+                                                        {{ number_format(
                                     ($veiculo->vlr_tabela ?? 0)
                                     + ($vlrDesconto ?? 0)
                                     - ($vlrNota ?? 0),

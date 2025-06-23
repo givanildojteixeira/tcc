@@ -27,7 +27,7 @@ class UserController extends Controller
             });
         }
 
-        // Filtro por nível de usuário
+        // Filtro por nivel
         if ($request->filled('nivel')) {
             $query->where('level', $request->input('nivel'));
         }

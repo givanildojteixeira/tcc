@@ -10,7 +10,7 @@
                 this.aba = abaUrl;
                 sessionStorage.setItem('abaAtiva', abaUrl);
 
-                // 🔄 Remove o ?aba=... da URL
+                //  Remove o ?aba=... da URL
                 const novaUrl = window.location.origin + window.location.pathname;
                 window.history.replaceState({}, document.title, novaUrl);
             } else if ('{{ session('aba') }}') {
@@ -373,7 +373,7 @@
                     const sessao = window.propostaSessao || {};
                     const negociacoesSalvas = window.negociacoesSalvas || [];
 
-                    // Carrega negociações anteriores (sem duplicar "Usado(s)")
+                    // Carrega negociações anteriores 
                     this.negociacoes = negociacoesSalvas.filter(n => n.condicao_texto !== 'Usado(s)');
 
                     // Valor da proposta
@@ -444,7 +444,7 @@
                 },
 
                 somaNegociacoes() {
-                    // Ignora "(-) ou  (+)"
+                    // Ignora (-) ou  (+)
                     return this.negociacoes
                         // .filter(n => n.condicao_texto !== 'Acréscimo(+)' && n.condicao != 'ACRESCIMO')
                         .filter(n => !n.condicao_texto.includes('(+)') && !n.condicao_texto.includes('(-)'))

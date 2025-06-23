@@ -1,5 +1,5 @@
 <x-app-layout>
-    @acessoDiretor()
+    @acessoAssistente()
 
     <div class="max-w-7xl mx-auto p-4">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
@@ -140,10 +140,6 @@
                 @endforelse
             </tbody>
         </table>
-
-
-
-
     </div>
 
     @else
@@ -156,8 +152,7 @@
                     class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Voltar</a>
             </div>
         </div> 
-
-    @endacessoDiretor
+    @endacessoAssistente
     <x-rodape>
         <div class="font-medium">Total de contas a receber: {{ $negociacoes->total() }}</div>
         <div class="pagination">{{ $negociacoes->links() }}</div>

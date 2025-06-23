@@ -1,4 +1,4 @@
-<x-app-layout> {{-- ✅ Alterar informações do Veículo - EDIT - INDEX - VEICULOS - GENERICOS --}}
+<x-app-layout> {{--  Alterar informações do Veículo - EDIT - INDEX - VEICULOS - GENERICOS --}}
     <div x-data="{
         tabAtiva: '{{ old('tabAtiva') ??
     ($errors->has('cor')
@@ -149,41 +149,41 @@
                                     class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                             </div>
                         @endif
-                        <!-- Portas (campo pequeno) -->
+                        <!-- Portas  -->
                         <div class="basis-[8%] min-w-[60px]">
                             <label class="block text-gray-700 font-medium mb-1">Portas</label>
                             <input type="number" name="portas" value="{{ old('portas', $veiculo->portas) }}"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 text-center focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         </div>
 
-                        <!-- Combustível () -->
+                        <!-- Combustível  -->
                         <div class="flex-grow basis-[10%] min-w-[80px]">
                             <label class="block text-gray-700 font-medium mb-1">Combustível</label>
                             <select name="combustivel"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                                 <option value="Gasolina" {{ old('combustivel', $veiculo->combustivel) == 'Gasolina' ?
-    'selected' : '' }}>
+                                    'selected' : '' }}>
                                     Gasolina
                                 </option>
                                 <option value="Etanol" {{ old('combustivel', $veiculo->combustivel) == 'Etanol' ?
-    'selected' : '' }}>
+                                    'selected' : '' }}>
                                     Etanol
                                 </option>
                                 <option value="Diesel" {{ old('combustivel', $veiculo->combustivel) == 'Diesel' ?
-    'selected' : '' }}>
+                                    'selected' : '' }}>
                                     Diesel
                                 </option>
                                 <option value="Flex" {{ old('combustivel', $veiculo->combustivel) == 'Flex' ? 'selected'
-    : '' }}>
+                                     : '' }}>
                                     Flex
                                 </option>
                                 <option value="Elétrico" {{ old('combustivel', $veiculo->combustivel) == 'Elétrico' ?
-    'selected'
-    : '' }}>
+                                    'selected'
+                                    : '' }}>
                                     Elétrico
                                 </option>
                                 <option value="GNV" {{ old('combustivel', $veiculo->combustivel) == 'GNV' ? 'selected'
-    : '' }}>
+                                    : '' }}>
                                     GNV
                                 </option>
                             </select>
@@ -195,15 +195,15 @@
                             <select name="transmissao"
                                 class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none">
                                 <option value="Mecânica" {{ old('transmissao', $veiculo->transmissao) == 'Mecânica' ?
-    'selected' : '' }}>
+                                    'selected' : '' }}>
                                     Mecânica
                                 </option>
                                 <option value="Automática" {{ old('transmissao', $veiculo->transmissao) == 'Automática'
-    ? 'selected' : '' }}>
+                                    ? 'selected' : '' }}>
                                     Automática
                                 </option>
                                 <option value="Automática" {{ old('transmissao', $veiculo->transmissao) == 'CVT'
-    ? 'selected' : '' }}>
+                                    ? 'selected' : '' }}>
                                     CVT
                                 </option>
                             </select>
@@ -236,7 +236,6 @@
                             <label for="local" class="block text-gray-700 font-medium mb-1">Local</label>
                             <select name="local" id="local" required
                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
-                                {{-- <option value="{{ old('local', $veiculo->local) }}"></option> --}}
 
 
                                 @if (request('from') === 'novos')
@@ -537,7 +536,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        // Remove o contêiner da imagem
+                        // Remove o conteiner da imagem
                         const container = botao.closest('.flex-col');
                         container.remove();
                         window.mostrarToast?.('Imagem excluída com sucesso!');

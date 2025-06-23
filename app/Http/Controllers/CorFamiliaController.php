@@ -14,7 +14,6 @@ class CorFamiliaController extends Controller
     {
         // dd($request->all());
 
-                // Verifica se a família foi selecionada
         if (!$request->filled('familia_id')) {
             return back()->with('error', 'Selecione uma família antes de relacionar as cores.');
         }

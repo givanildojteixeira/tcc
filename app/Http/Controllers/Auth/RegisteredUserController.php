@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'level' => 'user', // 'Vendedor'
+            'level' => 'user', // 'Default como usuario sem acesso, necessita de liberaçao
         ]);
 
         event(new Registered($user));
